@@ -6,7 +6,7 @@
 	import { selectedItems } from '$lib/store/general.store';
 	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
-	import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
+	// import { createDataTableStore, dataTableHandler , localStorageStore} from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,10 +82,10 @@
 
 	console.log('courseIds', courseIds);
 
-	const dataTableStore = createDataTableStore(courses, {
-		search: ''
-	});
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	// const dataTableStore = createDataTableStore(courses, {
+	// 	search: ''
+	// });
+	// dataTableStore.subscribe((model) => dataTableHandler(model));
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -152,16 +152,17 @@
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top w-1/4">Courses</td>
 				<td class="flex flex-col gap-2 w-full">
-					<input
+					<!-- <input
 						class="input"
 						name="courses"
 						bind:value={$dataTableStore.search}
 						type="search"
 						placeholder="Search course here..."
-					/>
+					/> -->
 
 					<div class="flex flex-col gap-2">
-						<CoursesDragDrop title = 'Available Courses' items={$dataTableStore.filtered} />
+						<!-- <CoursesDragDrop title = 'Available Courses' items={$dataTableStore.filtered} /> -->
+						<CoursesDragDrop title = 'Available Courses' items={courses} />
 						<SelectedCoursesDragDrop title = 'Add courses to learning journey' sletectItems={selectedCourses} />
 					</div>
 
@@ -197,10 +198,10 @@
 	</div>
 </form>
 
-<style>
+<!-- <style>
 	:global(*) {
 		box-sizing: border-box;
 		margin: 0;
 		padding: 1;
 	}
-</style>
+</style> -->

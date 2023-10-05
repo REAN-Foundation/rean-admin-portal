@@ -5,11 +5,7 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import {
-		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
+		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
@@ -21,10 +17,6 @@
 	let index = Number;
 	personRoleTypes = personRoleTypes.map((item, index) => ({ ...item, index: index + 1 }));
 
-	const dataTableStore = createDataTableStore(personRoleTypes, {
-		search: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
 
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/person-role-types/create`;
@@ -34,9 +26,12 @@
 
 	const breadCrumbs = [{ name: 'Person-Roles', path: personRoleTypesRoute }];
 
-	dataTableStore.updateSource(personRoleTypes);
-
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	let paginationSettings = {
+		page: 0,
+		limit: personRoleTypes.length,
+		size: personRoleTypes.length,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
 
 	const handlePersonRoleTypeDelete = async (e, id) => {
 		const personRoleTypeId = id;
@@ -55,7 +50,7 @@
 			headers: { 'content-type': 'application/json' }
 		});
 	}
-</script>
+</script> 
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
@@ -64,8 +59,8 @@
 </div>
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid">
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
 				<th data-sort="RoleName">Role Name</th>
@@ -76,7 +71,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each personRoleTypes as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td>{row.index}</td>
 					<td>
@@ -115,10 +110,10 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
+	<div class="invisible">
 		<Paginator
-			bind:settings={$dataTableStore.pagination}
+			bind:settings={paginationSettings}
 			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
 		/>
-	{/if}
+	</div>
 </div>

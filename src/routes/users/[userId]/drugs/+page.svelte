@@ -5,11 +5,10 @@
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
-	import { Paginator } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types';
-
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
@@ -36,7 +35,7 @@
 	let items = 10;
 
 	let paginationSettings = {
-		offset: 0,
+		page: 0,
 		limit: 10,
 		size: totalDrugsCount,
 		amounts: [10, 20, 30, 50]
@@ -61,8 +60,8 @@
 	}
 
 	$: retrivedDrugs = drugs.slice(
-		paginationSettings.offset * paginationSettings.limit,
-		paginationSettings.offset * paginationSettings.limit + paginationSettings.limit
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
 	$: if (browser)
@@ -161,13 +160,15 @@
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
-						<a href={viewRoute(row.id)}>{Helper.truncateText(row.DrugName, 20)}</a>
+						<a href={viewRoute(row.id)}>
+							{row.DrugName !== null && row.DrugName !== "" ? Helper.truncateText(row.DrugName, 20) : 'Not specified'}
+						</a>
 					</td>
 					<td role="gridcell" aria-colindex={3} tabindex="0">
-						{row.GenericName !== null ? Helper.truncateText(row.GenericName, 40) : 'Not specified'}
+						{row.GenericName !== null && row.GenericName !== "" ? Helper.truncateText(row.GenericName, 40) : 'Not specified'}
 					</td>
 					<td role="gridcell" aria-colindex={4} tabindex="0">
-						{row.Ingredients !== null ? Helper.truncateText(row.Ingredients, 40) : 'Not specified'}
+						{row.Ingredients !== null && row.Ingredients !== "" ? Helper.truncateText(row.Ingredients, 40) : 'Not specified'}
 					</td>
 					<td role="gridcell" aria-colindex={5} tabindex="0">
 						{date.format(new Date(row.CreatedAt), 'DD-MMM-YYYY')}</td
@@ -205,6 +206,9 @@
 		bind:settings={paginationSettings}
 		on:page={onPageChange}
 		on:amount={onAmountChange}
-		buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
-	/>
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
+		/>
 </div>

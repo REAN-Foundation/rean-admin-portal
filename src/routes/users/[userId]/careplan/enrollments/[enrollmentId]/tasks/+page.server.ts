@@ -17,6 +17,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		}
 	
 		const enrollment = response.Data;
+		console.log("enrollment", enrollment);
 		const participantId = enrollment.ParticipantId;
 		const careplanId = enrollment.CareplanId;
 		const searchParams ={
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		}
 		const enrollmentTask_ = await searchEnrollmentTask(sessionId, searchParams);
 		const participantResponse_ = await searchParticipantActivities(sessionId, participantId);
-		const enrollmentTask = enrollmentTask_.Data.Items;
+		const enrollmentTask = enrollmentTask_.Data;
 		const participantResponse = participantResponse_.Data.Items;
 		return {
 			enrollmentTask,

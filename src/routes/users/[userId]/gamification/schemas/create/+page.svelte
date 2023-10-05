@@ -3,7 +3,7 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
-	import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
+	// import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
 	import { browser } from '$app/environment';
 	import ItemDragDrop from '$lib/components/drag-and-drop/courses-drag-drop.svelte';
 	import SelectedDragDropItems from '$lib/components/drag-and-drop/selected-courses-drag-drop.svelte';
@@ -16,10 +16,10 @@
 	let index = Number;
 	eventTypes = eventTypes.map((item, index) => ({ ...item, index: index + 1 }));
 
-	const dataTableStore = createDataTableStore(eventTypes, {
-		search: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
+	// const dataTableStore = createDataTableStore(eventTypes, {
+	// 	search: '',
+	// 	pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
+	// });
 
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/gamification/schemas/create`;
@@ -61,12 +61,12 @@
 		const response = await res.json();
 		eventTypes = response.map((item, index) => ({ ...item, index: index + 1 }));
 		console.log("eventTypes",eventTypes)
-		dataTableStore.updateSource(eventTypes);
+		// dataTableStore.updateSource(eventTypes);
 	}
 
 	$: if (browser) searchEventType({name: name });
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	// dataTableStore.subscribe((model) => dataTableHandler(model));
 
 
 </script>
@@ -138,7 +138,7 @@
 					/>
 
 					<div class="flex flex-col gap-2">
-						<ItemDragDrop title = 'Available Event Types' items={$dataTableStore.filtered} />
+						<ItemDragDrop title = 'Available Event Types' items={eventTypes} />
 						<SelectedDragDropItems title = 'Add Event Types' sletectItems={selectedEventType} />
 					</div>
 

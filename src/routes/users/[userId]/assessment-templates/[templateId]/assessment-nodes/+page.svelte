@@ -4,9 +4,9 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import Icon from '@iconify/svelte';
-	import { Paginator } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
-	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types';
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
@@ -39,7 +39,7 @@
 	let items = 10;
 
 	let paginationSettings = {
-		offset: 0,
+		page: 0,
 		limit: 10,
 		size: totalAssessmentNodesCount,
 		amounts: [10, 20, 30, 50]
@@ -65,8 +65,8 @@
 	}
 
 	$: retrivedAssessmentNodes = assessmentNodes.slice(
-		paginationSettings.offset * paginationSettings.limit,
-		paginationSettings.offset * paginationSettings.limit + paginationSettings.limit
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
 	$: if (browser)
@@ -203,6 +203,9 @@
 		bind:settings={paginationSettings}
 		on:page={onPageChange}
 		on:amount={onAmountChange}
-		buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
-	/>
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
+		/>
 </div>

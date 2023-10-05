@@ -17,7 +17,7 @@ export const load: PageServerLoad  = async (event: RequestEvent) => {
             throw error(response.HttpCode, response.Message);
         }
         console.log("response",response);
-        const careplans = response.Data.Items;
+        const careplans = response.Data;
         console.log(`Careplan = ${JSON.stringify(careplans)}`);
         const _careplanCategories = await searchCareplanCategories(sessionId);
         const careplanCategories = _careplanCategories.Data.Items;

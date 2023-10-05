@@ -7,10 +7,7 @@
 	import Icon from '@iconify/svelte';
 	import {
 		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
+		type PaginationSettings
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
@@ -21,11 +18,6 @@
 	let priorityTypes = data.priorityTypes;
 	let index = Number;
 	priorityTypes = priorityTypes.map((item, index) => ({ ...item, index: index + 1 }));
-
-	const dataTableStore = createDataTableStore(priorityTypes, {
-		search: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
 
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/priorities/create`;
@@ -60,11 +52,16 @@
 
 		const response = await res.json();
 		priorityTypes = response.map((item, index) => ({ ...item, index: index + 1 }));
-		dataTableStore.updateSource(priorityTypes);
+		// dataTableStore.updateSource(priorityTypes);
 	}
 	$: if (browser) searchPriority({ type: type, tags: tags });
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	let paginationSettings = {
+		page: 0,
+		limit: priorityTypes.length,
+		size: priorityTypes.length,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
 
 	const handlePriorityDelete = async (e, id) => {
 		const priorityId = id;
@@ -91,8 +88,8 @@
 	<a href={createRoute} class="btn variant-filled-secondary ml-auto">Add New</a>
 </div>
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid" >
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
 				<th data-sort="Type">Type</th>
@@ -103,7 +100,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each priorityTypes as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
@@ -144,10 +141,10 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
+	<div class="invisible">
 		<Paginator
-			bind:settings={$dataTableStore.pagination}
+			bind:settings={paginationSettings}
 			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
 		/>
-	{/if}
+	</div>
 </div>

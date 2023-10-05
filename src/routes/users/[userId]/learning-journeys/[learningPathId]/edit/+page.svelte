@@ -7,7 +7,7 @@
 	import { selectedItems } from '$lib/store/general.store';
 	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
-	import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
+	// import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -96,10 +96,10 @@
 			await upload(e.target.result, filename);
 		};
 	};
-	const dataTableStore = createDataTableStore(allCources, {
-		search: ''
-	});
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	// const dataTableStore = createDataTableStore(allCources, {
+	// 	search: ''
+	// });
+	// dataTableStore.subscribe((model) => dataTableHandler(model));
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -189,14 +189,14 @@
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Courses</td>
 				<td>
-					<input
+					<!-- <input
 						class="input mb-3"
 						bind:value={$dataTableStore.search}
 						type="search"
 						placeholder="Search course here..."
-					/>
+					/> -->
 					<div class="mb-4 mt-1">
-						<CoursesDragDrop title='Available courses' items={$dataTableStore.filtered} />
+						<CoursesDragDrop title='Available courses' items={courses} />
 					</div>
 					<div>
 						<SelectedCoursesDragDrop title='Add courses to learning journey' sletectItems={courses} />

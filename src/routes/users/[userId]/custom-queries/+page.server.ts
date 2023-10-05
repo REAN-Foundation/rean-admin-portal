@@ -13,7 +13,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
-		const queries = response.Data.Queries.Items;
+		const queries = response.Data.Queries;
+		console.log("queries", queries)
 		return {
 			queries,
 			sessionId,

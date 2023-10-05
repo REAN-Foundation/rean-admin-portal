@@ -7,11 +7,7 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import {
-		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
+		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
@@ -19,13 +15,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let symptomData = data.symptoms;
-	symptomData = symptomData.map((item, index) => ({ ...item, index: index + 1 }));
-
-	const dataTableStore = createDataTableStore(symptomData, {
-		search: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
+	let symptoms = data.symptoms;
 
 	const userId = $page.params.userId;
 	const symptomRoute = `/users/${userId}/symptoms`;
@@ -37,10 +27,22 @@
 
 	let symptom = undefined;
 	let tags = undefined;
-	let sortBy = 'CreatedAt';
+	let sortBy = 'Symptom';
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
-	let pageIndex = 0;
+	let offset = 0;
+	let totalSymptomsCount = data.symptomsCount;
+	let isSortingSymptom = false;
+	let isSortingTags = false;
+	let items = 10;
+
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: totalSymptomsCount,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
+
 
 	async function searchSymptom(model) {
 		let url = `/api/server/symptoms/search?`;
@@ -49,7 +51,7 @@
 
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		if (pageIndex) url += `&pageIndex=${pageIndex}`;
+		if (offset) url += `&pageIndex=${offset}`;
 		if (symptom) url += `&symptom=${symptom}`;
 		if (tags) url += `&tags=${tags}`;
 
@@ -59,12 +61,45 @@
 		});
 		const response = await res.json();
 
-		symptomData = response.map((item, index) => ({ ...item, index: index + 1 }));
-		dataTableStore.updateSource(symptomData);
+		symptoms = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
-	$: if (browser) searchSymptom({ symptom, tags });
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	$: retrivedSymptoms = symptoms.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+
+	$: if (browser)
+		searchSymptom({ 
+			symptom, 
+			tags,
+			itemsPerPage: itemsPerPage,
+			pageIndex: offset,
+			sortOrder: sortOrder,
+			sortBy: sortBy
+		});
+
+	function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
+
+	function sortTable(columnName) {
+		isSortingSymptom = false;
+		isSortingTags = false;
+		sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
+		if (columnName === 'Symptom') {
+			isSortingSymptom = true;
+		} else if (columnName === 'Tags') {
+			isSortingTags = true;
+		}
+		sortBy = columnName;
+	}
 
 	const handleSymptomDelete = async (e, id) => {
 		const symptomId = id;
@@ -99,12 +134,20 @@
 </div>
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid">
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
-				<th data-sort="Symptom">Symptom</th>
-				<th data-sort="Tags">Tags</th>
+				<th>
+					<button on:click={() => sortTable('Symptom')}>
+						Symptom {isSortingSymptom ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
+				<th>
+					<button on:click={() => sortTable('Tags')}>
+						Tags {isSortingTags ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
 				<th>Image</th>
 				<th>Created Date</th>
 				<th />
@@ -112,7 +155,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each retrivedSymptoms as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
@@ -155,10 +198,13 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
-		<Paginator
-			bind:settings={$dataTableStore.pagination}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
 		/>
-	{/if}
 </div>

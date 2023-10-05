@@ -32,7 +32,7 @@
 		out:fade={{ delay: 200, duration: 200 }}
 	/>
 	<div
-		class="confirm-dialog p-4 flex flex-col gap-4 rounded-lg shadow-xl bg-surface-50 dark:bg-surface-900"
+		class="absolute z-[999] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col gap-4 rounded-lg shadow-xl bg-surface-50 dark:bg-surface-900"
 		in:fly={{ y: -10, delay: 200, duration: 200 }}
 		out:fly={{ y: -10, duration: 200 }}
 	>
@@ -66,7 +66,7 @@
 	</div>
 {/if}
 
-<style>
+<!-- <style>
 	.confirm-dialog {
 		position: absolute;
 		z-index: 999;
@@ -74,4 +74,4 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}
-</style>
+</style> -->

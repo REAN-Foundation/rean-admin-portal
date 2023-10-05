@@ -15,7 +15,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
-		const badges = response.Data.Items;
+		const badges = response.Data;
 		const badgeCategories = _badgeCategories.Data.Items;
 		return {
 			badges,

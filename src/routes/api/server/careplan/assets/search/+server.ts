@@ -28,7 +28,6 @@ export const GET = async (event: RequestEvent) => {
             itemsPerPage,
             pageIndex,
         };
-        
 		const response = await searchAssets(sessionId,assetTypeRoute,searchParams);
         const items = response.Data.Items;
 

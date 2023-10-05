@@ -6,11 +6,7 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import {
-		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
+		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
@@ -18,8 +14,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let queries = data.queries;
-	queries = queries.map((item, index) => ({ ...item, index: index + 1 }));
+	let queries = data.queries.Items;
 
 	const userId = $page.params.userId;
 	const queryRoute = `/users/${userId}/custom-queries`;
@@ -30,16 +25,21 @@
 	const breadCrumbs = [{ name: 'Custom Queries', path: queryRoute }];
 
 	let name = undefined;
-	let sortBy = 'CreatedAt';
+	let sortBy = 'Name';
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
-	let pageIndex = 0;
+	let offset = 0;
+	let totalCustomQueriesCount = data.queries.TotalCount;
+	let isSortingName = false;
+	let isSortingGenericName = false;
+	let items = 10;
 
-	const dataTableStore = createDataTableStore(queries, {
-		search: '',
-		sort: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: totalCustomQueriesCount,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
 
 	async function searchQuery(model) {
 		let url = `/api/server/custom-query/search?`;
@@ -47,7 +47,7 @@
 		else url += `sortOrder=ascending`;
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		if (pageIndex) url += `&pageIndex=${pageIndex}`;
+		if (offset) url += `&pageIndex=${offset}`;
 		if (name) url += `&name=${name}`;
 
 		const res = await fetch(url, {
@@ -57,12 +57,40 @@
 		const response = await res.json();
 		queries = response.map((item, index) => ({ ...item, index: index + 1 }));
 		console.log("queries",queries)
-
-		dataTableStore.updateSource(queries);
 	}
-	$: if (browser) searchQuery({ name: name });
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	$: retrivedCustomQueries = queries.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+	
+	$: if (browser)
+		searchQuery({ 
+			name: name,
+			itemsPerPage: itemsPerPage,
+			pageIndex: offset,
+			sortOrder: sortOrder,
+			sortBy: sortBy
+		});
+
+		function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
+
+	function sortTable(columnName) {
+		isSortingName = false;
+		sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
+		if (columnName === 'Name') {
+			isSortingName = true;
+		}
+		sortBy = columnName;
+	}
 
 	const handleQueryDelete = async (e, id) => {
 		const queryId = id;
@@ -96,11 +124,15 @@
 </div>
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid">
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
-				<th data-sort="Name">Name</th>
+				<th>
+					<button on:click={() => sortTable('Name')}>
+						Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
         <th data-sort="Description">Description</th>
 				<th>Tags</th>
 				<th />
@@ -108,7 +140,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each retrivedCustomQueries as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
@@ -147,10 +179,13 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
-		<Paginator
-			bind:settings={$dataTableStore.pagination}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
 		/>
-	{/if}
 </div>

@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import Icon from '@iconify/svelte';
 	import type { DrawerSettings } from '@skeletonlabs/skeleton';
-	import { AppBar, AppShell, Drawer, drawerStore } from '@skeletonlabs/skeleton';
+	import { AppBar, AppShell, Drawer, getDrawerStore} from '@skeletonlabs/skeleton';
 	import { afterUpdate, onMount } from 'svelte';
 	import { navbarMenu, sidebarMenu, type TabDefinition } from './navigation.tabs';
 	import SettingMenu from './setting.menus.svelte';
@@ -10,7 +10,8 @@
 	export let userId = undefined;
 	const navbarTabs: TabDefinition[] = navbarMenu(userId);
 	const sidebarTabs: TabDefinition[] = sidebarMenu(userId);
-
+	const drawerStore = getDrawerStore();
+	
 	function drawerLeftOpen(): void {
 		const settings: DrawerSettings = {
 			id: 'leftSidebar',

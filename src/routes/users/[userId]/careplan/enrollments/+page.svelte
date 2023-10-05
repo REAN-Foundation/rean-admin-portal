@@ -4,29 +4,17 @@
 	import type { PageServerData } from './$types';
 	import { page } from '$app/stores';
 	import {
-		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
+		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import { browser } from '$app/environment';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+	export let data: PageServerData;
+	let enrollment = data.enrollments.Items;
+
 	const userId = $page.params.userId;
 	const enrollmentsRoute = () => `/users/${userId}/careplan/enrollments`;
-
-	export let data: PageServerData;
-	let enrollment = data.enrollments;
-	let carePlan = undefined;
-	let displayId = undefined;
-	let startDate = undefined;
-	let endDate = undefined;
-	let sortBy = 'CreatedAt';
-	let sortOrder = 'ascending';
-	let itemsPerPage = 10;
-	let pageIndex = 0;
 
 	const breadCrumbs = [
 		{
@@ -35,13 +23,27 @@
 		}
 	];
 
-	enrollment = enrollment.map((item, index) => ({ ...item, index: index + 1 }));
+	let carePlan = undefined;
+	let displayId = undefined;
+	let startDate = undefined;
+	let endDate = undefined;
+	let sortBy = 'CarePlan';
+	let sortOrder = 'ascending';
+	let itemsPerPage = 10;
+	let offset = 0;
+	let totalEnrollmentsCount = data.enrollments.TotalCount;
+	let isSortingCareplan = false;
+	let isSortingDisplayId = false;
+	let isSortingStartDate = false;
+	let isSortingEndDate = false;
+	let items = 10;
 
-	const dataTableStore = createDataTableStore(enrollment, {
-		search: '',
-		sort: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: totalEnrollmentsCount,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
 
 	async function searchEnrollments(model) {
 		let url = `/api/server/careplan/enrollments/search?`;
@@ -49,7 +51,7 @@
 		else url += `sortOrder=ascending`;
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		if (pageIndex) url += `&pageIndex=${pageIndex}`;
+		if (offset) url += `&pageIndex=${offset}`;
 		if (carePlan) {
 			const careplanId = enrollment.map((item) => {
 				if (item.Careplan.Name == carePlan) {
@@ -74,18 +76,52 @@
 		});
 		const response = await res.json();
 		enrollment = response.map((item, index) => ({ ...item, index: index + 1 }));
-
-		dataTableStore.updateSource(enrollment);
 	}
+
+	$: retrivedEnrollments = enrollment.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+
 	$: if (browser)
 		searchEnrollments({
 			carePlan: carePlan,
 			displayId: displayId,
 			startDate: startDate,
-			endDate: endDate
+			endDate: endDate,
+			itemsPerPage: itemsPerPage,
+			pageIndex: offset,
+			sortOrder: sortOrder,
+			sortBy: sortBy
 		});
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+		function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
+
+	function sortTable(columnName) {
+		isSortingCareplan = false;
+		isSortingDisplayId = false;
+		isSortingStartDate = false;
+		isSortingEndDate = false;
+		sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
+		if (columnName === 'Careplan') {
+			isSortingCareplan = true;
+		} else if (columnName === 'DisplayId') {
+			isSortingDisplayId = true;
+		} else if (columnName === 'StartDate') {
+			isSortingStartDate = true;
+		} else if (columnName === 'EndDate') {
+			isSortingEndDate = true;
+		}
+		sortBy = columnName;
+	}
 
 </script>
 
@@ -111,24 +147,36 @@
 		type="date"
 		required
 		placeholder="Search by end date"
-		class="input w-auto grow uppercase "
+		class="input w-auto grow"
 	/>
 </div>
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid">
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
 				<th>Participant</th>
 				<th>Enrollment Code</th>
-				<th>Careplan</th>
-				<th>Start Date</th>
-				<th>End Date</th>
+				<th>
+					<button on:click={() => sortTable('Careplan')}>
+						Careplan {isSortingCareplan ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
+				<th>
+					<button on:click={() => sortTable('StartDate')}>
+						Start Date {isSortingStartDate ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
+				<th>
+					<button on:click={() => sortTable('EndDate')}>
+						End Date {isSortingEndDate ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each retrivedEnrollments as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
@@ -151,10 +199,14 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
-		<Paginator
-			bind:settings={$dataTableStore.pagination}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
 		/>
-	{/if}
 </div>
+

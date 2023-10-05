@@ -3,13 +3,14 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import Icon from '@iconify/svelte';
-	import { Paginator, createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings} from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
+	import { browser } from '$app/environment';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	const module = data.module;
+	let modules = data.modules.Items;
 
 	const userId = $page.params.userId;
 	const courseId = $page.params.courseId;
@@ -18,22 +19,78 @@
 
 	const breadCrumbs = [{ name: 'Modules', path: moduleRoute }];
 
-	const dataTableStore = createDataTableStore(
-		// Pass your source data here:
-		module,
-		{
-			// The current search term.
-			search: '',
-			// The current sort key.
-			sort: '',
-			// Paginator component settings.
-			pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-		}
-	);
-	// This automatically handles search, sort, etc when the model updates.
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	// const dataTableStore = createDataTableStore(
+	// 	// Pass your source data here:
+	// 	module,
+	// 	{
+	// 		// The current search term.
+	// 		search: '',
+	// 		// The current sort key.
+	// 		sort: '',
+	// 		// Paginator component settings.
+	// 		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
+	// 	}
+	// );
+	// // This automatically handles search, sort, etc when the model updates.
+	// dataTableStore.subscribe((model) => dataTableHandler(model));
 
-	dataTableStore.updateSource(module);
+	// dataTableStore.updateSource(module);
+	let name = undefined;
+	let sortBy = 'Name';
+	let sortOrder = 'ascending';
+	let itemsPerPage = 10;
+	let offset = 0;
+	let totalModuleCount = data.modules.TotalCount;
+	let isSortingName = false;
+	let items = 10;
+
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: totalModuleCount,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
+
+	async function searchCourseModule(model) {
+		let url = `/api/server/modules/search?`;
+		if (sortOrder) url += `sortOrder=${sortOrder}`;
+		else url += `sortOrder=ascending`;
+
+		if (sortBy) url += `&sortBy=${sortBy}`;
+		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
+		if (offset) url += `&pageIndex=${offset}`;
+		if (name) url += `&name=${name}`;
+		const res = await fetch(url, {
+			method: 'GET',
+			headers: { 'content-type': 'application/json' }
+		});
+		const response = await res.json();
+		modules = response.map((item, index) => ({ ...item, index: index + 1 }));
+	}
+
+	$: retrivedCourseModule = modules.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+
+	$: if (browser)
+	searchCourseModule({
+			name: name,
+			itemsPerPage: itemsPerPage,
+			pageIndex: offset,
+			sortOrder: sortOrder,
+			sortBy: sortBy
+		});
+
+	function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
 
 	const handleModuleDelete = async (e, id) => {
 		const moduleId = id;
@@ -74,7 +131,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row, rowIndex}
+			{#each retrivedCourseModule as row, rowIndex}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td>{rowIndex + 1}</td>
 					<td>{row.Name}</td>
@@ -113,10 +170,13 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
-		<Paginator
-			bind:settings={$dataTableStore.pagination}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
 		/>
-	{/if}
 </div>

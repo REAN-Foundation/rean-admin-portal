@@ -23,7 +23,7 @@
 	let downloads = data.appDownloadCount;
 
 	let labels = [
-		'Downloads',
+		// 'Downloads',
 		'Onboarded',
 		'Not-Deleted ',
 		'Users With Active Session',
@@ -32,7 +32,7 @@
 
 	let funnelChartData;
 	$: funnelChartData = [
-		downloads,
+		// downloads,
 		totalUsers.Count,
 		nonDeletedUsers.Count,
 		activeUsers.Count,
@@ -115,10 +115,10 @@
 			<dt class="truncate text-md font-normal text-primary-500 dark:text-primary-100">{data.OSType}</dt>
 			<dd class="mt-1 flex items-baseline pb-6 sm:pb-7">
 				<div class="text-5xl  font-semibold text-primary-500 dark:text-primary-100">{data.count}</div>
-					<div class="ml-2 flex items-baseline text-md font-normal text-primary-500 dark:text-primary-100">
+					<!-- <div class="ml-2 flex items-baseline text-md font-normal text-primary-500 dark:text-primary-100">
 				{((data.count / downloads) * 100).toFixed(2)}
 					<div class="text-xs">%</div>
-				</div>
+				</div> -->
 			</dd>
 		</div>
 		{/each}
@@ -165,37 +165,37 @@
 	<div
 		class="mt-5 flex overflow-x-auto rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:p-6 w-1/2 h-auto"
 	>
-		<div class="pb-4 w-2/3 gap-6 justify-center ">
+		<div class="pb-4 w-1/2 gap-6 justify-center ">
 			<h4 class="text-center mb-2 p-2 font-semibold justify-center text-primary-500 dark:text-primary-100">App Users</h4>
 			<div>
 				<Funnel {labels} dataSource={funnelChartData} />
 			</div>
 		</div>
-		<div class="mt-10">
-			<div class="flex  items-center gap-4 ">
+		<div class="mt-10 px-4 w-1/2">
+			<!-- <div class="flex  items-center gap-4 ">
 				<div class="h-3 w-3 mt-1 border bg-primary-700" />
 				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">Downloads</div>
 				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">{downloads}</div>
-			</div>
-			<div class="flex  gap-4">
+			</div> -->
+			<div class="flex gap-4 w-full py-1">
 				<div class="h-3 w-3 mt-1 border bg-primary-500" />
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">Onboarded Users</div>
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">{totalUsers.Count}</div>
+				<div class="text-sm w-2/3 font-normal text-primary-500 dark:text-primary-100">Onboarded Users</div>
+				<div class="text-sm w-1/3 font-normal text-primary-500 dark:text-primary-100">{totalUsers.Count}</div>
 			</div>
-			<div class="flex  gap-4">
+			<div class="flex gap-4 w-full py-1">
 				<div class="h-3 w-3 mt-1 border bg-secondary-500" />
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">Not Deleted Users</div>
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">{nonDeletedUsers.Count}</div>
+				<div class="text-sm w-2/3 font-normal text-primary-500 dark:text-primary-100">Not Deleted Users</div>
+				<div class="text-sm w-1/3 font-normal text-primary-500 dark:text-primary-100">{nonDeletedUsers.Count}</div>
 			</div>
-			<div class="flex  gap-4">
+			<div class="flex gap-4 w-full py-1">
 				<div class="h-3 w-3 mt-1 border bg-tertiary-500" />
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">Users With Active Session</div>
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">{activeUsers.Count}</div>
+				<div class="text-sm w-2/3 font-normal text-primary-500 dark:text-primary-100">Users With Active Session</div>
+				<div class="text-sm w-1/3 font-normal text-primary-500 dark:text-primary-100">{activeUsers.Count}</div>
 			</div>
-			<div class="flex  gap-4">
+			<div class="flex gap-4 py-1 w-full">
 				<div class="h-3 w-3 mt-1 border bg-primary-700" />
-				<div class="text-sm  font-normal text-primary-500 dark:text-primary-100">Enrolled Users</div>
-				<div class="text-sm font-normal text-primary-500 dark:text-primary-100">{enrolledUsersData.Count}</div>
+				<div class="text-sm w-2/3 font-normal text-primary-500 dark:text-primary-100">Enrolled Users</div>
+				<div class="text-sm w-1/3 font-normal text-primary-500 dark:text-primary-100">{enrolledUsersData.Count}</div>
 			</div>
 		</div>
 	</div>

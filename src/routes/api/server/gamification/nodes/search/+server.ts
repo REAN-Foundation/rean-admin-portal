@@ -9,11 +9,21 @@ export const GET = async (event: RequestEvent) => {
   const schemaId = searchParams.get('schemaId') ?? undefined;
 	console.log("searchParams",searchParams)
 	const name = searchParams.get('name') ?? undefined;
+	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
+	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
+	const itemsPerPage_ = searchParams.get('itemsPerPage');
+	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 10;
+	const pageIndex_ = searchParams.get('pageIndex');
+	const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;
 	console.log("Name",name);
 	try {
 		const searchParams = {
       schemaId:schemaId,
 			name: name,
+			orderBy: sortBy,
+			order: sortOrder,
+			itemsPerPage: itemsPerPage,
+			pageIndex: pageIndex
 		};
 		const response = await searchNodes(sessionId, searchParams);
 		const items = response.Data.Items;

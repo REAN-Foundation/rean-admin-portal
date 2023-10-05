@@ -5,15 +5,13 @@
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
-	import { Paginator } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
-	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
 	let assessmentTemplates = data.assessmentTemplate.Items;
-
 	const userId = $page.params.userId;
 	const assessmentRoute = `/users/${userId}/assessment-templates`;
 	const editRoute = (id) => `/users/${userId}/assessment-templates/${id}/edit`;
@@ -27,14 +25,14 @@
 	let sortBy = 'Title';
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
-	let offset = 0;
+	let offest = 0;
 	let totalAssessmentTemplatesCount = data.assessmentTemplate.TotalCount;
 	let isSortingTitle = false;
 	let isSortingType = false;
 	let items = 10;
 
 	let paginationSettings = {
-		offset: 0,
+		page: 0,
 		limit: 10,
 		size: totalAssessmentTemplatesCount,
 		amounts: [10, 20, 30, 50]
@@ -46,7 +44,7 @@
 		else url += `sortOrder=ascending`;
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		if (offset) url += `&pageIndex=${offset}`;
+		if (offest) url += `&pageIndex=${offest}`;
 		if (title) url += `&title=${title}`;
 		if (type) url += `&type=${type}`;
 
@@ -59,16 +57,17 @@
 	}
 
 	$: retrivedAssessmentTemplates = assessmentTemplates.slice(
-		paginationSettings.offset * paginationSettings.limit,
-		paginationSettings.offset * paginationSettings.limit + paginationSettings.limit
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
+	$:console.log(retrivedAssessmentTemplates)
 	$: if (browser)
 		searchAssessmentTemplate({
 			title,
 			type,
 			itemsPerPage: itemsPerPage,
-			pageIndex: offset,
+			pageIndex: page,
 			sortOrder: sortOrder,
 			sortBy: sortBy
 		});
@@ -159,7 +158,9 @@
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
 						<a href={viewRoute(row.id)}>
-							{Helper.truncateText(row.Title, 40)}
+							{row.Title !== null && row.Title !== ''
+							? Helper.truncateText(row.Title, 40)
+							: 'Not specified'}
 						</a>
 					</td>
 					<td role="gridcell" aria-colindex={3} tabindex="0">
@@ -205,6 +206,9 @@
 		bind:settings={paginationSettings}
 		on:page={onPageChange}
 		on:amount={onAmountChange}
-		buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
-	/>
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
+		/>
 </div>

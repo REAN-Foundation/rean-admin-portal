@@ -5,7 +5,7 @@
 	import SelectedItems from '$lib/components/drag-and-drop/selected-courses-drag-drop.svelte';
 	import { selectedItems } from '$lib/store/general.store';
 	import Icon from '@iconify/svelte';
-	import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
+	// import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types'
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,9 @@
 		}
 	];
 
-	const dataTableStore = createDataTableStore(eventTypes, {
-		search: ''
-	});
+	// const dataTableStore = createDataTableStore(eventTypes, {
+	// 	search: ''
+	// });
 
 </script>
 
@@ -121,14 +121,14 @@
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Event Types</td>
 				<td>
-					<input
+					<!-- <input
 						class="input mb-3"
 						bind:value={$dataTableStore.search}
 						type="search"
 						placeholder="Search course here..."
-					/>
+					/> -->
 					<div class="mb-4 mt-1">
-						<ItemsDragDrop title='Available event types' items={$dataTableStore.filtered} />
+						<ItemsDragDrop title='Available event types' items={eventTypes} />
 					</div>
 					<div>
 						<SelectedItems title='Add event types to schema' sletectItems={eventType} />

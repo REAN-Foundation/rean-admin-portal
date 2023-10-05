@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getAppDownloadsData,
 	getDeviceDetailWiseUsers,
-	getEnrollmetUsers,
+	// getEnrollmetUsers,
 	getOverallUsers,
 	getYears
 } from '$routes/api/services/statistics';

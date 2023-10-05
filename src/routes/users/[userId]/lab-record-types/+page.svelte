@@ -5,12 +5,7 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import {
-		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
-	} from '@skeletonlabs/skeleton';
+		Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,10 +15,10 @@
 	let index = Number;
 	labRecordTypes = labRecordTypes.map((item, index) => ({ ...item, index: index + 1 }));
 
-	const dataTableStore = createDataTableStore(labRecordTypes, {
-		search: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
+	// const dataTableStore = createDataTableStore(labRecordTypes, {
+	// 	search: '',
+	// 	pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
+	// });
 
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/lab-record-types/create`;
@@ -38,7 +33,12 @@
 		}
 	];
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	let paginationSettings = {
+		page: 0,
+		limit: labRecordTypes.length,
+		size: labRecordTypes.length,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
 
 	const handleLabRecordTypeDelete = async (e, id) => {
 		const labRecordTypeId = id;
@@ -66,8 +66,8 @@
 </div>
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid" >
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
 				<th data-sort="TypeName">Type Name</th>
@@ -80,7 +80,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each labRecordTypes as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
@@ -123,10 +123,10 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
+	<div class="invisible">
 		<Paginator
-			bind:settings={$dataTableStore.pagination}
+			bind:settings={paginationSettings}
 			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
 		/>
-	{/if}
+	</div>
 </div>

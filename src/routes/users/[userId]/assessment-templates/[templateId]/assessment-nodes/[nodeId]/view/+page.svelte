@@ -15,7 +15,7 @@
 	let id = data.assessmentNode.id;
 	let nodeType = data.assessmentNode.NodeType;
 	let title = data.assessmentNode.Title;
-	let description = data.assessmentNode.Description !== null ? data.assessmentNode.Description : "Not specified";
+	let description = data.assessmentNode.Description !== null && data.assessmentNode.Description !== "" ? data.assessmentNode.Description : "Not specified";
 	let message = data.assessmentNode.Message !== null ? data.assessmentNode.Message : "Not specified" ;
 	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? null;
 	let queryType = data.assessmentNode.QueryResponseType;
@@ -30,7 +30,7 @@
 	$: resolutionScore;
 
 	if (nodeType === 'Question') {
-		resolutionScore = data.assessmentNode.ScoringCondition.ResolutionScore;
+		resolutionScore = data.assessmentNode.ScoringCondition?.ResolutionScore;
 	}
 
 	scoringApplicableCondition.set(data.templateScoringCondition.ScoringApplicable);

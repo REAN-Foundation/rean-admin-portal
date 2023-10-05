@@ -10,24 +10,24 @@ export const GET = async (event: RequestEvent) => {
 	console.log("searchParams",searchParams)
 	const name = searchParams.get('name') ?? undefined;
 	console.log("Name",name);
-	// const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
-	// const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
-	// const itemsPerPage_ = searchParams.get('pageIndex');
-	// const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 10;
-	// const pageIndex_ = searchParams.get('pageIndex');
-	// const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;
+	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
+	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
+	const itemsPerPage_ = searchParams.get('itemsPerPage');
+	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 10;
+	const pageIndex_ = searchParams.get('pageIndex');
+	const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;
 
 	try {
 		const searchParams = {
 			name: name,
-			// orderBy: sortBy,
-			// order: sortOrder,
-			// itemsPerPage: itemsPerPage,
-			// pageIndex: pageIndex
+			orderBy: sortBy,
+			order: sortOrder,
+			itemsPerPage: itemsPerPage,
+			pageIndex: pageIndex
 		};
 		const response = await searchEventTypes(sessionId, searchParams);
 		const items = response.Data.Items;
-console.log("items",items)
+		console.log("items",items)
 		return new Response(JSON.stringify(items));
 	} catch (err) {
 		console.error(`Error retriving event types: ${err.message}`);

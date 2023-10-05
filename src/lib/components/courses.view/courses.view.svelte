@@ -2,13 +2,16 @@
 	import CollapsibleSection from '$lib/components/courses.view/collapsible.section.svelte';
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import Icon from '@iconify/svelte';
-	import { Paginator, createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher } from 'svelte';
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let userId = undefined;
 	export let courses = [];
+	export let itemsPerPage;
+	export let toatalCourseCount;
+	let items = 10;
 
 	courses = courses.map((item, index) => ({ ...item, index: index + 1 }));
 	let addModuleRoute = (courseId) => `/users/${userId}/courses/${courseId}/modules/create`;
@@ -25,12 +28,23 @@
 	let viewContentRoute = (courseId, moduleId, contentId) =>
 		`/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${contentId}/edit`;
 
-	const dataTableStore = createDataTableStore(courses, {
-		search: '',
-		sort: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: toatalCourseCount,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
+
+	function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
+
 	const dispatch = createEventDispatcher();
 
 	const handleContentDelete = async (id) => dispatch('onContentDeleteClick', { contentId: id });
@@ -47,7 +61,7 @@
 >
 	<div class="p-4 font-bold variant-soft-secondary">Courses</div>
 	<section class="bg-white dark:bg-inherit overflow-auto">
-		{#each $dataTableStore.filtered as course}
+		{#each courses as course}
 			<CollapsibleSection
 				headerText="{course.index}. {course.Name}"
 				itemsCount="Modules ({course.Modules.length})"
@@ -145,10 +159,13 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
-		<Paginator
-			bind:settings={$dataTableStore.pagination}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
 		/>
-	{/if}
 </div>

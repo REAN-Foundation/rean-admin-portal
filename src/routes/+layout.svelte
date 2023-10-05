@@ -1,15 +1,15 @@
 <script lang="ts">
-	import '@skeletonlabs/skeleton/styles/all.css';
 	import { beforeNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { initFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
-	import '../theme.css';
 	import '../app.postcss';
+	import { initializeStores } from '@skeletonlabs/skeleton';
 
 	//////////////////////////////////////////////////////////////////////////////
 	
 	const flash = initFlash(page);
+	initializeStores();
 	beforeNavigate((nav) => {
 		if ($flash && nav.from?.url.toString() != nav.to?.url.toString()) {
 			$flash = undefined;

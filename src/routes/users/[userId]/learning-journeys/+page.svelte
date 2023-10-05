@@ -7,8 +7,7 @@
 	import Icon from '@iconify/svelte';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-	import type { PaginationSettings } from '@skeletonlabs/skeleton/components/Paginator/types';
-	import { Paginator } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +34,7 @@
 	let items = 10;
 
 	let paginationSettings = {
-		offset: 0,
+		page: 0,
 		limit: 10,
 		size: totalLearningJourneysCount,
 		amounts: [10, 20, 30, 50]
@@ -61,8 +60,8 @@
 	}
 
 	$: retrivedLearningJourneys = learningPaths.slice(
-		paginationSettings.offset * paginationSettings.limit,
-		paginationSettings.offset * paginationSettings.limit + paginationSettings.limit
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
 
 	$: if (browser)
@@ -209,6 +208,9 @@
 		bind:settings={paginationSettings}
 		on:page={onPageChange}
 		on:amount={onAmountChange}
-		buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
-	/>
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
+		/>
 </div>

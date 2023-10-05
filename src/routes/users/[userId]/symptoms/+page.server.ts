@@ -14,6 +14,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
+
+		const symptomsCount = response.Data.SymptomTypes.TotalCount;
 		const symptoms = response.Data.SymptomTypes.Items;
 
 		for (const symptom of symptoms) {
@@ -26,6 +28,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 			}
 		}
 		return {
+			symptomsCount,
 			symptoms,
 			sessionId,
 			message: response.Message

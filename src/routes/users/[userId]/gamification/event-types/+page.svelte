@@ -6,26 +6,14 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import {
-		Paginator,
-		createDataTableStore,
-		dataTableHandler,
-		tableA11y,
-		tableInteraction
+		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
-	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let eventTypes = data.eventTypes;
-	let index = Number;
-	eventTypes = eventTypes.map((item, index) => ({ ...item, index: index + 1 }));
-
-	const dataTableStore = createDataTableStore(eventTypes, {
-		search: '',
-		pagination: { offset: 0, limit: 10, size: 0, amounts: [10, 20, 30, 50] }
-	});
+	let eventTypes = data.eventTypes.Items;
 
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/gamification/event-types/create`;
@@ -36,19 +24,29 @@
 	const breadCrumbs = [{ name: 'Event-Types', path: eventTypeRoute }];
 
 	let name = undefined;
-	let sortBy = 'CreatedAt';
+	let sortBy = 'Name';
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
-	let pageIndex = 0;
+	let offset = 0;
+	let totalEventTypesCount = data.eventTypes.TotalCount;
+	let isSortingName = false;
+	let items = 10;
+
+	let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: totalEventTypesCount,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
 
 	async function searchEventType(model) {
 		let url = `/api/server/gamification/event-types/search?`;
-		// if (sortOrder) url += `sortOrder=${sortOrder}`;
-		// else url += `sortOrder=ascending`;
+		if (sortOrder) url += `sortOrder=${sortOrder}`;
+		else url += `sortOrder=ascending`;
 
-		// if (sortBy) url += `&sortBy=${sortBy}`;
-		// if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		// if (pageIndex) url += `&pageIndex=${pageIndex}`;
+		if (sortBy) url += `&sortBy=${sortBy}`;
+		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
+		if (offset) url += `&pageIndex=${offset}`;
 		if (name) url += `&name=${name}`;
 		const res = await fetch(url, {
 			method: 'GET',
@@ -58,12 +56,42 @@
 		const response = await res.json();
 		eventTypes = response.map((item, index) => ({ ...item, index: index + 1 }));
 		console.log("eventTypes",eventTypes)
-		dataTableStore.updateSource(eventTypes);
 	}
 
-	$: if (browser) searchEventType({name: name });
+	$: retrivedEventTypes = eventTypes.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
 
-	dataTableStore.subscribe((model) => dataTableHandler(model));
+	$: if (browser)
+		searchEventType({
+			name: name,
+			itemsPerPage: itemsPerPage,
+			pageIndex: offset,
+			sortOrder: sortOrder,
+			sortBy: sortBy
+	});
+
+	function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
+
+	function sortTable(columnName) {
+		isSortingName = false;
+		sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
+		if (columnName === 'Name') {
+			isSortingName = true;
+		} else if (columnName === '') {
+
+		}
+		sortBy = columnName;
+	}
 
 	const handleEventDelete = async (e, id) => {
 		const eventTypeId = id;
@@ -98,18 +126,22 @@
 </div>
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
-	<table class="table" role="grid" use:tableInteraction use:tableA11y>
-		<thead on:click={(e) => dataTableStore.sort(e)} on:keypress class="!variant-soft-secondary">
+	<table class="table" role="grid">
+		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
-				<th data-sort="Name">Name</th>
+				<th>
+					<button on:click={() => sortTable('Name')}>
+						Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					</button>
+				</th>
 				<th>Description</th>
 				<th />
 				<th />
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#each $dataTableStore.filtered as row}
+			{#each retrivedEventTypes as row}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 					<td role="gridcell" aria-colindex={2} tabindex="0">
@@ -147,10 +179,13 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	{#if $dataTableStore.pagination}
-		<Paginator
-			bind:settings={$dataTableStore.pagination}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
 		/>
-	{/if}
 </div>
