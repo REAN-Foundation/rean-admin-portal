@@ -15,12 +15,16 @@ export const load: LayoutServerLoad = async (event) => {
 
 	const sessionUser = {
 		sessionId: session.sessionId,
-		userId: session.userId,
-		email: session.email,
-		username: session.username,
-		fullName: session.fullName,
+        tenantId : session.tenantId,
+        tenantCode : session.tenantCode,
+        tenantName : session.tenantName,
+		userId   : session.userId,
+		email    : session.email,
+		username : session.username,
+		fullName : session.fullName,
 		firstName: session.firstName,
-		roleId: session.roleId
+		roleId   : session.roleId,
+        roleName : session.roleName
 	};
 	return sessionUser;
 };

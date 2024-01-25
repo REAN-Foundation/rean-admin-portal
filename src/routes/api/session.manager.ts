@@ -1,17 +1,7 @@
-export interface Session {
-	sessionId?: string;
-	accessToken?: string;
-	userId?: string;
-	email?: string;
-	username?: string;
-	profileImageUrl?: string;
-	fullName?: string;
-	firstName?: string;
-	roleId?: string;
-	expiryDate?: Date;
-}
+import type { Session } from './session';
 
 export class SessionManager {
+
 	static _sessions = [];
 
 	static addSession = (sessionId: string, session: Session): Promise<Session | null> => {
@@ -60,27 +50,34 @@ export class SessionManager {
 		return Promise.resolve(session);
 	};
 
-	static constructSession = async (user, token: string, expiryDate: Date): Promise<Session> => {
+	static constructSession = async (user, accessToken: string, expiryDate: Date, refreshToken?: string): Promise<Session> => {
 		console.log(`Constructing session!`);
 		console.log(`User: ${JSON.stringify(user, null, 2)}`);
 		// console.log(`Token: ${token}`);
 		// console.log(`Expiry date: ${expiryDate.toISOString()}`);
 
-		if (!user || !token || !expiryDate) {
+		if (!user || !accessToken || !expiryDate) {
 			return null;
 		}
 		const session: Session = {
-			accessToken: token,
-			sessionId: user.SessionId,
-			userId: user.UserId,
-			email: user.Email,
-			username: user.UserName,
-			profileImageUrl: user.profileImageUrl ?? null,
-			fullName: user.fullName ?? null,
-			firstName: user.firstName ?? null,
-			roleId: user.CurrentRoleId,
-			expiryDate: expiryDate
+			sessionId      : user.SessionId,
+			tenantId       : user.TenantId,
+            tenantCode     : user.TenantCode,
+			tenantName     : user.TenantName,
+			accessToken    : accessToken,
+			refreshToken   : refreshToken,
+			userId         : user.id,
+			email          : user.Person.Email,
+			username       : user.UserName,
+			profileImageUrl: user.Person.ProfileImageUrl ?? null,
+			fullName       : user.Person.DisplayName ?? null,
+			firstName      : user.Person.FirstName ?? null,
+			roleId         : user.Role.id,
+			roleName       : user.Role.RoleName,
+			expiryDate     : expiryDate,
 		};
+        console.log(`Session: ${JSON.stringify(session, null, 2)}`);
+
 		return Promise.resolve(session);
 	};
 }

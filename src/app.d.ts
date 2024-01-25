@@ -5,6 +5,9 @@ declare namespace App {
   interface Locals {
     sessionUser: {
       sessionId      ?: string;
+      tenantId       ?: string;
+      tenantCode     ?: string;
+      tenantName     ?: string;
       userId         ?: string;
       email          ?: string;
       username       ?: string;
@@ -12,6 +15,7 @@ declare namespace App {
       fullName       ?: string;
       firstName      ?: string;
       roleId         ?: string;
+      roleName       ?: string;
     };
 
     // interface PageData {}

@@ -7,21 +7,23 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return await resolve(event);
 	}
 
-	//console.log(`session id received - ${sessionId}`);
-
 	let sessionUser = null;
 	const session = await SessionManager.getSession(sessionId);
 	if (session) {
 		console.log(`session received`);
 		sessionUser = {
-			sessionId: session.sessionId,
-			userId: session.userId,
-			email: session.email,
-			username: session.username,
+			sessionId      : session.sessionId,
+            tenantId       : session.tenantId,
+            tenantCode     : session.tenantCode,
+            tenantName     : session.tenantName,
+			userId         : session.userId,
+			email          : session.email,
+			username       : session.username,
 			profileImageUrl: session.profileImageUrl,
-			fullName: session.fullName,
-			firstName: session.firstName,
-			roleId: session.roleId
+			fullName       : session.fullName,
+			firstName      : session.firstName,
+			roleId         : session.roleId,
+            roleName       : session.roleName
 		};
 	}
 

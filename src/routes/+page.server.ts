@@ -53,6 +53,7 @@ export const actions = {
 		const user = response.Data.User;
 		user.SessionId = response.Data.SessionId;
 		const accessToken = response.Data.AccessToken;
+        const refreshToken = response.Data.RefreshToken;
 		const expiryDate = new Date(response.Data.SessionValidTill);
 		const sessionId = response.Data.SessionId;
 		const userId: string = response.Data.User.id;
@@ -61,7 +62,7 @@ export const actions = {
 			throw redirect(303, `/`, errorMessage(`Unsupported user role!`), event);
 		}
 
-		const session = await SessionManager.constructSession(user, accessToken, expiryDate);
+		const session = await SessionManager.constructSession(user, accessToken, expiryDate, refreshToken);
 		if (!session) {
 			console.log(`Session cannot be constructed!`);
 			throw redirect(303, `/`, errorMessage(`Use login session cannot be created!`), event);

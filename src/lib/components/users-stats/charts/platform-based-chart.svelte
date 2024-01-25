@@ -16,9 +16,9 @@
   const tickColorDark = getTickColorDark();
 
 	export let lables: string[] = [];
-	export let totalUsersData: number[] = [];
-	export let androidUsersData: number[] = [];
-	export let iOSUsersData: number[] = [];
+	export let totalUsers: number[] = [];
+	export let androidUsers: number[] = [];
+	export let iOSUsers: number[] = [];
 	let barChart;
 	let ctx;
 
@@ -31,19 +31,19 @@
 				datasets: [
 					{
 						label: 'Total users',
-						data: totalUsersData,
+						data: totalUsers,
 						borderColor: 'green',
 						fill: false
 					},
 					{
 						label: 'Android users',
-						data: androidUsersData,
+						data: androidUsers,
 						borderColor: 'blue',
 						fill: false
 					},
 					{
 						label: 'iOS users',
-						data: iOSUsersData,
+						data: iOSUsers,
 						borderColor: 'purple',
 						fill: false
 					}
