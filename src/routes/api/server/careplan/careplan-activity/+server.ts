@@ -15,9 +15,12 @@ export const DELETE = async (event: RequestEvent) => {
             data.sessionId,
             data.careplanActivityId,
 		);
-		return new Response(response.message);
+		return new Response(JSON.stringify(response));
 	} catch (err) {
 		console.error(`Error deleting careplan activity: ${err.message}`);
-		return new Response(err.message);
+		return new Response(JSON.stringify({
+            Status: "failure",
+            Message: `Error deleting careplan activity: ${JSON.parse(err.message)}`
+        }));
 	}
 };

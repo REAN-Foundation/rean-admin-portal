@@ -5,7 +5,7 @@ import { error, type RequestEvent } from '@sveltejs/kit';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
-import { SessionManager } from './api/session.manager';
+import { SessionManager } from './api/sessions/session.manager';
 import { login } from './api/services/user';
 import { getUserRoles } from './api/services/types';
 
@@ -43,25 +43,23 @@ export const actions = {
 			throw error(400, `Username or password are not valid!`);
 		}
 		console.log(`data....... = ${JSON.stringify(request, null, 2)}`);
-		const response = await login(username, password, loginRoleId ?? 1);
+		// const response = await login(username, password, loginRoleId ?? 1);
+        const response = await login(username, password);
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			console.log(response.Message);
 			//Login error, so redirect to the sign-in page
-			throw redirect(303, '/sign-in/', errorMessage(response.Message), event);
+			throw redirect(303, '/', errorMessage(response.Message), event);
 		}
 		console.log('response ....', response);
 		const user = response.Data.User;
 		user.SessionId = response.Data.SessionId;
 		const accessToken = response.Data.AccessToken;
+        const refreshToken = response.Data.RefreshToken;
 		const expiryDate = new Date(response.Data.SessionValidTill);
 		const sessionId = response.Data.SessionId;
 		const userId: string = response.Data.User.id;
 
-		if (user.Role.RoleName !== 'System admin') {
-			throw redirect(303, `/`, errorMessage(`Unsupported user role!`), event);
-		}
-
-		const session = await SessionManager.constructSession(user, accessToken, expiryDate);
+			const session = await SessionManager.constructSession(user, accessToken, expiryDate, refreshToken);
 		if (!session) {
 			console.log(`Session cannot be constructed!`);
 			throw redirect(303, `/`, errorMessage(`Use login session cannot be created!`), event);
@@ -71,7 +69,7 @@ export const actions = {
 		console.log(JSON.stringify(userSession, null, 2));
 
 		CookieUtils.setCookieHeader(event, 'sessionId', sessionId);
-
+      
 		throw redirect(303, `/users/${userId}/home`, successMessage(`Login successful!`), event);
 	}
 };

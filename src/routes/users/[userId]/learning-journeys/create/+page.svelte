@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import CoursesDragDrop from '$lib/components/drag-and-drop/courses-drag-drop.svelte';
-	import SelectedCoursesDragDrop from '$lib/components/drag-and-drop/selected-courses-drag-drop.svelte';
+	import CoursesDragDrop from '$lib/components/drag.and.drop/courses.drag.drop.svelte';
+	import SelectedCoursesDragDrop from '$lib/components/drag.and.drop/selected.courses.drag.drop.svelte';
 	import { selectedItems } from '$lib/store/general.store';
 	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';

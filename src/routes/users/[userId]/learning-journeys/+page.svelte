@@ -8,12 +8,13 @@
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let learningPaths = data.learningPaths.Items;
-
+	$: learningPaths = data.learningPaths.Items;
+    let retrivedLearningJourneys;
 	const userId = $page.params.userId;
 	const learningJourneyRoute = `/users/${userId}/learning-journeys`;
 	const editRoute = (id) => `/users/${userId}/learning-journeys/${id}/edit`;
@@ -28,7 +29,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offset = 0;
-	let totalLearningJourneysCount = data.learningPaths.TotalCount;
+	let totalLearningJourneysCount = data.learningPaths.Items.length;
 	let isSortingName = false;
 	let isSortingPreferenceWeight = false;
 	let items = 10;
@@ -48,8 +49,8 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (name) url += `&name=${name}`;
-		if (preferenceWeight) url += `&preferenceWeight=${preferenceWeight}`;
+		if (name) url += `&name=${model.name}`;
+		if (preferenceWeight) url += `&preferenceWeight=${model.preferenceWeight}`;
 
 		const res = await fetch(url, {
 			method: 'GET',
@@ -59,11 +60,14 @@
 		learningPaths = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedLearningJourneys = learningPaths.slice(
+	$: {
+        learningPaths = learningPaths.map((item, index) => ({ ...item, index: index + 1 }));
+		paginationSettings.size = data.learningPaths.Items.length;
+        retrivedLearningJourneys = learningPaths.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchLearningJourney({
 			name: name,
@@ -102,7 +106,7 @@
 			sessionId: data.sessionId,
 			symptomId
 		});
-		window.location.href = learningJourneyRoute;
+		invalidate('app:learning-journeys');
 	};
 
 	async function Delete(model) {

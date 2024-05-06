@@ -1,6 +1,6 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { getCareplanById, searchCareplanCategories } from '$routes/api/services/careplan/careplans';
 import { createCarePlanActivity, searchCarePlanActivities } from '$routes/api/services/careplan/scheduling';
 import { getAssetsType } from '$routes/api/services/careplan/assets/asset';
@@ -11,10 +11,10 @@ import { zfd } from 'zod-form-data';
 
 /////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
   const sessionId = event.cookies.get('sessionId');
   console.log(`session id received - ${sessionId}`);
-
+  event.depends('app:careplan-careplans-scheduling')
   try {
     const careplanId = event.params.careplanId;
     const searchParams = {

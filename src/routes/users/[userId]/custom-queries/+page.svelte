@@ -10,12 +10,13 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let queries = data.queries.Items;
-
+	$: queries = data.queries.Items;
+    let retrivedCustomQueries;
 	const userId = $page.params.userId;
 	const queryRoute = `/users/${userId}/custom-queries`;
 	const editRoute = (id) => `/users/${userId}/custom-queries/${id}/edit`;
@@ -59,11 +60,15 @@
 		console.log("queries",queries)
 	}
 
-	$: retrivedCustomQueries = queries.slice(
+	$:{
+        queries = queries.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.queries.TotalCount;
+        retrivedCustomQueries = queries.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-	
+    } 
+   	
 	$: if (browser)
 		searchQuery({ 
 			name: name,
@@ -98,7 +103,7 @@
 			sessionId: data.sessionId,
 	    queryId
 		});
-		window.location.href = queryRoute;
+		invalidate('app:custom-query');
 	};
 
 	async function Delete(model) {

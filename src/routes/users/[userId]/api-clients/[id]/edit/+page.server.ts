@@ -31,7 +31,10 @@ const updateApiClientSchema = z.object({
 	clientName: z.string().min(3).max(64),
 	phone: z.string().min(10).max(64),
 	email: z.string().email().min(10).max(64),
-	password: z.string().min(6).max(15)
+	password: z
+    .union([z.string().min(6).max(15), z.string().length(0)])
+    .optional()
+    .transform(e => e === "" ? undefined : e),
 });
 
 export const actions = {
@@ -42,7 +45,7 @@ export const actions = {
 		const apiClientId = event.params.id;
 		const formData = Object.fromEntries(await request.formData());
 		type ApiClientSchema = z.infer<typeof updateApiClientSchema>;
-		let result: ApiClientSchema = {};
+		let result: ApiClientSchema;
 		try {
 			result = updateApiClientSchema.parse(formData);
 			console.log('result-----------', result);

@@ -9,12 +9,13 @@
 		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let eventTypes = data.eventTypes.Items;
-
+	$: eventTypes = data.eventTypes.Items;
+    let retrivedEventTypes;
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/gamification/event-types/create`;
 	const editRoute = (id) => `/users/${userId}/gamification/event-types/${id}/edit`;
@@ -47,7 +48,7 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (name) url += `&name=${name}`;
+		if (name) url += `&name=${model.name}`;
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
@@ -58,11 +59,14 @@
 		console.log("eventTypes",eventTypes)
 	}
 
-	$: retrivedEventTypes = eventTypes.slice(
+	$: {
+        eventTypes = eventTypes.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.eventTypes.TotalCount;
+        retrivedEventTypes = eventTypes.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchEventType({
 			name: name,
@@ -100,7 +104,7 @@
 			sessionId: data.sessionId,
 			eventTypeId: eventTypeId
 		});
-		window.location.href = eventTypeRoute;
+		invalidate('app:gamification-event-types');
 	};
 
 	async function Delete(model) {

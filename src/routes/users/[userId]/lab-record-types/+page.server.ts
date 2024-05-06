@@ -9,23 +9,15 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
 	const sessionId = cookies.get('sessionId');
 	depends('app:labRecordType')
 	let labRecordTypes=[]
-	try {
-		const response = await searchLabRecordTypes(sessionId);
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		labRecordTypes = response.Data.LabRecordTypes;
-		return {
-			labRecordTypes,
-			sessionId,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving Lab record types: ${error.message}`);
-		return {
-			labRecordTypes,
-			sessionId,
-			message: error.message
-		};
-	}
+    const response = await searchLabRecordTypes(sessionId);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    labRecordTypes = response.Data.LabRecordTypes;
+    return {
+        labRecordTypes,
+        sessionId,
+        message: response.Message
+    };
+		
 };

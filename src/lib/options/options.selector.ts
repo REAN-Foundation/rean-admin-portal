@@ -1,6 +1,7 @@
 import { SystemTypes } from '../system.types';
 import { Options as AHAFeatureOptions } from './aha.options';
 import { Options as REANFeatureOptions } from './rean.options';
+import { Options as GMUFeatureOptions } from './gmu.options';
 import { SYSTEM_ID } from '../constants';
 
 //////////////////////////////////////////////////////////////////////////////
@@ -12,6 +13,8 @@ export const getFeatureOptions = () => {
             return REANFeatureOptions;
         case SystemTypes.AHA:
             return AHAFeatureOptions;
+        case SystemTypes.GMU:
+            return GMUFeatureOptions;
         default:
             return REANFeatureOptions;
     }

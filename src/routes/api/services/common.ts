@@ -1,6 +1,6 @@
 import { API_CLIENT_INTERNAL_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
-import { SessionManager } from '../session.manager';
+import { SessionManager } from '../sessions/session.manager';
 import chalk from 'chalk';
 
 /////////////////////////////////////////////////////////////////////////
@@ -8,18 +8,14 @@ import chalk from 'chalk';
 export const get_ = async (
 	sessionId: string,
 	url: string,
-	authorizeUser = false,
-	authorizeClient = true,
-	apiKey = API_CLIENT_INTERNAL_KEY
+	authorizeUser = false
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	// console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	if (authorizeClient) {
-		headers['x-api-key'] = apiKey;
-	}
+	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -46,17 +42,14 @@ export const post_ = async (
 	sessionId: string,
 	url: string,
 	bodyObj: unknown,
-	authorizeUser = false,
-	authorizeClient = true,
-	apiKey = API_CLIENT_INTERNAL_KEY
+	authorizeUser = false
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	if (authorizeClient) {
-		headers['x-api-key'] = apiKey;
-	}
+	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -82,17 +75,13 @@ export const put_ = async (
 	sessionId: string,
 	url: string,
 	bodyObj: unknown,
-	authorizeUser = false,
-	authorizeClient = true,
-	apiKey = API_CLIENT_INTERNAL_KEY
+	authorizeUser = false
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	if (authorizeClient) {
-		headers['x-api-key'] = apiKey;
-	}
+	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -114,17 +103,13 @@ export const put_ = async (
 export const delete_ = async (
 	sessionId: string,
 	url: string,
-	authorizeUser = false,
-	authorizeClient = true,
-	apiKey = API_CLIENT_INTERNAL_KEY
+	authorizeUser = false
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	if (authorizeClient) {
-		headers['x-api-key'] = apiKey;
-	}
+	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}

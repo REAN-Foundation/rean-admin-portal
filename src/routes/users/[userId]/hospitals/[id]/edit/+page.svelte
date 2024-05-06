@@ -46,6 +46,12 @@
         { name: 'Hospitals', path: hospitalsRoute },
         { name: 'Edit', path: editRoute }
     ];
+
+    function handleHealthSystemChange(event) {
+        healthSystemId = event.target.value;
+  }
+
+  $: console.log('HealthSystem Id ', healthSystemId);
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -94,6 +100,8 @@
                 <td>Health System *</td>
                 <td>
                     <select
+                        on:change={handleHealthSystemChange}
+                        disabled
                         name="healthSystemId"
                         class="select select-primary w-full "
                     >
@@ -102,6 +110,7 @@
                             <option value={healthSystem.id}>{healthSystem.Name}</option>
                         {/each}
                     </select>
+                    <input type="text" hidden bind:value={healthSystemId}>
                 </td>
             </tr>
             <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

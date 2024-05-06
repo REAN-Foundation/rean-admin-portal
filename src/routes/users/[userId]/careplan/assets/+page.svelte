@@ -8,13 +8,15 @@
 	import { Helper } from '$lib/utils/helper';
 	import { browser } from '$app/environment';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
+    import { invalidate } from '$app/navigation';
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
 	const userId = $page.params.userId;
 	const assetType = data.assetTypes;
-	let asset = data.assets.Items;
+    let retrivedAssets;
+	$: asset = data.assets.Items;
 	let types = assetType.Data.AssetTypes;
 	// let asset = data.assets;
 	let selectedAssetType = 'Action plan';
@@ -30,7 +32,7 @@
 	let isSortingAssetCode = false;
 	let items = 10;
 
-	let paginationSettings = {
+	$: paginationSettings = {
 		page: 0,
 		limit: 10,
 		size: totalAssetsCount,
@@ -73,8 +75,8 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (assetName) url += `&assetName=${assetName}`;
-		if (assetCode) url += `&assetCode=${assetCode}`;
+		if (assetName) url += `&assetName=${model.assetName}`;
+		if (assetCode) url += `&assetCode=${model.assetCode}`;
 		console.log('url', url);
 		const res = await fetch(url, {
 			method: 'GET',
@@ -82,14 +84,18 @@
 		});
 		const response = await res.json();
 		console.log('response', response);
-		asset = response.map((item, index) => ({ ...item, index: index + 1 }));
+        totalAssetsCount = response.TotalCount;
+		asset = response.Items.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedAssets = asset.slice(
+	$: {
+        asset = asset.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = totalAssetsCount;
+        retrivedAssets = asset.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchAssets({
 			selectedAssetType: selectedAssetType,
@@ -129,7 +135,7 @@
 			sessionId: data.sessionId,
 			selectedAssetType
 		});
-	};
+    };
 
 	const assetRoute = () => `/users/${userId}/careplan/assets`;
 	const breadCrumbs = [
@@ -148,7 +154,11 @@
 			selectAsset: selectedAssetRoute,
 			assetId: assetId
 		});
-		window.location.href = assetRoute();
+        invalidate('app:careplan-assets');
+        await searchAssets({
+			sessionId: data.sessionId,
+			selectedAssetType
+		});
 	};
 
 	async function Delete(model) {

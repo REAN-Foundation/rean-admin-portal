@@ -4,14 +4,16 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import Icon from '@iconify/svelte';
-	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
+	import { Paginator, Toast, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
+    import toast from 'svelte-french-toast';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let assessmentNodes = data.assessmentNodes.Items;
-
+	$: assessmentNodes = data.assessmentNodes.Items;
+    let retrivedAssessmentNodes;
 	const userId = $page.params.userId;
 	const templateId = $page.params.templateId;
 	const assessmentRoute = `/users/${userId}/assessment-templates`;
@@ -47,14 +49,14 @@
 
 	async function searchNode(model) {
 		templateId;
-		let url = `/api/server/assessment-nodes/search?templateId=${templateId}&`;
+		let url = `/api/server/assessments/assessment-nodes/search?templateId=${templateId}&`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (title) url += `&title=${title}`;
-		if (nodeType) url += `&nodeType=${nodeType}`;
+		if (title) url += `&title=${model.title}`;
+		if (nodeType) url += `&nodeType=${model.nodeType}`;
 
 		const res = await fetch(url, {
 			method: 'GET',
@@ -64,11 +66,14 @@
 		assessmentNodes = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedAssessmentNodes = assessmentNodes.slice(
+	$: {
+        assessmentNodes = assessmentNodes.map((item, index) => ({ ...item, index: index + 1 }));
+		paginationSettings.size = data.assessmentNodes.TotalCount;
+        retrivedAssessmentNodes = assessmentNodes.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchNode({
 			title: title,
@@ -101,23 +106,33 @@
 		sortBy = columnName;
 	}
 
-	const handleAssessmentNodeDelete = async (e, id) => {
+	const handleAssessmentNodeDelete = async (id) => {
 		const assessmentNodeId = id;
 		console.log('assessmentNodeId', assessmentNodeId);
-		await Delete({
+		const response = await Delete({
 			sessionId: data.sessionId,
 			assessmentTemplateId: templateId,
 			assessmentNodeId
 		});
-		window.location.href = assessmentNodeRoute;
+        if (response.Status === 'success') {
+                toast.success(response.Message)
+                invalidate('app:assessment-nodes');
+            } 
+        else 
+            {
+                toast.error(response.Message)
+                invalidate('app:assessment-nodes');
+            }
+		
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/assessment-nodes`, {
+		const response = await fetch(`/api/server/assessments/assessment-nodes`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
 		});
+        return await response.json();
 	}
 </script>
 
@@ -174,7 +189,7 @@
 							<a href={viewRoute(row.id)}> {row.Title}</a>
 						</td>
 						<td>{row.NodeType}</td>
-						<td>{row.QueryResponseType}</td>
+						<td>{row.QueryResponseType ? row.QueryResponseType : 'N/A'}</td>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
 								<Icon icon="material-symbols:edit-outline" class="text-lg" />
@@ -185,7 +200,6 @@
 								confirmTitle="Delete"
 								cancelTitle="Cancel"
 								let:confirm={confirmThis}
-								on:delete={(e) => handleAssessmentNodeDelete(e, row.id)}
 							>
 								<button
 									on:click|preventDefault={() => confirmThis(handleAssessmentNodeDelete, row.id)}

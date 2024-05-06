@@ -96,7 +96,7 @@
 										<a href={moduleViewRoute(courseId, module.id)}>
 											<div class="flex">
 												<img class="w-6" alt="logo" src="/module.png" />
-												{module.Sequence}-{module.Name}
+												{module.Sequence ? `${module.Sequence}-` : ''}{module.Name}
 											</div>
 										</a>
 									</div>

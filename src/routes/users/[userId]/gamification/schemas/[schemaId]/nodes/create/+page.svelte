@@ -3,8 +3,8 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
-	import KeyValue from '$lib/components/key-value/key-value.svelte';
-	import List from '$lib/components/key-value/list.svelte';
+	import KeyValue from '$lib/components/key.value/key.value.svelte';
+	import List from '$lib/components/key.value/list.svelte';
 	import { items } from '$lib/store/key.value.store';
     import { enhance } from '$app/forms';
 
@@ -137,7 +137,7 @@
 					>
             {#each eventActionTypes as type}
             <option value={type}>{type}</option>
-            {/each}   
+            {/each}
 					</select>
 				</td>
 			</tr>
@@ -157,7 +157,7 @@
 				<td>Input Parameters</td>
         <td></td>
 			</tr>
-   
+
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Record Type*</td>
 				<td>
@@ -181,13 +181,13 @@
 					>
           {#each inputSourceTypes as inputSourceType}
           <option value={inputSourceType}>{inputSourceType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
       {#if selectedEventActionType === 'Extract-Data'}
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td class="align-top">Filters</td>	
+				<td class="align-top">Filters</td>
 					<td>
 						<KeyValue/>
 						<div class="mt-4">
@@ -218,7 +218,7 @@
 					>
           {#each dataActionTypes as dataActionType}
           <option value={dataActionType}>{dataActionType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -232,7 +232,7 @@
 					>
           {#each operandDataTypes as operandDataType}
           <option value={operandDataType}>{operandDataType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -257,7 +257,7 @@
 					>
           {#each operandDataTypes as operandDataType}
           <option value={operandDataType}>{operandDataType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -298,7 +298,7 @@
 					>
           {#each logicalOpratorTypes as logicalOpratorType}
           <option value={logicalOpratorType}>{logicalOpratorType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -346,7 +346,7 @@
 					>
           {#each dataActionTypes as dataActionType}
           <option value={dataActionType}>{dataActionType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -419,7 +419,7 @@
 					>
           {#each outputSourceTypes as outputSourceType}
           <option value={outputSourceType}>{outputSourceType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>

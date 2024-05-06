@@ -9,12 +9,13 @@
 		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let badgeCategories = data.badgeCategories.Items;
-
+	$: badgeCategories = data.badgeCategories.Items;
+    let retrivedBadgeCategories;
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/gamification/badge-categories/create`;
 	const editRoute = (id) => `/users/${userId}/gamification/badge-categories/${id}/edit`;
@@ -47,7 +48,7 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (name) url += `&name=${name}`;
+		if (name) url += `&name=${model.name}`;
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
@@ -56,11 +57,14 @@
 		badgeCategories = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedBadgeCategories = badgeCategories.slice(
+	$: {
+        badgeCategories = badgeCategories.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.badgeCategories.TotalCount;
+        retrivedBadgeCategories = badgeCategories.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchBadgeCategory({
 			name: name,
@@ -98,7 +102,7 @@
 			sessionId: data.sessionId,
 			badgeCategoryId: badgeCategoryId
 		});
-		window.location.href = badgeCategoryRoute;
+        invalidate('app:gamification-badge-categories');
 	};
 
 	async function Delete(model) {

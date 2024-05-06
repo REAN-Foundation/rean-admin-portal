@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import ItemsDragDrop from '$lib/components/drag-and-drop/courses-drag-drop.svelte';
-	import SelectedItems from '$lib/components/drag-and-drop/selected-courses-drag-drop.svelte';
+	import ItemsDragDrop from '$lib/components/drag.and.drop/courses.drag.drop.svelte';
+	import SelectedItems from '$lib/components/drag.and.drop/selected.courses.drag.drop.svelte';
 	import { selectedItems } from '$lib/store/general.store';
 	import Icon from '@iconify/svelte';
 	// import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types'
     import { enhance } from '$app/forms';
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
@@ -101,7 +101,7 @@
 						placeholder="Enter description here..."
 						class="textarea w-full"
 					/>
-			
+
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

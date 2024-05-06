@@ -14,7 +14,9 @@
 	const logoImageSource = getPublicLogoImageSource();
     const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
     const footerLink = getPublicFooterLink();
+    
 	export let data: PageServerData;
+
 	personRolesStore.set(data.roles);
 	LocalStorageUtils.setItem('personRoles', JSON.stringify(data.roles));
 	let personRoles = [],
@@ -53,7 +55,7 @@
 						method="post"
 						action="?/login"
 						class=" shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl"
-						use:enhance
+					
 					>
 						<!-- <input class="hidden" type="number" name="loginRoleId" value={loginRoleId}> -->
 						<div class="hidden">

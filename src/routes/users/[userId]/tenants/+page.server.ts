@@ -1,13 +1,13 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { searchTenants } from '$routes/api/services/tenants';
 
 ////////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
-
+    event.depends('app:tenants');
 	try {
 		const response = await searchTenants(sessionId);
 		if (response.Status === 'failure' || response.HttpCode !== 200) {

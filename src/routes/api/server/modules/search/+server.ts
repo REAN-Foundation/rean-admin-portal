@@ -9,6 +9,8 @@ export const GET = async (event: RequestEvent) => {
 
 	const searchParams: URLSearchParams = event.url.searchParams;
 	const name = searchParams.get('name') ?? undefined;
+    const courseId = searchParams.get('courseId') ?? undefined;
+    const durationInMins = searchParams.get('durationInMins') ?? undefined;
 	const description = searchParams.get('description') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
@@ -20,7 +22,9 @@ export const GET = async (event: RequestEvent) => {
 	try {
 		const searchParams = {
 			name,
-			Description: description,
+            courseId,
+            durationInMins,
+            Description: description,
 			orderBy: sortBy,
 			order: sortOrder,
 			itemsPerPage,
@@ -28,7 +32,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchModules(sessionId, searchParams);
-		const items = response.Data.Items;
+		const items = response.Data.CourseModules.Items;
 		console.log('data==/////', response);
 
 		return new Response(JSON.stringify(items));

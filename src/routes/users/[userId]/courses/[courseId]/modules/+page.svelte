@@ -6,18 +6,29 @@
 	import { Paginator, type PaginationSettings} from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
 	import { browser } from '$app/environment';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let modules = data.modules.Items;
-
+	$: modules = data.modules.Items;
+    let retrivedCourseModule;
 	const userId = $page.params.userId;
 	const courseId = $page.params.courseId;
+    $: console.log('courseId: ' + courseId);
 	const moduleRoute = `/users/${userId}/courses/${courseId}/modules`;
 	const createRoute = `/users/${userId}/courses/${courseId}/modules/create`;
-
-	const breadCrumbs = [{ name: 'Modules', path: moduleRoute }];
+    const courseRoute = `/users/${userId}/courses/${courseId}/view`
+	const breadCrumbs = [
+        {
+            name: 'Courses',
+            path: courseRoute
+        },
+        { 
+            name: 'Modules', 
+            path: moduleRoute 
+        }
+    ];
 
 	// const dataTableStore = createDataTableStore(
 	// 	// Pass your source data here:
@@ -36,6 +47,7 @@
 
 	// dataTableStore.updateSource(module);
 	let name = undefined;
+    let durationInMins = undefined;
 	let sortBy = 'Name';
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
@@ -59,23 +71,30 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (name) url += `&name=${name}`;
+		if (name) url += `&name=${model.name}`;
+        url += `&courseId=${courseId}`;
+        if (durationInMins) url += `&durationInMins=${model.durationInMins}`
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
 		});
 		const response = await res.json();
-		modules = response.map((item, index) => ({ ...item, index: index + 1 }));
+		console.log('response: ' + response);
+        modules = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedCourseModule = modules.slice(
+	$:  {
+        modules = modules.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.modules.TotalCount;
+        retrivedCourseModule = modules.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 	searchCourseModule({
 			name: name,
+            durationInMins: durationInMins,
 			itemsPerPage: itemsPerPage,
 			pageIndex: offset,
 			sortOrder: sortOrder,
@@ -92,13 +111,13 @@
 		items = itemsPerPage;
 	}
 
-	const handleModuleDelete = async (e, id) => {
+	const handleModuleDelete = async (id) => {
 		const moduleId = id;
 		await Delete({
 			sessionId: data.sessionId,
 			moduleId
 		});
-		window.location.href = moduleRoute;
+		invalidate('app:courses-modules');
 	};
 
 	async function Delete(model) {
@@ -113,8 +132,8 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input type="text" placeholder="Search by name" class="input w-auto grow" />
-	<input type="text" placeholder="Search by duration" class="input w-auto grow" />
+	<input type="text" bind:value={name} placeholder="Search by name" class="input w-auto grow" />
+	<input type="number" bind:value={durationInMins} placeholder="Search by duration" class="input w-auto grow" />
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -131,15 +150,23 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
+            {#if retrivedCourseModule.length <= 0 }
+				<tr>
+					<td colspan="6">No records found</td>
+				</tr>
+			{:else}
 			{#each retrivedCourseModule as row, rowIndex}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td>{rowIndex + 1}</td>
-					<td>{row.Name}</td>
-					<td>{row.Description}</td>
-					<td>{row.DurationInMins}</td>
+					<!-- <td>{row.Name}</td> -->
+                    <td>
+                        <a href="/users/{userId}/courses/{courseId}/modules/{row.id}/view">{row.Name} </a>
+                    </td>
+					<td>{row.Description ?? 'Not specified'}</td>
+					<td>{row.DurationInMins ?? 'Not specified'}</td>
 					<td>
 						<a
-							href="/users/${userId}/courses/${courseId}/modules/{row.id}/edit"
+							href= "/users/{userId}/courses/{courseId}/modules/{row.id}/edit"
 							class="btn p-2 -my-1 hover:variant-soft-primary"
 						>
 							<Icon icon="material-symbols:edit-outline" class="text-lg" />
@@ -150,7 +177,6 @@
 							confirmTitle="Delete"
 							cancelTitle="Cancel"
 							let:confirm={confirmThis}
-							on:delete={(e) => handleModuleDelete(e, row.id)}
 						>
 							<button
 								on:click|preventDefault={() => confirmThis(handleModuleDelete, row.id)}
@@ -165,6 +191,7 @@
 					</td>
 				</tr>
 			{/each}
+            {/if}
 		</tbody>
 	</table>
 </div>

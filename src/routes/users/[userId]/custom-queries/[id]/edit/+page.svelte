@@ -67,15 +67,17 @@
 			headers: { 'content-type': 'application/json' }
 		});
 		const res = await response.json();
-		const data = downloadFile(res)
-		if(res.success === true){
-			toast.success(`Query updated successfully, View downloads for data file`)
-			goto(viewRoute);
-		}
-		else
-		{
-			toast.error(`Unable to updated query!`)
-		}
+        console.log("model!!!",res);
+        console.log(res.Data.FileName)
+		if (!res.Data.FileName) {
+            toast.error(res.Data.Buffer.Message);
+            goto(queryRoute);
+        } else {
+        const data = downloadFile(res)
+        toast.success(`Query executed successfully, View downloads for data file`)
+		goto(queryRoute);
+        }
+       
 	}
 
 	function downloadFile(response) {
@@ -102,7 +104,6 @@
 <form
 on:submit={async () => await onUpdate(name, description, format, query, tags)}
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
-	use:enhance
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">

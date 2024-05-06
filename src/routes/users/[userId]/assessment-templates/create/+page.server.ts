@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createAssessmentTemplate } from '../../../../api/services/assessment-templates';
+import { createAssessmentTemplate } from '../../../../api/services/assessments/assessment-templates';
 
 /////////////////////////////////////////////////////////////////////////
 

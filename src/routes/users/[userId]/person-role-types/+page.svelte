@@ -9,16 +9,15 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let personRoleTypes = data.personRoleTypes;
-	let index = Number;
-	personRoleTypes = personRoleTypes.map((item, index) => ({ ...item, index: index + 1 }));
-
-
-	const userId = $page.params.userId;
+	$: personTypes = data.personRoleTypes;
+    console.log('PersonRoleTypes', personTypes);
+	let retrivedTypes;
+    const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/person-role-types/create`;
 	const editRoute = (id) => `/users/${userId}/person-role-types/${id}/edit`;
 	const viewRoute = (id) => `/users/${userId}/person-role-types/${id}/view`;
@@ -26,12 +25,25 @@
 
 	const breadCrumbs = [{ name: 'Person-Roles', path: personRoleTypesRoute }];
 
+    let totalPersonRoleCount = data.personRoleTypes.length
+    let items = 10;
+    let itemsPerPage = 10;
+
 	let paginationSettings = {
 		page: 0,
-		limit: personRoleTypes.length,
-		size: personRoleTypes.length,
+		limit: 10,
+		size: totalPersonRoleCount,
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
+
+    $:{
+        personTypes = personTypes.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.personRoleTypes.length;
+        retrivedTypes = personTypes.slice(
+        paginationSettings.page * paginationSettings.limit,
+        paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+    );
+    }
 
 	const handlePersonRoleTypeDelete = async (id) => {
 		const personRoleTypeId = id;
@@ -40,7 +52,7 @@
 			sessionId: data.sessionId,
 			personRoleTypeId: personRoleTypeId
 		});
-		window.location.href = personRoleTypesRoute;
+        invalidate('app:person-role-types');
 	};
 
 	async function Delete(model) {
@@ -49,6 +61,16 @@
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
 		});
+	}
+
+    function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
 	}
 </script> 
 
@@ -71,12 +93,12 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#if personRoleTypes.length <= 0 }
+			{#if retrivedTypes.length <= 0 }
 				<tr>
 					<td colspan="6">No records found</td>
 				</tr>
 			{:else}
-				{#each personRoleTypes as row}
+				{#each retrivedTypes as row}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td>{row.index}</td>
 						<td>
@@ -113,10 +135,16 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	<div class="invisible">
+	<!-- <div class="invisible"> -->
+        <div>
 		<Paginator
 			bind:settings={paginationSettings}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+            on:page={onPageChange}
+		    on:amount={onAmountChange}
+			buttonClasses=" text-primary-500"
+            regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+            controlVariant = 'rounded-full text-primary-500 '
+            controlSeparator = 'fill-primary-400'
 		/>
 	</div>
 </div>

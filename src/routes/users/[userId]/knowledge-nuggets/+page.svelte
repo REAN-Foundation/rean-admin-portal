@@ -10,12 +10,13 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let knowledgeNuggets = data.knowledgeNuggets.Items;
-
+	$: knowledgeNuggets = data.knowledgeNuggets.Items;
+    let retrivedKnowledgeNuggets;
 	const userId = $page.params.userId;
 	const knowledgeNuggetRoute = `/users/${userId}/knowledge-nuggets`;
 	const editRoute = (id) => `/users/${userId}/knowledge-nuggets/${id}/edit`;
@@ -61,11 +62,14 @@
 		knowledgeNuggets = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedKnowledgeNuggets = knowledgeNuggets.slice(
+	$: {
+        knowledgeNuggets = knowledgeNuggets.map((item, index) => ({ ...item, index: index + 1 }));
+		paginationSettings.size = data.knowledgeNuggets.TotalCount;
+        retrivedKnowledgeNuggets = knowledgeNuggets.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchKnowledgeNugget({
 			topicName: topicName,
@@ -104,7 +108,7 @@
 			sessionId: data.sessionId,
 			knowledgeNuggetId
 		});
-		window.location.href = knowledgeNuggetRoute;
+		invalidate('app:knowledge-nuggests');
 	};
 
 	async function Delete(model) {

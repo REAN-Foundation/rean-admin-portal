@@ -49,8 +49,8 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (drugName) url += `&drugName=${drugName}`;
-		if (genericName) url += `&genericName=${genericName}`;
+		if (drugName) url += `&drugName=${model.drugName}`;
+		if (genericName) url += `&genericName=${model.genericName}`;
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }

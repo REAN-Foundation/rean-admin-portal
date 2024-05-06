@@ -2,7 +2,7 @@
 	import type { PageServerData } from './$types';
 	import date from 'date-and-time';
 	import { page } from '$app/stores';
-	import EnrollmentDisplay from '$lib/components/enrollmentDisplay/enrollmentDisplay.svelte';
+	import EnrollmentDisplay from '$lib/components/enrollment.display/enrollment.display.svelte';
 	import { goto } from '$app/navigation';
   import { ProgressRadial } from '@skeletonlabs/skeleton';
   import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';

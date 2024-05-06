@@ -1,4 +1,4 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import type { ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { searchBadges } from '$routes/api/services/gamification/badge';
@@ -6,10 +6,9 @@ import { searchBadgeCategories } from '$routes/api/services/gamification/badge.c
 
 ////////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
-
-	try {
+    event.depends('app:gamification-badges');
 		const response = await searchBadges(sessionId);
 		const _badgeCategories = await searchBadgeCategories(sessionId);
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
@@ -23,7 +22,5 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 			sessionId,
 			message: response.Message
 		};
-	} catch (error) {
-		console.error(`Error retriving badges: ${error.message}`);
-	}
+
 };

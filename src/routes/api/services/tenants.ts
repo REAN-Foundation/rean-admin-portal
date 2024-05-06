@@ -24,7 +24,7 @@ export const createTenant = async (
 		body.Phone = Helper.sanitizePhone(phone);
 	};
 	const url = BACKEND_API_URL + '/tenants';
-	return await post_(sessionId, url, body, true, false);
+	return await post_(sessionId, url, body, true);
 };
 
 export const getTenantById = async (sessionId: string, tenantId: string) => {
@@ -49,7 +49,7 @@ export const searchTenants = async (sessionId: string, searchParams?: any) => {
 		}
 	}
 	const url = BACKEND_API_URL + `/tenants/search${searchString}`;
-	return await get_(sessionId, url, true, false);
+	return await get_(sessionId, url, true);
 };
 
 export const updateTenant = async (
@@ -72,10 +72,10 @@ export const updateTenant = async (
 		body.Phone = Helper.sanitizePhone(phone);
 	};
 	const url = BACKEND_API_URL + `/tenants/${tenantId}`;
-	return await put_(sessionId, url, body, true, false);
+	return await put_(sessionId, url, body, true);
 };
 
 export const deleteTenant = async (sessionId: string, tenantId: string) => {
 	const url = BACKEND_API_URL + `/tenants/${tenantId}`;
-	return await delete_(sessionId, url, true, false);
+	return await delete_(sessionId, url, true);
 };

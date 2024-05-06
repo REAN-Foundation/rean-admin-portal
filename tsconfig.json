@@ -11,6 +11,7 @@
 		"strict": false,
 		"ignoreDeprecations": "5.0",
 		"allowSyntheticDefaultImports": true,
+        "strictNullChecks": false,
 		"module": "ESNext",
 	},
 	"include": [
