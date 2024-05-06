@@ -6,7 +6,7 @@
 	const message = $page.error.message;
 	const code = $page.error.code;
 	const stack = $page.error.stack;
-	const stackMessages = stack.split('\n');
+	// const stackMessages = stack.split('\n');
 	const isProd = false;
 
 </script>
@@ -29,9 +29,10 @@
 		{/if}
 		{#if !isProd}
 			<h4 class="m-3 text-primary-500 font-semibold text-[1.5rem]">Error Trace</h4>
-			{#each stackMessages as stackMessage}
+			<!-- {#each stackMessages as stackMessage}
 				<p class="m-1 font-normal text-[1.0rem]">{stackMessage}</p>
-			{/each}
+			{/each} -->
+            <p>{stack}</p>
 		{/if}
 	{/if}
 	<a href="/" class="btn variant-filled-primary">Back to Home</a>

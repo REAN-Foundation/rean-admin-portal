@@ -6,15 +6,17 @@
 	import { showMessage } from '$lib/utils/message.utils';
 	import { browser } from '$app/environment';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let courses = data.courses.Items;
+	$: courses = data.courses.Items;
+    let retrivedCourses;
 	let toatalCourseCount = data.courses.TotalCount;
 
-	courses = courses.map((item, index) => ({ ...item, index: index + 1 }));
-	console.log('courses', courses);
+	// courses = courses.map((item, index) => ({ ...item, index: index + 1 }));
+	// console.log('courses', courses);
 
 	const userId = $page.params.userId;
 	const courseRoute = `/users/${userId}/courses`;
@@ -82,10 +84,14 @@
 		items = itemsPerPage;
 	}
 
-	$: retrivedCourses = courses.slice(
+	$:  {
+        courses = courses.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.courses.TotalCount;
+        retrivedCourses = courses.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+    }
 	const handleCourseDelete = async (id, modules) => {
 		const courseId = id;
 		console.log('courseId', courseId);
@@ -100,7 +106,8 @@
 			courseId: courseId
 		});
 		showMessage(`Course deteted successfully!`, 'success');
-		window.location.href = courseRoute;
+		// window.location.href = courseRoute;
+        invalidate('app:courses');
 	};
 
 	async function DeleteCourse(model) {
@@ -125,7 +132,8 @@
 			sessionId: data.sessionId,
 			moduleId: moduleId
 		});
-		window.location.href = courseRoute;
+		// window.location.href = courseRoute;
+        invalidate('app:courses');
 	};
 
 	async function DeleteModule(model) {

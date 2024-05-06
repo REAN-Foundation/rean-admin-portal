@@ -24,7 +24,6 @@
 	let format;
 	let query = '';
 	let tags = [];
-
 	const onQuerySubmit = async (name:string, description: string, format: string, query:string, tags:string[]) => {
 		await executeQuery({
 			name,
@@ -43,18 +42,16 @@
 			headers: { 'content-type': 'application/json' }
 		});
 	  const res = await response.json();
-		console.log("response-------",res)
-		const data = downloadFile(res)
-		if(res.success === true){
-			toast.success(`Query executed successfully, View downloads for data file`)
-			goto(queryRoute);
-		}
-		else
-		{
-			toast.error(`Unable to execute query!`)
-		}
-		console.log("response",res)
-		console.log("data", data);
+	  console.log("response-------",res)
+        if ('Status' in res.Data.Buffer) {
+            toast.error(res.Data.Buffer.Message);
+            goto(queryRoute);
+        } else {
+        const data = downloadFile(res)
+        toast.success(`Query executed successfully, View downloads for data file`)
+		goto(queryRoute);
+        }
+      
 	}
 
 function downloadFile(response) {
@@ -75,15 +72,13 @@ function downloadFile(response) {
 	URL.revokeObjectURL(url);
 }
 
-
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <form
-	on:submit={async () => await onQuerySubmit(name, description, format, query, tags)}
+	on:submit|preventDefault={async () => await onQuerySubmit(name, description, format, query, tags)}
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
-	use:enhance
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -106,7 +101,7 @@ function downloadFile(response) {
 						bind:value={name}
 						placeholder="Enter query here..."
 						class="input w-full {form?.errors?.name ? 'border-error-300' : 'border-primary-200'}"
-					/>
+                    />
 					{#if form?.errors?.name}
 						<p class="text-error-500 text-xs">{form?.errors?.name[0]}</p>
 					{/if}

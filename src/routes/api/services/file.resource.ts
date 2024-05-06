@@ -1,5 +1,5 @@
 import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL } from '$env/static/private';
-import { SessionManager } from '../session.manager';
+import { SessionManager } from '../sessions/session.manager';
 import { error } from '@sveltejs/kit';
 import { delete_, get_ } from './common';
 import { ServerHelper } from '$lib/server/server.helper';
@@ -109,7 +109,7 @@ export const deleteFileResource = async (sessionId: string, resourceId: string) 
 };
 
 export const download = async (sessionId, fileResourceId, asAttachment = false) => {
-	let url = BACKEND_API_URL + `file-resources/${fileResourceId}/download`;
+	let url = BACKEND_API_URL + `/file-resources/${fileResourceId}/download`;
 	if (asAttachment) {
 		url = url + `?disposition=attachment`;
 	}
@@ -127,7 +127,7 @@ export const download = async (sessionId, fileResourceId, asAttachment = false) 
 	});
 
 	const data = await res.arrayBuffer();
-	if (data) {
+    if (data) {
 		const responseHeaders = res.headers;
 		const contentType = responseHeaders['content-type'];
 		const parts = contentType.split('/');

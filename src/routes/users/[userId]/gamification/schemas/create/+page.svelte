@@ -5,8 +5,8 @@
 	import Icon from '@iconify/svelte';
 	// import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
 	import { browser } from '$app/environment';
-	import ItemDragDrop from '$lib/components/drag-and-drop/courses-drag-drop.svelte';
-	import SelectedDragDropItems from '$lib/components/drag-and-drop/selected-courses-drag-drop.svelte';
+	import ItemDragDrop from '$lib/components/drag.and.drop/courses.drag.drop.svelte';
+	import SelectedDragDropItems from '$lib/components/drag.and.drop/selected.courses.drag.drop.svelte';
 	import { selectedItems } from '$lib/store/general.store';
     import { enhance } from '$app/forms';
 

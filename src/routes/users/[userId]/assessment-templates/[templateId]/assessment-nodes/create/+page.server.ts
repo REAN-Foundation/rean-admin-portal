@@ -9,7 +9,7 @@ import {
 	createAssessmentNode,
 	getQueryResponseTypes,
 	searchAssessmentNodes
-} from '../../../../../../api/services/assessment-nodes';
+} from '../../../../../../api/services/assessments/assessment-nodes';
 
 /////////////////////////////////////////////////////////////////////////
 

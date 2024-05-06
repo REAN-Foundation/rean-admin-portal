@@ -59,7 +59,7 @@
 													confirmTitle="Delete"
 													cancelTitle="Cancel"
 													let:confirm={confirmThis}
-													on:delete={() => handlelDeleteClick(activity.id)}
+										
 												>
 													<button
 														on:click|preventDefault={() =>

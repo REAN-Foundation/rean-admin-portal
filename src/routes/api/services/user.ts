@@ -4,8 +4,8 @@ import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL } from '$env/static/private';
 import { post_ } from './common';
 ////////////////////////////////////////////////////////////////
 
-export const login = async (username: string, password: string, loginRoleId: number) => {
-	const model: LoginModel = getLoginModel(username, password, loginRoleId);
+export const login = async (username: string, password: string) => {
+	const model: LoginModel = getLoginModel(username, password);
 	console.log(JSON.stringify(model, null, 2));
 
 	const headers = {};
@@ -25,9 +25,9 @@ export const login = async (username: string, password: string, loginRoleId: num
 	return response;
 };
 
-const getLoginModel = (username: string, password: string, loginRoleId: number): LoginModel => {
+const getLoginModel = (username: string, password: string): LoginModel => {
 	const loginModel: LoginModel = {
-		LoginRoleId: loginRoleId ?? 1
+		// LoginRoleId: loginRoleId ?? 1
 	};
 
 	if (Helper.isEmail(username)) {

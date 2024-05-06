@@ -8,10 +8,12 @@
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+    let retrivedTenants;
 	let tenants = data.tenants.Items;
 
 	const userId = $page.params.userId;
@@ -64,10 +66,14 @@
 		tenants = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedTenants = tenants.slice(
+	$: {
+        tenants = tenants.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.tenants.TotalCount;
+        retrivedTenants = tenants.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+    }
 
 	$: if (browser)
 		searchTenant({
@@ -116,7 +122,8 @@
 			sessionId: data.sessionId,
 			tenantId
 		});
-		window.location.href = tenantRoute;
+        invalidate('app:tenants');
+		// window.location.href = tenantRoute;
 	};
 
 	async function Delete(model) {

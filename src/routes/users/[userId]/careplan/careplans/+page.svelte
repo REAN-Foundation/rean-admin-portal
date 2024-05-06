@@ -8,11 +8,12 @@
 	} from '@skeletonlabs/skeleton';
 	import Icon from '@iconify/svelte';
 	import { browser } from '$app/environment';
+    import { invalidate } from '$app/navigation';
 
 	///////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-
+    let retrivedCareplans;
 	const userId = $page.params.userId;
 	const careplansRoute = `/users/${userId}/careplan/careplans`;
 	const createRoute = `/users/${userId}/careplan/careplans/create`;
@@ -37,7 +38,7 @@
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
 
-	let carePlans = data.careplans.Items;
+	$: carePlans = data.careplans.Items;
 	let careplanCategories = data.careplanCategories;
 
 	const breadCrumbs = [
@@ -54,7 +55,7 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (name) url += `&name=${name}`;
+		if (name) url += `&name=${model.name}`;
 		if (categoryId == 'Category') {
 			url;
 		} else {
@@ -69,11 +70,14 @@
 		carePlans = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
-	$: retrivedCareplans = carePlans.slice(
+	$: {
+        carePlans = carePlans.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = totalCareplansCount;
+        retrivedCareplans = carePlans.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchCareplan({ 
 			name: name, 
@@ -112,7 +116,7 @@
 			sessionId: data.sessionId,
 			careplanId
 		});
-		window.location.href = careplansRoute;
+		invalidate('app:careplan-careplans');
 	};
 
 	async function Delete(model) {

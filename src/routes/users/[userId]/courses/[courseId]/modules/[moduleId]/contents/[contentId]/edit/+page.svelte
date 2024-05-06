@@ -45,7 +45,7 @@
 	const moduleId = $page.params.moduleId;
 	const contentId = $page.params.contentId;
 	const editRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${contentId}/edit`;
-	const viewRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${contentId}/view`;
+	const contentRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/`;
 	const courseRoute = `/users/${userId}/courses`;
 	const moduleRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/view`;
 
@@ -60,7 +60,7 @@
 		},
 		{
 			name: 'Content',
-			path: viewRoute
+			path: contentRoute
 		},
 		{
 			name: 'Edit',
@@ -121,9 +121,9 @@
 			<tr>
 				<th>Edit Content</th>
 				<th class="text-end">
-					<a href={viewRoute} class="btn p-2 -my-2 variant-soft-secondary">
+					<!-- <a href={viewRoute} class="btn p-2 -my-2 variant-soft-secondary">
 						<Icon icon="material-symbols:close-rounded" class="text-lg" />
-					</a>
+					</a> -->
 				</th>
 			</tr>
 		</thead>

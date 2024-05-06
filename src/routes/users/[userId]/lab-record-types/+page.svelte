@@ -11,6 +11,7 @@
 
 	export let data: PageServerData;
 	let labRecordTypes=data.labRecordTypes;
+    let selectedLabRecordTypes;
 	let sortOrder = false;
 
 	const userId = $page.params.userId;
@@ -63,11 +64,14 @@
 		invalidate('app:labRecordType')
 	};
 
-	$: selectedLabRecordTypes = labRecordTypes.slice(
+	$:{
+        labRecordTypes = labRecordTypes.map((item, index) => ({ ...item, index: index + 1 }));
+		paginationSettings.size = labRecordTypes.length;
+        selectedLabRecordTypes = labRecordTypes.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	function onPageChange(e: CustomEvent): void {
 		 paginationSettings.page = e.detail
 	}

@@ -9,12 +9,13 @@
 		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let schemas = data.schemas.Items;
-
+	$: schemas = data.schemas.Items;
+    let retrivedSchemas;
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/gamification/schemas/create`;
 	const editRoute = (id) => `/users/${userId}/gamification/schemas/${id}/edit`;
@@ -46,7 +47,7 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (name) url += `&name=${name}`;
+		if (name) url += `&name=${model.name}`;
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
@@ -57,11 +58,14 @@
 		console.log("schemas",schemas)
 	}
 
-	$: retrivedSchemas = schemas.slice(
+	$: {
+        schemas = schemas.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.schemas.TotalCount;
+        retrivedSchemas = schemas.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
-
+    }
 	$: if (browser)
 		searchNode({
 			name: name,
@@ -98,7 +102,7 @@
 			sessionId: data.sessionId,
 			schemaId
 		});
-		window.location.href = schemaRoute;
+        invalidate('app:gamification-schemas');
 	};
 
 	async function Delete(model) {

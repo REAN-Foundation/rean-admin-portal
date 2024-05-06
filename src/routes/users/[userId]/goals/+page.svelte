@@ -11,13 +11,14 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let goalTypes = data.goalTypes;
-	goalTypes = goalTypes.map((item, index) => ({ ...item, index: index + 1 }));
-
+	$: goalTypes = data.goalTypes;
+    let retrivedGoalTypes;
+	
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/goals/create`;
 	const editRoute = (id) => `/users/${userId}/goals/${id}/edit`;
@@ -32,6 +33,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let pageIndex = 0;
+    let items = 10;
 
 	async function searchGoal(model) {
 		let url = `/api/server/goals/search?`;
@@ -57,11 +59,29 @@
 
 	let paginationSettings = {
 		page: 0,
-		limit: goalTypes.length,
-		size: goalTypes.length,
+		limit: 10,
+		size: data.goalTypes.length,
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
 
+    $:{
+        goalTypes = goalTypes.map((item, index) => ({ ...item, index: index + 1 }));
+        paginationSettings.size = data.goalTypes.length;
+        retrivedGoalTypes = goalTypes.slice(
+        paginationSettings.page * paginationSettings.limit,
+        paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+    );
+    }
+
+    function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+		itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail;
+		items = itemsPerPage;
+	}
 
 	const handleGoalDelete = async (id) => {
 		const goalId = id;
@@ -70,7 +90,7 @@
 			sessionId: data.sessionId,
 			goalId: goalId
 		});
-		window.location.href = goalRoute;
+		invalidate('app:goals');
 	};
 
 	async function Delete(model) {
@@ -144,10 +164,15 @@
 </div>
 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
-	<div class="invisible">
+	<div >
 		<Paginator
-			bind:settings={paginationSettings}
-			buttonClasses="btn-icon bg-surface-50 dark:bg-surface-900"
+        bind:settings={paginationSettings}
+        on:page={onPageChange}
+        on:amount={onAmountChange}
+        buttonClasses=" text-primary-500"
+        regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+        controlVariant = 'rounded-full text-primary-500 '
+        controlSeparator = 'fill-primary-400'
 		/>
 	</div>
 </div>

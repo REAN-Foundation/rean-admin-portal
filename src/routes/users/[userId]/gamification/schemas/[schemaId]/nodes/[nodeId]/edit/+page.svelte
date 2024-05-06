@@ -3,8 +3,8 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
-	import KeyValue from '$lib/components/key-value/key-value.svelte';
-	import List from '$lib/components/key-value/list.svelte';
+	import KeyValue from '$lib/components/key.value/key.value.svelte';
+	import List from '$lib/components/key.value/list.svelte';
 	import { items } from '$lib/store/key.value.store';
     import { enhance } from '$app/forms';
 
@@ -23,9 +23,9 @@
   const node = data.schemaNode;
 	console.log("node", node);
 	$:console.log("items", $items)
-	
+
 	let filtersData = node.Action.InputParams?.Filters ?? [];
-	
+
 	if(filtersData.length > 0){
 		for(const item of filtersData){
 			$items.push(item)
@@ -145,7 +145,7 @@ $:console.log("items", $items)
 					>
 					<option selected value={node.ParentNode?.id}>{node.ParentNode}</option>
 					{#each parentNodes as node}
-          
+
 					<option value={node.id}>{node.Name}</option>
 				{/each}
 					</select>
@@ -187,7 +187,7 @@ $:console.log("items", $items)
            <option selected>{actionType}</option>
             {#each eventActionTypes as type}
             <option value={type}>{type}</option>
-            {/each}   
+            {/each}
 					</select>
 				</td>
 			</tr>
@@ -208,7 +208,7 @@ $:console.log("items", $items)
 				<td>Input Parameters</td>
         <td></td>
 			</tr>
-   
+
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Record Type*</td>
 				<td>
@@ -235,13 +235,13 @@ $:console.log("items", $items)
 					<option selected>{sourceType}</option>
           {#each inputSourceTypes as inputSourceType}
           <option value={inputSourceType}>{inputSourceType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
       {#if selectedEventActionType === 'Extract-Data'}
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td class="align-top">Filters</td>	
+				<td class="align-top">Filters</td>
 					<td>
 						<KeyValue/>
 						<List/>
@@ -273,7 +273,7 @@ $:console.log("items", $items)
 					<option selected>{inputParams.DataActionType}</option>
           {#each dataActionTypes as dataActionType}
           <option value={dataActionType}>{dataActionType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -289,7 +289,7 @@ $:console.log("items", $items)
 					<option selected>{inputParams.KeyDataType}</option>
           {#each operandDataTypes as operandDataType}
           <option value={operandDataType}>{operandDataType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -317,7 +317,7 @@ $:console.log("items", $items)
 					<option selected>{inputParams.ValueDataType}</option>
           {#each operandDataTypes as operandDataType}
           <option value={operandDataType}>{operandDataType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -363,7 +363,7 @@ $:console.log("items", $items)
 					<option selected>{inputParams.Operator}</option>
           {#each logicalOpratorTypes as logicalOpratorType}
           <option value={logicalOpratorType}>{logicalOpratorType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -415,7 +415,7 @@ $:console.log("items", $items)
 					>
           {#each dataActionTypes as dataActionType}
           <option value={dataActionType}>{dataActionType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>
@@ -489,7 +489,7 @@ $:console.log("items", $items)
           <option selected>{destinationType}</option>
           {#each outputSourceTypes as outputSourceType}
           <option value={outputSourceType}>{outputSourceType}</option>
-          {/each}   
+          {/each}
 					</select>
 				</td>
 			</tr>

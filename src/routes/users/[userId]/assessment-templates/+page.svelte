@@ -42,15 +42,15 @@
 	} satisfies PaginationSettings;
 
 	async function searchAssessmentTemplate(model) {
-		let url = `/api/server/assessment-templates/search?`;
+		let url = `/api/server/assessments/assessment-templates/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offest) url += `&pageIndex=${offest}`;
-		if (title) url += `&title=${title}`;
-		if (type) url += `&type=${type}`;
-
+		if (title) url += `&title=${model.title}`;
+		if (type) url += `&type=${model.type}`;
+        console.log("URL: " + url);
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
@@ -111,7 +111,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/assessment-templates`, {
+		const response = await fetch(`/api/server/assessments/assessment-templates`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

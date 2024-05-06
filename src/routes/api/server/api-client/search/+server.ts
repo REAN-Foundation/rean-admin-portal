@@ -26,9 +26,8 @@ export const GET = async (event: RequestEvent) => {
 			pageIndex: pageIndex
 		};
 		const response = await searchApiClients(sessionId, searchParams);
-		const items = response.Data.ApiClientRecords.Items;
-
-		return new Response(JSON.stringify(items));
+		const items = response.Data.ClientAppRecords;
+         return new Response(JSON.stringify(items));
 	} catch (err) {
 		console.error(`Error retriving asset: ${err.message}`);
 		return new Response(err.message);

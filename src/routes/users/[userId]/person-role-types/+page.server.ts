@@ -1,13 +1,13 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { searchPersonRoleTypes } from '../../../api/services/person-role-types';
 
 ////////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
-
+    event.depends('app:person-role-types');
 	try {
 		const response = await searchPersonRoleTypes(sessionId);
 		if (response.Status === 'failure' || response.HttpCode !== 200) {

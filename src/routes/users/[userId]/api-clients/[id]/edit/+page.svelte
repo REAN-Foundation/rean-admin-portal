@@ -12,7 +12,7 @@
 	let id = data.apiClient.id;
 	let clientName = data.apiClient.ClientName;
 	let clientCode = data.apiClient.ClientCode;
-	let password = data.apiClient.Password;
+	let password;
 	let phone = data.apiClient.Phone;
 	let email = data.apiClient.Email;
 

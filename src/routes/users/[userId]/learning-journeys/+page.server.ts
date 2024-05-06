@@ -1,12 +1,13 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { searchLearningJourneys } from '../../../api/services/learning-journeys';
 
 ////////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    event.depends('app:learning-journeys');
 	console.log('sessionId', sessionId);
 	try {
 		const response = await searchLearningJourneys(sessionId);

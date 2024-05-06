@@ -24,7 +24,7 @@
 	const courseRoute = `/users/${userId}/courses`;
 	const editRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${contentId}/edit`;
 	const viewRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${contentId}/view`;
-	const contentRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/view`;
+	const contentRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/contents`;
 	const moduleRoute = `/users/${userId}/courses/${courseId}/modules/${moduleId}/view`;
 
 	const breadCrumbs = [

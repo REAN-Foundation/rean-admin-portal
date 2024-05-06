@@ -21,21 +21,7 @@ export const getPersonRoleTypeById = async (sessionId: string, personRoleTypeId:
 	return await get_(sessionId, url, true);
 };
 
-export const searchPersonRoleTypes = async (sessionId: string, searchParams?: any) => {
-	let searchString = '';
-	if (searchParams) {
-		const keys = Object.keys(searchParams);
-		if (keys.length > 0) {
-			searchString = '?';
-			const params = [];
-			for (const key of keys) {
-				if (searchParams[key]) {
-					const param = `${key}=${searchParams[key]}`;
-					params.push(param);
-				}
-			}
-		}
-	}
+export const searchPersonRoleTypes = async (sessionId: string) => {
 	const url = BACKEND_API_URL + `/types/person-roles`;
 	return await get_(sessionId, url, true);
 };

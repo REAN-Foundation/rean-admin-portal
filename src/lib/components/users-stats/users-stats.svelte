@@ -1,11 +1,7 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { createEventDispatcher } from 'svelte';
 	import PieChart from './charts/pie-chart.svelte';
 	import BarChart from './charts/bar-chart.svelte';
-	import HorizontalBarChart from './charts/horizontal-bar-chart.svelte';
-	import HealthPillarChart from './charts/health-pillar-chart.svelte';
-	import BiometricsChart from './charts/biometrics-chart.svelte';
 	import { tick } from 'svelte';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,23 +10,13 @@
 	export let genderWiseUsers;
 	export let ageWiseUsers;
 	export let maritalStatusWiseUsers;
-	export let countryWiseUsers;
+    // export let countryWiseUsers;
 	export let majorAilment;
-	// export let obesityDistribution;
 	export let addictionDistribution;
-	// export let healthPillarDistribution;
-	// export let healthPillarDistributionMonthly;
-	// export let roleDistribution;
-	// export let biometricsDistribution;
-	// export let biometricsDistributionMonthly;
 	export let usersCount;
 	export let deviceDetailWiseUsers;
 
 	console.log("years",years)
-	// let androidUsers = deviceDetailWiseUsers.AndroidUsers;
-	// let iOSUsers = deviceDetailWiseUsers.IOSUsers;
-	// let missingDeviceDetails = deviceDetailWiseUsers.MissingDeviceDetails;
-
 	const usersData = [
 		{
 			usersDetail: 'Not Deleted Users',
@@ -53,8 +39,7 @@
 			ratio: `${Math.ceil(usersCount.EnrolledUsers.Ratio)}`
 		}
 	];
-
-	// const deviceDetailData = [
+    // const deviceDetailData = [
 	// 	{
 	// 		usersDetail: 'Android Users',
 	// 		count: androidUsers.Count,
@@ -80,7 +65,7 @@
 		genderDistributionData = false;
 
 		tick().then(() => {
-			genderDistributionLabels = genderWiseUsers.map((x) => x.Status);
+			genderDistributionLabels = genderWiseUsers.map((x) => x.Gender);
 			genderDistributionData = genderWiseUsers.map((x) => x.Ratio);
 		});
 	}
@@ -107,22 +92,22 @@
 
 		tick().then(() => {
       maritalStatusDistributionLabels = maritalStatusWiseUsers.map((x) => x.MaritalStatus);
-	    maritalStatusDistributionData = maritalStatusWiseUsers.map((x) => x.count);
+	    maritalStatusDistributionData = maritalStatusWiseUsers.map((x) => x.Count);
 		});
 	}
 
 	let cuntryDistributionLabels;
 	let cuntryDistributionData;
+    
+	// $: if (countryWiseUsers) {
+	// 	cuntryDistributionLabels = false;
+	// 	cuntryDistributionData = false;
 
-	$: if (countryWiseUsers) {
-		cuntryDistributionLabels = false;
-		cuntryDistributionData = false;
-
-		tick().then(() => {
-		cuntryDistributionLabels = countryWiseUsers.map((x) => x.Country);
-		cuntryDistributionData = countryWiseUsers.map((x) => x.Ratio);
-		});
-	}
+	// 	tick().then(() => {
+	// 	cuntryDistributionLabels = countryWiseUsers.map((x) => x.Country);
+	// 	cuntryDistributionData = countryWiseUsers.map((x) => x.Ratio);
+	// 	});
+	// }
 
 	let majorAilmentDistributionData;
 	let majorAilmentDistributionLabels;
@@ -132,23 +117,13 @@
 		majorAilmentDistributionLabels = false;
 
 		tick().then(() => {
-			majorAilmentDistributionData = majorAilment.map((x) => x.count);
+			majorAilmentDistributionData = majorAilment.map((x) => x.Count);
 			majorAilmentDistributionLabels = majorAilment.map((x) => x.MajorAilment);
 		});
 	}
 
 	let obesityDistributionData;
 	let obesityDistributionLabels;
-
-	// $: if (obesityDistribution) {
-	// 	obesityDistributionData = false;
-	// 	obesityDistributionLabels = false;
-
-	// 	tick().then(() => {
-	// 		obesityDistributionData = obesityDistribution.map((x) => x.Count);
-	// 		obesityDistributionLabels = obesityDistribution.map((x) => x.Status);
-	// 	});
-	// }
 
 	let addictionDistributionData;
 	let addictionDistributionLabels;
@@ -162,15 +137,6 @@
 			addictionDistributionLabels = addictionDistribution.map((x) => x.Status);
 		});
 	}
-
-	// let healthPillarDistributionData = healthPillarDistribution.map((x) => x.Count);
-	// let healthPillarDistributionLabels = healthPillarDistribution.map((x) => x.Status);
-
-	// let roleDistributionData = roleDistribution.map((x) => x.Ratio);
-	// let roleDistributionLabels = roleDistribution.map((x) => x.Role);
-
-	// let biometricsDistributionData = biometricsDistribution.map((x) => x.Count);
-	// let biometricsDistributionLabels = biometricsDistribution.map((x) => x.Biometrics);
 
 	const dispatch = createEventDispatcher();
 
@@ -310,7 +276,7 @@
 											<td
 												style="width:10%;"
 												class="whitespace-nowrap text-sm px-3 py-2 text-primary-500 dark:text-primary-100"
-												>{data.count}</td
+												>{data.Count}</td
 											>
 											<td
 												style="width:15%;"
@@ -320,10 +286,10 @@
 													<div class="h-2 w-1/4 rounded-full bg-primary-200 mr-2">
 														<div
 															class="h-2 rounded-full bg-primary-500"
-															style="width:{Math.ceil((data.count / usersCount.TotalUsers.Count) * 100).toFixed(2)}%"
+															style="width:{Math.ceil((data.Count / usersCount.TotalUsers.Count) * 100).toFixed(2)}%"
 														/>
 													</div>
-													<span class="text-primary-500 dark:text-primary-100 ">{Math.ceil((data.count / usersCount.TotalUsers.Count) * 100).toFixed(0)}</span>
+													<span class="text-primary-500 dark:text-primary-100 ">{Math.ceil((data.Count / usersCount.TotalUsers.Count) * 100).toFixed(0)}</span>
 													<span class="text-primary-500 dark:text-primary-100 text-xs">%</span>
 												</div>
 											</td>
@@ -426,7 +392,7 @@
 											<td
 												style="width:10%;"
 												class="whitespace-nowrap py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 text-sm  sm:pl-3"
-												>{data.Status}</td
+												>{data.Gender}</td
 											>
 											<td
 												style="width:10%;"
@@ -493,7 +459,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{#each countryWiseUsers as data}
+									<!-- {#each countryWiseUsers as data}
 										<tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition">
 											<td
 												style="width:10%;"
@@ -521,7 +487,7 @@
 												</div>
 											</td>
 										</tr>
-									{/each}
+									{/each} -->
 								</tbody>
 							</table>
 						</div>

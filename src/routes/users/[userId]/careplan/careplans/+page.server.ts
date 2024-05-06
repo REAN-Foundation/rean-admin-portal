@@ -1,18 +1,15 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import type { ServerLoadEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { searchCareplanCategories, searchCareplans } from '$routes/api/services/careplan/careplans';
-import { errorMessage } from '$lib/utils/message.utils';
-import { redirect } from 'sveltekit-flash-message/server';
 
 ////////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad  = async (event: RequestEvent) => {
+export const load: PageServerLoad  = async (event: ServerLoadEvent) => {
     const userId = event.params.userId;
     const sessionId = event.cookies.get('sessionId');
     console.log('sessionId', sessionId);
-
-    try {
+    event.depends('app:careplan-careplans');
         const response = await searchCareplans(sessionId );
         
         if (response.Status === 'failure' || response.HttpCode !== 200) {
@@ -30,10 +27,6 @@ export const load: PageServerLoad  = async (event: RequestEvent) => {
                 sessionId ,
                 message: response.Message
             }
-    }
-    catch (error) {
-        console.error(`Error retriving care plan: ${error.message}`);
-        throw redirect(303,`/users/${userId}/home`,errorMessage('Error retriving care plan'), event) 
-    }
+
 }
 

@@ -18,6 +18,7 @@
 	const editRoute = `/users/${userId}/tenants/${tenantId}/edit`;
 	const viewRoute = `/users/${userId}/tenants/${tenantId}/view`;
 	const tenantRoute = `/users/${userId}/tenants`;
+    const settingsRoute = `/users/${userId}/tenants/${tenantId}/settings`
 
 	const breadCrumbs = [
 		{
@@ -33,8 +34,12 @@
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
-<div class="flex flex-wrap gap-2">
-	<a href={editRoute} class="btn variant-filled-secondary ml-auto">
+<div class="flex w-full flex-wrap justify-end gap-2">
+    <a href={settingsRoute} class="btn variant-filled-secondary">
+		<!-- <Icon icon="material-symbols:edit-outline" /> -->
+		<span>Setting</span>
+	</a>
+	<a href={editRoute} class="btn variant-filled-secondary">
 		<Icon icon="material-symbols:edit-outline" />
 		<span>Edit</span>
 	</a>

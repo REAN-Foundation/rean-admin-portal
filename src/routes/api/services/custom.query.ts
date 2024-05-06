@@ -1,7 +1,7 @@
 import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import { delete_, get_, post_, put_ } from './common';
-import { SessionManager } from '../session.manager';
+import { SessionManager } from '../sessions/session.manager';
 
 ////////////////////////////////////////////////////////////////
 

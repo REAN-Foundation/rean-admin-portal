@@ -2,15 +2,17 @@
 	import Careplanscheduleform from './careplan-schedule-form.svelte';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import Select from 'svelte-select';
 	import type { PageServerData } from './$types';
 	import Icon from '@iconify/svelte';
+    import { enhance } from '$app/forms';
+    import { invalidate } from '$app/navigation';
+    import toast from 'svelte-french-toast';
 
 	//////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
 	const assetType = data.assetTypes;
-	let careplanActivities = data.careplanActivities;
+	$: careplanActivities = data.careplanActivities;
 	let items = [];
 	let types = assetType.Data.AssetTypes;
 	const timeSlot = data.timeslot;
@@ -93,10 +95,11 @@
 		}
 	};
 
-	var sanitized = sanitizeActivities(careplanActivities);
-	var classifiedByDay = classifyActivitiesByDay(sanitized);
+	$: sanitized = sanitizeActivities(careplanActivities);
+	$: classifiedByDay = classifyActivitiesByDay(sanitized);
 
-	var classifiedByWeek = classifyByWeek(classifiedByDay);
+	$: classifiedByWeek = classifyByWeek(classifiedByDay);
+
 
 	const assetRouteMap = {
 		'Action plan': 'action-plans',
@@ -145,20 +148,28 @@
 			}
 		});
 		const response = await res.json();
-		items = response.map((obj) => {
+
+		items = response.Items.map((obj) => {
 			return { value: obj.id, label: obj.Name };
 		});
-		console.log('response: ', response);
 		console.log('items: ', items);
 		return items;
 	}
 
 	const handleSchedulingDelete = async (e) => {
 		let careplanActivityId = e;
-		await Delete({
+		const response = await Delete({
 			sessionId: data.sessionId,
 			careplanActivityId
 		});
+        if (response.Status === 'success') {
+            toast.success(response.Message);
+            invalidate('app:careplan-careplans-scheduling');
+        }
+        else {
+            toast.error(response.Message ? response.Message : "Error in deleteing.");
+            invalidate('app:careplan-careplans-scheduling');
+        }
 	};
 
 	async function Delete(model) {
@@ -169,7 +180,7 @@
 				'content-type': 'application/json'
 			}
 		});
-		console.log('response', response);
+        return await response.json();
 	}
 </script>
 
@@ -198,6 +209,7 @@
 		method="post"
 		action="?/createCarePlanActivityAction"
 		class="table-container border border-secondary-100 dark:!border-surface-700 mt-2 mb-6"
+        use:enhance
 	>
 		<table class="table">
 			<thead class="!variant-soft-secondary">
@@ -214,7 +226,7 @@
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td>Assets Type *</td>
 					<td>
-						<select name="assetType" class="select" on:change={onSelectAssetType}>
+						<select name="assetType" class="select" value='' on:change={onSelectAssetType}>
 							{#each types as val}
 								<option value={val}>
 									{val}

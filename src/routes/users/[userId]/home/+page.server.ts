@@ -1,51 +1,41 @@
 import type { PageServerLoad } from './$types';
 import { error, type RequestEvent } from '@sveltejs/kit';
-import { getDailyStatistics } from '$routes/api/services/statistics';
+import { getDailyStatistics, getDailyTenantStatistics } from "../../../../routes/api/services/statistics"
 
-////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
-    const response = await getDailyStatistics(sessionId);
+    let response;
+
+    if (! event.locals.sessionUser) {
+        throw error (401, 'Unauthorized Access');
+    }
+    if (event.locals.sessionUser.roleName === 'System admin') {
+        response = await getDailyStatistics(sessionId);
+     } else if (event.locals.sessionUser.roleName === 'Tenant admin') {
+        response = await getDailyTenantStatistics(sessionId, event.locals.sessionUser.tenantId);
+     } else {
+        throw error (401, 'Unauthorized Access');
+    }
+
     if (!response) {
         throw error(404, 'Daily user statistics data not found');
     }
-    // const _enrollmentUsers = await getEnrollmetUsers(sessionId);
-    const overallUsersData = response.Data.DailyStatistics.Statistics.UserStatistics.UsersCountStats;
-    const deviceDetailWiseUsers_ = response.Data.DailyStatistics.Statistics.UserStatistics.DeviceDetailWiseUsers;
-    const yearWiseUserCount = response.Data.DailyStatistics.Statistics.UserStatistics.YearWiseUserCount;
-    const yearWiseDeviceDetails = response.Data.DailyStatistics.Statistics.UserStatistics.YearWiseDeviceDetails;
-    const deviceDetailWiseUsers = deviceDetailWiseUsers_.map((item) => {
-        if (item.OSType === 'aaa') {
-            return { OSType: 'Missing device detail', count: item.count };
-        }
-        return item;
-    });
-    // const enrollmentUsers = _enrollmentUsers.Data.EnrollmentUsers;
-
-    const appDownloadsData = response.Data.DailyStatistics.Statistics.UserStatistics.AppDownload;
-    let appDownloadCount = 0;
-
-    if (appDownloadsData.rows.length > 0) {
-        const latestEntry = latestDownloadEnrty(appDownloadsData);
-        appDownloadCount = latestEntry.TotalDownloads;
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
     }
+
+    const userCountStats = response.Data.DailyStatistics.DashboardStats.UserStatistics.UsersCountStats;
+    const deviceDetailsStats = response.Data.DailyStatistics.DashboardStats.UserStatistics.DeviceDetailWiseUsers;
+    const userCountByYears = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseUserCount;
+    const deviceDetailsByYears = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseDeviceDetails;
 
     return {
         sessionId,
-        deviceDetailWiseUsers,
-        // enrollmentUsers,
-        appDownloadCount,
-        overallUsersData,
-        yearWiseUserCount,
-        yearWiseDeviceDetails
+        userCountStats,
+        userCountByYears,
+        deviceDetailsStats,
+        deviceDetailsByYears,
     };
-
-    function latestDownloadEnrty(appDownloadsData) {
-        return appDownloadsData.rows.reduce((latest, current) => {
-            const latestTimestamp = latest ? new Date(latest.CreatedAt).getTime() : 0;
-            const currentTimestamp = new Date(current.CreatedAt).getTime();
-            return currentTimestamp > latestTimestamp ? current : latest;
-        }, null);
-    }
 };

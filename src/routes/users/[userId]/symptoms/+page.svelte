@@ -54,8 +54,8 @@
 		if (sortBy) url += `&sortBy=${sortBy}`;
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
-		if (symptom) url += `&symptom=${symptom}`;
-		if (tags) url += `&tags=${tags}`;
+		if (symptom) url += `&symptom=${model.symptom}`;
+		if (tags) url += `&tags=${model.tags}`;
 
 		const res = await fetch(url, {
 			method: 'GET',

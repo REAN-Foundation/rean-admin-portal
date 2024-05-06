@@ -29,7 +29,7 @@ export const GET = async (event: RequestEvent) => {
             pageIndex,
         };
 		const response = await searchAssets(sessionId,assetTypeRoute,searchParams);
-        const items = response.Data.Items;
+        const items = response.Data;
 
         return new Response(JSON.stringify(items));
 	} catch (err) {

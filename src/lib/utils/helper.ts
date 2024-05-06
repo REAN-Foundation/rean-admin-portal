@@ -187,4 +187,7 @@ export class Helper {
         return buffer.toString('base64');
     };
 
+    public static replaceAll = (str: string, find: string, replace: string): string => {
+        return str.replace(new RegExp(find, 'g'), replace);
+    };
 }
