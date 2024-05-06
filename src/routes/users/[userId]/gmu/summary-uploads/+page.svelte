@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { format, parse } from 'date-fns';
     export let data
     let totalPatient ='';
     let arrivedPatient = '';
