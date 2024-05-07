@@ -35,9 +35,8 @@ RUN npm install
 # # COPY . /app
 
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
-
-# RUN chmod +x /app/entrypoint.sh
-# ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh"]
 ENV ORIGIN=https://rean-admin-portal-dev.services.reanfoundation.org
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh"]
 
-CMD ["node", "build/index.js"]
+#CMD ["node", "build/index.js"]
