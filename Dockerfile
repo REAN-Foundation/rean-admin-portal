@@ -38,6 +38,6 @@ RUN npm install
 
 # RUN chmod +x /app/entrypoint.sh
 # ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh"]
-ENV ORIGIN=http://35.154.171.205
+ENV ORIGIN=https://rean-admin-portal-dev.services.reanfoundation.org
 
 CMD ["node", "build/index.js"]
