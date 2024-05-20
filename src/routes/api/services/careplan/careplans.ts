@@ -1,4 +1,4 @@
-import { CAREPLAN_BACKEND_API_URL } from "$env/static/private";
+import { CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
 import { delete_, get_, post_, put_ } from "./../common";
 
 // ////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ export const createCareplan = async (
 
 export const getCareplanById = async (sessionId: string, careplanId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/careplans/${careplanId}`;
-    return await get_(sessionId, url,true, false);
+    return await get_(sessionId, url,true, true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const searchCareplans = async (sessionId: string,
@@ -49,7 +49,7 @@ export const searchCareplans = async (sessionId: string,
     }
     const url = CAREPLAN_BACKEND_API_URL + `/careplans/search${searchString}`;
     console.log('Timestamp ', new Date().toTimeString());
-    return await get_(sessionId, url, true, false);
+    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const updateCareplan = async (

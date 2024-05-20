@@ -19,7 +19,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         throw error (401, 'Unauthorized Access');
     }
 
-    if (!response) {
+    if (!response || !response.Data.DailyStatistics.DashboardStats) {
         throw error(404, 'Daily user statistics data not found');
     }
     if (response.Status === 'failure' || response.HttpCode !== 200) {
