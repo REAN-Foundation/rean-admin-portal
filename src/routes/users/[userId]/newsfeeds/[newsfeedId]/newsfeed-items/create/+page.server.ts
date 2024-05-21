@@ -2,7 +2,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createNewsfeedItem } from '../../../../../../api/services/newsfeed-items';
+import { createNewsfeedItem } from '../../../../../../api/services/reancare/newsfeed-items';
 import type { RequestEvent } from './$types';
 
 /////////////////////////////////////////////////////////////////////////

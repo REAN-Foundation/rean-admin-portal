@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { deleteTenant } from '$routes/api/services/tenants';
+import { deleteTenant } from '$routes/api/services/reancare/tenants';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 

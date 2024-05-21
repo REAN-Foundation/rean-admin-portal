@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises';
-import { importAssessmentTemplate } from '../../../../api/services/assessments/assessment-templates';
+import { importAssessmentTemplate } from '../../../../api/services/reancare/assessments/assessment-templates';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';

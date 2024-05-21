@@ -1,11 +1,11 @@
 import { CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
-import { delete_, get_ } from "../common";
+import { del, get } from "./common.careplan";
 
 ////////////////////////////////////////////////////////////////
 
 export const getEnrollmentById = async (sessionId: string, enrollmentId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/enrollments/${enrollmentId}`;
-    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const searchEnrollments = async (sessionId: string, searchParams?: any) => {
@@ -27,16 +27,16 @@ export const searchEnrollments = async (sessionId: string, searchParams?: any) =
     const url = CAREPLAN_BACKEND_API_URL + `/enrollments/search${searchString}`;
 
      console.log("URL----",url);
-    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const getEnrollmentStats = async (sessionId: string,participantId:string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/enrollments/${participantId}/stats`;
-    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const deleteEnrollment = async (sessionId: string,  enrollmentId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/enrollments/${enrollmentId}`;
-    return await delete_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
+    return await del(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };
 

@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchAssessmentNodes } from '../../../../services/assessments/assessment-nodes';
+import { searchAssessmentNodes } from '../../../../services/reancare/assessments/assessment-nodes';
 
 //////////////////////////////////////////////////////////////
 

@@ -1,7 +1,7 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { BACKEND_API_URL } from '$env/static/private';
-import { getSymptomById } from '../../../../../api/services/symptoms';
+import { getSymptomById } from '../../../../../api/services/reancare/symptoms';
 
 ////////////////////////////////////////////////////////////////////////////
 

@@ -1,13 +1,13 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import type { RequestEvent } from '@sveltejs/kit';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createOrganization } from '../../../../api/services/organizations';
-import { createAddress } from '../../../../api/services/addresses';
+import { createOrganization } from '../../../../api/services/reancare/organizations';
+import { createAddress } from '../../../../api/services/reancare/addresses';
 import type { OrganizationTypes } from '$lib/types/domain.models';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import type { PageServerLoad } from './$types';
-import { getOrganizationTypes } from '../../../../api/services/types';
+import { getOrganizationTypes } from '../../../../api/services/reancare/types';
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

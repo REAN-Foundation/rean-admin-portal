@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteNewsfeed } from '../../services/newsfeeds';
+import { deleteNewsfeed } from '../../services/reancare/newsfeeds';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

@@ -1,5 +1,5 @@
 import {CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
-import { get_ } from "../common";
+import { get } from "./common.careplan";
 
 // ////////////////////////////////////////////////////////////////
 
@@ -23,5 +23,5 @@ export const getCareplanStatistics = async (sessionId: string,
     }
     const url = CAREPLAN_BACKEND_API_URL + `/statistics/search${searchString}`;
    
-    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };

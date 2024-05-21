@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteSymptom } from '../../services/symptoms';
+import { deleteSymptom } from '../../services/reancare/symptoms';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

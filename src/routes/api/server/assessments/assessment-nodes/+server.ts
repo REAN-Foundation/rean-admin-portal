@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteAssessmentNode } from '../../../services/assessments/assessment-nodes';
+import { deleteAssessmentNode } from '../../../services/reancare/assessments/assessment-nodes';
 
 //////////////////////////////////////////////////////////////
 

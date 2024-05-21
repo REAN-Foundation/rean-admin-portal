@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchAssessmentTemplates } from '../../../api/services/assessments/assessment-templates';
+import { searchAssessmentTemplates } from '../../../api/services/reancare/assessments/assessment-templates';
 
 ////////////////////////////////////////////////////////////////////////////
 

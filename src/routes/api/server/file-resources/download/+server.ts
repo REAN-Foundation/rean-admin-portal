@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { download } from '../../../services/file.resource';
+import { download } from '../../../services/reancare/file.resource';
 
 //////////////////////////////////////////////////////////////
 

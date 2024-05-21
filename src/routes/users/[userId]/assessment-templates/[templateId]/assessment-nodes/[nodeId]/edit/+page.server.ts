@@ -9,7 +9,7 @@ import {
 	getQueryResponseTypes,
 	searchAssessmentNodes,
 	updateAssessmentNode
-} from '../../../../../../../api/services/assessments/assessment-nodes';
+} from '../../../../../../../api/services/reancare/assessments/assessment-nodes';
 
 /////////////////////////////////////////////////////////////////////////
 

@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getQueryById } from '$routes/api/services/custom.query';
+import { getQueryById } from '$routes/api/services/reancare/custom.query';
 
 ////////////////////////////////////////////////////////////////////////////
 

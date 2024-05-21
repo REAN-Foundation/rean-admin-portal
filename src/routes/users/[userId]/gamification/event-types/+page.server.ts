@@ -1,7 +1,7 @@
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchEventTypes } from '$routes/api/services/gamification/event.types';
+import { searchEventTypes } from '$routes/api/services/awards/gamification/event.types';
 import { errorMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

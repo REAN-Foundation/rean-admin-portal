@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { getAddictionDistribution } from '$routes/api/services/statistics';
+import { getAddictionDistribution } from '$routes/api/services/reancare/statistics';
 
 //////////////////////////////////////////////////////////////
 

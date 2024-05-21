@@ -4,7 +4,7 @@ import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
-import { getNewsfeedById, updateNewsfeed } from '../../../../../api/services/newsfeeds';
+import { getNewsfeedById, updateNewsfeed } from '../../../../../api/services/reancare/newsfeeds';
 
 /////////////////////////////////////////////////////////////////////////
 

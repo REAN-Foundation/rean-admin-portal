@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteNewsfeedItem } from '../../services/newsfeed-items';
+import { deleteNewsfeedItem } from '../../services/reancare/newsfeed-items';
 
 //////////////////////////////////////////////////////////////
 

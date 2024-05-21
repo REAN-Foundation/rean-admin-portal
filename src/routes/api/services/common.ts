@@ -9,15 +9,14 @@ export const get_ = async (
 	sessionId: string,
 	url: string,
 	authorizeUser = false,
-    authorizeClient = true,
-    xApiKey = API_CLIENT_INTERNAL_KEY
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	// console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-    if (authorizeClient) {
+    if (xApiKey) {
         headers['x-api-key'] = xApiKey;
     }
 	if (authorizeUser) {
@@ -47,14 +46,13 @@ export const post_ = async (
 	url: string,
 	bodyObj: unknown,
 	authorizeUser = false,
-    authorizeClient = true,
-    xApiKey = API_CLIENT_INTERNAL_KEY
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-    if (authorizeClient) {
+    if (xApiKey) {
         headers['x-api-key'] = xApiKey;
     }
 	if (authorizeUser) {
@@ -83,14 +81,13 @@ export const put_ = async (
 	url: string,
 	bodyObj: unknown,
 	authorizeUser = false,
-    authorizeClient = true,
-    xApiKey = API_CLIENT_INTERNAL_KEY
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-    if (authorizeClient) {
+    if (xApiKey) {
         headers['x-api-key'] = xApiKey;
     }
 	if (authorizeUser) {
@@ -115,14 +112,13 @@ export const delete_ = async (
 	sessionId: string,
 	url: string,
 	authorizeUser = false,
-    authorizeClient = true,
-    xApiKey = API_CLIENT_INTERNAL_KEY
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-    if (authorizeClient) {
+    if (xApiKey) {
         headers['x-api-key'] = xApiKey;
     }
 	if (authorizeUser) {

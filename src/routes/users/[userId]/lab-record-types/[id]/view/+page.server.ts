@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getLabRecordTypeById } from '../../../../../api/services/lab-record-types';
+import { getLabRecordTypeById } from '../../../../../api/services/reancare/lab-record-types';
 
 ////////////////////////////////////////////////////////////////////////////
 

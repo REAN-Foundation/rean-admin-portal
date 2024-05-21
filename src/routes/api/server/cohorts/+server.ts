@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { deleteCohort } from '$routes/api/services/cohorts';
+import { deleteCohort } from '$routes/api/services/reancare/cohorts';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 

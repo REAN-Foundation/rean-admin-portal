@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -18,12 +18,12 @@ export const createGoal = async (
   };
 
   const url = CAREPLAN_BACKEND_API_URL + '/assets/goals';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getGoalById = async (sessionId: string, goalId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/goals/${goalId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchGoals = async (sessionId: string, searchParams) => {
@@ -37,7 +37,7 @@ export const searchGoals = async (sessionId: string, searchParams) => {
   }
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/goals/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateGoal = async (
@@ -56,10 +56,10 @@ export const updateGoal = async (
   };
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/goals/${goalId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteGoal = async (sessionId: string, goalId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/goals/${goalId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

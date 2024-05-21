@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -19,12 +19,12 @@ export const createPhysiotherapy = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/physiotherapy';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getPhysiotherapyById = async (sessionId: string, physiotherapyId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/physiotherapy/${physiotherapyId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchPhysiotherapy = async (sessionId: string, searchParams: any) => {
@@ -39,7 +39,7 @@ export const searchPhysiotherapy = async (sessionId: string, searchParams: any) 
   }
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/physiotherapy/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updatePhysiotherapy = async (
@@ -60,10 +60,10 @@ export const updatePhysiotherapy = async (
   };
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/physiotherapy/${physiotherapyId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deletePhysiotherapy = async (sessionId: string, physiotherapyId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/physiotherapy/${physiotherapyId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

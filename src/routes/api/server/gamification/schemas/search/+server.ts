@@ -1,4 +1,4 @@
-import { searchSchemas } from '$routes/api/services/gamification/schema';
+import { searchSchemas } from '$routes/api/services/awards/gamification/schema';
 import type { RequestEvent } from '@sveltejs/kit';
 
 //////////////////////////////////////////////////////////////

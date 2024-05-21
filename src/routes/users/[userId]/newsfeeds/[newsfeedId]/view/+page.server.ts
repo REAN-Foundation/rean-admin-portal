@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getNewsfeedById } from '../../../../../api/services/newsfeeds';
+import { getNewsfeedById } from '../../../../../api/services/reancare/newsfeeds';
 
 ////////////////////////////////////////////////////////////////////////////
 

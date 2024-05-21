@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteGoal } from '../../services/goals';
+import { deleteGoal } from '../../services/reancare/goals';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

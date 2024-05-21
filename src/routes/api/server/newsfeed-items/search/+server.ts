@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchNewsfeedItems } from '../../../../api/services/newsfeed-items';
+import { searchNewsfeedItems } from '../../../services/reancare/newsfeed-items';
 
 //////////////////////////////////////////////////////////////
 

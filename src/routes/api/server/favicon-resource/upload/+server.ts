@@ -1,4 +1,4 @@
-import { uploadBinary } from '../../../services/file.resource';
+import { uploadBinary } from '../../../services/reancare/file.resource';
 import type { RequestEvent, RequestHandler } from './$types';
 import * as fs from 'fs';
 

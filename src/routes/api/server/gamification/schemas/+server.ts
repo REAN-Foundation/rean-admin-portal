@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { deleteSchema } from '$routes/api/services/gamification/schema';
+import { deleteSchema } from '$routes/api/services/awards/gamification/schema';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 

@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getBadgeById } from '$routes/api/services/gamification/badge';
+import { getBadgeById } from '$routes/api/services/awards/gamification/badge';
 
 ////////////////////////////////////////////////////////////////////////////
 

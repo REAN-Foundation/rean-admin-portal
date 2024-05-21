@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deletePriority } from '../../services/priorities';
+import { deletePriority } from '../../services/reancare/priorities';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

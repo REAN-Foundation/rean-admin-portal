@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteKnowledgeNugget } from '../../services/knowledge-nuggets';
+import { deleteKnowledgeNugget } from '../../services/reancare/knowledge-nuggets';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

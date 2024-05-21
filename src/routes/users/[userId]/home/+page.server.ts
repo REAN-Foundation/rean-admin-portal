@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import { error, type RequestEvent } from '@sveltejs/kit';
-import { getDailyStatistics, getDailyTenantStatistics } from "../../../../routes/api/services/statistics"
+import { getDailyStatistics, getDailyTenantStatistics } from "../../../api/services/reancare/statistics"
 
 //////////////////////////////////////////////////////////////////////////
 

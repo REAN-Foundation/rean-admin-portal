@@ -7,7 +7,7 @@ import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import {
 	getPersonRoleTypeById,
 	updatePersonRoleType
-} from '../../../../../api/services/person-role-types';
+} from '../../../../../api/services/reancare/person-role-types';
 
 /////////////////////////////////////////////////////////////////////////
 

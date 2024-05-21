@@ -1,6 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { page } from '$app/stores';
-import { searchAssessmentTemplates } from '../../../../services/assessments/assessment-templates';
+import { searchAssessmentTemplates } from '../../../../services/reancare/assessments/assessment-templates';
 
 //////////////////////////////////////////////////////////////
 

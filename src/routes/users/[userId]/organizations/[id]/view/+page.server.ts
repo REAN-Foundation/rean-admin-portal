@@ -1,7 +1,7 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { PageServerLoad } from './$types';
-import { getOrganizationById } from '../../../../../api/services/organizations';
+import { getOrganizationById } from '../../../../../api/services/reancare/organizations';
 
 ////////////////////////////////////////////////////////////////////////////
 

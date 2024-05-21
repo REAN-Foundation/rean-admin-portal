@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getNoticeById } from '../../../../../api/services/notices';
+import { getNoticeById } from '../../../../../api/services/reancare/notices';
 
 ////////////////////////////////////////////////////////////////////////////
 

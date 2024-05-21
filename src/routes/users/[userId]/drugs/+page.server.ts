@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchDrugs } from '../../../api/services/drugs';
+import { searchDrugs } from '../../../api/services/reancare/drugs';
 
 ////////////////////////////////////////////////////////////////////////////
 

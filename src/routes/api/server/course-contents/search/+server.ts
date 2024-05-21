@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchCourseContents } from '../../../services/course.contents';
+import { searchCourseContents } from '../../../services/reancare/course.contents';
 
 //////////////////////////////////////////////////////////////
 

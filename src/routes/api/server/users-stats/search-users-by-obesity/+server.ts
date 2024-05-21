@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { getObesityDistribution } from '$routes/api/services/statistics';
+import { getObesityDistribution } from '$routes/api/services/reancare/statistics';
 
 //////////////////////////////////////////////////////////////
 

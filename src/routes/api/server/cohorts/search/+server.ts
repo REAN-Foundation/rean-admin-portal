@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchCohorts } from '../../../services/cohorts';
+import { searchCohorts } from '../../../services/reancare/cohorts';
 
 //////////////////////////////////////////////////////////////
 

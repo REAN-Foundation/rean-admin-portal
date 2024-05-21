@@ -4,8 +4,8 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
-import { getSchemaById, updateSchema } from '$routes/api/services/gamification/schema';
-import { searchEventTypes } from '$routes/api/services/gamification/event.types';
+import { getSchemaById, updateSchema } from '$routes/api/services/awards/gamification/schema';
+import { searchEventTypes } from '$routes/api/services/awards/gamification/event.types';
 
 ////////////////////////////////////////////////////////////////////////////
 

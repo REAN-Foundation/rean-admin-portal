@@ -1,7 +1,7 @@
 import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchKnowledgeNuggets } from '../../../api/services/knowledge-nuggets';
+import { searchKnowledgeNuggets } from '../../../api/services/reancare/knowledge-nuggets';
 
 ////////////////////////////////////////////////////////////////////////////
 

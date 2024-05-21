@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getSchemaById } from '$routes/api/services/gamification/schema';
+import { getSchemaById } from '$routes/api/services/awards/gamification/schema';
 
 ////////////////////////////////////////////////////////////////////////////
 

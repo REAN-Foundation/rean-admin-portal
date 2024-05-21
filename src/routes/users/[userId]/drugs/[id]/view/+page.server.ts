@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getDrugById } from '../../../../../api/services/drugs';
+import { getDrugById } from '../../../../../api/services/reancare/drugs';
 
 ////////////////////////////////////////////////////////////////////////////
 

@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -17,12 +17,12 @@ export const createCheckup = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/checkups';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getCheckupById = async (sessionId: string, checkupId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/checkups/${checkupId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchCheckups = async (sessionId: string, searchParams) => {
@@ -35,7 +35,7 @@ export const searchCheckups = async (sessionId: string, searchParams) => {
     }
   }
   const url = CAREPLAN_BACKEND_API_URL + `/assets/checkups/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateCheckup = async (
@@ -53,10 +53,10 @@ export const updateCheckup = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + `/assets/checkups/${checkupId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteCheckup = async (sessionId: string, checkupId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/checkups/${checkupId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

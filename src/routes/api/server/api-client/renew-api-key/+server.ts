@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { updateApiKey } from '../../../services/api-clients';
+import { updateApiKey } from '../../../services/reancare/api-clients';
 
 //////////////////////////////////////////////////////////////
 

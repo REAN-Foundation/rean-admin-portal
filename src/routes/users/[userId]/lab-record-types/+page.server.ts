@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchLabRecordTypes } from '../../../api/services/lab-record-types';
+import { searchLabRecordTypes } from '../../../api/services/reancare/lab-record-types';
 
 ////////////////////////////////////////////////////////////////////////////
 

@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { page } from '$app/stores';
-import { searchKnowledgeNuggets } from '../../../services/knowledge-nuggets';
+import { searchKnowledgeNuggets } from '../../../services/reancare/knowledge-nuggets';
 
 //////////////////////////////////////////////////////////////
 

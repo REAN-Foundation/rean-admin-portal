@@ -1,7 +1,7 @@
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchBadgeCategories } from '$routes/api/services/gamification/badge.category';
+import { searchBadgeCategories } from '$routes/api/services/awards/gamification/badge.category';
 
 ////////////////////////////////////////////////////////////////////////////
 

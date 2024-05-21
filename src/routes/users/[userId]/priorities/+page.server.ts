@@ -1,7 +1,7 @@
 import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchPriorities } from '../../../api/services/priorities';
+import { searchPriorities } from '../../../api/services/reancare/priorities';
 
 ////////////////////////////////////////////////////////////////////////////
 

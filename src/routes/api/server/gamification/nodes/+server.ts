@@ -1,4 +1,4 @@
-import { deleteNode } from '$routes/api/services/gamification/node';
+import { deleteNode } from '$routes/api/services/awards/gamification/node';
 import type { RequestEvent } from '@sveltejs/kit';
 
 //////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { getAgeWiseUsers, getMajorAilment } from '$routes/api/services/statistics';
+import { getAgeWiseUsers, getMajorAilment } from '$routes/api/services/reancare/statistics';
 
 //////////////////////////////////////////////////////////////
 

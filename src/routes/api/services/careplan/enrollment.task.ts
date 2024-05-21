@@ -1,11 +1,11 @@
 import { CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
-import { get_ } from "../common";
+import { get } from "./common.careplan";
 
 ////////////////////////////////////////////////////////////////
 
 export const getEnrollmentTaskById = async (sessionId: string, enrollmentTaskId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/enrollment-tasks/${enrollmentTaskId}`;
-    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY );
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY );
 };
 
 export const searchEnrollmentTask = async (sessionId: string, searchParams?: any) => {
@@ -26,6 +26,6 @@ export const searchEnrollmentTask = async (sessionId: string, searchParams?: any
     }
     const url = CAREPLAN_BACKEND_API_URL + `/enrollment-tasks/search${searchString}`;
 
-    return await get_(sessionId, url, true, true, CAREPLAN_SERVICE_API_KEY);
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };
 

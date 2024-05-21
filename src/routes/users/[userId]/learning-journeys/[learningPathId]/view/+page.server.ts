@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getLearningJourneyById } from '../../../../../api/services/learning-journeys';
+import { getLearningJourneyById } from '../../../../../api/services/reancare/learning-journeys';
 
 ////////////////////////////////////////////////////////////////////////////
 

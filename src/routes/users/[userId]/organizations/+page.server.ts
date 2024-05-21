@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchOrganizations } from '../../../api/services/organizations';
+import { searchOrganizations } from '../../../api/services/reancare/organizations';
 ////////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {

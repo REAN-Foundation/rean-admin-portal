@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteLearningJourney } from '../../services/learning-journeys';
+import { deleteLearningJourney } from '../../services/reancare/learning-journeys';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchNotifications } from '../../../api/services/notifications';
+import { searchNotifications } from '../../../api/services/reancare/notifications';
 
 ////////////////////////////////////////////////////////////////////////////
 

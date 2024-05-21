@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -19,12 +19,12 @@ export const createVideo = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/video';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getVideoById = async (sessionId: string, videoId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/video/${videoId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchVideos = async (sessionId: string, searchParams: any) => {
@@ -38,7 +38,7 @@ export const searchVideos = async (sessionId: string, searchParams: any) => {
     }
   }
   const url = CAREPLAN_BACKEND_API_URL + `/assets/web-newsfeeds/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateVideo = async (
@@ -58,10 +58,10 @@ export const updateVideo = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + `/assets/video/${videoId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteVideo = async (sessionId: string, videoId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/video/${videoId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

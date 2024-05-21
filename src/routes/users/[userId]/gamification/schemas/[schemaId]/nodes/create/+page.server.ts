@@ -3,8 +3,14 @@ import { error, type RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createNode, searchNodes } from '$routes/api/services/gamification/node';
-import { getDataActionTypes, getEventActionTypes, getInputSourceTypes, getLogicalOperatorTypes, getOperandDataTypes, getOutputSourceTypes } from '$routes/api/services/gamification/types.js';
+import { createNode, searchNodes } from '$routes/api/services/awards/gamification/node';
+import { 
+    getDataActionTypes, 
+    getEventActionTypes, 
+    getInputSourceTypes, 
+    getLogicalOperatorTypes, 
+    getOperandDataTypes, 
+    getOutputSourceTypes } from '$routes/api/services/awards/gamification/types.js';
 import type { PageServerLoad } from './$types';
 
 /////////////////////////////////////////////////////////////////////////

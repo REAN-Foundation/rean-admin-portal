@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getCourseContentById,
 	updateCourseContent
-} from '../../../../../../../../../api/services/course.contents';
+} from '../../../../../../../../../api/services/reancare/course.contents';
 
 /////////////////////////////////////////////////////////////////////////
 

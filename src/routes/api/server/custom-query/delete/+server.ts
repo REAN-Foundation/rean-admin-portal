@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { deleteQuery } from '$routes/api/services/custom.query';
+import { deleteQuery } from '$routes/api/services/reancare/custom.query';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 
