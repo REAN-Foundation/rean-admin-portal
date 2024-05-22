@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getKnowledgeNuggetById,
 	updateKnowledgeNugget
-} from '../../../../../api/services/knowledge-nuggets';
+} from '../../../../../api/services/reancare/knowledge-nuggets';
 
 /////////////////////////////////////////////////////////////////////////
 

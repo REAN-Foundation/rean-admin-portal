@@ -4,7 +4,7 @@ import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { getCareplanById, searchCareplanCategories } from '$routes/api/services/careplan/careplans';
 import { createCarePlanActivity, searchCarePlanActivities } from '$routes/api/services/careplan/scheduling';
 import { getAssetsType } from '$routes/api/services/careplan/assets/asset';
-import { getTimeSlots } from '$routes/api/services/types';
+import { getTimeSlots } from '$routes/api/services/reancare/types';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';

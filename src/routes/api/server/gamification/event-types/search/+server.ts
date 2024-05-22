@@ -1,4 +1,4 @@
-import { searchEventTypes } from '$routes/api/services/gamification/event.types';
+import { searchEventTypes } from '$routes/api/services/awards/gamification/event.types';
 import type { RequestEvent } from '@sveltejs/kit';
 
 //////////////////////////////////////////////////////////////

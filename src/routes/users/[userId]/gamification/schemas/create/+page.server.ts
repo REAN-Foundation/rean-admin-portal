@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createSchema } from '$routes/api/services/gamification/schema';
+import { createSchema } from '$routes/api/services/awards/gamification/schema';
 
 /////////////////////////////////////////////////////////////////////////
 

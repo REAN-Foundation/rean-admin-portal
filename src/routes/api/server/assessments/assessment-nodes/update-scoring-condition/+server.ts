@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { updateScoringCondition } from '../../../../services/assessments/assessment-nodes';
+import { updateScoringCondition } from '../../../../services/reancare/assessments/assessment-nodes';
 
 //////////////////////////////////////////////////////////////
 

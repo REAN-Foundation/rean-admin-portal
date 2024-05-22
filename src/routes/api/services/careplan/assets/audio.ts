@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -19,12 +19,12 @@ export const createAudio = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/audio';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getAudioById = async (sessionId: string, audioId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/audio/${audioId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchAudios = async (sessionId: string, searchParams) => {
@@ -37,7 +37,7 @@ export const searchAudios = async (sessionId: string, searchParams) => {
     }
   }
   const url = CAREPLAN_BACKEND_API_URL + `/assets/audio/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateAudio = async (
@@ -57,10 +57,10 @@ export const updateAudio = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + `/assets/audio/${audioId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteAudio = async (sessionId: string, audioId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/audio/${audioId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

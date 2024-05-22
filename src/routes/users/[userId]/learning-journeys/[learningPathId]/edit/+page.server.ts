@@ -7,8 +7,8 @@ import type { PageServerLoad } from './$types';
 import {
 	getLearningJourneyById,
 	updateLearningJourney
-} from '../../../../../api/services/learning-journeys';
-import { searchCourses } from '../../../../../api/services/courses';
+} from '../../../../../api/services/reancare/learning-journeys';
+import { searchCourses } from '../../../../../api/services/reancare/courses';
 
 /////////////////////////////////////////////////////////////////////////
 

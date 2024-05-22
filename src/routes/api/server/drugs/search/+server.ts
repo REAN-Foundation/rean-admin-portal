@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchDrugs } from '../../../services/drugs';
+import { searchDrugs } from '../../../services/reancare/drugs';
 
 //////////////////////////////////////////////////////////////
 

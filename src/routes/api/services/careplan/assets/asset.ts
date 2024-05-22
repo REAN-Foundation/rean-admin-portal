@@ -1,11 +1,11 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { get_ } from '../../common';
+import { get } from '../common.careplan';
 
 //////////////////////////////////////////////////////////////////////////////////
 
 export const getAssetsType = async (sessionId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/types/assets`;
-    return await get_(sessionId, url);
+    return await get(sessionId, url, false);
   };
 
 export const searchAssets = async (
@@ -32,5 +32,5 @@ export const searchAssets = async (
     const url = CAREPLAN_BACKEND_API_URL + `/assets/${assetTypeRoute}/search${searchString}`;
        
    
-    return await get_(sessionId, url, true, false);
+    return await get(sessionId, url, true);
 };

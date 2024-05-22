@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
-import { getNotificationById, updateNotification } from '../../../../../api/services/notifications';
+import { getNotificationById, updateNotification } from '../../../../../api/services/reancare/notifications';
 
 /////////////////////////////////////////////////////////////////////////
 

@@ -3,8 +3,8 @@ import { error, type RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createCohort } from '$routes/api/services/cohorts';
-import { searchTenants } from '$routes/api/services/tenants';
+import { createCohort } from '$routes/api/services/reancare/cohorts';
+import { searchTenants } from '$routes/api/services/reancare/tenants';
 import type { PageServerLoad } from './$types';
 
 /////////////////////////////////////////////////////////////////////////

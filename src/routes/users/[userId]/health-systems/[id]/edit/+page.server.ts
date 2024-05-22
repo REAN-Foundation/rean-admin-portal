@@ -4,8 +4,8 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
-import { getHealthSystemById, updateHealthSystem } from '../../../../../api/services/health.systems';
-import { searchHealthSystems } from '../../../../../api/services/health.systems';
+import { getHealthSystemById, updateHealthSystem } from '../../../../../api/services/reancare/health.systems';
+import { searchHealthSystems } from '../../../../../api/services/reancare/health.systems';
 
 /////////////////////////////////////////////////////////////////////////
 

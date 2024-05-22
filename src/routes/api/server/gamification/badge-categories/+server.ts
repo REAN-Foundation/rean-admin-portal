@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { deleteBadgeCategory } from '$routes/api/services/gamification/badge.category';
+import { deleteBadgeCategory } from '$routes/api/services/awards/gamification/badge.category';
 import type { RequestEvent } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 

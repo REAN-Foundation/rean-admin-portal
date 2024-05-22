@@ -8,14 +8,17 @@ import chalk from 'chalk';
 export const get_ = async (
 	sessionId: string,
 	url: string,
-	authorizeUser = false
+	authorizeUser = false,
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	// console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -42,14 +45,16 @@ export const post_ = async (
 	sessionId: string,
 	url: string,
 	bodyObj: unknown,
-	authorizeUser = false
+	authorizeUser = false,
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
-
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -75,13 +80,16 @@ export const put_ = async (
 	sessionId: string,
 	url: string,
 	bodyObj: unknown,
-	authorizeUser = false
+	authorizeUser = false,
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -103,13 +111,16 @@ export const put_ = async (
 export const delete_ = async (
 	sessionId: string,
 	url: string,
-	authorizeUser = false
+	authorizeUser = false,
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}

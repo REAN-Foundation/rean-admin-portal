@@ -1,7 +1,7 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchAssessmentNodes } from '../../../../../api/services/assessments/assessment-nodes';
-import { getAssessmentTemplateById } from '../../../../../api/services/assessments/assessment-templates';
+import { searchAssessmentNodes } from '../../../../../api/services/reancare/assessments/assessment-nodes';
+import { getAssessmentTemplateById } from '../../../../../api/services/reancare/assessments/assessment-templates';
 
 ////////////////////////////////////////////////////////////////////////////
 

@@ -1,5 +1,6 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
+
 ////////////////////////////////////////////////////////////////
 
 export const createInfographics = async (
@@ -18,12 +19,12 @@ export const createInfographics = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/infographics';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getInfographicsById = async (sessionId: string, infographicsId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/infographics/${infographicsId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchInfographics = async (sessionId: string, searchParams) => {
@@ -37,7 +38,7 @@ export const searchInfographics = async (sessionId: string, searchParams) => {
   }
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/infographics/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateInfographics = async (
@@ -58,10 +59,10 @@ export const updateInfographics = async (
   };
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/infographics/${infographicsId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteInfographics = async (sessionId: string, infographicsId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/infographics/${infographicsId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

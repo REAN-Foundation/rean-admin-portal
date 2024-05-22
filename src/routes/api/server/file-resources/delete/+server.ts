@@ -1,4 +1,4 @@
-import { deleteFileResource } from '../../../services/file.resource';
+import { deleteFileResource } from '../../../services/reancare/file.resource';
 import type { RequestEvent } from '@sveltejs/kit';
 
 //////////////////////////////////////////////////////////////

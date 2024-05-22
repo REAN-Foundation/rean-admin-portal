@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -20,12 +20,12 @@ export const createAppointment = async (
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/appointments';
   console.log("url--------",url);
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getAppointmentById = async (sessionId: string, appointmentId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/appointments/${appointmentId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchAppointments = async (sessionId: string, searchParams) => {
@@ -39,7 +39,7 @@ export const searchAppointments = async (sessionId: string, searchParams) => {
   }
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/appointments/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateAppointment = async (
@@ -60,10 +60,10 @@ export const updateAppointment = async (
   };
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/appointments/${appointmentId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteAppointment = async (sessionId: string, appointmentId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/appointments/${appointmentId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

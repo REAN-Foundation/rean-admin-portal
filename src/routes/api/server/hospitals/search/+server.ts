@@ -1,4 +1,4 @@
-import { searchHospitals } from "$routes/api/services/hospitals";
+import { searchHospitals } from "$routes/api/services/reancare/hospitals";
 import type { RequestEvent } from "@sveltejs/kit";
 
 //////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-import { searchBadgeCategories } from '$routes/api/services/gamification/badge.category';
+import { searchBadgeCategories } from '$routes/api/services/awards/gamification/badge.category';
 import type { RequestEvent } from '@sveltejs/kit';
 
 //////////////////////////////////////////////////////////////

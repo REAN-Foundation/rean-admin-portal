@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getKnowledgeNuggetById } from '../../../../../api/services/knowledge-nuggets';
+import { getKnowledgeNuggetById } from '../../../../../api/services/reancare/knowledge-nuggets';
 
 ////////////////////////////////////////////////////////////////////////////
 

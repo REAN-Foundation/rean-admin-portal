@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { updateQuery } from '$routes/api/services/custom.query';
+import { updateQuery } from '$routes/api/services/reancare/custom.query';
 
 //////////////////////////////////////////////////////////////
 

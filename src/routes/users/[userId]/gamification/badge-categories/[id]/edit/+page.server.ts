@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getBadgeCategoryById, updateBadgeCategory } from '$routes/api/services/gamification/badge.category';
+import { getBadgeCategoryById, updateBadgeCategory } from '$routes/api/services/awards/gamification/badge.category';
 import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { zfd } from 'zod-form-data';

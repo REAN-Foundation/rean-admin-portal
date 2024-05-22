@@ -1,7 +1,7 @@
 import type { ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchSchemas } from '$routes/api/services/gamification/schema';
+import { searchSchemas } from '$routes/api/services/awards/gamification/schema';
 
 ////////////////////////////////////////////////////////////////////////////
 

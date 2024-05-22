@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { page } from '$app/stores';
-import { searchSymptoms } from '../../../services/symptoms';
+import { searchSymptoms } from '../../../services/reancare/symptoms';
 
 //////////////////////////////////////////////////////////////
 

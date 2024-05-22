@@ -4,8 +4,8 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
-import { getBadgeById, updateBadge } from '$routes/api/services/gamification/badge';
-import { searchBadgeCategories } from '$routes/api/services/gamification/badge.category';
+import { getBadgeById, updateBadge } from '$routes/api/services/awards/gamification/badge';
+import { searchBadgeCategories } from '$routes/api/services/awards/gamification/badge.category';
 
 ////////////////////////////////////////////////////////////////////////////
 

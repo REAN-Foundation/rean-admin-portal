@@ -1,7 +1,7 @@
 import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
-import { searchModules } from '../../../../../api/services/modules';
+import { searchModules } from '../../../../../api/services/reancare/modules';
 
 ////////////////////////////////////////////////////////////////////////////
 

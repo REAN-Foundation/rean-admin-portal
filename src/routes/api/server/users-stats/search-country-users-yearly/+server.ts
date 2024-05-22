@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { getCountryWiseUsers } from '$routes/api/services/statistics';
+import { getCountryWiseUsers } from '$routes/api/services/reancare/statistics';
 
 //////////////////////////////////////////////////////////////
 

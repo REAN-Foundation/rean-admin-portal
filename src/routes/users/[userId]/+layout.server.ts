@@ -1,7 +1,7 @@
 import type { LayoutServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 import { SessionManager } from '../../api/sessions/session.manager';
-import { getTenantSettings } from '../../api/services/tenant-settings';
+import { getTenantSettings } from '../../api/services/reancare/tenant-settings';
 
 ////////////////////////////////////////////////////////////////
 

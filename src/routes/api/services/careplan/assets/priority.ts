@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -17,12 +17,12 @@ export const createPriority = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/priorities';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getPriorityById = async (sessionId: string, priorityId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/priorities/${priorityId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchPriority = async (sessionId: string, searchParams: any) => {
@@ -37,7 +37,7 @@ export const searchPriority = async (sessionId: string, searchParams: any) => {
   }
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/priorities/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updatePriority = async (
@@ -56,10 +56,10 @@ export const updatePriority = async (
   };
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/priorities/${priorityId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deletePriority = async (sessionId: string, priorityId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/priority/${priorityId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

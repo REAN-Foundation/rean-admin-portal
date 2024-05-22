@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getEventTypeById } from '$routes/api/services/gamification/event.types';
+import { getEventTypeById } from '$routes/api/services/awards/gamification/event.types';
 
 ////////////////////////////////////////////////////////////////////////////
 

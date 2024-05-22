@@ -1,5 +1,5 @@
-import { CAREPLAN_BACKEND_API_URL } from "$env/static/private";
-import { delete_, get_, post_, put_ } from "./../common";
+import { CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
+import {del, get, post, put} from "./common.careplan";
 
 // ////////////////////////////////////////////////////////////////
 
@@ -21,12 +21,12 @@ export const createCareplan = async (
         Tags: tags,
         Version: !version || version?.length === 0 ? 'V 1.0' : version,
     };
-    return await post_(sessionId, url, body, true, false);
+    return await post(sessionId, url, body, true);
 };
 
 export const getCareplanById = async (sessionId: string, careplanId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/careplans/${careplanId}`;
-    return await get_(sessionId, url,true, false);
+    return await get(sessionId, url,true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const searchCareplans = async (sessionId: string,
@@ -49,7 +49,7 @@ export const searchCareplans = async (sessionId: string,
     }
     const url = CAREPLAN_BACKEND_API_URL + `/careplans/search${searchString}`;
     console.log('Timestamp ', new Date().toTimeString());
-    return await get_(sessionId, url, true, false);
+    return await get(sessionId, url, true, CAREPLAN_SERVICE_API_KEY);
 };
 
 export const updateCareplan = async (
@@ -70,17 +70,17 @@ export const updateCareplan = async (
         Tags: tags,
         Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteCareplan = async (sessionId: string, careplanId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/careplans/${careplanId}`;
-    return await delete_(sessionId, url, true, false);
+    return await del(sessionId, url, true);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const searchCareplanCategories = async (sessionId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/careplan-categories/search`;
-    return await get_(sessionId, url, true, false);
+    return await get(sessionId, url, true);
 };

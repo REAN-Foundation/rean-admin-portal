@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getTenantSettings } from '../../../../../api/services/tenant-settings';
+import { getTenantSettings } from '../../../../../api/services/reancare/tenant-settings';
 
 ////////////////////////////////////////////////////////////////////////////
 

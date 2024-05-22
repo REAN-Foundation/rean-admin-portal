@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getCohortById } from '$routes/api/services/cohorts';
+import { getCohortById } from '$routes/api/services/reancare/cohorts';
 
 ////////////////////////////////////////////////////////////////////////////
 

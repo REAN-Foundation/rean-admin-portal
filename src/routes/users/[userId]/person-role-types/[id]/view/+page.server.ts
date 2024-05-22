@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getPersonRoleTypeById } from '../../../../../api/services/person-role-types';
+import { getPersonRoleTypeById } from '../../../../../api/services/reancare/person-role-types';
 
 ////////////////////////////////////////////////////////////////////////////
 

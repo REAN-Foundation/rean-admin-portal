@@ -6,8 +6,8 @@ import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
 import { SessionManager } from './api/sessions/session.manager';
-import { login } from './api/services/user';
-import { getUserRoles } from './api/services/types';
+import { login } from './api/services/reancare/user';
+import { getUserRoles } from './api/services/reancare/types';
 
 ////////////////////////////////////////////////////////////////
 

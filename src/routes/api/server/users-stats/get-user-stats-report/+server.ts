@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { getDailySystemStatistics, getDailyTenantStatistics, getDailyTenantStatsReport } from '../../../services/statistics';
-import { download } from '../../../services/file.resource';
+import { getDailySystemStatistics, getDailyTenantStatistics, getDailyTenantStatsReport } from '../../../services/reancare/statistics';
+import { download } from '../../../services/reancare/file.resource';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

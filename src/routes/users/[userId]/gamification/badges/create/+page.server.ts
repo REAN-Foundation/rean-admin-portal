@@ -5,8 +5,8 @@ import { zfd } from 'zod-form-data';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createBadge } from '$routes/api/services/gamification/badge';
-import { searchBadgeCategories } from '$routes/api/services/gamification/badge.category';
+import { createBadge } from '$routes/api/services/awards/gamification/badge';
+import { searchBadgeCategories } from '$routes/api/services/awards/gamification/badge.category';
 
 /////////////////////////////////////////////////////////////////////////
 

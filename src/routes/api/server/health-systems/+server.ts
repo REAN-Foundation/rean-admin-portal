@@ -1,5 +1,5 @@
 import { errorMessage, successMessage } from "$lib/utils/message.utils";
-import { deleteHealthSystem } from "$routes/api/services/health.systems";
+import { deleteHealthSystem } from "$routes/api/services/reancare/health.systems";
 import type { RequestEvent } from "@sveltejs/kit";
 import { redirect } from "sveltekit-flash-message/server";
 

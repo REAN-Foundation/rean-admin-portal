@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -19,12 +19,12 @@ export const createWordPower = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/word-power';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getWordPowerById = async (sessionId: string, wordPowerId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/word-power/${wordPowerId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchWordPower = async (sessionId: string, searchParams) => {
@@ -38,7 +38,7 @@ export const searchWordPower = async (sessionId: string, searchParams) => {
   }
 
   const url = CAREPLAN_BACKEND_API_URL + `/assets/word-power/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateWordPower = async (
@@ -58,10 +58,10 @@ export const updateWordPower = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + `/assets/word-power/${wordPowerId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteWordPower = async (sessionId: string, wordPowerId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/word-power/${wordPowerId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

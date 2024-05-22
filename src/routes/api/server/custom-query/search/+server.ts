@@ -1,4 +1,4 @@
-import { searchQueries } from '$routes/api/services/custom.query';
+import { searchQueries } from '$routes/api/services/reancare/custom.query';
 import type { RequestEvent } from '@sveltejs/kit';
 
 //////////////////////////////////////////////////////////////

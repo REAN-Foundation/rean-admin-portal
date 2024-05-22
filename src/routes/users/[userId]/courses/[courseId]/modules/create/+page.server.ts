@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createModule } from '../../../../../../api/services/modules';
+import { createModule } from '../../../../../../api/services/reancare/modules';
 
 /////////////////////////////////////////////////////////////////////////
 

@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteLabRecordType } from '../../services/lab-record-types';
+import { deleteLabRecordType } from '../../services/reancare/lab-record-types';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

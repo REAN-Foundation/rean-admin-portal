@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getNewsfeedItemById,
 	updateNewsfeedItem
-} from '../../../../../../../api/services/newsfeed-items';
+} from '../../../../../../../api/services/reancare/newsfeed-items';
 
 /////////////////////////////////////////////////////////////////////////
 

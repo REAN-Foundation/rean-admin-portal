@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { errorMessage, successMessage } from "$lib/utils/message.utils";
-import { updateTenantSettings } from '../../../services/tenant-settings';
+import { updateTenantSettings } from '../../../services/reancare/tenant-settings';
 import { redirect } from 'sveltekit-flash-message/server';
 
 //////////////////////////////////////////////////////////////

@@ -7,7 +7,7 @@ import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import {
 	getLabRecordTypeById,
 	updateLabRecordType
-} from '../../../../../api/services/lab-record-types';
+} from '../../../../../api/services/reancare/lab-record-types';
 
 /////////////////////////////////////////////////////////////////////////
 

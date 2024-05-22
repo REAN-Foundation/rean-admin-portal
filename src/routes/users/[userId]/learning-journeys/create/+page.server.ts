@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
-import { createLearningJourney } from '../../../../api/services/learning-journeys';
-import { searchCourses } from '../../../../api/services/courses';
+import { createLearningJourney } from '../../../../api/services/reancare/learning-journeys';
+import { searchCourses } from '../../../../api/services/reancare/courses';
 
 ////////////////////////////////////////////////////////////////////////////
 

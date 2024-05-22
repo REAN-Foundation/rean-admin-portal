@@ -1,7 +1,7 @@
 import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchQueries } from '$routes/api/services/custom.query';
+import { searchQueries } from '$routes/api/services/reancare/custom.query';
 
 ////////////////////////////////////////////////////////////////////////////
 

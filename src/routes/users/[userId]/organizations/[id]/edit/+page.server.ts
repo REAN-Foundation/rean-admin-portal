@@ -6,9 +6,9 @@ import type { OrganizationTypes } from '$lib/types/domain.models';
 import { BACKEND_API_URL } from '$env/static/private';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
-import { getOrganizationById, updateOrganization } from '../../../../../api/services/organizations';
-import { getOrganizationTypes } from '../../../../../api/services/types';
-import { updateAddress } from '../../../../../api/services/addresses';
+import { getOrganizationById, updateOrganization } from '../../../../../api/services/reancare/organizations';
+import { getOrganizationTypes } from '../../../../../api/services/reancare/types';
+import { updateAddress } from '../../../../../api/services/reancare/addresses';
 
 /////////////////////////////////////////////////////////////////////////
 

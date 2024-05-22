@@ -6,7 +6,7 @@ import {
 	getCarePlanActivityById,
 	updateCarePlanActivity
 } from '$routes/api/services/careplan/scheduling';
-import { getTimeSlots } from '$routes/api/services/types';
+import { getTimeSlots } from '$routes/api/services/reancare/types';
 import { getAssetsType } from '$routes/api/services/careplan/assets/asset';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';

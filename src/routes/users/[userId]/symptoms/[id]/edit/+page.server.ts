@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { PageServerLoad } from './$types';
-import { getSymptomById, updateSymptom } from '../../../../../api/services/symptoms';
+import { getSymptomById, updateSymptom } from '../../../../../api/services/reancare/symptoms';
 
 /////////////////////////////////////////////////////////////////////////
 

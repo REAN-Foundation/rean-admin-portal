@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getAssessmentTemplateById,
 	updateAssessmentTemplate
-} from '../../../../../api/services/assessments/assessment-templates';
+} from '../../../../../api/services/reancare/assessments/assessment-templates';
 
 /////////////////////////////////////////////////////////////////////////
 

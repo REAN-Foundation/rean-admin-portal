@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchTenants } from '$routes/api/services/tenants';
+import { searchTenants } from '$routes/api/services/reancare/tenants';
 
 //////////////////////////////////////////////////////////////
 

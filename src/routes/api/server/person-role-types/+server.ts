@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deletePersonRoleType } from '../../services/person-role-types';
+import { deletePersonRoleType } from '../../services/reancare/person-role-types';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

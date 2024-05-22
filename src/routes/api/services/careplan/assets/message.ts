@@ -1,5 +1,5 @@
 import { CAREPLAN_BACKEND_API_URL } from '$env/static/private';
-import { delete_, get_, post_, put_ } from '../../common';
+import { del, get, post, put } from '../common.careplan';
 
 ////////////////////////////////////////////////////////////////
 
@@ -21,12 +21,12 @@ export const createMessage = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + '/assets/messages';
-  return await post_(sessionId, url, body, true, false);
+  return await post(sessionId, url, body, true);
 };
 
 export const getMessageById = async (sessionId: string, messageId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/messages/${messageId}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const searchMessage = async (sessionId: string, searchParams: any) => {
@@ -40,7 +40,7 @@ export const searchMessage = async (sessionId: string, searchParams: any) => {
     }
   }
   const url = CAREPLAN_BACKEND_API_URL + `/assets/messages/search${searchString}`;
-  return await get_(sessionId, url, true, false);
+  return await get(sessionId, url, true);
 };
 
 export const updateMessage = async (
@@ -62,10 +62,10 @@ export const updateMessage = async (
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
   const url = CAREPLAN_BACKEND_API_URL + `/assets/messages/${messageId}`;
-  return await put_(sessionId, url, body, true, false);
+  return await put(sessionId, url, body, true);
 };
 
 export const deleteMessage = async (sessionId: string, messageId: string) => {
   const url = CAREPLAN_BACKEND_API_URL + `/assets/messages/${messageId}`;
-  return await delete_(sessionId, url, true, false);
+  return await del(sessionId, url, true);
 };

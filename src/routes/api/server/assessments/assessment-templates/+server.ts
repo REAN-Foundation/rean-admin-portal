@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteAssessmentTemplate } from '../../../services/assessments/assessment-templates';
+import { deleteAssessmentTemplate } from '../../../services/reancare/assessments/assessment-templates';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { redirect } from 'sveltekit-flash-message/server';
 

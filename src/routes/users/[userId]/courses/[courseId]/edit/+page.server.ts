@@ -4,7 +4,7 @@ import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
-import { getCourseById, updateCourse } from '../../../../../api/services/courses';
+import { getCourseById, updateCourse } from '../../../../../api/services/reancare/courses';
 
 /////////////////////////////////////////////////////////////////////////
 
