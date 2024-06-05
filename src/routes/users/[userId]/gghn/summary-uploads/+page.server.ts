@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit';
 
 export const load:PageServerLoad = async ({fetch}) =>
 {
-    const res =await fetch(`/api/server/gmu/appointment-report`)
+    const res =await fetch(`/api/server/gghn/appointment-report`)
     const data = await res.json()
     if (data.Status === 'Failure') {
         throw error(404, 'Appointment report status not found')
@@ -13,5 +13,3 @@ export const load:PageServerLoad = async ({fetch}) =>
     AppointmentReport:data
    }
  }
-
- 
