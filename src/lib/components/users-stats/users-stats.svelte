@@ -10,13 +10,11 @@
 	export let genderWiseUsers;
 	export let ageWiseUsers;
 	export let maritalStatusWiseUsers;
-    // export let countryWiseUsers;
 	export let majorAilment;
 	export let addictionDistribution;
 	export let usersCount;
 	export let deviceDetailWiseUsers;
 
-	console.log("years",years)
 	const usersData = [
 		{
 			usersDetail: 'Not Deleted Users',
