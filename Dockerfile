@@ -33,7 +33,8 @@ COPY --from=builder ./app/ ./
 RUN npm install
 
 # # COPY . /app
-
+##
+##
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
 ENV ORIGIN=https://rean-admin-portal-dev.services.reanfoundation.org
 RUN chmod +x /app/entrypoint.sh
