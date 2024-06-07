@@ -12,7 +12,18 @@ export const actions = {
     const date = formData.get('date');
     console.log('in +page.server date is',date)
     if (typeof date === 'string') {
-      await handleDateSubmission(date);
+     const response = await handleDateSubmission(date);
+     console.log("response.status",response.status)
+     if (response.status !== 201) {
+      return {
+          Status: 'failure',
+         
+         }
+        }
+      return {
+      Status: 'success',
+      
+      }
     }
   }
 };

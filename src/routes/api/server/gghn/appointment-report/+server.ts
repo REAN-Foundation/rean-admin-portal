@@ -4,7 +4,7 @@ const gmuUrl = GMU_URL;
 
 export const GET = async () =>{
   try{
-    console.log('get endoint called');
+    console.log('get endpoint called');
     return await fetch(`${gmuUrl}/appointment-schedules/gghn/recent-status-report/recent-file`)
   }   
  catch(error)

@@ -7,13 +7,13 @@ export async function handleDateSubmission(date: string) {
 
   try {
     const response = await fetch(url.toString(), {
-      method: 'GET'
+      method: 'POST'
     });
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-
+    return (response)
     // const data = await response.json();
     console.log('in serverside page',date)
     // Do something with the data

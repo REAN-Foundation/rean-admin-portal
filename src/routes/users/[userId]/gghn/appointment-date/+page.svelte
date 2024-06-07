@@ -1,8 +1,25 @@
 <script lang="ts">
 import { enhance } from '$app/forms';
 import { page } from '$app/stores';
+    import toast from 'svelte-french-toast';
+    import type { ActionData } from './$types';
+    import { invalidate } from '$app/navigation';
+    import { date } from 'zod';
 
-export let form;
+
+
+export let form: ActionData;
+    $: {
+        if (form?.Status) {
+            if (form.Status=== 'success') {
+                toast.success(form.Status)
+            }
+            if (form.Status=== 'failure') {
+                toast.error(form.Status)
+            }
+            invalidate('app:appointment-upload');
+        }
+    }
 const userId = $page.params.userId;
 
 
@@ -26,14 +43,12 @@ const userId = $page.params.userId;
 				<td>
 					<input
 						type="text"
-						class="input {form?.errors?.drugName ? 'border-error-300 text-error-500' : ''}"
+						class="input" 
 						name="date"
 						placeholder="YYYY-MM-D"
 						required
 					/>
-					{#if form?.errors?.drugName}
-						<p class="text-error-500 text-xs">{form?.errors?.drugName[0]}</p>
-					{/if}
+					
 				</td>
 			</tr>
 			

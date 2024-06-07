@@ -5,6 +5,7 @@
     let notarrived ='';
     let repliedYes ='';
     let repliedNo = '';
+
     const appointmentReport = data.AppointmentReport;
     console.log(appointmentReport)
     let summary = appointmentReport['Summary'];
@@ -41,7 +42,6 @@
     // const parsedDate = parse(dateString, 'dd-MM-yyyy', new Date());
     // return format(parsedDate, 'yyyy-MM-dd');
     // }
-
     // function to add patient name
     function addPatientName(newPatientName: string, rowNumber: number): void {
         // Update the specified row with the new patient name
