@@ -27,7 +27,7 @@ const userId = $page.params.userId;
 
 <form
 	method="post"
-	action="?/createDrugAction1"
+	action="?/setReminderAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
 >
@@ -55,6 +55,6 @@ const userId = $page.params.userId;
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary">Set Reminder</button>
 	</div>
 </form>

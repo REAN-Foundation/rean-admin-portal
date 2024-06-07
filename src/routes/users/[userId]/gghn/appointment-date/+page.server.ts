@@ -6,7 +6,7 @@ import { handleDateSubmission } from '../../../../api/server/gghn/appointment-da
 
 
 export const actions = {
-	createDrugAction1: async (event: RequestEvent) => {
+	setReminderAction: async (event: RequestEvent) => {
 	const request = event.request;
     const formData = await request.formData();
     const date = formData.get('date');
