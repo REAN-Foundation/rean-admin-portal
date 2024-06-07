@@ -9,7 +9,7 @@ RUN npm run build
 
 #######################################
 
-FROM node:18.12.0-alpine3.16
+FROM node:18.20-alpine3.19
 
 RUN apk add bash
 RUN apk add --no-cache \
