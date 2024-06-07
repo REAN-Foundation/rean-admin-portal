@@ -17,7 +17,7 @@ export let form: ActionData;
             if (form.Status=== 'failure') {
                 toast.error(form.Status)
             }
-            invalidate('app:appointment-upload');
+            // invalidate('app:appointment-upload');
         }
     }
 const userId = $page.params.userId;
@@ -42,7 +42,7 @@ const userId = $page.params.userId;
 				<td> Add date*</td>
 				<td>
 					<input
-						type="text"
+						type="date"
 						class="input" 
 						name="date"
 						placeholder="YYYY-MM-D"
