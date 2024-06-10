@@ -62,7 +62,7 @@
 				<td>Health System</td>
 				<td>
 					<select name="healthSystemId" class="select select-primary w-full ">
-						<option disabled selected>Select category of plan here...</option>
+						<option disabled selected>Select health system here...</option>
 						{#each healthSystems as healthSystem}
 							<option value={healthSystem.id}>{healthSystem.Name}</option>
 						{/each}

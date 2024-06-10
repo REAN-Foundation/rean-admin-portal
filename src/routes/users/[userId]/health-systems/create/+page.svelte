@@ -32,7 +32,7 @@
 	<table class="table">
 		<thead class="!variant-soft-secondary">
 			<tr>
-				<th>Add Health System</th>
+				<th>Create Health System</th>
 				<th class="text-end">
 					<a href={healthSystemsRoute} class="btn p-2 -my-2 variant-soft-secondary">
 						<Icon icon="material-symbols:close-rounded" class="text-lg" />

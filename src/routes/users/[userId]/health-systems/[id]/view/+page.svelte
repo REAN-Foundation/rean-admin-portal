@@ -47,7 +47,7 @@
     <table class="table">
         <thead class="!variant-soft-secondary">
             <tr>
-                <th>View HealthSystem</th>
+                <th>View Health System</th>
                 <th class="text-end">
                     <a
                         href={healthSystemRoute}
