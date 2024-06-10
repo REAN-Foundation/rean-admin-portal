@@ -33,7 +33,7 @@
 	<table class="table">
 		<thead class="!variant-soft-secondary">
 			<tr>
-				<th>Create Person Role</th>
+				<th>Create User Role</th>
 				<th class="text-end">
 					<a href={personRoleTypesRoute} class="btn p-2 -my-2 variant-soft-secondary">
 						<Icon icon="material-symbols:close-rounded" class="text-lg" />
