@@ -18,15 +18,11 @@ export const actions = {
      const res = await handleDateSubmission(date);
      console.log("response.status",res.status)
      const response = await res.json();
-     if (response.status !== 201) 
-      {
-        throw redirect(303, `/users/${userId}/gghn/appointment-date`, errorMessage(response.Message), event)
-      }
-      
-      else
+     if (response.Status === "Success") 
       {
         throw redirect(303, `/users/${userId}/gghn/summary-uploads`, successMessage(response.Message), event)
       }
+    throw redirect(303, `/users/${userId}/gghn/appointment-date`, errorMessage(response.Message), event)
     }
   }
 };
