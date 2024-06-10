@@ -23,7 +23,7 @@
 	const viewRoute = (id) => `/users/${userId}/person-role-types/${id}/view`;
 	const personRoleTypesRoute = `/users/${userId}/person-role-types`;
 
-	const breadCrumbs = [{ name: 'Person-Roles', path: personRoleTypesRoute }];
+	const breadCrumbs = [{ name: 'User Roles', path: personRoleTypesRoute }];
 
     let totalPersonRoleCount = data.personRoleTypes.length
     let items = 10;
