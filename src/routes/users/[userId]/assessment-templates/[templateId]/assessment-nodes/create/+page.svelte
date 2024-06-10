@@ -64,7 +64,7 @@
 	<table class="table">
 		<thead class="!variant-soft-secondary">
 			<tr>
-				<th>Create Assessment Node</th>
+				<th class="whitespace-nowrap" >Create Assessment Node</th>
 				<th class="text-end">
 					<a href={assessmentNodeRoutes} class="btn p-2 -my-2 variant-soft-secondary">
 						<Icon icon="material-symbols:close-rounded" class="text-lg" />
