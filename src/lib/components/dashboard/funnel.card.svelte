@@ -1,13 +1,16 @@
 <script lang="ts">
     import Funnel from '$lib/components/users-stats/charts/funnel.svelte';
+    import { getChartColors } from '$lib/themes/theme.selector';
     import { afterUpdate, onMount } from 'svelte';
 
     export let labels: string[];
     export let dataSource: number[];
 
+    const chartColors = getChartColors();
     interface FunnelDataPoint {
         label: string;
         count: number;
+        color: string;
     }
 
     let dataPoints : FunnelDataPoint[] = []
@@ -15,7 +18,8 @@
         dataPoints = labels.map((label, index) => {
             return {
                 label,
-                count: dataSource[index]
+                count: dataSource[index],
+                color: chartColors[index % chartColors.length]
             }
         })
     });
@@ -32,7 +36,8 @@
     <div class="mt-10 px-4 w-1/2">
         { #each dataPoints as dp}
             <div class="flex gap-4 w-full py-1">
-                <div class="h-3 w-3 mt-1 border bg-primary-700" />
+                <!-- <div class="h-3 w-3 mt-1 border bg-primary-700" /> -->
+                <div class="h-3 w-3 mt-1 border" style="background-color: {dp.color};"></div>
                 <div class="text-sm w-2/3 font-normal text-primary-500 dark:text-primary-100">{dp.label}</div>
                 <div class="text-sm w-1/3 font-normal text-primary-500 dark:text-primary-100">{dp.count}</div>
             </div>
