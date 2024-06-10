@@ -129,7 +129,7 @@
     <input
         type="text"
         name="hospitalName"
-        placeholder="Search by Hospital Name"
+        placeholder="Search by name"
         bind:value={hospitalName}
         class="input w-auto grow"
     />
