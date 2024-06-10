@@ -10,8 +10,8 @@
   
     let labels = [
         'Onboarded',
-        'Not-Deleted ',
-        'Users With Active Session',
+        'Not Deleted ',
+        'Current Active',
     ];
 
     $: funnelChartData = [

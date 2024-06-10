@@ -18,7 +18,7 @@
 
 	const breadCrumbs = [
 		{
-			name: 'Person-Roles',
+			name: 'User Roles',
 			path: personRoleTypesRoute
 		},
 		{
