@@ -8,24 +8,25 @@ import type { PageServerLoad } from './$types';
 import { SessionManager } from './api/sessions/session.manager';
 import { login } from './api/services/reancare/user';
 import { getUserRoles } from './api/services/reancare/types';
+import { logLoadingError } from './api/error.logging';
 
 ////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
-	try {
-		let roles: PersonRole[] = await getUserRoles();
-		if (!roles || roles.length === 0) {
-			roles = UserRoles;
-		}
-		return {
-			message: 'Common data successfully retrieved!',
-			roles,
-		};
-	} catch (error) {
-		console.error(`Error retrieving data : ${error.message}`);
-		throw redirect(303, '/');
-	}
-};
+// export const load: PageServerLoad = async (event: RequestEvent) => {
+// 	try {
+// 		let roles: PersonRole[] = await getUserRoles();
+// 		if (!roles || roles.length === 0) {
+// 			roles = UserRoles;
+// 		}
+// 		return {
+// 			message: 'Common data successfully retrieved!',
+// 			roles,
+// 		};
+// 	} catch (error) {
+// 		logLoadingError('PageServerLoad', event, error.message);
+// 		throw redirect(303, '/');
+// 	}
+// };
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -38,7 +39,7 @@ export const actions = {
 		const username = data.has('username') ? (data.get('username') as string) : null;
 		const password = data.has('password') ? (data.get('password') as string) : null;
 		const loginRoleId_ = data.has('loginRoleId') ? data.get('loginRoleId') : null;
-		const loginRoleId = loginRoleId_.valueOf() as number;
+		const loginRoleId = loginRoleId_?.valueOf() as number;
 		if (!username || !password) {
 			throw error(400, `Username or password are not valid!`);
 		}
@@ -47,6 +48,7 @@ export const actions = {
         const response = await login(username, password);
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			console.log(response.Message);
+			logLoadingError('Login action', event, response.Message);
 			//Login error, so redirect to the sign-in page
 			throw redirect(303, '/', errorMessage(response.Message), event);
 		}

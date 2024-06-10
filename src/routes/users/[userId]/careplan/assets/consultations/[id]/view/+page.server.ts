@@ -1,4 +1,5 @@
 import { getConsultationById } from '$routes/api/services/careplan/assets/consultation';
+import { logLoadingError } from '../../../../../../../api/error.logging';
 import type { PageServerLoad } from './$types';
 import { error, redirect, type RequestEvent } from '@sveltejs/kit';
 
@@ -20,7 +21,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
       message: response.Message
     };
   } catch (error) {
-    console.error(`Error retriving consultation: ${error.message}`);
+    logLoadingError('PageServerLoad', event, error.message);
     throw redirect(303, '/');
   }
 };

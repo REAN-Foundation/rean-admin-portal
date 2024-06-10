@@ -2,6 +2,7 @@ import { API_CLIENT_INTERNAL_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import { SessionManager } from '../sessions/session.manager';
 import chalk from 'chalk';
+import { logApiError } from '../error.logging';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -12,8 +13,11 @@ export const get_ = async (
     xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
+	if (session == null) {
+		logApiError(sessionId, url, session);
+	}
 	const accessToken = session.accessToken;
-	// console.log(`accessToken = ${accessToken}`);
+	
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
     if (xApiKey) {

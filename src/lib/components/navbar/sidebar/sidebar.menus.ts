@@ -275,7 +275,7 @@ export const buildSidebarMenu = (
     sidebarNaviagation = addGMUMenus(sidebarNaviagation, userId, userRole, tenantSettings, options);   
     // Add here any new menu items
 
-    console.log('sidebarMenu', sidebarNaviagation);
+    // console.log('sidebarMenu', sidebarNaviagation);
 
     return sidebarNaviagation;
 };

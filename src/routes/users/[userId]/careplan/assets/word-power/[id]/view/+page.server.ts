@@ -1,4 +1,5 @@
 import { getWordPowerById } from '$routes/api/services/careplan/assets/word-power';
+import { logLoadingError } from '../../../../../../../api/error.logging';
 import type { PageServerLoad } from './$types';
 import { error, redirect, type RequestEvent } from '@sveltejs/kit';
 
@@ -21,6 +22,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		};
 	} catch (error) {
 		console.error(`Error retriving word power ${error.message}`);
+		logLoadingError('PageServerLoad', event, error.message);
 		throw redirect(303, '/');
 	}
 };

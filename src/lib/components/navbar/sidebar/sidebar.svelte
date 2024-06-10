@@ -10,7 +10,7 @@
     export let userRole = undefined;
 
     const navData = buildSidebarMenu(userId, tenantSettings, userRole);
-    console.log('navData', JSON.stringify(navData, null, 2));
+    //console.log('navData', JSON.stringify(navData, null, 2));
 
     $: if ($navigating) showSidebar = false;
 
