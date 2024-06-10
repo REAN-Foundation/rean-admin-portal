@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { enhance } from '$app/forms';
     import { onMount } from 'svelte';
+    import toast from 'svelte-french-toast';
+    import type { ActionData } from './$types';
     export let data
     let totalPatient ='';
     let notarrived ='';
@@ -30,18 +33,7 @@
         replied: ''
     }));
  
-    // function getSummary () {
-    //     if (!enteredDate){
-    //         console.log(enteredDate);
-    //         let fileDate = convertDateFormat(enteredDate)
-    //         console.log(fileDate)
-    //     }
-    // }
-
-    // function convertDateFormat(dateString: string): string {
-    // const parsedDate = parse(dateString, 'dd-MM-yyyy', new Date());
-    // return format(parsedDate, 'yyyy-MM-dd');
-    // }
+   
     // function to add patient name
     function addPatientName(newPatientName: string, rowNumber: number): void {
         // Update the specified row with the new patient name
@@ -78,16 +70,18 @@
                      }
                 }, 1000); 
             });
-           
+  
 </script>
 <!-- <div class=" w-3/5 mx-auto flex justify-between mt-12"> -->
     <!-- Left Side (H1 Heading) -->
     <div>
         <h1 class="text-2xl text-center">Summary of Appointment GGHN</h1>
     </div>
-    <div>
-    <p class="text-lg text-right">Date {summary['Date']}</p>
+       <div>
+    <p class="text-lg text-right justify-end ">Date {summary['Date']}</p>
     </div>
+
+    
   
 <!-- </div> -->
 <!-- Start -->
