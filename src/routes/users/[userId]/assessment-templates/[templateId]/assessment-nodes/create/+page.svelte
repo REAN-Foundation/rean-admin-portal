@@ -5,7 +5,7 @@
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
 	import Choice from './choice.svelte';
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 
 	/////////////////////////////////////////////////////////////////////////////////////
 
@@ -190,7 +190,7 @@
 					<tr>
 						<td class="align-top">Options</td>
 						<td>
-							<Choice />
+							<Choice/>
 						</td>
 					</tr>
 				{/if}

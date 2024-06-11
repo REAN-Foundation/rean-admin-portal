@@ -64,7 +64,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/assessment-templates/${id}/view`,
-			successMessage(`Assessment template created successfully!`),
+			successMessage(`Assessment created successfully!`),
 			event
 		);
 	}

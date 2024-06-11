@@ -164,22 +164,23 @@
 						<select
 							id="mySelect"
 							name="queryType"
+							disabled
 							class="select select-info w-full"
 							placeholder="Select query type here..."
 							bind:value={queryType}
 							on:change={(val) => onSelectQueryResponseType(val)}
 						>
 							<option selected value={queryType}>{queryType}</option>
-							{#each queryResponseTypes as responseType}
-								<option value={responseType}>{responseType}</option>
-							{/each}
+							<!-- {#each queryResponseTypes as responseType}
+								<option disabled value={responseType}>{responseType}</option>
+							{/each} -->
 						</select>
 					</td>
 				</tr>
 				{#if selectedQueryType === 'Single Choice Selection' || selectedQueryType === 'Multi Choice Selection'}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td class="align-top">Options</td>
-						<td><Choice {optionValueStore} /></td>
+						<td><Choice {optionValueStore} readonly={true}/></td>
 					</tr>
 				{/if}
 			{:else if selectedNodeType === 'Message'}
