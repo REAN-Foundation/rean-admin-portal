@@ -14,8 +14,8 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let badges = data.badges.Items;
-	$: badgeCategories = data.badgeCategories;
+	$: badges = data.badges.Items;
+    let badgeCategories = data.badgeCategories;
     let retrivedBadges;
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/gamification/badges/create`;
@@ -52,7 +52,6 @@
 		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
 		if (offset) url += `&pageIndex=${offset}`;
 		if (name) url += `&name=${model.name}`;
-		console.log('url', url);
 		if (categoryId == 'Category') {
 			url;
 		} else {

@@ -16,7 +16,7 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Clients',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Tenants',
@@ -29,11 +29,11 @@ export const Options: FeatureOptions[] = [
     //..............................
     {
         Name: 'Analysis',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Custom-Queries',
-        Enabled: true
+        Enabled: false
     },
     //..............................
     {
@@ -97,11 +97,11 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Courses',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Learning-Journeys',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Knowledge-Nuggets',
