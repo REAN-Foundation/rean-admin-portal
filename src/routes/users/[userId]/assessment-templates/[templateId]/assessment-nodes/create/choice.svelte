@@ -2,7 +2,7 @@
 	import Icon from '@iconify/svelte';
 
 	export let optionValueStore = [{ Text: '' }];
-	export let readonly = false; // Add a new prop to control the readonly state
+	export let readonly = false;
 
 	const addOptionField = () => (optionValueStore = [...optionValueStore, { Text: '' }]);
 	const removeOptionField = () =>
@@ -20,7 +20,7 @@
 				placeholder="Add option here..."
 				disabled={readonly}
 			/>
-			{#if !readonly} <!-- Only show the remove button if not readonly -->
+			{#if !readonly} 
 				<button class="btn p-2 variant-soft-error" on:click={removeOptionField}>
 					<Icon icon="material-symbols:close-rounded" />
 				</button>
