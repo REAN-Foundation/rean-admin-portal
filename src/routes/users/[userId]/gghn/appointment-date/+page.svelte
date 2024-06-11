@@ -6,24 +6,7 @@ import { page } from '$app/stores';
     import { invalidate } from '$app/navigation';
     import { date } from 'zod';
 
-
-
-// export let form: ActionData;
-//     $: {
-//         if (form?.Status) {
-//             if (form.Status=== 'success') {
-//                 toast.success(form.Status)
-
-//             }
-//             if (form.Status=== 'failure') {
-//                 toast.error(form.Status)
-//             }
-//             // invalidate('app:appointment-upload');
-//         }
-//     }
 const userId = $page.params.userId;
-
-
 </script>
 
 <form
