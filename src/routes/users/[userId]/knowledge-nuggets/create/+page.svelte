@@ -3,7 +3,7 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
 	import InputChip from '$lib/components/input-chips.svelte';
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,7 @@
 
 	const breadCrumbs = [
 		{
-			name: 'Knowledge-Nuggets',
+			name: 'Knowledge Nuggets',
 			path: knowledgeNuggetsRoute,
 			home: true
 		},

@@ -10,7 +10,6 @@
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
   import { invalidate } from '$app/navigation';
-    import Tooltip from '$lib/components/tooltip.svelte';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -102,20 +101,10 @@
 				{#each retrivedTypes as row}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td>{row.index}</td>
-						<td class="truncate max-w-xs">
-              <Tooltip text={row.RoleName}>
-                <a href={viewRoute(row.id)}>{row.RoleName}</a>
-              </Tooltip>
-            </td>
-            <td class="truncate max-w-lg">
-              <Tooltip text={row.Description !== null ? row.Description : 'Not specified'}>
-                {row.Description !== null ? row.Description : 'Not specified'}
-              </Tooltip>
-            </td>
-						<!-- <td>
+						<td>
 							<a href={viewRoute(row.id)}>{Helper.truncateText(row.RoleName, 20)} </a>
 						</td>
-						<td>{row.Description !== null ? Helper.truncateText(row.Description, 40) : 'Not specified'} </td> -->
+						<td>{row.Description !== null ? Helper.truncateText(row.Description, 40) : 'Not specified'} </td>
 						<td>{date.format(new Date(row.CreatedAt), 'DD-MMM-YYYY')}</td>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">

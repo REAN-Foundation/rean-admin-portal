@@ -23,7 +23,7 @@
 	const viewRoute = (id) => `/users/${userId}/knowledge-nuggets/${id}/view`;
 	const createRoute = `/users/${userId}/knowledge-nuggets/create`;
 
-	const breadCrumbs = [{ name: 'Knowledge-Nuggets', path: knowledgeNuggetRoute }];
+	const breadCrumbs = [{ name: 'Knowledge Nuggets', path: knowledgeNuggetRoute }];
 
 	let topicName = undefined;
 	let tags = undefined;
@@ -126,14 +126,14 @@
 	<input
 		type="text"
 		name="topicName"
-		placeholder="Search by Topic"
+		placeholder="Search by topic name"
 		bind:value={topicName}
 		class="input w-auto grow"
 	/>
 	<input 
 		type="text"
 		name="tags"
-		placeholder="Search by Tags" bind:value={tags}
+		placeholder="Search by tags" bind:value={tags}
 		class="input w-auto grow"
 	/>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>

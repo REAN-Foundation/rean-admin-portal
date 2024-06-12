@@ -22,7 +22,7 @@
 	const knowledgeNuggetsRoute = `/users/${userId}/knowledge-nuggets`;
 
 	const breadCrumbs = [
-		{ name: 'Knowledge-Nuggets', path: knowledgeNuggetsRoute },
+		{ name: 'Knowledge Nuggets', path: knowledgeNuggetsRoute },
 		{ name: 'View', path: viewRoute }
 	];
 </script>

@@ -6,12 +6,12 @@
 	import Icon from '@iconify/svelte';
 	import {Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
-    import { invalidate} from '$app/navigation';
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  import { invalidate} from '$app/navigation';
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
 	let labRecordTypes=data.labRecordTypes;
-    let selectedLabRecordTypes;
+  let selectedLabRecordTypes;
 	let sortOrder = false;
 
 	const userId = $page.params.userId;
@@ -42,7 +42,7 @@
 
 	const breadCrumbs = [
 		{
-			name: 'Lab-Records',
+			name: 'Lab Records',
 			path: labRecordTypesRoute
 		}
 	];
@@ -65,9 +65,9 @@
 	};
 
 	$:{
-        labRecordTypes = labRecordTypes.map((item, index) => ({ ...item, index: index + 1 }));
+    labRecordTypes = labRecordTypes.map((item, index) => ({ ...item, index: index + 1 }));
 		paginationSettings.size = labRecordTypes.length;
-        selectedLabRecordTypes = labRecordTypes.slice(
+    selectedLabRecordTypes = labRecordTypes.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
@@ -152,7 +152,7 @@
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>
-								<span slot="description"> Are you sure you want to delete a lab record type? </span> 							</Confirm>
+								<span slot="description"> Are you sure you want to delete a lab record? </span> 							</Confirm>
 						</td>
 					</tr>
 				{/each}

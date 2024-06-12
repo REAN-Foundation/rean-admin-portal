@@ -23,7 +23,7 @@ export const DELETE = async (event: RequestEvent) => {
 			);
 	}
 	throw redirect(
-		successMessage(response.Message),
+		successMessage('Health system deleted successfully!'),
 		event
 		);	
 };
