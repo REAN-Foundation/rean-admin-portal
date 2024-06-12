@@ -72,8 +72,7 @@
             });
   
 </script>
-<!-- <div class=" w-3/5 mx-auto flex justify-between mt-12"> -->
-    <!-- Left Side (H1 Heading) -->
+
     <div>
         <h1 class="text-2xl text-center">Summary of Appointment GGHN</h1>
     </div>
@@ -83,7 +82,7 @@
 
     
   
-<!-- </div> -->
+
 <!-- Start -->
 <div class="mt-8 mx-auto w-2/5 p-1">
     <div class="flex justify-between items-center">
