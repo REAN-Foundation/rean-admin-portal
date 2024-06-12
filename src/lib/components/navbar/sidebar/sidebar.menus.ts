@@ -545,7 +545,7 @@ function addClinicalMenus(
     
         const labRecordType: SidebarMenu = {
             name    : 'Lab-Records',
-            title   : 'Lab-Records',
+            title   : 'Lab Records',
             icon    : 'material-symbols:lab-research-outline-rounded',
             link    : `/users/${userId}/lab-record-types`,
             children: []
