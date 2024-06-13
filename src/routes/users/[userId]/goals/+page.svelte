@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
@@ -27,36 +26,27 @@
 
 	const breadCrumbs = [{ name: 'Goals', path: goalRoute }];
 
-	let type = undefined;
-	let tags = undefined;
-	let sortBy = 'CreatedAt';
-	let sortOrder = 'ascending';
+	let sortOrder = false;
 	let itemsPerPage = 10;
-	let pageIndex = 0;
     let items = 10;
+    let type = "Type";
 
-	async function searchGoal(model) {
-		let url = `/api/server/goals/search?`;
-		if (sortOrder) url += `sortOrder=${sortOrder}`;
-		else url += `sortOrder=ascending`;
-
-		if (sortBy) url += `&sortBy=${sortBy}`;
-		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		if (pageIndex) url += `&pageIndex=${pageIndex}`;
-		if (type) url += `&type=${type}`;
-		if (tags) url += `&tags=${tags}`;
-
-		const res = await fetch(url, {
-			method: 'GET',
-			headers: { 'content-type': 'application/json' }
+    function sort(sortOrder: boolean, isOrdeApplied: boolean = false){
+        if (isOrdeApplied) {
+            type = `Type ${sortOrder ? '▲' : '▼'}`
+        }
+		goalTypes = goalTypes.sort((a, b) => {
+			let fa = a.Type.toLowerCase(),
+				fb = b.Type.toLowerCase();
+			if (fa < fb) {
+				return !sortOrder ? -1 : 1;
+			}
+			if (fa > fb) {
+				return !sortOrder ? 1 : -1;
+			}
+			return 0;
 		});
-
-		const response = await res.json();
-		goalTypes = response.map((item, index) => ({ ...item, index: index + 1 }));
-		
 	}
-	// $: if (browser) searchGoal({ type: type, tags: tags });
-
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
@@ -94,11 +84,6 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/goals`, {
-			method: 'DELETE',
-			body: JSON.stringify(model),
-			headers: { 'content-type': 'application/json' }
-		});
 	}
 </script> 
 
@@ -112,7 +97,11 @@
 		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
-				<th data-sort="Type">Type</th>
+				<th>
+                    <button on:click={() =>sort(sortOrder=!sortOrder?true:false, true) }>
+                        {type}
+                   </button>
+                </th>
 				<th data-sort="Tags">Tags</th>
 				<th>Created Date</th>
 				<th />

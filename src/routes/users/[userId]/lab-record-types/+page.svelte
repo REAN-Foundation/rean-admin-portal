@@ -13,7 +13,7 @@
 	let labRecordTypes=data.labRecordTypes;
     let selectedLabRecordTypes;
 	let sortOrder = false;
-
+    let typeName = "Type Name";
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/lab-record-types/create`;
 	const editRoute = (id) => `/users/${userId}/lab-record-types/${id}/edit`;
@@ -26,7 +26,10 @@
 		sort(sortOrder)
 		labRecordTypes = labRecordTypes.map((item, index) => ({ ...item, index: index + 1 }));
 	}
-	function sort(sortOrder){
+	function sort(sortOrder, isOrdeApplied: boolean = false){
+        if (isOrdeApplied) {
+            typeName = `Type Name ${sortOrder ? '▲' : '▼'}`
+        }
 		labRecordTypes = labRecordTypes.sort((a, b) => {
 			let fa = a.TypeName.toLowerCase(),
 				fb = b.TypeName.toLowerCase();
@@ -101,8 +104,9 @@
 			<tr>
 				<th data-sort="index">Id</th>
 				<th>
-					<button on:click={() =>sort(sortOrder=!sortOrder?true:false) }>
-						Type Name {sortOrder ? '▲' : '▼'}
+					<button on:click={() =>sort(sortOrder=!sortOrder?true:false, true) }>
+						<!-- Type Name {sortOrder ? '▲' : '▼'} -->
+                         {typeName}
 					</button>
 				</th>
 				<!-- <th data-sort="TypeName">Type Name</th> -->
