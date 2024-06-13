@@ -123,7 +123,7 @@
 	<input
 		type="text"
 		name="drugName"
-		placeholder="Search by Drug Name"
+		placeholder="Search by Name"
 		bind:value={drugName}
 		class="input w-auto grow"
 	/>
@@ -144,7 +144,7 @@
 				<th data-sort="index">Id</th>
 				<th>
 					<button on:click={() => sortTable('DrugName')}>
-						Drug Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+						Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
 					</button>
 				</th>
 				<th>

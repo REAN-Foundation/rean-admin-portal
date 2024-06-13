@@ -10,7 +10,7 @@
 	const labRecordTypesRoute = `/users/${userId}/lab-record-types`;
 
 	const breadCrumbs = [
-		{ name: 'Lab-Records', path: labRecordTypesRoute },
+		{ name: 'Lab Records', path: labRecordTypesRoute },
 		{ name: 'Create', path: createRoute }
 	];
 </script>
