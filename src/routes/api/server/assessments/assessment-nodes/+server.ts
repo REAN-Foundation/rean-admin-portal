@@ -6,9 +6,10 @@ import { deleteAssessmentNode } from '../../../services/reancare/assessments/ass
 export const DELETE = async (event: RequestEvent) => {
 	const request = event.request;
 	const data = await request.json();
+    let response;
 	try {
 		console.log('Inside assessment node server endpoints');
-		const response = await deleteAssessmentNode(
+		response = await deleteAssessmentNode(
 			data.sessionId,
 			data.assessmentTemplateId,
 			data.assessmentNodeId
@@ -18,10 +19,10 @@ export const DELETE = async (event: RequestEvent) => {
             Message : response.Message
         }));
 	} catch (err) {
-		console.error(`Error deleting assessment node: ${err.message}`);
+		console.error(`Error deleting assessment node: ${JSON.parse(err).message}`);
 		return new Response(JSON.stringify({
             Status: "failure",
-            Message : 'Error deleting assessment node'
+            Message : JSON.parse(err).message ? JSON.parse(err).message : 'Error deleting assessment node'
         }));
 	}
 };

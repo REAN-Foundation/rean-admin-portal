@@ -202,7 +202,7 @@
 								</button>
 								<span slot="title">Delete</span>
 								<span slot="description">
-									Are you sure you want to delete a assessment template?
+									Are you sure you want to delete a assessment?
 								</span>
 							</Confirm>
 						</td>

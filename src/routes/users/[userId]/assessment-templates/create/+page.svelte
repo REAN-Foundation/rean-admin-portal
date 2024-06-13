@@ -61,7 +61,7 @@
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Type *</td>
 				<td>
-					<select class="select w-full" name="type" placeholder="Select type here...">
+					<select required class="select w-full" name="type" placeholder="Select type here..." value="">
 						<option>Daily Update</option>
 						<option>Symptoms</option>
 						<option>Survey</option>

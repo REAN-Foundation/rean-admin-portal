@@ -71,7 +71,7 @@ export const actions = {
         throw redirect(
             303,
             `/users/${userId}/health-systems/${id}/view`,
-            successMessage(`HealthSystem created successfully!`),
+            successMessage(`Health system created successfully!`),
             event
         );
     }

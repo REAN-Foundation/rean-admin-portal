@@ -99,7 +99,7 @@ function downloadFile(response) {
 						type="text"
 						name="name"
 						bind:value={name}
-						placeholder="Enter query here..."
+						placeholder="Enter query name here..."
 						class="input w-full {form?.errors?.name ? 'border-error-300' : 'border-primary-200'}"
                     />
 					{#if form?.errors?.name}

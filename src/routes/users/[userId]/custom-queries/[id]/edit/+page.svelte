@@ -124,7 +124,7 @@ on:submit={async () => await onUpdate(name, description, format, query, tags)}
 						type="text"
 						name="name"
 						bind:value={name}
-						placeholder="Enter query here..."
+						placeholder="Enter query name here"
 						class="input w-full"
 					/>
 				</td>

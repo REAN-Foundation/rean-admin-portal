@@ -64,15 +64,15 @@
 						<div class="justify-center w-full mt-5 h-50">
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="mb-2" for="username">
-								<span class="text-primary-500">Username / Email</span>
+								<span class="text-primary-500">Username</span>
 								<span class="label-text-alt" />
 							</label>
 							<input type="text" name="username" required class="input mb-4" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="mb-2" for="password">
 								<div class="grid grid-flow-col">
-									<span class="text-left text-primary-500">Password / OTP</span>
-									<span class="text-right text-primary-500 ml-4 sm:ml-12">
+									<span class="text-left text-primary-500">Password</span>
+									<span class="text-right text-primary-500 ml-4 sm:ml-12 invisible">
 										<b>Generate OTP</b>
 									</span>
 								</div>
@@ -80,7 +80,7 @@
 							<input type="password" name="password" required class=" input" />
 							<!-- svelte-ignore a11y-label-has-associated-control -->
 							<label class="lable">
-								<span class=" text-primary-500">
+								<span class=" text-primary-500 hidden">
 									<b>Forgot Password?</b>
 								</span>
 							</label>

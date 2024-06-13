@@ -9,25 +9,53 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
+  import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	$: personTypes = data.personRoleTypes;
-    console.log('PersonRoleTypes', personTypes);
+	let personTypes = data.personRoleTypes;
+    $: console.log('PersonRoleTypes', personTypes);
 	let retrivedTypes;
+    $: console.log('retrivedTypes', retrivedTypes);
+    let roleName = "Role Name";
+    let sortOrder = false;
+
     const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/person-role-types/create`;
 	const editRoute = (id) => `/users/${userId}/person-role-types/${id}/edit`;
 	const viewRoute = (id) => `/users/${userId}/person-role-types/${id}/view`;
 	const personRoleTypesRoute = `/users/${userId}/person-role-types`;
 
-	const breadCrumbs = [{ name: 'Person-Roles', path: personRoleTypesRoute }];
+	const breadCrumbs = [{ name: 'User Roles', path: personRoleTypesRoute }];
 
     let totalPersonRoleCount = data.personRoleTypes.length
     let items = 10;
     let itemsPerPage = 10;
+
+    sort(sortOrder)
+	$:{
+		personTypes = data.personRoleTypes;
+		sort(sortOrder)
+		personTypes = personTypes.map((item, index) => ({ ...item, index: index + 1 }));
+	}
+
+    function sort(sortOrder: boolean, isOrdeApplied: boolean = false){
+        if (isOrdeApplied) {
+            roleName = `Role Name ${sortOrder ? '▲' : '▼'}`
+        }
+		personTypes = personTypes.sort((a, b) => {
+			let fa = a.RoleName.toLowerCase(),
+				fb = b.RoleName.toLowerCase();
+			if (fa < fb) {
+				return !sortOrder ? -1 : 1;
+			}
+			if (fa > fb) {
+				return !sortOrder ? 1 : -1;
+			}
+			return 0;
+		});
+	}
 
 	let paginationSettings = {
 		page: 0,
@@ -85,7 +113,11 @@
 		<thead class="!variant-soft-secondary">
 			<tr>
 				<th data-sort="index">Id</th>
-				<th data-sort="RoleName">Role Name</th>
+				<th>
+                    <button on:click={() =>sort(sortOrder=!sortOrder?true:false, true) }>
+                        {roleName}
+                   </button>
+                </th>
 				<th>Description</th>
 				<th data-sort="CreatedAt">Created Date</th>
 				<th />
@@ -124,7 +156,7 @@
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>
-								<span slot="description"> Are you sure you want to delete a person role type? </span>
+								<span slot="description"> Are you sure you want to delete a user role? </span>
 							</Confirm>
 						</td>
 					</tr>

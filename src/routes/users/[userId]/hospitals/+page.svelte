@@ -42,10 +42,10 @@
 
     async function searchHospital(model) {
         let url = `/api/server/hospitals/search?`;
-        if (sortOrder) url += `sortOrder=${model.sortOrder}`;
+        if (sortOrder) url += `sortOrder=${sortOrder}`;
         else url += `sortOrder=ascending`;
 
-        if (sortBy) url += `&sortBy=${model.sortBy}`;
+        if (sortBy) url += `&sortBy=${sortBy}`;
         if (itemsPerPage) url += `&itemsPerPage=${model.itemsPerPage}`;
         if (offset) url += `&pageIndex=${model.pageIndex}`;
         if (hospitalName) url += `&name=${model.hospitalName}`;
@@ -96,7 +96,7 @@
         isSortingName = false;
         isSortingHealthSystemName = false;
         sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
-        if (columnName === 'HospitalName') {
+        if (columnName === 'Name') {
             isSortingName = true;
         }
         // else if (columnName === 'HealthSystemName') {
@@ -129,7 +129,7 @@
     <input
         type="text"
         name="hospitalName"
-        placeholder="Search by Hospital Name"
+        placeholder="Search by name"
         bind:value={hospitalName}
         class="input w-auto grow"
     />
@@ -155,7 +155,7 @@
             <tr>
                 <th data-sort="index">Id</th>
                 <th>
-                    <button on:click={() => sortTable('HospitalName')}>
+                    <button on:click={() => sortTable('Name')}>
                         Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
                     </button>
                 </th>

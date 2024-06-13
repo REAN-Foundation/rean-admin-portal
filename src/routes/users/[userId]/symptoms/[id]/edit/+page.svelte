@@ -102,6 +102,7 @@
 <form
 	method="post"
 	action="?/updateSymptomAction"
+    enctype="multipart/form-data"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
 >

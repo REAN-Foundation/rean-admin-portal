@@ -62,8 +62,7 @@
 			headers: { 'content-type': 'application/json' }
 		});
 		const response = await res.json();
-
-		symptoms = response.map((item, index) => ({ ...item, index: index + 1 }));
+        symptoms = response;
 	}
 
 	$: {

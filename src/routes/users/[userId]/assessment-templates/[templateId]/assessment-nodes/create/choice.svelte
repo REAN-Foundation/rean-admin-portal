@@ -2,10 +2,11 @@
 	import Icon from '@iconify/svelte';
 
 	export let optionValueStore = [{ Text: '' }];
+	export let readonly = false;
 
-	// const addOptionField = () => (optionValueStore = [...optionValueStore, { Text: '' }]);
-	// const removeOptionField = () =>
-	// 	(optionValueStore = optionValueStore.slice(0, optionValueStore.length - 1));
+	const addOptionField = () => (optionValueStore = [...optionValueStore, { Text: '' }]);
+	const removeOptionField = () =>
+		(optionValueStore = optionValueStore.slice(0, optionValueStore.length - 1));
 </script>
 
 <div class="border dark:border-surface-700 flex flex-col rounded my-2 p-2 gap-2">
@@ -15,17 +16,22 @@
 				type="text"
 				class="input"
 				name="options"
-				disabled
 				bind:value={optionValueStore[i].Text}
 				placeholder="Add option here..."
+				disabled={readonly}
 			/>
-			<!-- <button class="btn p-2 variant-soft-error" on:click={removeOptionField}>
-				<Icon icon="material-symbols:close-rounded" />
-			</button> -->
+			{#if !readonly} 
+				<button class="btn p-2 variant-soft-error" on:click={removeOptionField}>
+					<Icon icon="material-symbols:close-rounded" />
+				</button>
+			{/if}
 		</div>
 	{/each}
-
-	<!-- <button class="btn btn-sm variant-soft-secondary" on:click|preventDefault={addOptionField}>
-		Add Option
-	</button> -->
+	
+<!-- Only show the add button if not readonly -->
+	{#if !readonly} 
+		<button class="btn btn-sm variant-soft-secondary" on:click|preventDefault={addOptionField}>
+			Add Option
+		</button>
+	{/if}
 </div>

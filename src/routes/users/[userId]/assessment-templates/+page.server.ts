@@ -7,7 +7,10 @@ import { searchAssessmentTemplates } from '../../../api/services/reancare/assess
 export const load: PageServerLoad = async ({cookies,depends}) => {
 	const sessionId = cookies.get('sessionId');
 	depends('app:assessmentTemplate')
-    const response = await searchAssessmentTemplates(sessionId);
+    const response = await searchAssessmentTemplates(sessionId,{
+        orderBy: "Title",
+        order: "ascending"
+    });
     if (response.Status === 'failure' || response.HttpCode !== 200) {
         throw error(response.HttpCode, response.Message);
     }

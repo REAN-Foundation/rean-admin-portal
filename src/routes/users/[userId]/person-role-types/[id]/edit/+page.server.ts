@@ -81,7 +81,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/person-role-types/${id}/view`,
-			successMessage(`Person role type updated successfully!`),
+			successMessage(`User role updated successfully!`),
 			event
 		);
 	}

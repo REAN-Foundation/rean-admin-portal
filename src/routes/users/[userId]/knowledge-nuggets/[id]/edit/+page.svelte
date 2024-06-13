@@ -4,7 +4,7 @@
 	import Icon from '@iconify/svelte';
 	import InputChip from '$lib/components/input-chips.svelte';
 	import type { PageServerData } from './$types';
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 	
 	///////////////////////////////////////////////////////////////////////////
 
@@ -46,7 +46,7 @@
 
 	const breadCrumbs = [
 		{
-			name: 'Knowledge-Nuggets',
+			name: 'Knowledge Nuggets',
 			path: knowledgeNuggetsRoute
 		},
 		{

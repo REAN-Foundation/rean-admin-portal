@@ -45,7 +45,7 @@
         if (sortOrder) url += `sortOrder=${model.sortOrder}`;
         else url += `sortOrder=ascending`;
 
-        if (sortBy) url += `&sortBy=${model.sortBy}`;
+        if (sortBy) url += `&sortBy=${sortBy}`;
         if (itemsPerPage) url += `&itemsPerPage=${model.itemsPerPage}`;
         if (offset) url += `&pageIndex=${model.pageIndex}`;
         if (healthSystemName) url += `&name=${model.healthSystemName}`;
@@ -61,7 +61,8 @@
         const items = response.Items;
         console.log('items', JSON.stringify(items, null, 2));
         paginationSettings.size = items.length;
-        healthSystems = items.map((item, index) => ({ ...item, index: index + 1 }));
+         healthSystems = items;
+        // healthSystems = items.map((item, index) => ({ ...item, index: index + 1 }));
     }
 
     $: {
@@ -84,6 +85,7 @@
             sortBy: sortBy
         });
 
+
     function onPageChange(e: CustomEvent): void {
         let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
@@ -97,7 +99,7 @@
     function sortTable(columnName) {
         isSortingName = false;
         sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
-        if (columnName === 'HealthSystemName') {
+        if (columnName === 'Name') {
             isSortingName = true;
         }
         sortBy = columnName;
@@ -128,7 +130,7 @@
     <input
         type="text"
         name="healthSystemName"
-        placeholder="Search by Health System Name"
+        placeholder="Search by name"
         bind:value={healthSystemName}
         class="input w-auto grow"
     />
@@ -147,7 +149,7 @@
             <tr>
                 <th data-sort="index">Id</th>
                 <th>
-                    <button on:click={() => sortTable('HealthSystemName')}>
+                    <button on:click={() => sortTable('Name')}>
                         Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
                     </button>
                 </th>

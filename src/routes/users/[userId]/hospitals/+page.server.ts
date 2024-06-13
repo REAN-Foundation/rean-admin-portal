@@ -8,7 +8,10 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
 	const sessionId = cookies.get('sessionId');
 	depends('app:hospitals')
 	try {
-		const response = await searchHospitals(sessionId);
+		const response = await searchHospitals(sessionId, {
+            orderBy: "Name",
+            order: "ascending"
+        });
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}

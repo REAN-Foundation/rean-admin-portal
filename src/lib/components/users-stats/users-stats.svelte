@@ -439,7 +439,7 @@
 			</div>
 		</div>
 
-		<div
+		<!-- <div
 			class="grid grid-cols-3 overflow-x-auto justify-center rounded-lg  shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-full h-full gap-3 "
 		>
 			<div class="px-4 sm:px-6 lg:px-8 col-span-2">
@@ -456,7 +456,7 @@
 										>
 									</tr>
 								</thead>
-								<tbody>
+								<tbody> -->
 									<!-- {#each countryWiseUsers as data}
 										<tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition">
 											<td
@@ -486,7 +486,7 @@
 											</td>
 										</tr>
 									{/each} -->
-								</tbody>
+								<!-- </tbody>
 							</table>
 						</div>
 					</div>
@@ -514,8 +514,8 @@
 					{/if}
 				</div>
 			</div>
-		</div>
-	</div>
+		</div>-->
+	</div> 
 
 	<div class="flex justify-center items-center h-full gap-10 w-full">
 		<div

@@ -43,7 +43,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 const createAssessmentNodeSchema = zfd.formData({
 	nodeType: z.string(),
 	parentNodeId: z.string().uuid(),
-	title: z.string().min(8).max(256),
+	title: z.string().min(4).max(256),
 	description: z.string().optional(),
 	sequence: zfd.numeric(z.number().optional()),
 	queryType: z.string().optional(),
