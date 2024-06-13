@@ -56,7 +56,7 @@
 			headers: { 'content-type': 'application/json' }
 		});
 		const response = await res.json();
-		drugs = response.map((item, index) => ({ ...item, index: index + 1 }));
+        drugs = response.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
 	$:{

@@ -96,7 +96,7 @@
         isSortingName = false;
         isSortingHealthSystemName = false;
         sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
-        if (columnName === 'HospitalName') {
+        if (columnName === 'Name') {
             isSortingName = true;
         }
         // else if (columnName === 'HealthSystemName') {
@@ -155,7 +155,7 @@
             <tr>
                 <th data-sort="index">Id</th>
                 <th>
-                    <button on:click={() => sortTable('HospitalName')}>
+                    <button on:click={() => sortTable('Name')}>
                         Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
                     </button>
                 </th>

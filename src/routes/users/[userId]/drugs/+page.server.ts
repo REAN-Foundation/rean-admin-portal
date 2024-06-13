@@ -7,7 +7,10 @@ import { searchDrugs } from '../../../api/services/reancare/drugs';
 export const load: PageServerLoad = async ({cookies,depends}) => {
 	const sessionId = cookies.get('sessionId');
 	depends('app:drugs')
-    const response = await searchDrugs(sessionId);
+    const response = await searchDrugs(sessionId, {
+        orderBy : 'DrugName',
+        order : 'ascending'
+    });
     if (response.Status === 'failure' || response.HttpCode !== 200) {
         throw error(response.HttpCode, response.Message);
     }
