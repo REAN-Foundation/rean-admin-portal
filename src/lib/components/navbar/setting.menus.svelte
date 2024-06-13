@@ -1,11 +1,22 @@
 <script>
+  import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher } from 'svelte';
+
+	export let userId;
+
 	const dispatch = createEventDispatcher();
+
 	const gotoLogout = async () => {
 		dispatch('logout');
 	};
+
+	async function changePassword() {
+		dispatch('click');
+		await goto(`/users/${userId}/change-password`);
+	}
+	
 </script>
 
 <div class="flex justify-between">
@@ -40,6 +51,12 @@
 
 <div class="flex items-center justify-between gap-2">
 	<h3 class="!text-lg">Themes</h3>
-
 	<LightSwitch rounded="rounded-full" height="h-6" width="w-12" />
 </div>
+
+<div class="mt-4">
+	<button class="btn variant-filled-secondary" on:click={changePassword}>
+			Change Password
+	</button>
+</div>
+

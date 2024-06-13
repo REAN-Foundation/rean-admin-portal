@@ -54,3 +54,16 @@ export const logout = async (sessionId: string) => {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////
+
+export const changePassword = async (
+	sessionId: string,
+	oldPassword: string,
+	newPassword: string,
+) => {
+	const body = {
+		oldPassword: oldPassword,
+		newPassword: newPassword
+	};
+	const url = BACKEND_API_URL + `/users/reset-password`;
+	return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
+};
