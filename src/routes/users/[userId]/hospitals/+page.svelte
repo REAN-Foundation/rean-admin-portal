@@ -42,10 +42,10 @@
 
     async function searchHospital(model) {
         let url = `/api/server/hospitals/search?`;
-        if (sortOrder) url += `sortOrder=${model.sortOrder}`;
+        if (sortOrder) url += `sortOrder=${sortOrder}`;
         else url += `sortOrder=ascending`;
 
-        if (sortBy) url += `&sortBy=${model.sortBy}`;
+        if (sortBy) url += `&sortBy=${sortBy}`;
         if (itemsPerPage) url += `&itemsPerPage=${model.itemsPerPage}`;
         if (offset) url += `&pageIndex=${model.pageIndex}`;
         if (hospitalName) url += `&name=${model.hospitalName}`;
