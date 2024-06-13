@@ -15,7 +15,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	$: goalTypes = data.goalTypes;
+	let goalTypes = data.goalTypes;
     let retrivedGoalTypes;
 	
 	const userId = $page.params.userId;
@@ -30,6 +30,13 @@
 	let itemsPerPage = 10;
     let items = 10;
     let type = "Type";
+
+    sort(sortOrder)
+	$:{
+		goalTypes = data.goalTypes;
+		sort(sortOrder)
+		goalTypes = goalTypes.map((item, index) => ({ ...item, index: index + 1 }));
+	}
 
     function sort(sortOrder: boolean, isOrdeApplied: boolean = false){
         if (isOrdeApplied) {

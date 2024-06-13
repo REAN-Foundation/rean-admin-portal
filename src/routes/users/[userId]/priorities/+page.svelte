@@ -15,7 +15,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	$: priorityTypes = data.priorityTypes;
+	let priorityTypes = data.priorityTypes;
     let retrivedPriorityTypes;
 	let type = "Type";
 	const userId = $page.params.userId;
@@ -29,6 +29,13 @@
 	let sortOrder = false;
 	let itemsPerPage = 10;
     let items = 10;
+
+    sort(sortOrder)
+	$:{
+		priorityTypes = data.priorityTypes;
+		sort(sortOrder)
+		priorityTypes = priorityTypes.map((item, index) => ({ ...item, index: index + 1 }));
+	}
 
     function sort(sortOrder: boolean, isOrdeApplied: boolean = false){
         if (isOrdeApplied) {
