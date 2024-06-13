@@ -9,7 +9,10 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
     event.depends('app:knowledge-nuggests');
 	try {
-		const response = await searchKnowledgeNuggets(sessionId);
+		const response = await searchKnowledgeNuggets(sessionId, {
+            orderBy : 'TopicName',
+            order : 'ascending'
+        });
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
