@@ -86,11 +86,11 @@
 
 	function onPageChange(e: CustomEvent): void {
 		let pageIndex = e.detail;
-		itemsPerPage = items * (pageIndex + 1);
+        itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
-		itemsPerPage = e.detail;
+		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
 

@@ -85,7 +85,7 @@
 	}
 
 	function onAmountChange(e: CustomEvent): void {
-		itemsPerPage = e.detail;
+		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
 
