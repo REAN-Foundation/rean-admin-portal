@@ -10,6 +10,12 @@
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
 	let fileinput;
+    let symptomImage;
+    let errorMessage = {
+        Text: 'Max file upload size 150 KB',
+        Colour: 'border-b-surface-700'
+    }
+    const MAX_FILE_SIZE = 1024 * 150;
 
 	const createRoute = `/users/${userId}/symptoms/create`;
 	const symptomRoute = `/users/${userId}/symptoms`;
@@ -43,21 +49,42 @@
 			console.log('ImageResource', imageResourceId_);
 			if (imageResourceId_) {
 				imageResourceId = imageResourceId_;
+                return true;
 			}
 			console.log(imageResourceId);
 		} else {
 			showMessage(response.Message, 'error');
+            return false;
 		}
 	};
 
 	const onFileSelected = async (e) => {
 		let f = e.target.files[0];
+        const fileSize = f.size;
+        if (fileSize > MAX_FILE_SIZE) {
+            errorMessage.Text = "File should be less than 150 KB";
+            errorMessage.Colour = 'text-error-500'
+            symptomImage.value = null;
+            return;
+        }
+        errorMessage.Text = 'Please wait file upload is in progress';
+        errorMessage.Colour = 'text-error-500';
+        console.log(`File size: ${fileSize} bytes`);
 		const filename = f.name;
 		let reader = new FileReader();
 		reader.readAsDataURL(f);
 		reader.onload = async (e) => {
 			fileinput = e.target.result;
-			await upload(e.target.result, filename);
+			const isFileUploaded = await upload(e.target.result, filename);
+            if (isFileUploaded) {
+                errorMessage.Text = "File uploaded successfully";
+                errorMessage.Colour = 'text-success-500'
+                return;
+            }
+            errorMessage.Text = 'Error in file upload';
+            errorMessage.Colour = 'text-error-500'
+            symptomImage.value = null;
+            return;
 		};
 	};
 </script>
@@ -134,8 +161,12 @@
 						required
 						class="true input w-full"
 						placeholder="Image"
+                        bind:this={symptomImage}
 						on:change={async (e) => await onFileSelected(e)}
 					/>
+                    {#if errorMessage}
+                        <p class= {`${errorMessage.Colour}`}>{errorMessage.Text}</p>
+                    {/if}
 					<input type="hidden" name="imageResourceId" value={imageResourceId} />
 				</td>
 			</tr>
