@@ -91,6 +91,11 @@
 	};
 
 	async function Delete(model) {
+        const response = await fetch(`/api/server/goals`, {
+            method: 'DELETE',
+            body: JSON.stringify(model),
+            headers: { 'content-type': 'application/json' }
+        });
 	}
 </script> 
 
