@@ -1,25 +1,110 @@
 <script>
-  import { goto } from '$app/navigation';
+  // import { goto } from '$app/navigation';
+	// import Icon from '@iconify/svelte';
+	// import { LightSwitch } from '@skeletonlabs/skeleton';
+	// import { createEventDispatcher } from 'svelte';
+
+	// export let userId;
+
+	// const dispatch = createEventDispatcher();
+
+	// const gotoLogout = async () => {
+	// 	dispatch('logout');
+	// };
+
+	// async function changePassword() {
+	// 	dispatch('click');
+	// 	await goto(`/users/${userId}/change-password`);
+	// }
+
+	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher } from 'svelte';
+	import { writable } from 'svelte/store';
+  const expandedMenus = writable({});
 
-	export let userId;
-
+  export let userId;
 	const dispatch = createEventDispatcher();
+	async function changePassword() {
+		dispatch('click');
+		await goto(`/users/${userId}/change-password`);
+	}
 
 	const gotoLogout = async () => {
 		dispatch('logout');
 	};
 
-	async function changePassword() {
-		dispatch('click');
-		await goto(`/users/${userId}/change-password`);
-	}
+  let menuItems = [
+    { name: 'My profile', link: '#' },
+    {
+      name: 'Authorization and security', subMenu: [
+        { name: 'Change Password', link: '#', action: () => changePassword() },
+      ]
+    },
+    {
+      name: 'Miscellaneous', subMenu: [
+        { name: 'Logout', link: '#',action: () => gotoLogout() },
+      ]
+    }
+  ];
+
+  function toggleMenu(name) {
+    expandedMenus.update(state => {
+      state[name] = !state[name];
+      return state;
+    });
+  }
 	
 </script>
 
-<div class="flex justify-between">
+<div class="w-64 h-full">
+  <div class="px-4 py-2">
+    <div class="flex items-center justify-between">
+      <span class="text-lg ">My profile</span>
+			<button class="btn variant-soft-error p-2" on:click>
+				<Icon icon="material-symbols:close-rounded" class="text-xl" />
+			</button>
+			<!-- <span class="text-sm text-gray-500">Account Info</span> -->
+    </div>
+  </div>
+  <div class="border-t border-primary-200 mt-2"></div>
+  <ul class="py-4 space-y-2">
+    {#each menuItems as item}
+      <li>
+        {#if item.subMenu}
+          <div>
+            <button on:click={() => toggleMenu(item.name)} class="w-full text-left px-4 py-2 hover:bg-primary-100 rounded-md">
+              {item.name}
+            </button>
+            {#if $expandedMenus[item.name]}
+              <ul class="ml-4 mt-2 space-y-1">
+                {#each item.subMenu as subItem}
+                  <li>
+                    {#if subItem.action}
+                      <button on:click={subItem.action} class="w-full text-left px-4 py-2 hover:bg-primary-100 rounded-md">
+                        {subItem.name}
+                      </button>
+                    {:else}
+                      <a href={subItem.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
+                        {subItem.name}
+                      </a>
+                    {/if}
+                  </li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
+        {:else}
+          <a href={item.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
+            {item.name}
+          </a>
+        {/if}
+      </li>
+    {/each}
+  </ul>
+</div>
+<!-- <div class="flex justify-between">
 	<button on:click={async () => await gotoLogout()} class="btn p-2 variant-soft-error">
 		<Icon icon="material-symbols:logout-rounded" />
 		<span class="text-xs">Sign Out</span>
@@ -58,5 +143,5 @@
 	<button class="btn variant-filled-secondary" on:click={changePassword}>
 			Change Password
 	</button>
-</div>
+</div> -->
 

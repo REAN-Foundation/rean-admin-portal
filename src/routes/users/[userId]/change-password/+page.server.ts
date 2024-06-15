@@ -10,8 +10,11 @@ import { changePassword } from '$routes/api/services/reancare/user';
 const changePasswordSchema = zfd
   .formData({
     oldPassword: z.string().min(1, "Old password is required"),
-    newPassword: z.string().min(1, "New password is required"),
+    newPassword: z.string().min(8, "New password should be greater than 8 charactor "),
     confirmNewPassword: z.string().min(1, "Please confirm the new password"),
+    email:z.string(),
+    username:z.string(),
+    roleId:z.string(),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     path: ["confirmNewPassword"],
@@ -47,6 +50,9 @@ export const actions = {
       sessionId,
       result.oldPassword,
       result.newPassword,
+      result.email,
+      result.username,
+      result.roleId,
     );
 
     if (response.Status === 'failure' || response.HttpCode !== 200) {
@@ -54,8 +60,8 @@ export const actions = {
     }
     throw redirect(
       303,
-      `/users`,
-      successMessage(`Password changed successfully!`),
+      `/`,
+      successMessage(response.Message),
       event
     );
   }
