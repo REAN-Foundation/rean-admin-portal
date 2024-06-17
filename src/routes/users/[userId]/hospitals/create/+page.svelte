@@ -59,10 +59,9 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td>Health System</td>
+				<td>Health System *</td>
 				<td>
-					<select name="healthSystemId" class="select select-primary w-full ">
-						<option disabled selected>Select health system here...</option>
+					<select required name="healthSystemId" class="select select-primary w-full" value="" >
 						{#each healthSystems as healthSystem}
 							<option value={healthSystem.id}>{healthSystem.Name}</option>
 						{/each}
