@@ -193,7 +193,7 @@
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>
-								<span slot="description"> Are you sure you want to delete a knowledge-nugget? </span>
+								<span slot="description"> Are you sure you want to delete a knowledge nugget? </span>
 							</Confirm>
 						</td>
 					</tr>
