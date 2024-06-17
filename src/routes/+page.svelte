@@ -1,26 +1,40 @@
 <script lang="ts">
 	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	import { browser } from '$app/environment';
-	import { personRolesStore, genderTypesStore } from '$lib/store/general.store';
+	import { personRolesStore } from '$lib/store/general.store';
 	import type { PageServerData } from './$types';
-    import { enhance } from '$app/forms';
+	import { enhance } from '$app/forms';
 	import {
 		getPublicLogoImageSource,
 		getPublicFooterText,
 		getPublicFooterLink,
 		getSystemName,
 	} from '$lib/themes/theme.selector';
+    import { invalidate } from '$app/navigation';
+    import { errorMessage, successMessage } from '$lib/utils/message.utils';
+		import { z } from 'zod';
+		import toast from 'svelte-french-toast';
+
+	/////////////////////////////////////////////////////////////////////////////
 
 	const logoImageSource = getPublicLogoImageSource();
-    const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
-    const footerLink = getPublicFooterLink();
-    
+  const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
+  const footerLink = getPublicFooterLink();
+
 	export let data: PageServerData;
 
 	personRolesStore.set(data.roles);
 	LocalStorageUtils.setItem('personRoles', JSON.stringify(data.roles));
-	let personRoles = [],
-		loginRoleId = 1;
+	let personRoles = [];
+	let loginRoleId = 1;
+	let showForgotPassword = false;
+	let showResetPassword = false;
+
+	let email = '';
+	let resetCode = '';
+	let newPassword = '';
+	let confirmPassword = '';
+	let errors: Record<string, string[]> = {};
 
 	if (browser) {
 		const tmp = LocalStorageUtils.getItem('personRoles');
@@ -32,7 +46,64 @@
 		LocalStorageUtils.removeItem('prevUrl');
 	}
 
-	var systemName = getSystemName();
+	const systemName = getSystemName();
+
+	const resetPasswordSchema = z.object({
+		email: z.string().email({ message: 'Invalid email address' }),
+		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
+		newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+		confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+	}).refine(data => data.newPassword === data.confirmPassword, {
+		message: "New password and confirm new password must match",
+		path: ['confirmPassword'],
+	});
+
+	async function handleForgotPassword() {
+		const response = await fetch(`/api/server/users/send-reset-code`, {
+			method: 'POST',
+			body: JSON.stringify({ email }),
+			headers: { 'content-type': 'application/json' }
+		});
+
+		const res =  await response.json();
+		console.log("res...........", res)
+		if (res.Status === "success") {
+			toast.success(res.Message)
+			showResetPassword = true;
+			showForgotPassword = false;
+		} else {
+			toast.error(res.Message);
+		}
+	}
+
+	async function handleResetPassword() {
+		errors = {};
+		try {
+			resetPasswordSchema.parse({ email, resetCode, newPassword, confirmPassword });
+
+			const response = await fetch('/api/server/users/reset-password', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ email, resetCode, newPassword })
+		});
+		const res =  await response.json();
+		if (res.Status === "success") {
+			toast.success(res.Message)
+			showResetPassword = false;
+			showForgotPassword = false;
+		} else {
+			toast.error(res.Message);
+		}
+		} catch (err) {
+			if (err instanceof z.ZodError) {
+				errors = err.flatten().fieldErrors;
+			} else {
+				errorMessage('An unexpected error occurred');
+			}
+		}
+	}
 
 </script>
 
@@ -45,49 +116,90 @@
 	<div class="w-full h-full" id="background-image">
 		<div class="bg-back-ground h-full w-full bg-primary-50">
 			<div class="h-full w-full px-3">
-				<div class=" flex justify-center flex-col items-center">
+				<div class="flex justify-center flex-col items-center">
 					<img
 						class="ct-image w-36 mt-7 mb-7"
 						alt="logo"
 						src={logoImageSource}
 					/>
-					<form
-						method="post"
-						action="?/login"
-						class=" shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl"
-					
-					>
-						<!-- <input class="hidden" type="number" name="loginRoleId" value={loginRoleId}> -->
-						<div class="hidden">
-							<input name="loginRoleId" class="hidden" value={loginRoleId} />
+					{#if showForgotPassword}
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+							<h2 class="text-center text-xl mb-4">Forgot Password</h2>
+							<form on:submit|preventDefault={handleForgotPassword}>
+								<label class="mb-2">
+									<span class="text-primary-500">Email</span>
+									<input type="email" bind:value={email} required class="input mb-4 mt-2" />
+								</label>
+								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Send Reset Code</button>
+								<button type="button" class="btn variant-filled-secondary mb-6 w-full" on:click={() => { showForgotPassword = false; }}>Back to Login</button>
+							</form>
 						</div>
-						<div class="justify-center w-full mt-5 h-50">
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="mb-2" for="username">
-								<span class="text-primary-500">Username</span>
-								<span class="label-text-alt" />
-							</label>
-							<input type="text" name="username" required class="input mb-4" />
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="mb-2" for="password">
-								<div class="grid grid-flow-col">
-									<span class="text-left text-primary-500">Password</span>
-									<span class="text-right text-primary-500 ml-4 sm:ml-12 invisible">
-										<b>Generate OTP</b>
+					{:else if showResetPassword}
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+							<h2 class="text-center text-xl mb-4">Reset Password</h2>
+							<form on:submit|preventDefault={handleResetPassword}>
+								<label class="mb-2 hidden">
+									<span class="text-primary-500">Email</span>
+									<input type="email"value={email} required class="input mb-4" />
+								</label>
+								<label class="mb-2">
+									<span class="text-primary-500">Reset Code</span>
+									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
+									{#if errors.resetCode}
+										<span class="text-error-500">{errors.resetCode}</span>
+									{/if}
+								</label>
+								<label class="mb-2">
+									<span class="text-primary-500">New Password</span>
+									<input type="password" bind:value={newPassword} required class="input mb-4 mt-2" />
+									{#if errors.newPassword}
+										<span class="text-error-500">{errors.newPassword}</span>
+									{/if}
+								</label>
+								<label class="mb-2">
+									<span class="text-primary-500">Confirm New Password</span>
+									<input type="password" bind:value={confirmPassword} required class="input mb-4" />
+									{#if errors.confirmPassword}
+										<span class="text-error-500">{errors.confirmPassword}</span>
+									{/if}
+								</label>
+								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Reset Password</button>
+								<button type="button" class="btn variant-filled-secondary mb-6 w-full" on:click={() => { showResetPassword = false; }}>Back to Login</button>
+							</form>
+						</div>
+					{:else}
+						<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+							<div class="hidden">
+								<input name="loginRoleId" class="hidden" value={loginRoleId} />
+							</div>
+							<div class="justify-center w-full mt-5 h-50">
+								<label class="mb-2" for="username">
+									<span class="text-primary-500">Username</span>
+									<span class="label-text-alt" />
+								</label>
+								<input type="text" name="username" required class="input mb-4" />
+								<label class="mb-2" for="password">
+									<div class="grid grid-flow-col">
+										<span class="text-left text-primary-500">Password</span>
+										<span class="text-right text-primary-500 ml-4 sm:ml-12 invisible">
+											<b>Generate OTP</b>
+										</span>
+									</div>
+								</label>
+								<input type="password" name="password" required class="input" />
+								<!-- svelte-ignore a11y-label-has-associated-control -->
+								<label class="lable">
+									<!-- svelte-ignore a11y-click-events-have-key-events -->
+									<!-- svelte-ignore a11y-no-static-element-interactions -->
+									<span class="text-primary-500 cursor-pointer" on:click={() => { showForgotPassword = true; }}>
+										<b>Forgot Password?</b>
 									</span>
-								</div>
-							</label>
-							<input type="password" name="password" required class=" input" />
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="lable">
-								<span class=" text-primary-500 hidden">
-									<b>Forgot Password?</b>
-								</span>
-							</label>
-							<br />
-							<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Login</button>
-						</div>
-					</form>
+								</label>
+								<br />
+								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Login</button>
+							</div>
+						</form>
+					{/if}
 				</div>
 			</div>
 		</div>

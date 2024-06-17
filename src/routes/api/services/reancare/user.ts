@@ -74,6 +74,55 @@ export const changePassword = async (
 	return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
 
+export const SendPasswordResetCode = async (email: string) => 
+	{
+	const model = {
+		Email:email,
+	};
+	const headers = {};
+	headers['Content-Type'] = 'application/json';
+	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+	const body = JSON.stringify(model);
+	console.log('model', model);
+	const url =
+		BACKEND_API_URL + `/users/send-password-reset-code`;
+	const res = await fetch(url, {
+		method: 'POST',
+		body,
+		headers
+	});
+	const response = await res.json();
+	console.log('response', response);
+	return response;
+};
+
+export const resetPassword = async (
+	email: string,
+	resetCode: string,
+	newPassword: string,
+) => {
+	const model = {
+		Email:email,
+		NewPassword: newPassword,
+		ResetCode:resetCode
+	};
+
+	const body = JSON.stringify(model);
+	const headers = {};
+	headers['Content-Type'] = 'application/json';
+	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+	const url =
+		BACKEND_API_URL +  `/users/reset-password`;
+	const res = await fetch(url, {
+		method: 'POST',
+		body,
+		headers
+	});
+	const response = await res.json();
+	console.log('response', response);
+	return response;
+};
+
 ///////////////////////////////////////////////////////////////////////
 
 // User curd end points
