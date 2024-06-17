@@ -41,6 +41,12 @@
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
 
+    $: {
+        if (title || type) {
+            paginationSettings.page = 0;
+        }
+    }
+
 	async function searchAssessmentTemplate(model) {
 		let url = `/api/server/assessments/assessment-templates/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
@@ -55,13 +61,14 @@
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
 		});
-		const response = await res.json();
-		assessmentTemplates = response.map((item, index) => ({ ...item, index: index + 1 }));
+		const searchResult = await res.json();
+        totalAssessmentTemplatesCount = searchResult.TotalCount;
+		assessmentTemplates = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
 	$:{
 		assessmentTemplates = assessmentTemplates.map((item, index) => ({ ...item, index: index + 1 }));
-		paginationSettings.size = data.assessmentTemplate.TotalCount;
+		paginationSettings.size = totalAssessmentTemplatesCount;
 		retrivedAssessmentTemplates = assessmentTemplates.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit

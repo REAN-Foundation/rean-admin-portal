@@ -34,6 +34,12 @@
 	let isSortingGenericName = false;
 	let items = 10;
 
+    $: {
+        if (drugName || genericName) {
+            paginationSettings.page = 0;
+        }
+    }
+
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
@@ -55,13 +61,14 @@
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
 		});
-		const response = await res.json();
-        drugs = response.map((item, index) => ({ ...item, index: index + 1 }));
+		const searchResult = await res.json();
+        drugs = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+        totalDrugsCount = searchResult.TotalCount;
 	}
 
 	$:{
 		drugs = drugs.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = data.drugs.TotalCount;
+        paginationSettings.size = totalDrugsCount;
 		retrivedDrugs = drugs.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
@@ -109,11 +116,6 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/drugs`, {
-			method: 'DELETE',
-			body: JSON.stringify(model),
-			headers: { 'content-type': 'application/json' }
-		});
 	}
 </script>
 

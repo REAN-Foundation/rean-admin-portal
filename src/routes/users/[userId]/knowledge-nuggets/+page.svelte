@@ -43,6 +43,11 @@
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
 
+    $:{
+        if (topicName || tags) {
+            paginationSettings.page = 0;
+        }
+    }
 	async function searchKnowledgeNugget(model) {
 		let url = `/api/server/knowledge-nuggets/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
@@ -58,13 +63,14 @@
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
 		});
-		const response = await res.json();
-		knowledgeNuggets = response.map((item, index) => ({ ...item, index: index + 1 }));
+		const searchResult = await res.json();
+        totalKnowledgeNuggetsCount = searchResult.TotalCount;
+		knowledgeNuggets = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
 	$: {
         knowledgeNuggets = knowledgeNuggets.map((item, index) => ({ ...item, index: index + 1 }));
-		paginationSettings.size = data.knowledgeNuggets.TotalCount;
+		paginationSettings.size = totalKnowledgeNuggetsCount;
         retrivedKnowledgeNuggets = knowledgeNuggets.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
