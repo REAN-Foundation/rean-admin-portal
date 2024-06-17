@@ -27,7 +27,7 @@ export const GET = async (event: RequestEvent) => {
         console.log("Search parms: ", searchParams);
 		const response = await searchHospitals(sessionId, searchParams);
         const hospitals = response.Data.Hospitals;
-        // console.log("hospitals", JSON.stringify(hospitals, null, 2));
+        console.log("hospitals", JSON.stringify(response, null, 2));
         return new Response(JSON.stringify(hospitals));
 	} catch (err) {
 		console.error(`Error retriving careplans: ${err.message}`);

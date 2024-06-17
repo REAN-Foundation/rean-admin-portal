@@ -40,9 +40,15 @@
         amounts: [10, 20, 30, 50]
     } satisfies PaginationSettings;
 
+    $: {
+        if (healthSystemName) {
+            paginationSettings.page = 0;
+        }
+    }
+
     async function searchHealthSystem(model) {
         let url = `/api/server/health-systems/search?`;
-        if (sortOrder) url += `sortOrder=${model.sortOrder}`;
+        if (sortOrder) url += `sortOrder=${sortOrder}`;
         else url += `sortOrder=ascending`;
 
         if (sortBy) url += `&sortBy=${sortBy}`;
@@ -57,17 +63,14 @@
             headers: { 'content-type': 'application/json' }
         });
 
-        const response = await res.json();
-        const items = response.Items;
-        console.log('items', JSON.stringify(items, null, 2));
-        paginationSettings.size = items.length;
-         healthSystems = items;
-        // healthSystems = items.map((item, index) => ({ ...item, index: index + 1 }));
+        const searchResult = await res.json();
+        totalHealthSystemsCount = searchResult.TotalCount;
+                healthSystems = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
     }
 
     $: {
         healthSystems = healthSystems.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = data.healthSystems.TotalCount;
+        paginationSettings.size = totalHealthSystemsCount;
         retrivedHealthSystems = healthSystems.slice(
         paginationSettings.page * paginationSettings.limit,
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
@@ -92,7 +95,7 @@
     }
 
     function onAmountChange(e: CustomEvent): void {
-        itemsPerPage = e.detail;
+        itemsPerPage = e.detail * (paginationSettings.page + 1);
         items = itemsPerPage;
     }
 

@@ -7,9 +7,10 @@
 	import InputChip from '$lib/components/input-chips.svelte';
 	import type { PageServerData } from './$types';
     import { enhance } from '$app/forms';
-
+    
+    const MAX_FILE_SIZE = 1024 * 150;
 	let fileinput;
-
+    let symptomImage;
 	let retrievedTags = '';
 	let tagsPlaceholder = 'Enter a tags here...';
 
@@ -23,6 +24,11 @@
 	let language = data.symptom.Language;
 	let imageUrl = data.symptom.ImageUrl ?? undefined;
 	let imageResourceId = data.symptom.ImageResourceId ?? undefined;
+
+    let errorMessage = {
+        Text: 'Max file upload size 150 KB',
+        Colour: 'border-b-surface-700'
+    }
 
 	//Original data
 	let _symptom = symptom;
@@ -55,7 +61,7 @@
 		}
 	];
 
-	const upload = async (imgBase64, filename) => {
+    const upload = async (imgBase64, filename) => {
 		const data = {};
 		console.log(imgBase64);
 		const imgData = imgBase64.split(',');
@@ -73,28 +79,51 @@
 		console.log(Date.now().toString());
 		const response = await res.json();
 		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl_ = response.Data.FileResources[0].Url;
-			console.log('imageUrl', imageUrl);
+			const imageUrl = response.Data.FileResources[0].url;
+			console.log('imageResourceId', imageUrl);
 			const imageResourceId_ = response.Data.FileResources[0].id;
-			console.log('imageResourceId_', imageUrl);
+			console.log('ImageResource', imageResourceId_);
 			if (imageResourceId_) {
 				imageResourceId = imageResourceId_;
+                return true;
 			}
-			console.log('======', imageResourceId_);
+			console.log(imageResourceId);
 		} else {
 			showMessage(response.Message, 'error');
+            return false;
 		}
 	};
-	const onFileSelected = async (e) => {
+
+    const onFileSelected = async (e) => {
 		let f = e.target.files[0];
+        const fileSize = f.size;
+        if (fileSize > MAX_FILE_SIZE) {
+            errorMessage.Text = "File should be less than 150 KB";
+            errorMessage.Colour = 'text-error-500'
+            symptomImage.value = null;
+            return;
+        }
+        errorMessage.Text = 'Please wait file upload is in progress';
+        errorMessage.Colour = 'text-error-500';
+        console.log(`File size: ${fileSize} bytes`);
 		const filename = f.name;
 		let reader = new FileReader();
 		reader.readAsDataURL(f);
 		reader.onload = async (e) => {
 			fileinput = e.target.result;
-			await upload(e.target.result, filename);
+			const isFileUploaded = await upload(e.target.result, filename);
+            if (isFileUploaded) {
+                errorMessage.Text = "File uploaded successfully";
+                errorMessage.Colour = 'text-success-500'
+                return;
+            }
+            errorMessage.Text = 'Error in file upload';
+            errorMessage.Colour = 'text-error-500'
+            symptomImage.value = null;
+            return;
 		};
 	};
+
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -193,9 +222,13 @@
 							name="fileinput"
 							type="file"
 							class="true input w-full"
+                            bind:this={symptomImage}
 							placeholder="Image"
 							on:change={async (e) => await onFileSelected(e)}
 						/>
+                        {#if errorMessage}
+                            <p class= {`${errorMessage.Colour}`}>{errorMessage.Text}</p>
+                        {/if}
 					{/if}
 					<input type="hidden" name="imageResourceId" value={imageResourceId} />
 					{#if form?.errors?.imageResourceId}

@@ -12,7 +12,7 @@ const createSymptomSchema = zfd.formData({
 	description: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	language: z.string().optional(),
-	imageResourceId: z.string().optional()
+	imageResourceId: z.string().uuid()
 });
 
 export const actions = {
@@ -42,7 +42,7 @@ export const actions = {
 			};
 		}
 
-		const response = await createSymptom(
+  		const response = await createSymptom(
 			sessionId,
 			result.symptom,
 			result.description,

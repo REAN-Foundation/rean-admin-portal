@@ -27,7 +27,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchAssessmentTemplates(sessionId, searchParams);
-		const items = response.Data.AssessmentTemplateRecords.Items;
+		const items = response.Data.AssessmentTemplateRecords;
 
 		return new Response(JSON.stringify(items));
 	} catch (err) {

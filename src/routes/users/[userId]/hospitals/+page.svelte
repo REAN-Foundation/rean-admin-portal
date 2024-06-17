@@ -40,12 +40,18 @@
         amounts: [10, 20, 30, 50]
     } satisfies PaginationSettings;
 
+    $: {
+        if (hospitalName) {
+            paginationSettings.page = 0;
+        }
+    }
+
     async function searchHospital(model) {
         let url = `/api/server/hospitals/search?`;
-        if (sortOrder) url += `sortOrder=${model.sortOrder}`;
+        if (sortOrder) url += `sortOrder=${sortOrder}`;
         else url += `sortOrder=ascending`;
 
-        if (sortBy) url += `&sortBy=${model.sortBy}`;
+        if (sortBy) url += `&sortBy=${sortBy}`;
         if (itemsPerPage) url += `&itemsPerPage=${model.itemsPerPage}`;
         if (offset) url += `&pageIndex=${model.pageIndex}`;
         if (hospitalName) url += `&name=${model.hospitalName}`;
@@ -54,16 +60,14 @@
             method: 'GET',
             headers: { 'content-type': 'application/json' }
         });
-        const response = await res.json();
-        const items = response.Items;
-        paginationSettings.size = items.length;
-        // console.log(JSON.stringify(items, null, 2))
-        hospitals = items.map((item, index) => ({ ...item, index: index + 1 }));
-    }
+        const searchResult = await res.json();
+        totalHospitalsCount = searchResult.TotalCount;
+        hospitals = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+     }
 
     $:{
         hospitals = hospitals.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = data.hospitals.TotalCount;
+        paginationSettings.size = totalHospitalsCount;
         retrivedHospitals = hospitals.slice(
         paginationSettings.page * paginationSettings.limit,
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
@@ -88,7 +92,7 @@
     }
 
     function onAmountChange(e: CustomEvent): void {
-        itemsPerPage = e.detail;
+        itemsPerPage = e.detail * (paginationSettings.page + 1);
         items = itemsPerPage;
     }
 
