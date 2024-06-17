@@ -170,7 +170,7 @@
 					{/if}
 				</td>
 			</tr>
-			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Image</td>
 				<td>
 					<input
@@ -182,7 +182,7 @@
 					/>
 					<input type="hidden" name="imageResourceId" bind:value={imageResourceId} />
 				</td>
-			</tr>
+			</tr> -->
 		</tbody>
 	</table>
 	<div class="flex p-2 justify-end">
