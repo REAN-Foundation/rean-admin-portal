@@ -129,22 +129,24 @@ export const resetPassword = async (
 
 export const createUser = async (
 	sessionId: string,
+    tenantId: string,
 	firstName: string,
 	lastName: string,
-  phone: string,
+    phone: string,
 	email: string,
 	role: string,
+    roleId: string,
 	password: string,
-	imageResourceId: string
 ) => {
 	const body = {
+        TenantId: tenantId,
 		FirstName: firstName,
 		LastName: lastName,
-    Role: role,
+        Role: role,
+        RoleId: roleId,
 		Phone: phone ? phone : null,
-    Email: email ? email : null,
+        Email: email ? email : null,
 		Password: password,
-		ImageResourceId: imageResourceId
 	};
 
 	if (Helper.isPhone(phone)) {

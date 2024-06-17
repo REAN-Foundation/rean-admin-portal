@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
+    import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-  import { showMessage } from '$lib/utils/message.utils.js';
+    import { showMessage } from '$lib/utils/message.utils.js';
 	import Icon from '@iconify/svelte';
-
+    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
@@ -12,7 +12,7 @@
 	let imageResourceId = '';
 	let imageUrl = undefined;
 	let fileinput;
-
+    let selectedUserRoleId = undefined;
 	const createRoute = `/users/${userId}/users/create`;
 	const userRoute = `/users/${userId}/users`;
 
@@ -62,6 +62,16 @@
 		};
 	};
 	
+    function getRoleIdByRoleName(event) {
+        const selectedUserRole = event.target.value;
+        const tmp = LocalStorageUtils.getItem('personRoles');
+        const personRoles = JSON.parse(tmp);
+        const selectedRole = personRoles?.find((x) => x.RoleName === selectedUserRole);
+        if (selectedRole) {
+            selectedUserRoleId = selectedRole.id;
+        }
+  }
+  
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -69,7 +79,8 @@
 <form
 	method="post"
 	action="?/createUserAction"
-	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
+    enctype="multipart/form-data"
+	class= "table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
 >
 	<table class="table">
@@ -147,11 +158,19 @@
 					<select
 						name="role"
 						class="select w-full"
+                        required
+                        value=""
+                        on:change={getRoleIdByRoleName}
 						placeholder="Select role here..."
 					>
-						<option>Tenant Admin</option>
-						<option>Tenant User</option>
+						<option value="Tenant admin">Tenant Admin</option>
+						<option value="Tenant user">Tenant User</option>
+                        <option value="System user">System User</option>
+                        <option value="System admin">System Admin</option>
+                        
+                        
 					</select>
+                    <input type="hidden" name="selectedUserRoleId" bind:value={selectedUserRoleId} />
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
@@ -170,7 +189,7 @@
 					{/if}
 				</td>
 			</tr>
-			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Image</td>
 				<td>
 					<input
@@ -182,7 +201,7 @@
 					/>
 					<input type="hidden" name="imageResourceId" bind:value={imageResourceId} />
 				</td>
-			</tr>
+			</tr> -->
 		</tbody>
 	</table>
 	<div class="flex p-2 justify-end">

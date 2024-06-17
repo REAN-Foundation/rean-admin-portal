@@ -17,8 +17,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
-		const user = response.Data.User;
-		const id = response.Data.User.id;
+		const user = response.Data.user;
+		const id = response.Data.user.id;
 		return {
 			location: `${id}/edit`,
 			user,

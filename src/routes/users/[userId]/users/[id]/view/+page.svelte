@@ -8,13 +8,12 @@
 	//////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let firstName = data.user.FirstName;
-	let lastName = data.user.LastName;
-	let phone = data.user.Phone;
-	let email = data.user.Email;
-	let role = data.user.Role;
-	let imageUrl = data.user.ImageUrl;
-	
+	let firstName = data.user.Person.FirstName;
+	let lastName = data.user.Person.LastName;
+	let phone = data.user.Person.Phone;
+	let email = data.user.Person.Email;
+	let role = data.user.Role.RoleName;
+	// let imageUrl = data.user.ImageUrl;
 	const userId = $page.params.userId;
 	const id = $page.params.id;
 	const editRoute = `/users/${userId}/users/${id}/edit`;
@@ -75,7 +74,7 @@
 				<td>Role</td>
 				<td>{role}</td>
 			</tr>
-			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Image</td>
 				<td>
 					{#if imageUrl == 'undefined' || imageUrl == null}
@@ -84,7 +83,7 @@
 						<Image cls="flex h-24 w-24 rounded-lg" source={imageUrl} w="24" h="24" />
 					{/if}
 				</td>
-			</tr>
+			</tr> -->
 		</tbody>
 	</table>
 </div>

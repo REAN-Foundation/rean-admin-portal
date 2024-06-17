@@ -11,13 +11,13 @@
 
 	export let form;
 	export let data: PageServerData;
-	let firstName = data.user.FirstName;
-	let lastName = data.user.LastName;
-	let phone = data.user.Phone;
-	let email = data.user.Email;
-	let role = data.user.Role;
-	let imageUrl = data.user.ImageUrl;
-	$: avatarSource = imageUrl;
+	let firstName = data.user.Person.FirstName;
+	let lastName = data.user.Person.LastName;
+	let phone = data.user.Person.Phone;
+	let email = data.user.Person.Email;
+	let role = data.user.Role.RoleName;
+	// let imageUrl = data.user.ImageUrl;
+	// $: avatarSource = imageUrl;
 	let password;
 
 	//Original data
@@ -26,7 +26,7 @@
 	let _role = role;
 	let _phone = phone;
 	let _email = email;
-	let _imageUrl = imageUrl;
+	// let _imageUrl = imageUrl;
 
 	function handleReset() {
 		firstName = _firstName;
@@ -34,7 +34,7 @@
 		role = _role;
 		phone = _phone;
 		email = _email;
-		imageUrl = _imageUrl
+		// imageUrl = _imageUrl
 	}
 
 	const userId = $page.params.userId;
@@ -54,45 +54,45 @@
 		}
 	];
 
-	const upload = async (imgBase64, filename) => {
-		const data = {};
-		console.log(imgBase64);
-		const imgData = imgBase64.split(',');
-		data['image'] = imgData[1];
-		console.log(JSON.stringify(data));
-		const res = await fetch(`/api/server/file-resources/upload`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Accept: 'application/json',
-				filename: filename
-			},
-			body: JSON.stringify(data)
-		});
-		console.log(Date.now().toString());
-		const response = await res.json();
-		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl_ = response.Data.FileResources[0].Url;
-			console.log('imageUrl_', imageUrl_);
-			if (imageUrl_) {
-				imageUrl = imageUrl_;
-			}
-			console.log(imageUrl);
-		} else {
-			showMessage(response.Message, 'error');
-		}
-	};
+	// const upload = async (imgBase64, filename) => {
+	// 	const data = {};
+	// 	console.log(imgBase64);
+	// 	const imgData = imgBase64.split(',');
+	// 	data['image'] = imgData[1];
+	// 	console.log(JSON.stringify(data));
+	// 	const res = await fetch(`/api/server/file-resources/upload`, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 			Accept: 'application/json',
+	// 			filename: filename
+	// 		},
+	// 		body: JSON.stringify(data)
+	// 	});
+	// 	console.log(Date.now().toString());
+	// 	const response = await res.json();
+	// 	if (response.Status === 'success' && response.HttpCode === 201) {
+	// 		const imageUrl_ = response.Data.FileResources[0].Url;
+	// 		console.log('imageUrl_', imageUrl_);
+	// 		if (imageUrl_) {
+	// 			imageUrl = imageUrl_;
+	// 		}
+	// 		console.log(imageUrl);
+	// 	} else {
+	// 		showMessage(response.Message, 'error');
+	// 	}
+	// };
 
-	const onFileSelected = async (e) => {
-		let f = e.target.files[0];
-		const filename = f.name;
-		let reader = new FileReader();
-		reader.readAsDataURL(f);
-		reader.onload = async (e) => {
-			avatarSource = e.target.result;
-			await upload(e.target.result, filename);
-		};
-	};
+	// const onFileSelected = async (e) => {
+	// 	let f = e.target.files[0];
+	// 	const filename = f.name;
+	// 	let reader = new FileReader();
+	// 	reader.readAsDataURL(f);
+	// 	reader.onload = async (e) => {
+	// 		avatarSource = e.target.result;
+	// 		await upload(e.target.result, filename);
+	// 	};
+	// };
 
 </script>
 
@@ -181,12 +181,14 @@
 						placeholder="Select role here..."
 						bind:value={role}
 					>
-						<option>Tenant Admin</option>
-						<option>Tenant User</option>
+                    <option value="Tenant admin">Tenant Admin</option>
+                    <option value="Tenant user">Tenant User</option>
+                    <option value="System user">System User</option>
+                    <option value="System admin">System Admin</option>
 					</select>
 				</td>
 			</tr>
-			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Password</td>
 				<td>
 					<input
@@ -202,8 +204,8 @@
 						<p class="text-error-500 text-xs">{form?.errors?.password[0]}</p>
 					{/if}
 				</td>
-			</tr>	
-			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+			</tr>	 -->
+			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Image</td>
 				<td>
 					{#if imageUrl === 'undefined'}
@@ -226,7 +228,7 @@
 					{/if}
 					<input type="hidden" name="imageUrl" value={imageUrl} />
 				</td>
-			</tr>	
+			</tr>	 -->
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
