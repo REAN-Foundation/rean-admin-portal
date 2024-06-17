@@ -362,6 +362,15 @@ function addAdministrationMenus(
     };
     menuList.push(personRoleMenu);
 
+    const usersMenu: SidebarMenu = {
+        name    : 'Users',
+        title   : 'Users',
+        icon    : 'material-symbols:group-outline-rounded',
+        link    : `/users/${userId}/users`,
+        children: []
+    };
+    menuList.push(usersMenu);
+
     const userManagementMenu: SidebarMenu = {
         name    : 'User-Managment',
         title   : 'User Management',
@@ -376,10 +385,12 @@ function addAdministrationMenus(
     const tenants: SidebarMenu = getMenu(menuList, 'Tenants');
     const personRole: SidebarMenu = getMenu(menuList, 'Person-Role');
     const userManagement: SidebarMenu = getMenu(menuList, 'User-Managment');
+    const users: SidebarMenu = getMenu(menuList, 'Users');
     administration_?.children.push(clients);
     administration_?.children.push(tenants);
     administration_?.children.push(personRole);
     administration_?.children.push(userManagement);
+    administration_?.children.push(users);
 
     const administrationNavigation: NavigationMenu | null = toNavigation(administration_, userRole, tenantSettings, options);
     if (administrationNavigation) {
