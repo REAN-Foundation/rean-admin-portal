@@ -9,7 +9,8 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-  import { invalidate } from '$app/navigation';
+    import { invalidate } from '$app/navigation';
+    import { SYSTEM_ID } from '../../../../../src/lib/constants';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,10 +104,11 @@
 </script> 
 
 <BreadCrumbs crumbs={breadCrumbs} />
-
-<div class="flex flex-wrap gap-2 mt-1">
-	<a href={createRoute} class="btn variant-filled-secondary ml-auto">Add New</a>
-</div>
+{#if SYSTEM_ID !== 'AHA'}
+    <div class="flex flex-wrap gap-2 mt-1">
+        <a href={createRoute} class="btn variant-filled-secondary ml-auto">Add New</a>
+    </div>
+{/if}
 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
 	<table class="table" role="grid">
