@@ -16,6 +16,7 @@
 				type="text"
 				class="input"
 				name="options"
+                required
 				bind:value={optionValueStore[i].Text}
 				placeholder="Add option here..."
 				disabled={readonly}
