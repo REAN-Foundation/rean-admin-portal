@@ -174,7 +174,7 @@
 							</div>
 							<div class="justify-center w-full mt-5 h-50">
 								<label class="mb-2" for="username">
-									<span class="text-primary-500">Username</span>
+									<span class="text-primary-500">Username/Email/Phone</span>
 									<span class="label-text-alt" />
 								</label>
 								<input type="text" name="username" required class="input mb-4" />
