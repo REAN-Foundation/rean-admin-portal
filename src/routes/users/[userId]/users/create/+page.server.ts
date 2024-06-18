@@ -15,13 +15,14 @@ const createUserSchema = zfd.formData({
 	role: z.string().min(10).max(64),
 	password: z.string().min(6).max(15),
 	// imageResourceId: z.string().optional(),
-    selectedUserRoleId: z.string()
+  selectedUserRoleId: z.string(),
+	countryCode:z.string()
 
 });
 
 export const actions = {
 	createUserAction: async (event: RequestEvent) => {
-        const tenantId = event.locals?.sessionUser?.tenantId;
+    const tenantId = event.locals?.sessionUser?.tenantId;
 		const request = event.request;
 		const userId = event.params.userId;
 		const sessionId = event.cookies.get('sessionId');
@@ -42,15 +43,17 @@ export const actions = {
 				errors
 			};
 		}
+
+		const phone = result.countryCode + '-' + result.phone;
 		const response = await createUser(
 			sessionId,
-            tenantId,
+      tenantId,
 			result.firstName,
 			result.lastName,
-			result.phone,
+			phone,
 			result.email,
 			result.role,
-            result.selectedUserRoleId,
+      result.selectedUserRoleId,
 			result.password,
     	);
 		const id = response.Data.User.id;

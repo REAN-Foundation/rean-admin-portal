@@ -123,7 +123,7 @@
 					{/if}
 				</td>
 			</tr>
-			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Contact Number *</td>
 				<td>
 					<input
@@ -132,6 +132,27 @@
 						required
 						placeholder="Enter phone here..."
 						class="input w-full {form?.errors?.phone ? 'border-error-300' : 'border-primary-200'}"
+					/>
+					{#if form?.errors?.phone}
+						<p class="text-error-500 text-xs">{form?.errors?.phone[0]}</p>
+					{/if}
+				</td>
+			</tr> -->
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Contact Number *</td>
+				<td class="flex gap-2">
+					<select
+						name="countryCode"
+						class="select select-primary w-20 lg:w-20 md:w-20 sm:w-18 min-[320px]:w-12"
+					>
+						<option>+1</option>
+						<option>+91</option>
+					</select>
+					<input
+						type="text"
+						name="phone"
+						placeholder="Enter contact number here..."
+						class="input {form?.errors?.phone ? 'border-error-300 text-error-500' : ''}"
 					/>
 					{#if form?.errors?.phone}
 						<p class="text-error-500 text-xs">{form?.errors?.phone[0]}</p>

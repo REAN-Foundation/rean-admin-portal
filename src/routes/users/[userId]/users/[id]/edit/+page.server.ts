@@ -36,6 +36,7 @@ const updateUserSchema = zfd.formData({
 	email: z.string().email().min(10).max(64),
 	role: z.string().min(10).max(64),
 	password: z.string().min(6).max(15),
+	countryCode:z.string(),
 	imageResourceId: z.string().optional(),
 });
 
@@ -64,6 +65,7 @@ export const actions = {
 			};
 		}
 
+		const phone = result.countryCode + '-' + result.phone;
 		const response = await updateUser(
 			sessionId,
 			id,
