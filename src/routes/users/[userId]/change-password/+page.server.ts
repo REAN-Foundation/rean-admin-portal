@@ -12,9 +12,9 @@ const changePasswordSchema = zfd
     oldPassword: z.string().min(1, "Old password is required"),
     newPassword: z.string().min(8, "New password should be greater than 8 charactor "),
     confirmNewPassword: z.string().min(1, "Please confirm the new password"),
-    email:z.string(),
-    username:z.string(),
-    roleId:z.string(),
+    // email:z.string(),
+    // username:z.string(),
+    // roleId:z.string(),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     path: ["confirmNewPassword"],
@@ -26,6 +26,11 @@ export const actions = {
     const request = event.request;
     const userId = event.params.userId;
     const sessionId = event.cookies.get('sessionId');
+    const email = event.locals?.sessionUser?.email;
+    const username = event.locals?.sessionUser?.username;
+    const roleId = event.locals?.sessionUser?.roleId;
+
+    console.log("email",email)
     const data = await request.formData();
     const formData = Object.fromEntries(data);
 
@@ -50,9 +55,9 @@ export const actions = {
       sessionId,
       result.oldPassword,
       result.newPassword,
-      result.email,
-      result.username,
-      result.roleId,
+      email,
+      username,
+      roleId,
     );
 
     if (response.Status === 'failure' || response.HttpCode !== 200) {

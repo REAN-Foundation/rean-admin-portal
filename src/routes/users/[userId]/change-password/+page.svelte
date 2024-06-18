@@ -11,11 +11,6 @@
   const homeRoute = `/users/${userId}/home`;
 	const changePasswordRoute = `/users/${userId}/change-password`;
 
-  let sessionUser;
-  $: {
-    const data = $page.data;
-    sessionUser = data.sessionUser;
-  }
 	const breadCrumbs = [
 		{ name: 'Change Password', path: changePasswordRoute }
 	];
@@ -41,9 +36,6 @@
       </tr>
     </thead>
     <tbody class="!bg-white dark:!bg-inherit">
-      <input type="email" id="email" name="email" value={sessionUser.email} class="input w-full hidden" />
-      <input type="text" name="username" value={sessionUser.username} class="input w-full hidden" />
-      <input type="text" name="roleId" value={sessionUser.RoleId} class="input w-full hidden" />
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
         <td>Old Password *</td>
         <td>
