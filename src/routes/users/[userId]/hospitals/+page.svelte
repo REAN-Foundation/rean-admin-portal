@@ -28,7 +28,7 @@
     let sortOrder = 'ascending';
     let itemsPerPage = 10;
     let offset = 0;
-    let totalHospitalsCount = data.hospitals.TotalCount;
+    $: totalHospitalsCount = data.hospitals.TotalCount;
     let isSortingName = false;
     let isSortingHealthSystemName = false;
     let items = 10;

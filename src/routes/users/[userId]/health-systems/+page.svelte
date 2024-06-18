@@ -29,7 +29,7 @@
     let sortOrder = 'ascending';
     let itemsPerPage = 10;
     let offset = 0;
-    let totalHealthSystemsCount = data.healthSystems.TotalCount;
+    $: totalHealthSystemsCount = data.healthSystems.TotalCount;
     let isSortingName = false;
     let items = 10;
 

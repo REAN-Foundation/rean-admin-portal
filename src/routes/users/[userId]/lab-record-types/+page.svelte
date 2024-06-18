@@ -11,7 +11,7 @@
 
 	export let data: PageServerData;
 	let labRecordTypes=data.labRecordTypes;
-  let selectedLabRecordTypes;
+    let selectedLabRecordTypes;
 	let sortOrder = false;
     let typeName = "Type Name";
 	const userId = $page.params.userId;

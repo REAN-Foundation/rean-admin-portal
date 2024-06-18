@@ -12,7 +12,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	$:assessmentTemplates = data.assessmentTemplate.Items;
+	$: assessmentTemplates = data.assessmentTemplate.Items;
 	let retrivedAssessmentTemplates;
 	const userId = $page.params.userId;
 	const assessmentRoute = `/users/${userId}/assessment-templates`;
@@ -29,7 +29,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offest = 0;
-	let totalAssessmentTemplatesCount = data.assessmentTemplate.TotalCount;
+	$: totalAssessmentTemplatesCount = data.assessmentTemplate.TotalCount;
 	let isSortingTitle = false;
 	let isSortingType = false;
 	let items = 10;

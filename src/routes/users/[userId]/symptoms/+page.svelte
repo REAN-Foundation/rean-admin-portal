@@ -33,7 +33,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offset = 0;
-	let totalSymptomsCount = data.symptomsCount;
+	$: totalSymptomsCount = data.symptomsCount;
 	let isSortingSymptom = false;
 	let isSortingTags = false;
 	let items = 10;
