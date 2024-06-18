@@ -13,7 +13,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-    let retrivedUsers;
+  let retrivedUsers;
 	let users = data.users.Items;
 
 	const userId = $page.params.userId;
@@ -66,8 +66,8 @@
 
 	$: {
 		users = users.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = data.users.TotalCount;
-        retrivedUsers = users.slice(
+    paginationSettings.size = data.users.TotalCount;
+    retrivedUsers = users.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
@@ -178,14 +178,14 @@
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 						<td role="gridcell" aria-colindex={2} tabindex="0">
-							<a href={viewRoute(row.id)}>{Helper.truncateText(row.FirstName, 20)} </a>
+							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
 						</td>
-						<td role="gridcell" aria-colindex={4} tabindex="0">{row.LastName}</td>
+						<td role="gridcell" aria-colindex={4} tabindex="0">{row.Person.LastName}</td>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Phone !== null ? row.Phone : 'Not specified'}</td
+							>{row.Person.Phone !== null ? row.Person.Phone : 'Not specified'}</td
 						>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Email !== null ? row.Email : 'Not specified'}</td
+							>{row.Person.Email !== null ? row.Person.Email : 'Not specified'}</td
 						>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">

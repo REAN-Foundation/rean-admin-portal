@@ -7,13 +7,21 @@ import { searchUsers } from '$routes/api/services/reancare/user';
 
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
-    event.depends('app:users');
+	console.log("sessionId.....",sessionId)
+  event.depends('app:users');
 	try {
+		const tenantId = event.locals.sessionUser.tenantId;
+		console.log("tenantId.....",tenantId);
+		const searchParams = {
+			tenantId:tenantId
+		}
 		const response = await searchUsers(sessionId);
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
-		const users = response.Data.UserRecords;
+		const users = response.Data.Users;
+
+		console.log("users", users.Items)
 		return {
 			users,
 			sessionId,
