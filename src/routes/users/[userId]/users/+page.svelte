@@ -46,7 +46,7 @@
 	} satisfies PaginationSettings;
 
     $: {
-        if (firstName || email) {
+        if (phone || email) {
             paginationSettings.page = 0;
         }
     }
