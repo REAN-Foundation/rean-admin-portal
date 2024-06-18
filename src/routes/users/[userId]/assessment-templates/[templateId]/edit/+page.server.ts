@@ -13,24 +13,20 @@ import {
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const assessmentTemplateId = event.params.templateId;
+    const response = await getAssessmentTemplateById(sessionId, assessmentTemplateId);
 
-	try {
-		const assessmentTemplateId = event.params.templateId;
-		const response = await getAssessmentTemplateById(sessionId, assessmentTemplateId);
-
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const assessmentTemplate = response.Data.AssessmentTemplate;
-		const id = response.Data.AssessmentTemplate.id;
-		return {
-			location: `${id}/edit`,
-			assessmentTemplate,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving assessments: ${error.message}`);
-	}
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const assessmentTemplate = response.Data.AssessmentTemplate;
+    const id = response.Data.AssessmentTemplate.id;
+    return {
+        location: `${id}/edit`,
+        assessmentTemplate,
+        message: response.Message
+    };
+	
 };
 
 const updateAssessmentTemplateSchema = zfd.formData({

@@ -8,23 +8,20 @@ import { searchAssessmentNodes } from '../../../../../api/services/reancare/asse
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
     event.depends('app:assessment-nodes');
-	try {
-		const templateId = event.params.templateId;
-		const searchParams = {
-			templateId: templateId
-		};
-		const response = await searchAssessmentNodes(sessionId, searchParams);
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const assessmentNodes = response.Data.AssessmentNodeRecords;
+    const templateId = event.params.templateId;
+    const searchParams = {
+        templateId: templateId
+    };
+    const response = await searchAssessmentNodes(sessionId, searchParams);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const assessmentNodes = response.Data.AssessmentNodeRecords;
 
-		return {
-			assessmentNodes,
-			sessionId,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving assessment nodes: ${error.message}`);
-	}
+    return {
+        assessmentNodes,
+        sessionId,
+        message: response.Message
+    };		
+
 };

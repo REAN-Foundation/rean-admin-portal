@@ -7,9 +7,7 @@ import { getAssessmentNodeById } from '../../../../../../../api/services/reancar
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
-
-	try {
-		const assessmentNodeId = event.params.nodeId;
+	const assessmentNodeId = event.params.nodeId;
 		const templateId = event.params.templateId;
 		const response = await getAssessmentNodeById(sessionId, templateId, assessmentNodeId);
 		const _templateScoringCondition = await getAssessmentTemplateById(sessionId, templateId);
@@ -27,7 +25,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 			templateScoringCondition,
 			message: response.Message
 		};
-	} catch (error) {
-		console.error(`Error retriving assessment node: ${error.message}`);
-	}
+
+	
 };

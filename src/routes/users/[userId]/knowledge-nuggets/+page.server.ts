@@ -8,21 +8,18 @@ import { searchKnowledgeNuggets } from '../../../api/services/reancare/knowledge
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
     event.depends('app:knowledge-nuggests');
-	try {
-		const response = await searchKnowledgeNuggets(sessionId, {
-            orderBy : 'TopicName',
-            order : 'ascending'
-        });
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const knowledgeNuggets = response.Data.KnowledgeNuggetRecords;
-		return {
-			knowledgeNuggets,
-			sessionId,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving knowledge nuggets: ${error.message}`);
-	}
+    const response = await searchKnowledgeNuggets(sessionId, {
+        orderBy : 'TopicName',
+        order : 'ascending'
+    });
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const knowledgeNuggets = response.Data.KnowledgeNuggetRecords;
+    return {
+        knowledgeNuggets,
+        sessionId,
+        message: response.Message
+    };		
+
 };

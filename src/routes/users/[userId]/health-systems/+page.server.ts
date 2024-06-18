@@ -8,26 +8,23 @@ import { searchHealthSystems } from '../../../api/services/reancare/health.syste
 export const load: PageServerLoad = async ({cookies,depends}) => {
 	const sessionId = cookies.get('sessionId');
 	depends('app:healthSystem');
+    const response = await searchHealthSystems(sessionId, 
+        {
+            orderBy: "Name",
+            order: "ascending"
+        }
+    );
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const healthSystems = response.Data.HealthSystems;
+    console.log("%%%",healthSystems);
+    // healthSystems = healthSystems.map((item, index) => ({ ...item, index: index + 1 }));
+    return {
+        healthSystems,
+        sessionId,
+        message: response.Message
+    };
 
-	try {
-		const response = await searchHealthSystems(sessionId, 
-            {
-                orderBy: "Name",
-                order: "ascending"
-            }
-        );
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const healthSystems = response.Data.HealthSystems;
-        console.log("%%%",healthSystems);
-        // healthSystems = healthSystems.map((item, index) => ({ ...item, index: index + 1 }));
-		return {
-			healthSystems,
-			sessionId,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving healthSystems: ${error.message}`);
-	}
+		
 };
