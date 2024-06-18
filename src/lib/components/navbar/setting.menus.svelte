@@ -36,7 +36,7 @@
 	};
 
   let menuItems = [
-    { name: 'My profile', link: '#' },
+    // { name: 'My profile', link: '#' },
     {
       name: 'Authorization and security', subMenu: [
         { name: 'Change Password', link: '#', action: () => changePassword() },
