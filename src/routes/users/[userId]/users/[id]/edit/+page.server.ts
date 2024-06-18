@@ -5,6 +5,7 @@ import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
 import { getUserById, updateUser} from '$routes/api/services/reancare/user';
+
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
@@ -30,14 +31,14 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 };
 
 const updateUserSchema = zfd.formData({
-	firstName: z.string().min(3).max(256),
-	lastName: z.string().min(3).max(256),
-	phone: z.string().min(10).max(64),
-	email: z.string().email().min(10).max(64),
-	role: z.string().min(10).max(64),
-	password: z.string().min(6).max(15),
-	countryCode:z.string(),
-	imageResourceId: z.string().optional(),
+	firstName: z.string().optional(),
+	lastName: z.string().optional(),
+	phone: z.string().optional(),
+	email: z.string().email().optional(),
+	role: z.string().optional(),
+	countryCode:z.string().optional(),
+	selectedUserRoleId:z.string().optional(),
+	// imageResourceId: z.string().optional(),
 });
 
 export const actions = {
@@ -71,11 +72,11 @@ export const actions = {
 			id,
 			result.firstName,
 			result.lastName,
-			result.phone,
+			phone,
 			result.email,
-			result.role,
-			result.password,
-			result.imageResourceId
+			result.selectedUserRoleId,
+			// result.role,
+			// result.imageResourceId
 		);
 		// const id = response.Data.user.id;
 

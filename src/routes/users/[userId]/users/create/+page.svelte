@@ -12,7 +12,7 @@
 	let imageResourceId = '';
 	let imageUrl = undefined;
 	let fileinput;
-    let selectedUserRoleId = undefined;
+  let selectedUserRoleId = undefined;
 	const createRoute = `/users/${userId}/users/create`;
 	const userRoute = `/users/${userId}/users`;
 

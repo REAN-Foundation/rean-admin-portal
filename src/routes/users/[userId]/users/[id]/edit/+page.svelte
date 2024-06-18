@@ -6,6 +6,7 @@
   import { enhance } from '$app/forms';
   import { showMessage } from '$lib/utils/message.utils';
 	import Image from '$lib/components/image.svelte';
+    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	
 	//////////////////////////////////////////////////////////////////////
 
@@ -27,6 +28,7 @@
 	let _phone = phone;
 	let _email = email;
 	// let _imageUrl = imageUrl;
+	let selectedUserRoleId = data.user.Role.id;
 
 	console.log("phone",phone)
 	function handleReset() {
@@ -94,7 +96,15 @@
 	// 		await upload(e.target.result, filename);
 	// 	};
 	// };
-
+	function getRoleIdByRoleName(event) {
+        const selectedUserRole = event.target.value;
+        const tmp = LocalStorageUtils.getItem('personRoles');
+        const personRoles = JSON.parse(tmp);
+        const selectedRole = personRoles?.find((x) => x.RoleName === selectedUserRole);
+        if (selectedRole) {
+            selectedUserRoleId = selectedRole.id;
+        }
+  }
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -200,16 +210,18 @@
 				<td>Role *</td>
 				<td>
 					<select
-						name="role"
+						name="roleId"
 						class="select w-full"
 						placeholder="Select role here..."
 						bind:value={role}
+						on:change={getRoleIdByRoleName}
 					>
                     <option value="Tenant admin">Tenant Admin</option>
                     <option value="Tenant user">Tenant User</option>
                     <option value="System user">System User</option>
                     <option value="System admin">System Admin</option>
 					</select>
+					<input type="hidden" name="selectedUserRoleId" bind:value={selectedUserRoleId} />
 				</td>
 			</tr>
 			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

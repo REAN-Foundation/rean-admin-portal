@@ -189,22 +189,25 @@ export const updateUser = async (
 	lastName: string,
   phone: string,
 	email: string,
-	role: string,
-	password: string,
+	roleId:string,
+	// role: string,
+	// password: string,
 	imageResourceId: string
 ) => {
 	const body = {
 		FirstName: firstName,
 		LastName: lastName,
-    Role: role,
+    RoleId: roleId,
 		Phone: phone ? phone : null,
     Email: email ? email : null,
-		Password: password,
+		// Password: password,
 		ImageResourceId: imageResourceId
 	};
 	if (Helper.isPhone(phone)) {
 		body.Phone = Helper.sanitizePhone(phone);
 	};
+
+	console.log("body.....",body)
 	const url = BACKEND_API_URL + `/users/${userId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
