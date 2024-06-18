@@ -15,7 +15,10 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 		const searchParams = {
 			tenantId:tenantId
 		}
-		const response = await searchUsers(sessionId);
+		const response = await searchUsers(sessionId, {
+            orderBy: 'FirstName',
+            order : 'ascending'
+        });
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}

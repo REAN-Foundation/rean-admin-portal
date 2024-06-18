@@ -29,7 +29,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchUsers(sessionId, searchParams);
-		const items = response.Data.UserRecords.Items;
+		const items = response.Data.Users;
 		console.log('res==', response);
 
 		return new Response(JSON.stringify(items));

@@ -101,6 +101,7 @@
 					<input
 						type="text"
 						name="firstName"
+                        required
 						placeholder="Enter first name here..."
 						class="input w-full {form?.errors?.firstName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -115,6 +116,7 @@
 					<input
 						type="text"
 						name="lastName"
+                        required
 						placeholder="Enter last name here..."
 						class="input w-full {form?.errors?.lastName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -151,6 +153,7 @@
 					<input
 						type="text"
 						name="phone"
+                        required
 						placeholder="Enter contact number here..."
 						class="input {form?.errors?.phone ? 'border-error-300 text-error-500' : ''}"
 					/>
@@ -166,6 +169,7 @@
 						type="email"
 						name="email"
 						placeholder="Enter email here..."
+                        required
 						class="input w-full {form?.errors?.email ? 'border-error-300' : 'border-primary-200'}"
 					/>
 					{#if form?.errors?.email}
