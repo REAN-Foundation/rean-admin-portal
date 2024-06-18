@@ -38,6 +38,12 @@
 	let isSortingTags = false;
 	let items = 10;
 
+    $: {
+        if (symptom || tags) {
+            paginationSettings.page = 0;
+        }
+    }
+
 	let paginationSettings = {
 		page: 0,
 		limit: 10,
@@ -61,13 +67,14 @@
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
 		});
-		const response = await res.json();
-        symptoms = response;
+		const searchResult = await res.json();
+        totalSymptomsCount = searchResult.TotalCount;
+        symptoms = searchResult.Items;;
 	}
 
 	$: {
 		symptoms = symptoms.map((item, index) => ({ ...item, index: index + 1 }));
-		paginationSettings.size = data.symptomsCount;
+		paginationSettings.size = totalSymptomsCount;
 		retrivedSymptoms = symptoms.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit

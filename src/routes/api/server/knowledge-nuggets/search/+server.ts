@@ -28,7 +28,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchKnowledgeNuggets(sessionId, searchParams);
-		const items = response.Data.KnowledgeNuggetRecords.Items;
+		const items = response.Data.KnowledgeNuggetRecords;
 
 		return new Response(JSON.stringify(items));
 	} catch (err) {

@@ -34,7 +34,7 @@
 		const res = await fetch(`/api/server/file-resources/upload`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
+				'Content-Type': 'multipart/form-data',
 				Accept: 'application/json',
 				filename: filename
 			},

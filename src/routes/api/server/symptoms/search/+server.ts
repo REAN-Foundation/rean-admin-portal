@@ -28,7 +28,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchSymptoms(sessionId, searchParams);
-		const items = response.Data.SymptomTypes.Items;
+		const items = response.Data.SymptomTypes;
 
 		return new Response(JSON.stringify(items));
 	} catch (err) {

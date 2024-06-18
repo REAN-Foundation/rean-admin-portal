@@ -106,7 +106,7 @@
 
 <Drawer>
     {#if $drawerStore.id === 'rightSidebar'}
-        <SettingMenu on:click={drawerRightClose} on:logout />
+        <SettingMenu on:click={drawerRightClose} on:logout userId = {userId} />
     {:else if $drawerStore.id === 'leftSidebar'}
         <div class="grid justify-center w-60 space-y-4 mt-5">
             {#each sidebarTabs as t}

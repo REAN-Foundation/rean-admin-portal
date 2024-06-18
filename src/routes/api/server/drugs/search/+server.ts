@@ -27,7 +27,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchDrugs(sessionId, searchParams);
-		const items = response.Data.Drugs.Items;
+		const items = response.Data.Drugs;
 		console.log('res==', response);
 
 		return new Response(JSON.stringify(items));
