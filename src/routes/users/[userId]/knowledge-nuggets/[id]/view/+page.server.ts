@@ -6,23 +6,19 @@ import { getKnowledgeNuggetById } from '../../../../../api/services/reancare/kno
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const knowledgeNuggetsId = event.params.id;
+    const response = await getKnowledgeNuggetById(sessionId, knowledgeNuggetsId);
 
-	try {
-		const knowledgeNuggetsId = event.params.id;
-		const response = await getKnowledgeNuggetById(sessionId, knowledgeNuggetsId);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const knowledgeNugget = response.Data.KnowledgeNugget;
+    const id = response.Data.KnowledgeNugget.id;
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const knowledgeNugget = response.Data.KnowledgeNugget;
-		const id = response.Data.KnowledgeNugget.id;
-
-		return {
-			location: `${id}/edit`,
-			knowledgeNugget,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving knowledge nuggets: ${error.message}`);
-	}
+    return {
+        location: `${id}/edit`,
+        knowledgeNugget,
+        message: response.Message
+    };
+		
 };

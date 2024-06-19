@@ -16,33 +16,30 @@ import {
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
 
-	try {
-		const templateId = event.params.templateId;
-		const assessmentNodeId = event.params.nodeId;
-		const searchParams = {
-			templateId: templateId
-		};
-		const _queryResponseTypes = await getQueryResponseTypes(sessionId);
-		const _assessmentNodes = await searchAssessmentNodes(sessionId, searchParams);
-		const response = await getAssessmentNodeById(sessionId, templateId, assessmentNodeId);
+    const templateId = event.params.templateId;
+    const assessmentNodeId = event.params.nodeId;
+    const searchParams = {
+        templateId: templateId
+    };
+    const _queryResponseTypes = await getQueryResponseTypes(sessionId);
+    const _assessmentNodes = await searchAssessmentNodes(sessionId, searchParams);
+    const response = await getAssessmentNodeById(sessionId, templateId, assessmentNodeId);
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const assessmentNode = response.Data.AssessmentNode;
-		const queryResponseTypes = _queryResponseTypes.Data.QueryResponseTypes;
-		const assessmentNodes = _assessmentNodes.Data.AssessmentNodeRecords.Items;
-		const id = response.Data.AssessmentNode.id;
-		return {
-			location: `${id}/edit`,
-			assessmentNode,
-			queryResponseTypes,
-			assessmentNodes,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving assessment node: ${error.message}`);
-	}
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const assessmentNode = response.Data.AssessmentNode;
+    const queryResponseTypes = _queryResponseTypes.Data.QueryResponseTypes;
+    const assessmentNodes = _assessmentNodes.Data.AssessmentNodeRecords.Items;
+    const id = response.Data.AssessmentNode.id;
+    return {
+        location: `${id}/edit`,
+        assessmentNode,
+        queryResponseTypes,
+        assessmentNodes,
+        message: response.Message
+    };		
+
 };
 
 const updateAssessmentNodeSchema = zfd.formData({

@@ -15,29 +15,25 @@ import {
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+	const templateId = event.params.templateId;
+	const searchParams = {
+        templateId: templateId
+    };
+    const _queryResponseTypes = await getQueryResponseTypes(sessionId);
+    const response = await searchAssessmentNodes(sessionId, searchParams);
 
-	try {
-		const templateId = event.params.templateId;
-		const searchParams = {
-			templateId: templateId
-		};
-		const _queryResponseTypes = await getQueryResponseTypes(sessionId);
-		const response = await searchAssessmentNodes(sessionId, searchParams);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const queryResponseTypes = _queryResponseTypes.Data.QueryResponseTypes;
+    const assessmentNodes = response.Data.AssessmentNodeRecords.Items;
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const queryResponseTypes = _queryResponseTypes.Data.QueryResponseTypes;
-		const assessmentNodes = response.Data.AssessmentNodeRecords.Items;
-
-		return {
-			queryResponseTypes,
-			assessmentNodes,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving query response types: ${error.message}`);
-	}
+    return {
+        queryResponseTypes,
+        assessmentNodes,
+        message: response.Message
+    };	
+	
 };
 
 const createAssessmentNodeSchema = zfd.formData({

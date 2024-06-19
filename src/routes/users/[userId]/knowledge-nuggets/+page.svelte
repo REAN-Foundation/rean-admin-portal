@@ -31,7 +31,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offset = 0;
-	let totalKnowledgeNuggetsCount = data.knowledgeNuggets.TotalCount;
+	$: totalKnowledgeNuggetsCount = data.knowledgeNuggets.TotalCount;
 	let isSortingName = false;
 	let isSortingTags = false;
 	let items = 10;

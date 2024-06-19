@@ -11,29 +11,25 @@ import { getSymptomById, updateSymptom } from '../../../../../api/services/reanc
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const symptomId = event.params.id;
+    const response = await getSymptomById(sessionId, symptomId);
 
-	try {
-		const symptomId = event.params.id;
-		const response = await getSymptomById(sessionId, symptomId);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const symptom = response.Data.SymptomType;
+    const imageResourceId = symptom.ImageResourceId;
+    if (imageResourceId) {
+        symptom['ImageUrl'] =
+            BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
+    } else {
+        symptom['ImageUrl'] = null;
+    }
+    return {
+        sessionId,
+        symptom
+    };
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const symptom = response.Data.SymptomType;
-		const imageResourceId = symptom.ImageResourceId;
-		if (imageResourceId) {
-			symptom['ImageUrl'] =
-				BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
-		} else {
-			symptom['ImageUrl'] = null;
-		}
-		return {
-			sessionId,
-			symptom
-		};
-	} catch (error) {
-		console.error(`Error retriving symptom: ${error.message}`);
-	}
 };
 
 const updateSymptomSchema = zfd.formData({

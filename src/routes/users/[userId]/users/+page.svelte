@@ -8,13 +8,13 @@
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-  import { invalidate } from '$app/navigation';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
     let retrivedUsers;
-	let users = data.users.Items;
+	$: users = data.users.Items;
 
 	const userId = $page.params.userId;
 	const userRoute = `/users/${userId}/users`;
@@ -31,7 +31,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offset = 0;
-	let totalUsersCount = data.users.TotalCount;
+	$: totalUsersCount = data.users.TotalCount;
 	let isSortingName = false;
 	let isSortingCode = false;
 	let isSortingEmail = false;
@@ -45,6 +45,12 @@
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
 
+    $: {
+        if (phone || email) {
+            paginationSettings.page = 0;
+        }
+    }
+
 	async function searchUser(model) {
 		let url = `/api/server/users/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
@@ -55,18 +61,20 @@
 		if (firstName) url += `&firstName=${firstName}`;
 		if (email) url += `&email=${email}`;
 		if (phone) url += `&phone=${phone}`;
-
+        console.log('URL: ' + url);
 		const res = await fetch(url, {
 			method: 'GET',
 			headers: { 'content-type': 'application/json' }
 		});
-		const response = await res.json();
-		users = response.map((item, index) => ({ ...item, index: index + 1 }));
+		const searchResult = await res.json();
+		console.log('Response: ' + JSON.stringify(searchResult));
+        totalUsersCount = searchResult.TotalCount;
+        users = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
 	$: {
 		users = users.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = data.users.TotalCount;
+        paginationSettings.size = totalUsersCount;
         retrivedUsers = users.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
@@ -90,7 +98,7 @@
 	}
 
 	function onAmountChange(e: CustomEvent): void {
-		itemsPerPage = e.detail;
+		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
 
@@ -134,14 +142,15 @@
 	<input
 		type="text"
 		name="firstName"
-		placeholder="Search by first name"
-		bind:value={firstName}
+		placeholder="Search by phone"
+		bind:value={phone}
 		class="input w-auto grow"
 	/>
 	<input
 		type="text"
 		name="email"
 		placeholder="Search by email"
+        bind:value={email}
 		class="input w-auto grow"
 	/>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
@@ -153,12 +162,12 @@
 			<tr>
 				<th data-sort="index">Id</th>
 				<th>
-					<button on:click={() => sortTable('firstName')}>
+					<button on:click={() => sortTable('FirstName')}>
 						First Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
 					</button>
 				</th>
 				<th>
-					<button on:click={() => sortTable('Last Name')}>
+					<button on:click={() => sortTable('LastName')}>
 						Last Name {isSortingCode ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
 					</button>
 				</th>
@@ -178,14 +187,14 @@
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 						<td role="gridcell" aria-colindex={2} tabindex="0">
-							<a href={viewRoute(row.id)}>{Helper.truncateText(row.FirstName, 20)} </a>
+							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
 						</td>
-						<td role="gridcell" aria-colindex={4} tabindex="0">{row.LastName}</td>
+						<td role="gridcell" aria-colindex={4} tabindex="0">{row.Person.LastName}</td>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Phone !== null ? row.Phone : 'Not specified'}</td
+							>{row.Person.Phone !== null ? row.Person.Phone : 'Not specified'}</td
 						>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Email !== null ? row.Email : 'Not specified'}</td
+							>{row.Person.Email !== null ? row.Person.Email : 'Not specified'}</td
 						>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">

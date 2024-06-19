@@ -14,7 +14,7 @@
 
 	export let data: PageServerData;
 	let retrivedDrugs;
-	$:drugs = data.drugs.Items;
+	$: drugs = data.drugs.Items;
 	const userId = $page.params.userId;
 	const drugRoute = `/users/${userId}/drugs`;
 	const editRoute = (id) => `/users/${userId}/drugs/${id}/edit`;
@@ -29,7 +29,7 @@
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offset = 0;
-	let totalDrugsCount = data.drugs.TotalCount;
+	$: totalDrugsCount = data.drugs.TotalCount;
 	let isSortingName = false;
 	let isSortingGenericName = false;
 	let items = 10;
@@ -62,8 +62,9 @@
 			headers: { 'content-type': 'application/json' }
 		});
 		const searchResult = await res.json();
-        drugs = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
         totalDrugsCount = searchResult.TotalCount;
+        drugs = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+        
 	}
 
 	$:{
@@ -116,6 +117,11 @@
 	};
 
 	async function Delete(model) {
+        const response = await fetch(`/api/server/drugs`, {
+			method: 'DELETE',
+			body: JSON.stringify(model),
+			headers: { 'content-type': 'application/json' }
+		});
 	}
 </script>
 

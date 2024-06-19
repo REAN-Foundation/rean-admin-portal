@@ -3,8 +3,7 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
-	import Image from '$lib/components/image.svelte';
-
+	
 	//////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;

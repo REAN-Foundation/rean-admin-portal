@@ -28,7 +28,7 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Users',
-        Enabled: false
+        Enabled: true
     },
     //..............................
     {

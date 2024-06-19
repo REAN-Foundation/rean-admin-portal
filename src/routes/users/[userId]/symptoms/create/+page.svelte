@@ -1,22 +1,23 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import { showMessage } from '$lib/utils/message.utils';
+	import { showMessage, successMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
 	import InputChip from '$lib/components/input-chips.svelte';
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
+ 
+////////////////////////////////////////////////////////////////////////
 
 	export let form;
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
 	let fileinput;
-    let symptomImage;
+  let symptomImage;
     let errorMessage = {
         Text: 'Max file upload size 150 KB',
         Colour: 'border-b-surface-700'
     }
-    const MAX_FILE_SIZE = 1024 * 150;
-
+  const MAX_FILE_SIZE = 1024 * 150;
 	const createRoute = `/users/${userId}/symptoms/create`;
 	const symptomRoute = `/users/${userId}/symptoms`;
 
@@ -25,75 +26,133 @@
 		{ name: 'Create', path: createRoute }
 	];
 
-	const upload = async (imgBase64, filename) => {
-		const data = {};
-		console.log(imgBase64);
-		const imgData = imgBase64.split(',');
-		data['image'] = imgData[1];
-		console.log(JSON.stringify(data));
-		const res = await fetch(`/api/server/file-resources/upload`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'multipart/form-data',
-				Accept: 'application/json',
-				filename: filename
-			},
-			body: JSON.stringify(data)
-		});
-		console.log(Date.now().toString());
-		const response = await res.json();
-		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl = response.Data.FileResources[0].url;
-			console.log('imageResourceId', imageUrl);
-			const imageResourceId_ = response.Data.FileResources[0].id;
-			console.log('ImageResource', imageResourceId_);
-			if (imageResourceId_) {
-				imageResourceId = imageResourceId_;
-                return true;
-			}
-			console.log(imageResourceId);
-		} else {
-			showMessage(response.Message, 'error');
-            return false;
-		}
-	};
+	// const upload = async (imgBase64, filename) => {
+	// 	const data = {};
+	// 	console.log(imgBase64);
+	// 	const imgData = imgBase64.split(',');
+	// 	data['image'] = imgData[1];
+	// 	console.log(JSON.stringify(data));
+	// 	const res = await fetch(`/api/server/file-resources/upload`, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-Type': 'multipart/form-data',
+	// 			Accept: 'application/json',
+	// 			filename: filename
+	// 		},
+	// 		body: JSON.stringify(data)
+	// 	});
+	// 	console.log(Date.now().toString());
+	// 	const response = await res.json();
+	// 	if (response.Status === 'success' && response.HttpCode === 201) {
+	// 		const imageUrl = response.Data.FileResources[0].url;
+	// 		console.log('imageResourceId', imageUrl);
+	// 		const imageResourceId_ = response.Data.FileResources[0].id;
+	// 		console.log('ImageResource', imageResourceId_);
+	// 		if (imageResourceId_) {
+	// 			imageResourceId = imageResourceId_;
+  //               return true;
+	// 		}
+	// 		console.log(imageResourceId);
+	// 	} else {
+	// 		showMessage(response.Message, 'error');
+  //           return false;
+	// 	}
+	// };
 
-	const onFileSelected = async (e) => {
-		let f = e.target.files[0];
-        const fileSize = f.size;
-        if (fileSize > MAX_FILE_SIZE) {
-            errorMessage.Text = "File should be less than 150 KB";
-            errorMessage.Colour = 'text-error-500'
-            symptomImage.value = null;
-            return;
-        }
-        errorMessage.Text = 'Please wait file upload is in progress';
+	// const onFileSelected = async (e) => {
+	// 	let f = e.target.files[0];
+  //       const fileSize = f.size;
+  //       if (fileSize > MAX_FILE_SIZE) {
+  //           errorMessage.Text = "File should be less than 150 KB";
+  //           errorMessage.Colour = 'text-error-500'
+  //           symptomImage.value = null;
+  //           return;
+  //       }
+  //       errorMessage.Text = 'Please wait file upload is in progress';
+  //       errorMessage.Colour = 'text-error-500';
+  //       console.log(`File size: ${fileSize} bytes`);
+	// 	const filename = f.name;
+	// 	let reader = new FileReader();
+	// 	// reader.readAsDataURL(f);
+	// 	reader.onload = async (e) => {
+	// 		fileinput = e.target.result;
+	// 		const isFileUploaded = await upload(e.target.result, filename);
+  //           if (isFileUploaded) {
+  //               errorMessage.Text = "File uploaded successfully";
+  //               errorMessage.Colour = 'text-success-500'
+  //               return;
+  //           }
+  //           errorMessage.Text = 'Error in file upload';
+  //           errorMessage.Colour = 'text-error-500'
+  //           symptomImage.value = null;
+  //           return;
+	// 	};
+	// };
+
+const onFileSelected = async (e) => {
+    let file = e.target.files[0];
+    const fileSize = file.size;
+    if (fileSize > MAX_FILE_SIZE) {
+      errorMessage.Text = "File should be less than 150 KB";
+      errorMessage.Colour = 'text-error-500';
+      symptomImage.value = null;
+      return;
+    }
+
+    errorMessage.Text = 'Please wait, file upload is in progress';
+    errorMessage.Colour = 'text-error-500';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('filename', file.name);
+
+    try {
+      const res = await fetch(`/api/server/file-resources/upload`, {
+			// 	headers: {
+			// 	'Content-Type': 'application/json',
+			// 	Accept: 'application/json',
+			// },
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText);
+      }
+
+      const response = await res.json();
+			
+      if (response.Status === 'success' && response.HttpCode === 201) {
+        errorMessage.Text = "File uploaded successfully";
+        errorMessage.Colour = 'text-success-500';
+				const imageUrl = response.Data.FileResources[0].url;
+				console.log('imageResourceId', imageUrl);
+				const imageResourceId_ = response.Data.FileResources[0].id;
+				console.log('ImageResource', imageResourceId_);
+				if (imageResourceId_) {
+					imageResourceId = imageResourceId_;
+									return true;
+				}
+				console.log(imageResourceId);
+      
+      } else {
+        errorMessage.Text = response.Message;
         errorMessage.Colour = 'text-error-500';
-        console.log(`File size: ${fileSize} bytes`);
-		const filename = f.name;
-		let reader = new FileReader();
-		reader.readAsDataURL(f);
-		reader.onload = async (e) => {
-			fileinput = e.target.result;
-			const isFileUploaded = await upload(e.target.result, filename);
-            if (isFileUploaded) {
-                errorMessage.Text = "File uploaded successfully";
-                errorMessage.Colour = 'text-success-500'
-                return;
-            }
-            errorMessage.Text = 'Error in file upload';
-            errorMessage.Colour = 'text-error-500'
-            symptomImage.value = null;
-            return;
-		};
-	};
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      errorMessage.Text = 'Error uploading file: ' + error.message;
+      errorMessage.Colour = 'text-error-500';
+    }
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <form
 	method="post"
-    enctype="multipart/form-data"
+  enctype="multipart/form-data"
 	action="?/createSymptomAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance

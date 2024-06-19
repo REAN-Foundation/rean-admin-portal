@@ -11,25 +11,22 @@ import { searchHealthSystems } from '../../../../../api/services/reancare/health
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
+    const healthSystemId = event.params.id;
+    const response = await getHealthSystemById(sessionId, healthSystemId);
 
-    try {
-        const healthSystemId = event.params.id;
-        const response = await getHealthSystemById(sessionId, healthSystemId);
-
-        if (response.Status === 'failure' || response.HttpCode !== 200) {
-            throw error(response.HttpCode, response.Message);
-        }
-        const healthSystem = response.Data.HealthSystem;
-        const id = response.Data.HealthSystem.id;
-
-        return {
-            location: `${id}/edit`,
-            healthSystem,
-            message: response.Message
-        };
-    } catch (error) {
-        console.error(`Error retriving healthSystem: ${error.message}`);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
     }
+    const healthSystem = response.Data.HealthSystem;
+    const id = response.Data.HealthSystem.id;
+
+    return {
+        location: `${id}/edit`,
+        healthSystem,
+        message: response.Message
+    };
+        
+
 };
 
 const updateHealthSystemSchema = zfd.formData({

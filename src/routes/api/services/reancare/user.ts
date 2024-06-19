@@ -129,23 +129,23 @@ export const resetPassword = async (
 
 export const createUser = async (
 	sessionId: string,
-    tenantId: string,
+  tenantId: string,
 	firstName: string,
 	lastName: string,
-    phone: string,
+  phone: string,
 	email: string,
 	role: string,
-    roleId: string,
+  roleId: string,
 	password: string,
 ) => {
 	const body = {
-        TenantId: tenantId,
+    TenantId: tenantId,
 		FirstName: firstName,
 		LastName: lastName,
-        Role: role,
-        RoleId: roleId,
+    Role: role,
+    RoleId: roleId,
 		Phone: phone ? phone : null,
-        Email: email ? email : null,
+    Email: email ? email : null,
 		Password: password,
 	};
 
@@ -176,6 +176,7 @@ export const searchUsers = async (sessionId: string, searchParams?: any) => {
 			}
 			searchString += params.join('&');
 		}
+		console.log("searchString",searchString);
 	}
 	const url = BACKEND_API_URL + `/users/search${searchString}`;
 	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
@@ -188,22 +189,25 @@ export const updateUser = async (
 	lastName: string,
   phone: string,
 	email: string,
-	role: string,
-	password: string,
+	roleId:string,
+	// role: string,
+	// password: string,
 	imageResourceId: string
 ) => {
 	const body = {
 		FirstName: firstName,
 		LastName: lastName,
-    Role: role,
+    RoleId: roleId,
 		Phone: phone ? phone : null,
     Email: email ? email : null,
-		Password: password,
+		// Password: password,
 		ImageResourceId: imageResourceId
 	};
 	if (Helper.isPhone(phone)) {
 		body.Phone = Helper.sanitizePhone(phone);
 	};
+
+	console.log("body.....",body)
 	const url = BACKEND_API_URL + `/users/${userId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
