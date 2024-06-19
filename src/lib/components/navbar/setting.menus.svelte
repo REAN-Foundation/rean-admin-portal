@@ -35,16 +35,21 @@
 		dispatch('logout');
 	};
 
+  async function myProfile() {
+		dispatch('click');
+		await goto(`/users/${userId}/my-profile`);
+	}
+
   let menuItems = [
-    // { name: 'My profile', link: '#' },
+    { name: 'My profile', link: '', action: () => myProfile(), icon:'material-symbols:Person' },
     {
       name: 'Authorization and security', subMenu: [
-        { name: 'Change Password', link: '#', action: () => changePassword() },
+        { name: 'Change Password', link: '', action: () => changePassword() },
       ]
     },
     {
       name: 'Miscellaneous', subMenu: [
-        { name: 'Logout', link: '#',action: () => gotoLogout() },
+        { name: 'Logout', link: '',action: () => gotoLogout() },
       ]
     }
   ];
@@ -65,7 +70,6 @@
 			<button class="btn variant-soft-error p-2" on:click>
 				<Icon icon="material-symbols:close-rounded" class="text-xl" />
 			</button>
-			<!-- <span class="text-sm text-gray-500">Account Info</span> -->
     </div>
   </div>
   <div class="border-t border-primary-200 mt-2"></div>
@@ -96,9 +100,13 @@
             {/if}
           </div>
         {:else}
-          <a href={item.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
+          <!-- <a href={item.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
             {item.name}
-          </a>
+          </a> -->
+          <button on:click={item.action} class="w-full text-left px-4 py-2 hover:bg-primary-100 rounded-md">
+            {item.name}
+          </button>
+          
         {/if}
       </li>
     {/each}
