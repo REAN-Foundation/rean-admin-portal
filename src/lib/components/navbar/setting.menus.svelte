@@ -25,8 +25,8 @@
   const expandedMenus = writable({});
 
   export let userId;
-  export let username = undefined;
-  export let email = undefined; 
+  export let username = '';
+  export let email = ''; 
   
 	const dispatch = createEventDispatcher();
 	async function changePassword() {

@@ -7,11 +7,11 @@
 	//////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let firstName = data.user.Person.FirstName;
-	let lastName = data.user.Person.LastName;
+	let firstName = data.user.Person.FirstName || 'Not specified';
+	let lastName = data.user.Person.LastName || 'Not specified';
 	let phone = data.user.Person.Phone;
-	let email = data.user.Person.Email;
-	let role = data.user.Role.RoleName;
+	let email = data.user.Person.Email || 'Not specified';
+	let role = data.user.Role.RoleName || 'Not specified';
 	// let imageUrl = data.user.ImageUrl;
 	const userId = $page.params.userId;
 	const id = $page.params.id;
