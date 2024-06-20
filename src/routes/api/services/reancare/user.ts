@@ -129,24 +129,28 @@ export const resetPassword = async (
 
 export const createUser = async (
 	sessionId: string,
-  tenantId: string,
+    tenantId: string,
 	firstName: string,
 	lastName: string,
-  phone: string,
+    phone: string,
 	email: string,
 	role: string,
-  roleId: string,
+    roleId: string,
 	password: string,
+    defaultTimeZone: string,
+    currentTimeZone: string
 ) => {
 	const body = {
-    TenantId: tenantId,
+        TenantId: tenantId,
 		FirstName: firstName,
 		LastName: lastName,
-    Role: role,
-    RoleId: roleId,
+        Role: role,
+        RoleId: roleId,
 		Phone: phone ? phone : null,
-    Email: email ? email : null,
+        Email: email ? email : null,
 		Password: password,
+        DefaultTimeZone: defaultTimeZone,
+        CurrentTimeZone: currentTimeZone
 	};
 
 	if (Helper.isPhone(phone)) {
@@ -184,24 +188,28 @@ export const searchUsers = async (sessionId: string, searchParams?: any) => {
 
 export const updateUser = async (
 	sessionId: string,
-  userId: string,
+    userId: string,
 	firstName: string,
 	lastName: string,
-  phone: string,
+    phone: string,
 	email: string,
-	roleId:string,
+	roleId: string,
+    defaultTimeZone: string,
+    currentTimeZone: string
 	// role: string,
 	// password: string,
-	imageResourceId: string
+	// imageResourceId: string
 ) => {
 	const body = {
 		FirstName: firstName,
 		LastName: lastName,
-    RoleId: roleId,
+        RoleId: roleId,
 		Phone: phone ? phone : null,
-    Email: email ? email : null,
-		// Password: password,
-		ImageResourceId: imageResourceId
+        Email: email ? email : null,
+        DefaultTimeZone: defaultTimeZone ? defaultTimeZone : null,
+		CurrentTimeZone: currentTimeZone ? currentTimeZone : null
+        // Password: password,
+		// ImageResourceId: imageResourceId
 	};
 	if (Helper.isPhone(phone)) {
 		body.Phone = Helper.sanitizePhone(phone);
