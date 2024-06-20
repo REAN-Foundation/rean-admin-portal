@@ -62,6 +62,9 @@ export const actions = {
 			};
 		}
 
+        const defaultTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
+        const currentTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
+
 		const phone = result.countryCode + '-' + result.phone;
 		const response = await updateUser(
 			sessionId,
@@ -71,6 +74,8 @@ export const actions = {
 			phone,
 			result.email,
 			result.selectedUserRoleId,
+            defaultTimeZone,
+            currentTimeZone
 			// result.role,
 			// result.imageResourceId
 		);

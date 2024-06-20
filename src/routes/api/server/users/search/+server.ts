@@ -1,6 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { searchUsers } from '$routes/api/services/reancare/user';
-
 //////////////////////////////////////////////////////////////
 
 export const GET = async (event: RequestEvent) => {
@@ -10,6 +9,7 @@ export const GET = async (event: RequestEvent) => {
 	const firstName = searchParams.get('firstName') ?? undefined;
 	const email = searchParams.get('email') ?? undefined;
 	const phone = searchParams.get('phone') ?? undefined;
+    const roleIds = searchParams.get('roleIds') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
 	const itemsPerPage_ = searchParams.get('itemsPerPage');
@@ -22,17 +22,15 @@ export const GET = async (event: RequestEvent) => {
 			firstName,
 			phone,
 			email,
+            roleIds,
 			orderBy: sortBy,
 			order: sortOrder,
 			itemsPerPage,
 			pageIndex
 		};
-		console.log('Search parms: ', searchParams);
 		const response = await searchUsers(sessionId, searchParams);
-		const items = response.Data.Users;
-		console.log('res==', response);
-
-		return new Response(JSON.stringify(items));
+		const users = response.Data.Users;
+		return new Response(JSON.stringify(users));
 	} catch (err) {
 		console.error(`Error retriving users: ${err.message}`);
 		return new Response(err.message);

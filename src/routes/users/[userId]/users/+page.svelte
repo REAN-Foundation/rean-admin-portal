@@ -6,9 +6,9 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
-	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
+    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,6 +37,7 @@
 	let isSortingEmail = false;
 	let isSortingPhone = false;
 	let items = 10;
+    let selectedRoles = [];
 
 	let paginationSettings = {
 		page: 0,
@@ -51,7 +52,18 @@
         }
     }
 
-	async function searchUser(model) {
+    const tmp = LocalStorageUtils.getItem('personRoles');
+    const personRoles = JSON.parse(tmp);
+    personRoles?.map((x) => {
+        if (x.RoleName === "System admin" || 
+            x.RoleName === "System user"  ||
+            x.RoleName === "Tenant admin" ||
+            x.RoleName === "Tenant user") {
+                selectedRoles.push(x.id);
+            }});
+   
+    $: console.log("selectedRole", selectedRoles);
+    async function searchUser(model) {
 		let url = `/api/server/users/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -61,6 +73,7 @@
 		if (firstName) url += `&firstName=${firstName}`;
 		if (email) url += `&email=${email}`;
 		if (phone) url += `&phone=${phone}`;
+        if (selectedRoles.length > 0) url += `&roleIds=${selectedRoles}`;
         console.log('URL: ' + url);
 		const res = await fetch(url, {
 			method: 'GET',
@@ -189,9 +202,12 @@
 						<td role="gridcell" aria-colindex={2} tabindex="0">
 							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
 						</td>
-						<td role="gridcell" aria-colindex={4} tabindex="0">{row.Person.LastName}</td>
+						<td role="gridcell" aria-colindex={4} tabindex="0">
+                            {row.Person.LastName !== null ? row.Person.LastName : 'Not specified'}
+                        </td>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Person.Phone !== null ? row.Person.Phone : 'Not specified'}</td
+							>{row.Person.Phone !== null ? row.Person.Phone : 'Not specified'}
+                        </td
 						>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
 							>{row.Person.Email !== null ? row.Person.Email : 'Not specified'}</td

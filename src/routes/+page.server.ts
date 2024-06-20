@@ -50,7 +50,16 @@ export const actions = {
 			//Login error, so redirect to the sign-in page
 			throw redirect(303, '/', errorMessage(response.Message), event);
 		}
-		console.log('response ....', response);
+		console.log('response ....', response.Data.User.Role);
+
+        if (!response.Data.User.Role || !response.Data.User.Role.RoleName) {
+            throw redirect(303, '/', errorMessage("Permission Denied!"), event);
+        }
+
+        if (!['System admin','System user','Tenant admin','Tenant user'].includes(response.Data.User.Role.RoleName)) {
+            throw redirect(303, '/', errorMessage("Permission Denied!"), event);
+        }
+        
 		const user = response.Data.User;
 		user.SessionId = response.Data.SessionId;
 		const accessToken = response.Data.AccessToken;
@@ -59,7 +68,7 @@ export const actions = {
 		const sessionId = response.Data.SessionId;
 		const userId: string = response.Data.User.id;
 
-			const session = await SessionManager.constructSession(user, accessToken, expiryDate, refreshToken);
+		const session = await SessionManager.constructSession(user, accessToken, expiryDate, refreshToken);
 		if (!session) {
 			console.log(`Session cannot be constructed!`);
 			throw redirect(303, `/`, errorMessage(`Use login session cannot be created!`), event);

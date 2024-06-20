@@ -5,14 +5,14 @@
     import { showMessage } from '$lib/utils/message.utils.js';
 	import Icon from '@iconify/svelte';
     import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
 	const userId = $page.params.userId;
 	let imageResourceId = '';
 	let imageUrl = undefined;
 	let fileinput;
-  let selectedUserRoleId = undefined;
+    let selectedUserRoleId = undefined;
 	const createRoute = `/users/${userId}/users/create`;
 	const userRoute = `/users/${userId}/users`;
 
@@ -188,10 +188,10 @@
                         on:change={getRoleIdByRoleName}
 						placeholder="Select role here..."
 					>
-						<option value="Tenant admin">Tenant Admin</option>
+        				<option value="Tenant admin">Tenant Admin</option>
 						<option value="Tenant user">Tenant User</option>
                         <option value="System user">System User</option>
-                        <option value="System admin">System Admin</option>
+                        <!-- <option value="System admin">System Admin</option> -->
                         
                         
 					</select>
