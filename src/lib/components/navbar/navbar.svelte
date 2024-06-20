@@ -16,7 +16,8 @@
     export let userId = undefined;
     export let tenantSettings = undefined;
     export let userRole = undefined;
-
+    export let username = undefined;
+    export let email = undefined;
     const navbarTabs: TabDefinition[] = navbarMenu(userId);
     const sidebarTabs: TabDefinition[] = sidebarMenu(userId);
     const drawerStore = getDrawerStore();
@@ -106,7 +107,7 @@
 
 <Drawer>
     {#if $drawerStore.id === 'rightSidebar'}
-        <SettingMenu on:click={drawerRightClose} on:logout userId = {userId} />
+        <SettingMenu on:click={drawerRightClose} on:logout userId ={userId} username={username} email={email}/>
     {:else if $drawerStore.id === 'leftSidebar'}
         <div class="grid justify-center w-60 space-y-4 mt-5">
             {#each sidebarTabs as t}

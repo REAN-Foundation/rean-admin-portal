@@ -9,8 +9,10 @@
 	export let data: LayoutServerData;
 
 	const userId = $page.params.userId;
-    const userRole = data.sessionUser.roleName;
-    const tenantSettings = data.tenantSettings;
+  const userRole = data.sessionUser.roleName;
+  const tenantSettings = data.tenantSettings;
+	const username = data.sessionUser.fullName;
+	const email = data.sessionUser.email;
 
 	const onLogout = async () => {
 		const response = await fetch(`/api/server/logout`, {
@@ -27,6 +29,7 @@
 
 <body>
 	<Navbar userId={userId} userRole={userRole} tenantSettings={tenantSettings} 
+				username={username} email={email}
         on:logout={async () => await onLogout()}>
 		<slot />
 	</Navbar>

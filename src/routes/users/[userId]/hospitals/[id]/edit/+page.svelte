@@ -101,7 +101,6 @@
                 <td>
                     <select
                         on:change={handleHealthSystemChange}
-                        disabled
                         name="healthSystemId"
                         class="select select-primary w-full "
                     >

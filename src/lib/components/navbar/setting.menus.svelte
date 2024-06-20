@@ -25,6 +25,9 @@
   const expandedMenus = writable({});
 
   export let userId;
+  export let username = undefined;
+  export let email = undefined; 
+  
 	const dispatch = createEventDispatcher();
 	async function changePassword() {
 		dispatch('click');
@@ -35,16 +38,21 @@
 		dispatch('logout');
 	};
 
+  async function myProfile() {
+		dispatch('click');
+		await goto(`/users/${userId}/my-profile`);
+	}
+
   let menuItems = [
-    // { name: 'My profile', link: '#' },
+    { name: 'My profile', link: '', action: () => myProfile(), icon:'material-symbols:Person' },
     {
       name: 'Authorization and security', subMenu: [
-        { name: 'Change Password', link: '#', action: () => changePassword() },
+        { name: 'Change Password', link: '', action: () => changePassword() },
       ]
     },
     {
       name: 'Miscellaneous', subMenu: [
-        { name: 'Logout', link: '#',action: () => gotoLogout() },
+        { name: 'Logout', link: '',action: () => gotoLogout() },
       ]
     }
   ];
@@ -58,14 +66,21 @@
 	
 </script>
 
-<div class="w-64 h-full">
-  <div class="px-4 py-2">
-    <div class="flex items-center justify-between">
-      <span class="text-lg ">My profile</span>
-			<button class="btn variant-soft-error p-2" on:click>
-				<Icon icon="material-symbols:close-rounded" class="text-xl" />
-			</button>
-			<!-- <span class="text-sm text-gray-500">Account Info</span> -->
+<div class="w-80 h-full">
+  <div class="px-2 py-2">
+    <div class="flex items-center gap-2">
+      <img
+        class="object-cover rounded-full h-16 w-16"
+        src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+        alt="avatar"
+      />
+      <div class="flex-1">
+        <h3 class="text-lg font-medium truncate">{username}</h3>
+        <p class="text-sm text-gray-500 truncate">{email}</p>
+      </div>
+      <button class="ml-auto btn variant-soft-error p-2" on:click>
+        <Icon icon="material-symbols:close-rounded" class="text-xl" />
+      </button>
     </div>
   </div>
   <div class="border-t border-primary-200 mt-2"></div>
@@ -77,6 +92,10 @@
             <button on:click={() => toggleMenu(item.name)} class="w-full text-left px-4 py-2 hover:bg-primary-100 rounded-md">
               {item.name}
             </button>
+            <!-- <button on:click={() => toggleMenu(item.name)} class="w-full text-left flex items-center justify-between">
+              {item.name}
+              <Icon icon={$expandedMenus[item.name] ? "material-symbols:expand-less-rounded" : "material-symbols:expand-more-rounded"} class="text-xl" />
+            </button> -->
             {#if $expandedMenus[item.name]}
               <ul class="ml-4 mt-2 space-y-1">
                 {#each item.subMenu as subItem}
@@ -96,9 +115,13 @@
             {/if}
           </div>
         {:else}
-          <a href={item.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
+          <!-- <a href={item.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
             {item.name}
-          </a>
+          </a> -->
+          <button on:click={item.action} class="w-full text-left px-4 py-2 hover:bg-primary-100 rounded-md">
+            {item.name}
+          </button>
+          
         {/if}
       </li>
     {/each}
