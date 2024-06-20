@@ -155,7 +155,7 @@
 	<input
 		type="text"
 		name="firstName"
-		placeholder="Search by phone"
+		placeholder="Search by contact number"
 		bind:value={phone}
 		class="input w-auto grow"
 	/>
@@ -203,14 +203,14 @@
 							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
 						</td>
 						<td role="gridcell" aria-colindex={4} tabindex="0">
-                            {row.Person.LastName !== null ? row.Person.LastName : 'Not specified'}
+                            {row.Person.LastName || 'Not specified'}
                         </td>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Person.Phone !== null ? row.Person.Phone : 'Not specified'}
+							>{row.Person.Phone || 'Not specified'}
                         </td
 						>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
-							>{row.Person.Email !== null ? row.Person.Email : 'Not specified'}</td
+							>{row.Person.Email || 'Not specified'}</td
 						>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
