@@ -130,24 +130,28 @@ export const resetPassword = async (
 
 export const createUser = async (
 	sessionId: string,
-  tenantId: string,
+    tenantId: string,
 	firstName: string,
 	lastName: string,
-  phone: string,
+    phone: string,
 	email: string,
 	role: string,
-  roleId: string,
+    roleId: string,
 	password: string,
+    defaultTimeZone: string,
+    currentTimeZone: string
 ) => {
 	const body = {
-    TenantId: tenantId,
+        TenantId: tenantId,
 		FirstName: firstName,
 		LastName: lastName,
-    Role: role,
-    RoleId: roleId,
+        Role: role,
+        RoleId: roleId,
 		Phone: phone ? phone : null,
-    Email: email ? email : null,
+        Email: email ? email : null,
 		Password: password,
+        DefaultTimeZone: defaultTimeZone,
+        CurrentTimeZone: currentTimeZone
 	};
 
 	if (Helper.isPhone(phone)) {

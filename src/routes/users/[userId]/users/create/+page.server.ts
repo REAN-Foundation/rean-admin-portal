@@ -6,7 +6,6 @@ import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { createUser } from '$routes/api/services/reancare/user';
 
 /////////////////////////////////////////////////////////////////////////
-
 const createUserSchema = zfd.formData({
 	firstName: z.string().min(3).max(256),
 	lastName: z.string().min(3).max(256),
@@ -44,17 +43,21 @@ export const actions = {
 			};
 		}
 
+        const defaultTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
+        const currentTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
 		const phone = result.countryCode + '-' + result.phone;
 		const response = await createUser(
 			sessionId,
-      tenantId,
+            tenantId,
 			result.firstName,
 			result.lastName,
 			phone,
 			result.email,
 			result.role,
-      result.selectedUserRoleId,
+            result.selectedUserRoleId,
 			result.password,
+            defaultTimeZone,
+            currentTimeZone
     	);
 		const id = response.Data.User.id;
 
