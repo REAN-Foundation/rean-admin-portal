@@ -35,6 +35,7 @@
 	let newPassword = '';
 	let confirmPassword = '';
 	let errors: Record<string, string[]> = {};
+	let activeTab = 'username';
 
 	if (browser) {
 		const tmp = LocalStorageUtils.getItem('personRoles');
@@ -138,25 +139,25 @@
 						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
 							<h2 class="text-center text-xl mb-4">Reset Password</h2>
 							<form on:submit|preventDefault={handleResetPassword}>
-								<label class="mb-2 hidden">
+								<label class="hidden">
 									<span class="text-primary-500">Email</span>
 									<input type="email"value={email} required class="input mb-4" />
 								</label>
-								<label class="mb-2">
+								<label>
 									<span class="text-primary-500">Reset Code</span>
 									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
 									{#if errors.resetCode}
 										<span class="text-error-500">{errors.resetCode}</span>
 									{/if}
 								</label>
-								<label class="mb-2">
+								<label>
 									<span class="text-primary-500">New Password</span>
 									<input type="password" bind:value={newPassword} required class="input mb-4 mt-2" />
 									{#if errors.newPassword}
 										<span class="text-error-500">{errors.newPassword}</span>
 									{/if}
 								</label>
-								<label class="mb-2">
+								<label>
 									<span class="text-primary-500">Confirm New Password</span>
 									<input type="password" bind:value={confirmPassword} required class="input mb-4" />
 									{#if errors.confirmPassword}
@@ -168,37 +169,77 @@
 							</form>
 						</div>
 					{:else}
-						<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
-							<div class="hidden">
-								<input name="loginRoleId" class="hidden" value={loginRoleId} />
+					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+						<input name="roleId" bind:value={loginRoleId} class="hidden"/>
+						<!-- svelte-ignore a11y-label-has-associated-control -->
+						<div class="justify-center w-full mt-5 h-50">
+							<div class="flex gap-6 mb-4">
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="username" bind:group={activeTab} />Username
+								</div>
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="email" bind:group={activeTab} /> Email
+								</div>
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="phone" bind:group={activeTab} /> Phone
+								</div>
 							</div>
-							<div class="justify-center w-full mt-5 h-50">
+							{#if activeTab === 'username'}
 								<label class="mb-2" for="username">
-									<span class="text-primary-500">Username/Email/Phone</span>
+									<span class="text-primary-500">Username</span>
 									<span class="label-text-alt" />
 								</label>
 								<input type="text" name="username" required class="input mb-4" />
-								<label class="mb-2" for="password">
-									<div class="grid grid-flow-col">
-										<span class="text-left text-primary-500">Password</span>
-										<span class="text-right text-primary-500 ml-4 sm:ml-12 invisible">
-											<b>Generate OTP</b>
-										</span>
+							{/if}
+							{#if activeTab === 'email'}
+								<label class="mb-2" for="email">
+									<span class="text-primary-500">Email</span>
+									<span class="label-text-alt" />
+								</label>
+								<input type="email" name="email" required class="input mb-4" />
+							{/if}
+							{#if activeTab === 'phone'}
+							<div class="flex gap-4 mb-4">
+								<div class="flex flex-col">
+									<label class="mb-2" for="countryCode">
+										<span class="text-primary-500">Phone</span>
+										<span class="label-text-alt" />
+									</label>
+									<div class="flex flex-row gap-5">
+										<div class="w-1/3">
+											<select name="countryCode" required class="input">
+												<option value="+1">+1</option>
+												<option value="+91">+91</option>
+											</select>
+										</div>
+									<div class="w-2/3">
+										<input type="tel" name="phone" required class="input" />
 									</div>
-								</label>
-								<input type="password" name="password" required class="input" />
-								<!-- svelte-ignore a11y-label-has-associated-control -->
-								<label class="lable">
-									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<!-- svelte-ignore a11y-no-static-element-interactions -->
-									<span class="text-primary-500 cursor-pointer" on:click={() => { showForgotPassword = true; }}>
-										<b>Forgot Password?</b>
-									</span>
-								</label>
-								<br />
-								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Login</button>
+									</div>
+								</div>
 							</div>
-						</form>
+							{/if}
+							<label class="mb-2" for="password">
+								<div class="grid grid-flow-col">
+									<span class="text-left text-primary-500">Password</span>
+									<span class="text-right text-primary-500 ml-4 sm:ml-12 invisible">
+										<b>Generate OTP</b>
+									</span>
+								</div>
+							</label>
+							<input type="password" name="password" required class="input" />
+							<!-- svelte-ignore a11y-no-static-element-interactions -->
+							<label class="lable">
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<span class="text-primary-500 cursor-pointer" on:click={() => { showForgotPassword = true; }}>
+									<b>Forgot Password?</b>
+								</span>
+							</label>
+							<br />
+							<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Login</button>
+						</div>
+					</form>
 					{/if}
 				</div>
 			</div>
@@ -208,3 +249,17 @@
 		<a href={footerLink} class="!text-white">{footerText}</a>
 	</footer>
 </body>
+
+<style>
+  .radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .radio-group input {
+    margin-right: 0.5rem;
+  }
+  .tab-content {
+    margin-top: 1rem;
+  }
+</style>

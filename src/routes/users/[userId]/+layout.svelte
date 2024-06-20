@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import Navbar from '$lib/components/navbar/navbar.svelte';
 	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
-    import type { LayoutServerData } from './$types';
+  import type { LayoutServerData } from './$types';
 
     ////////////////////////////////////////////////////////////////
 
