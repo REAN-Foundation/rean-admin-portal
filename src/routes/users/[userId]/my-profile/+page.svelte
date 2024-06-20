@@ -13,6 +13,7 @@
 	let lastName = data.user.Person.LastName;
 	let phone = data.user.Person.Phone;
 	let email = data.user.Person.Email;
+	let roleId = data.user.Role.id;
 	let splitPhoneNumber = phone.split('-');
 	let [countryCode, phoneNumber] = splitPhoneNumber;
 
@@ -64,7 +65,7 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-		
+		<input type="text" hidden name="roleId" bind:value={roleId}>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>First Name *</td>
 				<td>
@@ -119,7 +120,7 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td>Email</td>
+				<td>Email *</td>
 				<td>
 					<input
 						type="email"

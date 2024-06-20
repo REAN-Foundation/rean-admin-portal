@@ -37,12 +37,13 @@ const getLoginModel = (username: string, password: string): LoginModel => {
 	} else {
 		loginModel.UserName = username;
 	}
-
 	if (Helper.isOtp(password)) {
 		loginModel.Otp = password;
 	} else {
 		loginModel.Password = password;
 	}
+
+	console.log("loginModel.......",loginModel)
 	return loginModel;
 };
 
@@ -184,29 +185,32 @@ export const searchUsers = async (sessionId: string, searchParams?: any) => {
 
 export const updateUser = async (
 	sessionId: string,
-  userId: string,
+	userId: string,
 	firstName: string,
 	lastName: string,
-  phone: string,
+	phone: string,
 	email: string,
-	roleId:string,
+	roleId: string,
+	defaultTimeZone: string,
+	currentTimeZone: string
 	// role: string,
 	// password: string,
-	imageResourceId: string
+	// imageResourceId: string
 ) => {
 	const body = {
-		FirstName: firstName,
-		LastName: lastName,
-    RoleId: roleId,
-		Phone: phone ? phone : null,
-    Email: email ? email : null,
-		// Password: password,
-		ImageResourceId: imageResourceId
+			FirstName: firstName,
+			LastName: lastName,
+			RoleId: roleId,
+			Phone: phone ? phone : null,
+			Email: email ? email : null,
+			DefaultTimeZone: defaultTimeZone ? defaultTimeZone : null,
+			CurrentTimeZone: currentTimeZone ? currentTimeZone : null
+			// Password: password,
+			// ImageResourceId: imageResourceId
 	};
 	if (Helper.isPhone(phone)) {
-		body.Phone = Helper.sanitizePhone(phone);
+			body.Phone = Helper.sanitizePhone(phone);
 	};
-
 	console.log("body.....",body)
 	const url = BACKEND_API_URL + `/users/${userId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);

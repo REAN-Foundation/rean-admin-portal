@@ -66,7 +66,7 @@
 	
 </script>
 
-<div class="w-72 h-full">
+<div class="w-80 h-full">
   <div class="px-2 py-2">
     <div class="flex items-center gap-2">
       <img

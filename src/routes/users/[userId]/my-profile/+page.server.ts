@@ -33,6 +33,7 @@ const updateUserSchema = zfd.formData({
 	phone: z.string().optional(),
 	email: z.string().email().optional(),
 	countryCode:z.string().optional(),
+	roleId:z.string().optional(),
 });
 
 export const actions = {
@@ -58,7 +59,8 @@ export const actions = {
 				errors
 			};
 		}
-
+		const defaultTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
+		const currentTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
 		const phone = result.countryCode + '-' + result.phone;
 		const response = await updateUser(
 			sessionId,
@@ -67,6 +69,9 @@ export const actions = {
 			result.lastName,
 			phone,
 			result.email,
+			result.roleId,
+			defaultTimeZone,
+			currentTimeZone
 		);
 		// const id = response.Data.user.id;
 
