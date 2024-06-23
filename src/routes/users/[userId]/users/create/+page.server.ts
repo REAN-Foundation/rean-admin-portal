@@ -1,11 +1,29 @@
 import { redirect } from 'sveltekit-flash-message/server';
-import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { createUser } from '$routes/api/services/reancare/user';
-
+import type { PageServerLoad } from './$types';
+import { error } from '@sveltejs/kit';
+import { getUserRoleList } from '$routes/api/services/reancare/user';
 /////////////////////////////////////////////////////////////////////////
+
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
+
+  const userRole = event.locals.sessionUser.roleName;
+
+  if (!userRole) {
+    throw error(403, 'Invalid user role');
+  }
+
+  const userRoles = await getUserRoleList(userRole);
+	return {
+		UserRoles: userRoles
+	};
+
+};
+
 const createUserSchema = zfd.formData({
 	firstName: z.string().min(3).max(256),
 	lastName: z.string().min(3).max(256),
