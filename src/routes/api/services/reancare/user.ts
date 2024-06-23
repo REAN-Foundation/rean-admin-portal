@@ -232,3 +232,27 @@ export const getUserRoleList = async (userRole: string) => {
 
   return [];
 }
+
+export const addPermissionMatrix = async (userRoleList: any[], userRole?: string, userId?: string, tenantId?: string, roleId?: string) => {
+  console.log('User Role',userRole);
+  const permissionMatrix: any[] = [];
+  
+  if (userRole === 'System admin') {
+    userRoleList.forEach((userRole) => {
+      permissionMatrix.push({...userRole, IsPermitted: 1});
+    })
+  }
+
+  if (userRole === 'Tenant admin') {
+      userRoleList.forEach((userRole) => {
+      if (userRole.RoleId === roleId && 
+        userRole.TenantId === tenantId && 
+        userRole.id === userId) {
+        permissionMatrix.push({...userRole, IsPermitted: 1});
+      } else {
+        permissionMatrix.push({...userRole, IsPermitted: 0});
+      }
+    })
+  }
+  return permissionMatrix.length > 0  ? permissionMatrix : userRoleList;
+}
