@@ -1,8 +1,7 @@
 <script lang="ts">
     import FunnelCard from '$lib/components/dashboard/funnel.card.svelte';
     import NumberCard from '$lib/components/dashboard/number.card.svelte';
-    import PlatformStatsCard from '$lib/components/dashboard/platform.stats.card.svelte';
-
+    
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     export let data;
@@ -12,14 +11,14 @@
     let iOSUsers = [];
     let funnelChartData;
     
-    function extractYearWiseUserCount(data:any[]) {
+    function extractYearWiseUserCount(data) {
         data.forEach((value)=>{
             yearsArray.push(value.Year);
             totalUsers.push(value.UserCount);
         })
     }
 
-    function extractYearWiseDeviceDetails(data:any[]) {
+    function extractYearWiseDeviceDetails(data) {
         data.forEach(value=>{
             if (value.DeviceDetails.length===0){
                 androidUsers.push(0);
@@ -53,10 +52,8 @@
     }
 
     let userCountStats       = data.userCountStats;
-    let deviceDetailsStats   = data.deviceDetailsStats;
     let userCountByYears     = data.userCountByYears
     let deviceDetailsByYears = data.deviceDetailsByYears;
-    let appDownloads         = data.appDownloadCount;
 
     let totalUsers      = userCountStats.TotalUsers;
     let activeUsers     = userCountStats.UsersWithActiveSession;

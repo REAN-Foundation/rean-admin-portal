@@ -71,9 +71,7 @@ $:console.log("items", $items)
 	};
 	const userId = $page.params.userId;
 	const schemaId = $page.params.schemaId;
-  const createRoute = `/users/${userId}/gamification/schemas/${schemaId}/nodes/create`;
   const editRoute = `/users/${userId}/gamification/schemas/${schemaId}/edit`;
-	const viewRoute = `/users/${userId}/gamification/schemas/${schemaId}/view`;
 	const schemaRoute = `/users/${userId}/gamification/schemas`;
 	const nodeRoute = `/users/${userId}/gamification/schemas/${schemaId}/nodes`;
 

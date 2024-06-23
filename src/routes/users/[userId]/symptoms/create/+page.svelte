@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import { showMessage, successMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
 	import InputChip from '$lib/components/input-chips.svelte';
   import { enhance } from '$app/forms';
@@ -11,7 +10,6 @@
 	export let form;
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
-	let fileinput;
   let symptomImage;
     let errorMessage = {
         Text: 'Max file upload size 150 KB',

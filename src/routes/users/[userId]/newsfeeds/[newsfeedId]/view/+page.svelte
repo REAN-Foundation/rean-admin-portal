@@ -32,7 +32,6 @@
 	const editRoute = `/users/${userId}/newsfeeds/${id}/edit`;
 	const viewRoute = `/users/${userId}/newsfeeds/${id}/view`;
 	const newsfeedRoute = `/users/${userId}/newsfeeds`;
-	const viewItemRoute = (id) => `/users/${userId}/newsfeeds/${id}/newsfeed-items/${id}/view`;
 	const newsfeedItemRoute = `/users/${userId}/newsfeeds/${newsfeedId}/newsfeed-items/create`;
 	const editItemRoute = (id) => `/users/${userId}/newsfeeds/${id}/newsfeed-items/${id}/edit`;
 
@@ -57,7 +56,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/newsfeed-items`, {
+		await fetch(`/api/server/newsfeed-items`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

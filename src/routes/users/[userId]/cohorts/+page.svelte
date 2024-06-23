@@ -40,6 +40,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchCohorts(model) {
+    console.log(model);
 		let url = `/api/server/cohorts/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -109,7 +110,7 @@
 	}
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/cohorts`, {
+		await fetch(`/api/server/cohorts`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

@@ -6,12 +6,10 @@
 	import type { PageServerData } from './$types';
 	import { goto } from '$app/navigation';
 	import toast from 'svelte-french-toast';
-    import { enhance } from '$app/forms';
 
 	//////////////////////////////////////////////////////////////////////
 	
 	export let data: PageServerData;
-	let id = data.query.id;
 	let name = data.query.Name;
 	let description = data.query.Description;
 	let query = data.query.Query;
@@ -74,6 +72,7 @@
             goto(queryRoute);
         } else {
         const data = downloadFile(res)
+        console.log(data);
         toast.success(`Query executed successfully, View downloads for data file`)
 		goto(queryRoute);
         }

@@ -1,4 +1,4 @@
-import type { RequestEvent, ServerLoadEvent } from '@sveltejs/kit';
+import type { ServerLoadEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { searchUsers } from '$routes/api/services/reancare/user';

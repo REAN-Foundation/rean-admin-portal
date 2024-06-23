@@ -8,9 +8,8 @@
 	import {
 		Paginator, type PaginationSettings,
 	} from '@skeletonlabs/skeleton';
-	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
+  import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +31,6 @@
 	let offset = 0;
 	let totalCustomQueriesCount = data.queries.TotalCount;
 	let isSortingName = false;
-	let isSortingGenericName = false;
 	let items = 10;
 
 	let paginationSettings = {
@@ -43,6 +41,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchQuery(model) {
+    console.log(model);
 		let url = `/api/server/custom-query/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -107,7 +106,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/custom-query/delete`, {
+		await fetch(`/api/server/custom-query/delete`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

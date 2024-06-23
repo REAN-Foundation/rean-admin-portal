@@ -14,7 +14,6 @@
 
     export let data: PageServerData;
     let healthSystem = data.healthSystem;
-    let id = healthSystem.id;
     let healthSystemName = healthSystem.Name;
     let tags_ = data.healthSystem.Tags;
     let tags = tags_.join(', ');

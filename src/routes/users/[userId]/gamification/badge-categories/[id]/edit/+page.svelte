@@ -11,7 +11,6 @@
 
 	export let form;
 	export let data: PageServerData;
-	let id = data.badgeCategory.id;
 	let name = data.badgeCategory.Name;
 	let description = data.badgeCategory.Description;
 	let imageUrl = data.badgeCategory.ImageUrl;
@@ -61,7 +60,6 @@
 		console.log(Date.now().toString());
 		const response = await res.json();
 		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageResourceId = response.Data.FileResources[0].id;
 			const imageUrl_ = response.Data.FileResources[0].Url;
 			console.log('imageUrl_', imageUrl_);
 			if (imageUrl_) {

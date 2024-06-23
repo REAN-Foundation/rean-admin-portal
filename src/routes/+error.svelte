@@ -2,9 +2,6 @@
 	import { page } from '$app/stores';
 	import { getPublicLogoImageSource } from '$lib/themes/theme.selector';
 
-	const userId = $page.error.userId;
-	const message = $page.error.message;
-	const code = $page.error.code;
 	const stack = $page.error.stack;
 	// const stackMessages = stack.split('\n');
 	const isProd = false;

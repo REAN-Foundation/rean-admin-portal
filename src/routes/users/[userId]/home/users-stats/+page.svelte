@@ -27,7 +27,7 @@
 
     const selectAgeWiseUsersDividionYearly = (e) => {
 		selectedYear = e.currentTarget.value;
-        const yearWiseAgeDetails:any[] = data.yearWiseAgeDetails;
+        const yearWiseAgeDetails = data.yearWiseAgeDetails;
         const ageDetail= yearWiseAgeDetails.filter(e => e.Year == selectedYear);
 		if (ageDetail.length > 0) {
             ageWiseUsers = ageDetail[0].AgeDetails

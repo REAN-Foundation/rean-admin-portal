@@ -41,6 +41,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchNotification(model) {
+    console.log(model);
 		let url = `/api/server/notifications/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -106,7 +107,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/notifications`, {
+		await fetch(`/api/server/notifications`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

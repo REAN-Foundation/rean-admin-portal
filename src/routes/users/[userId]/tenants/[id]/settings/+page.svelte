@@ -42,7 +42,6 @@
     export let data: PageServerData;
     $:createSetting = data.settings.TenantId ? 0 : 1;
     // data.settings.ChatBot = JSON.parse(data.settings.ChatBot);
-    const tenantSetting = data.settings;
     const integrations = [];
     let isPatientAppChecked = false;
     let isChatbotChecked = false;
@@ -397,7 +396,6 @@
 
     async function handleUpdateTenantSettings() {
         console.log('handledUpdateTenantSettings() get called.....');
-        const tenantSettingId = data.settings.TenantId;
         const updatedSettings: TenantSettings = {
             UserInterfaces : {
                 PatientApp: false,

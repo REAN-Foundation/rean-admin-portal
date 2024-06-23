@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
     import { invalidate } from "$app/navigation";
-    import { page } from '$app/stores';
     import type { ActionData } from "./$types";
-    import { onMount } from 'svelte';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import toast from 'svelte-french-toast';
 
 
     export let form: ActionData;

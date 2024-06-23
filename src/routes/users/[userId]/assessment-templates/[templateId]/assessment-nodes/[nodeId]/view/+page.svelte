@@ -12,7 +12,6 @@
 
 	export let data: PageServerData;
 	let sessionId = data.sessionId;
-	let id = data.assessmentNode.id;
 	let nodeType = data.assessmentNode.NodeType;
 	let title = data.assessmentNode.Title;
 	let description = data.assessmentNode.Description !== null && data.assessmentNode.Description !== "" ? data.assessmentNode.Description : "Not specified";
@@ -79,7 +78,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/assessment-nodes`, {
+		await fetch(`/api/server/assessment-nodes`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

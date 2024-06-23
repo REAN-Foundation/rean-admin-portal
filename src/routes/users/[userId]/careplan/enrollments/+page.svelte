@@ -46,6 +46,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchEnrollments(model) {
+    console.log(model);
 		let url = `/api/server/careplan/enrollments/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;

@@ -3,23 +3,18 @@
 	import date from 'date-and-time';
 	import { page } from '$app/stores';
 	import EnrollmentDisplay from '$lib/components/enrollment.display/enrollment.display.svelte';
-	import { goto } from '$app/navigation';
-  import { ProgressRadial } from '@skeletonlabs/skeleton';
-  import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
+	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 
 	////////////////////////////////////////////////////////////////////////
 
 	const userId = $page.params.userId;
 	const enrollmentId = $page.params.enrollmentId;
-	const createRoute = `/users/${userId}/enrollments/create`;
-	const editRoute = `/users/${userId}/careplan/enrollments/${enrollmentId}/edit`;
 	const viewRoute = `/users/${userId}/careplan/enrollments/${enrollmentId}/view`;
 	const viewTaskRoute = `/users/${userId}/careplan/enrollments/${enrollmentId}/tasks`;
 	const enrollmentsRoute = `/users/${userId}/careplan/enrollments`;
 
 
 	export let data: PageServerData;
-	let value: number = 50; // %
 	let enrollment = data.enrollment;
 	let enrollmentStats = data.enrollmentStats;
 	let participantBirthDate = enrollment.Participant.BirthDate;
@@ -27,7 +22,6 @@
 	let enrollmentCode = enrollment.DisplayId;
 	let currentWeek = enrollmentStats.CurrentWeek;
 	let totalWeeks = enrollmentStats.TotalWeek;
-	let weekArray = Array.from(new Array(totalWeeks), (x, i) => i + 1);
 	let MAX_STEP_WIDTH = 500;
 	//Calculating age by birthdate
 	let year = Number(participantBirthDate.substr(0, 4));

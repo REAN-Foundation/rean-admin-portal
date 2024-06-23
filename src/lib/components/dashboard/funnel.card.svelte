@@ -1,7 +1,7 @@
 <script lang="ts">
     import Funnel from '$lib/components/users-stats/charts/funnel.svelte';
     import { getChartColors } from '$lib/themes/theme.selector';
-    import { afterUpdate, onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
     export let labels: string[];
     export let dataSource: number[];

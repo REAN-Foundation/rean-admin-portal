@@ -1,6 +1,5 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { createEventDispatcher } from 'svelte';
     import Icon from '@iconify/svelte';
     import Icons from '$lib/components/icons.svelte';
     import InfoIcon from '$lib/components/infoIcon.svelte';

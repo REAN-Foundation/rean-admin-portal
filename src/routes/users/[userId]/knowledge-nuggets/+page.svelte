@@ -49,6 +49,7 @@
         }
     }
 	async function searchKnowledgeNugget(model) {
+    console.log(model);
 		let url = `/api/server/knowledge-nuggets/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -118,7 +119,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/knowledge-nuggets`, {
+		await fetch(`/api/server/knowledge-nuggets`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

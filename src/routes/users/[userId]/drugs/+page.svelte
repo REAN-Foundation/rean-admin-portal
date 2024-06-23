@@ -117,7 +117,7 @@
 	};
 
 	async function Delete(model) {
-        const response = await fetch(`/api/server/drugs`, {
+        await fetch(`/api/server/drugs`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

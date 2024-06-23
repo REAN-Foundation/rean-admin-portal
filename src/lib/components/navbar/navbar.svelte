@@ -3,7 +3,6 @@
     import Icon from '@iconify/svelte';
     import type { DrawerSettings } from '@skeletonlabs/skeleton';
     import { AppBar, AppShell, Drawer, getDrawerStore} from '@skeletonlabs/skeleton';
-    import { afterUpdate, onMount } from 'svelte';
     import { navbarMenu, sidebarMenu, type TabDefinition } from './navigation.tabs';
     import SettingMenu from './setting.menus.svelte';
     import Sidebar from './sidebar/sidebar.svelte';
@@ -25,16 +24,6 @@
     const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
     const footerLink = getPublicFooterLink();
 
-    function drawerLeftOpen(): void {
-        const settings: DrawerSettings = {
-            id: 'leftSidebar',
-            position: 'left',
-            width: '800px',
-            bgDrawer: 'bg-primary-50 text-on-primary-token',
-            bgBackdrop: 'bg-primary-500/50'
-        };
-        drawerStore.open(settings);
-    }
 
     function drawerRightOpen(): void {
         const settings: DrawerSettings = {

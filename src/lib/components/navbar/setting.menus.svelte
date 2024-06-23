@@ -19,7 +19,6 @@
 
 	import { goto } from '$app/navigation';
 	import Icon from '@iconify/svelte';
-	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import { createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
   const expandedMenus = writable({});

@@ -41,7 +41,6 @@
 	let itemsPerPage = 10;
 	let offset = 0;
 	let totalModuleCount = data.courseContent.TotalCount;
-	let isSortingName = false;
 	let items = 10;
 
 	let paginationSettings = {
@@ -110,7 +109,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/course-contents`, {
+		await fetch(`/api/server/course-contents`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

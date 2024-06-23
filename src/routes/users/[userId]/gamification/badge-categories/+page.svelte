@@ -90,7 +90,7 @@
 		if (columnName === 'Name') {
 			isSortingName = true;
 		} else if (columnName === 'GenericName') {
-
+      console.log(columnName);
 		}
 		sortBy = columnName;
 	}
@@ -106,7 +106,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/gamification/badge-categories`, {
+		await fetch(`/api/server/gamification/badge-categories`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

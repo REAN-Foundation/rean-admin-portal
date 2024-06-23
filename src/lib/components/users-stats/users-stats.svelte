@@ -94,8 +94,7 @@
 		});
 	}
 
-	let cuntryDistributionLabels;
-	let cuntryDistributionData;
+
     
 	// $: if (countryWiseUsers) {
 	// 	cuntryDistributionLabels = false;
@@ -120,8 +119,6 @@
 		});
 	}
 
-	let obesityDistributionData;
-	let obesityDistributionLabels;
 
 	let addictionDistributionData;
 	let addictionDistributionLabels;
@@ -150,11 +147,7 @@
 		});
 	};
 
-	const handlelSelectYearForCountry = (year) => {
-		dispatch('selectCountryDistributionYearly', {
-			year: year
-		});
-	};
+
 
 	const handlelSelectYearForMaritalStatus = (year) => {
 		dispatch('selectMaritalStatusDistributionYearly', {
@@ -168,11 +161,7 @@
 		});
 	};
 
-	const handlelSelectYearForObesity = (year) => {
-		dispatch('selectObesityDistributionYearly', {
-			year: year
-		});
-	};
+
 
 	const handlelSelectYearForAddiction = (year) => {
 		dispatch('selectAddictionDistributionYearly', {

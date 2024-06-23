@@ -85,7 +85,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/person-role-types`, {
+		await fetch(`/api/server/person-role-types`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

@@ -3,15 +3,13 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Image from '$lib/components/image.svelte';
 	import { showMessage } from '$lib/utils/message.utils';
-	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
 	export let data: PageServerData;
-	let id = data.content.id;
 	let title = data.content.Title;
 	let description = data.content.Description;
 	let contentType = data.content.ContentType;
@@ -84,7 +82,6 @@
 		console.log(Date.now().toString());
 		const response = await res.json();
 		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageResourceId = response.Data.FileResources[0].id;
 			const imageUrl_ = response.Data.FileResources[0].Url;
 			console.log('imageUrl_', imageUrl_);
 			if (imageUrl_) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	// @ts-nocheck
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 	let tag = '';
@@ -216,7 +215,8 @@
 			"'": '&#x27;',
 			'/': '&#x2F;'
 		};
-		return ('' + string).replace(/[&<>"'\/]/g, (match) => htmlEscapes[match]);
+		// return ('' + string).replace(/[&<>"'\/]/g, (match) => htmlEscapes[match]);
+    return ('' + string).replace(/[&<>"']/g, (match) => htmlEscapes[match]);
 	}
 
 	function buildMatchMarkup(search, value) {

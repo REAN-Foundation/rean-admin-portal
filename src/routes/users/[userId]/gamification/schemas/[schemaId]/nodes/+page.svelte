@@ -46,6 +46,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchNode(model) {
+    console.log(model);
 		let url = `/api/server/gamification/nodes/search?schemaId=${schemaId}&`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -103,12 +104,13 @@
 		if (columnName === 'Name') {
 			isSortingName = true;
 		} else if (columnName === '') {
+      console.log(columnName);
 		}
 		sortBy = columnName;
 	}
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/gamification/nodes`, {
+		await fetch(`/api/server/gamification/nodes`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

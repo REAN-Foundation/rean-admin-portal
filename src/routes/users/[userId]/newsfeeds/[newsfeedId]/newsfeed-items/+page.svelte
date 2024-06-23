@@ -6,7 +6,6 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let newsfeedItems = data.newsfeedItems;
 
 	const userId = $page.params.userId;
 	const newsfeedItemsRoute = `/users/${userId}/newsfeeds/newsfeed-items`;
@@ -36,22 +35,6 @@
 
 	// dataTableStore.updateSource(newsfeedItems);
 
-	const handleNewsfeedItemDelete = async (e, id) => {
-		const newsfeedItemId = id;
-		await Delete({
-			sessionId: data.sessionId,
-			newsfeedItemId
-		});
-		window.location.href = newsfeedItemsRoute;
-	};
-
-	async function Delete(model) {
-		const response = await fetch(`/api/server/newsfeed-items`, {
-			method: 'DELETE',
-			body: JSON.stringify(model),
-			headers: { 'content-type': 'application/json' }
-		});
-	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />

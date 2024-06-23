@@ -13,7 +13,6 @@
 
 	export let form;
 	export let data: PageServerData;
-	let initiaData = {};
 	let id = data.newsfeed.id;
 	let title = data.newsfeed.Title;
 	let description = data.newsfeed.Description;
@@ -35,7 +34,6 @@
 	let _language = language;
 	let _copyright = copyright;
 	let _favicon = favicon;
-	let _updated = updated;
 	let _image = image;
 	let _tags = tags;
 

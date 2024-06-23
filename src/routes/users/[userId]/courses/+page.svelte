@@ -20,7 +20,6 @@
 
 	const userId = $page.params.userId;
 	const courseRoute = `/users/${userId}/courses`;
-	const editRoute = (id) => `/users/${userId}/courses/${id}/edit`;
 	const createRoute = `/users/${userId}/courses/create`;
 
 	const breadCrumbs = [
@@ -137,7 +136,7 @@
 	};
 
 	async function DeleteModule(model) {
-		const response = await fetch(`/api/server/modules`, {
+		await fetch(`/api/server/modules`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
@@ -155,7 +154,7 @@
 	};
 
 	async function DeleteContent(model) {
-		const response = await fetch(`/api/server/course-contents`, {
+		await fetch(`/api/server/course-contents`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

@@ -2,16 +2,12 @@
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import {
-		getChartColors,
-		getHoverChartColors,
 		getTickColorLight,
 		getTickColorDark
   	} from '$lib/themes/theme.selector';
 
   /////////////////////////////////////////////////////////////////////////////
 
-  const chartColors = getChartColors();
-  const hoverChartColors = getHoverChartColors();
   const tickColorLight = getTickColorLight();
   const tickColorDark = getTickColorDark();
 

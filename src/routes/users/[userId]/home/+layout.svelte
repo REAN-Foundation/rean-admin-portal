@@ -6,7 +6,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     async function handleDownloadReportClick(event) {
-        console.log('Handling download report click');
+        console.log('Handling download report click',event);
         try {
             const response = await fetch(`/api/server/users-stats/get-user-stats-report`, {
 			method: 'GET',

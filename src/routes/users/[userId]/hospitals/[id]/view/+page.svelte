@@ -14,9 +14,7 @@
 
     export let data: PageServerData;
     let hospital = data.hospital;
-    let id = hospital.id;
     let hospitalName = hospital.Name;
-    let healthSystemId = hospital.HealthSystemId !== null ? hospital.HealthSystemId : 'Not specified';
     let healthSystemName = hospital.HealthSystemName !== null ? hospital.HealthSystemName : 'Not specified';
     let tags_ = data.hospital.Tags;
     let tags = tags_.join(', ');

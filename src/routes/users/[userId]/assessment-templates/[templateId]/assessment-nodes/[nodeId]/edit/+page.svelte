@@ -10,9 +10,6 @@
 
 	export let form;
 	export let data: PageServerData;
-	const queryResponseTypes = data.queryResponseTypes;
-	const assessmentNodes = data.assessmentNodes;
-	let id = data.assessmentNode.id;
 	let nodeType = data.assessmentNode.NodeType;
 	let title = data.assessmentNode.Title;
 	let description = data.assessmentNode.Description;
@@ -20,7 +17,6 @@
 	let options = data.assessmentNode.Options ?? [];
 	let optionValueStore = options;
 	let message = data.assessmentNode.Message ?? null;
-	let parentNodeId = data.assessmentNode.ParentNodeId;
 	let sequence = data.assessmentNode.Sequence;
 
 	//Original data
@@ -57,10 +53,6 @@
 	];
 	let selectedNodeType = nodeType;
 	let selectedQueryType = queryType;
-
-	const onSelectNodeType = (val) => {
-		selectedNodeType = val.target.value;
-	};
 
 	const onSelectQueryResponseType = (val) => (selectedQueryType = val.target.value);
 </script>

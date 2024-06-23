@@ -17,7 +17,6 @@
 	const newsfeedRoute = `/users/${userId}/newsfeeds`;
 	const editRoute = (id) => `/users/${userId}/newsfeeds/${id}/edit`;
 	const viewRoute = (id) => `/users/${userId}/newsfeeds/${id}/view`;
-	const viewItemRoute = (id) => `/users/${userId}/newsfeeds/${id}/newsfeed-items/${id}/view`;
 	const createRoute = `/users/${userId}/newsfeeds/create`;
 
 	const breadCrumbs = [{ name: 'Newsfeeds', path: newsfeedRoute }];
@@ -41,6 +40,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchNewsfeed(model) {
+    console.log(model);
 		let url = `/api/server/newsfeeds/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -107,7 +107,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/newsfeeds`, {
+		await fetch(`/api/server/newsfeeds`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

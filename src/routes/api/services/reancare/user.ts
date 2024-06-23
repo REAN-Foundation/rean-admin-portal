@@ -180,9 +180,6 @@ export const updateUser = async (
 	roleId: string,
 	defaultTimeZone: string,
 	currentTimeZone: string
-	// role: string,
-	// password: string,
-	// imageResourceId: string
 ) => {
 	const body = {
 			FirstName: firstName,
@@ -192,8 +189,7 @@ export const updateUser = async (
 			Email: email ? email : null,
 			DefaultTimeZone: defaultTimeZone ? defaultTimeZone : null,
 			CurrentTimeZone: currentTimeZone ? currentTimeZone : null
-			// Password: password,
-			// ImageResourceId: imageResourceId
+
 	};
 	if (Helper.isPhone(phone)) {
 			body.Phone = Helper.sanitizePhone(phone);
@@ -207,3 +203,32 @@ export const deleteUser = async (sessionId: string, usreId: string) => {
     const url = BACKEND_API_URL + `/users/${usreId}`;
     return await del(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };
+
+export const getUserRoleList = async (userRole: string) => {
+  if (userRole === "System admin") {
+    return [
+      {
+        Title : 'System Admin',
+        Value : 'System admin'
+      },
+      {
+        Title : 'Tenant User',
+        Value : 'Tenant user'
+      },
+      {
+        Title : 'Tenant Admin',
+        Value : 'Tenant admin'
+      }
+    ]
+  }
+  if (userRole === 'Tenant admin') {
+    return [
+      {
+        Title : 'Tenant User',
+        Value : 'Tenant user'
+      },
+    ];
+  }
+
+  return [];
+}

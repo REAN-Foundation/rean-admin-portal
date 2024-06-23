@@ -91,6 +91,7 @@
 		if (columnName === 'Name') {
 			isSortingName = true;
 		} else if (columnName === '') {
+      console.log(columnName);
 		}
 		sortBy = columnName;
 	}
@@ -106,7 +107,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/gamification/schemas`, {
+		await fetch(`/api/server/gamification/schemas`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
