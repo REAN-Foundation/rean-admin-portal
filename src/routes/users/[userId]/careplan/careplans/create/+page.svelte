@@ -11,10 +11,7 @@
   
   export let form;
   const userId = $page.params.userId;
-  const careplanId = $page.params.id;
   const createRoute = `/users/${userId}/careplan/careplans/create`;
-  const editRoute = `/users/${userId}/careplan/careplans/${careplanId}/edit`;
-  const viewRoute = `/users/${userId}/careplan/careplans/${careplanId}/view`;
   const careplansRoute =  `/users/${userId}/careplan/careplans`;
 
   let careplanCategories = data.careplanCategories;

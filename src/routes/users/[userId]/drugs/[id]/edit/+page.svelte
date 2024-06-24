@@ -7,7 +7,6 @@
 
 	export let form;
 	export let data: PageServerData;
-	let initiaData = {};
 	let id = data.drug.id;
 	let drugName = data.drug.DrugName;
 	let genericName = data.drug.GenericName;

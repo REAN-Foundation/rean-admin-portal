@@ -40,6 +40,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchOrganization(model) {
+    console.log(model);
 		let url = `/api/server/organizations/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -109,7 +110,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/organizations/delete`, {
+		await fetch(`/api/server/organizations/delete`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

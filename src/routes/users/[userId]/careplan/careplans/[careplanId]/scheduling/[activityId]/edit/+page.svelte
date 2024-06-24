@@ -92,6 +92,7 @@
     });
   };
   async function searchAssets(model) {
+    console.log(model);
     const selectedAssetRoute = assetRouteMap[selectedAssetType];
 
     let url = `/api/server/assets/search?assetType=${selectedAssetRoute}`;

@@ -5,7 +5,6 @@
 	import InputChip from '$lib/components/input-chips.svelte';
 	import toast from 'svelte-french-toast';
 	import { goto } from '$app/navigation';
-    import { enhance } from '$app/forms';
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +47,7 @@
             goto(queryRoute);
         } else {
         const data = downloadFile(res)
+        console.log(data);
         toast.success(`Query executed successfully, View downloads for data file`)
 		goto(queryRoute);
         }

@@ -26,7 +26,6 @@
 	const userId = $page.params.userId;
 	const editRoute = `/users/${userId}/learning-journeys/${learningPathId}/edit`;
 	const viewRoute = `/users/${userId}/learning-journeys/${learningPathId}/view`;
-	const courseRoute = `/users/${userId}/courses`;
 	const learningJourneyRoute = `/users/${userId}/learning-journeys`;
 	const courseViewRoute = (courseId) => `/users/${userId}/courses/${courseId}/view`;
 	const moduleViewRoute = (courseId, moduleId) =>

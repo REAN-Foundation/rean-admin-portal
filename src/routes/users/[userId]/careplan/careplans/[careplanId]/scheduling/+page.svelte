@@ -139,6 +139,7 @@
 	};
 
 	async function searchAssets(model) {
+    console.log(model);
 		const selectedAssetRoute = assetRouteMap[selectedAssetType];
 		let url = `/api/server/careplan/assets/search?assetType=${selectedAssetRoute}`;
 		const res = await fetch(url, {

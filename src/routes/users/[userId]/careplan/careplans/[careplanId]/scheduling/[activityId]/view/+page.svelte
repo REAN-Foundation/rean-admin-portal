@@ -15,7 +15,6 @@
 	const viewRoute = `/users/${userId}/careplan/careplans/${careplanId}/scheduling/${activityId}/view`;
 	const schedulingRoute = `/users/${userId}/careplan/careplans/${careplanId}/scheduling`;
 
-	let id = data.careplanActivity.id;
 	let assetType = data.careplanActivity.AssetType;
 	let name = data.careplanActivity.Asset.Name;
 	let timeslot = data.careplanActivity.TimeSlot;

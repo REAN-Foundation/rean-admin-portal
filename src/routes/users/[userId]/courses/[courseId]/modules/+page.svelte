@@ -53,7 +53,6 @@
 	let itemsPerPage = 10;
 	let offset = 0;
 	let totalModuleCount = data.modules.TotalCount;
-	let isSortingName = false;
 	let items = 10;
 
 	let paginationSettings = {
@@ -121,7 +120,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/modules`, {
+		await fetch(`/api/server/modules`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

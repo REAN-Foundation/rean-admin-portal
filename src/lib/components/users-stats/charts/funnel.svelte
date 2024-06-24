@@ -2,20 +2,14 @@
 	import { onMount } from 'svelte';
 	import Chart, { LinearScale, CategoryScale } from 'chart.js/auto';
 	import { FunnelController, TrapezoidElement } from 'chartjs-chart-funnel';
-	import datalabels from 'chartjs-plugin-datalabels';
 	import {
 		getChartColors,
-		getHoverChartColors,
-		getTickColorLight,
-		getTickColorDark
+
   	} from '$lib/themes/theme.selector';
 
   /////////////////////////////////////////////////////////////////////////////
 
   const chartColors = getChartColors();
-  const hoverChartColors = getHoverChartColors();
-  const tickColorLight = getTickColorLight();
-  const tickColorDark = getTickColorDark();
 
     export let labels: string[];
 	export let dataSource: number[];

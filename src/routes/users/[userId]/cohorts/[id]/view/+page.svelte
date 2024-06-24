@@ -11,7 +11,6 @@
 	console.log(data.cohort)
 	let name = data.cohort.Name;
 	let description = (data.cohort.Description !== '' && data.cohort.Description !== null) ? data.cohort.Description : 'Not specified';
-	let tenant = data.cohort.TenantId;
 	let imageUrl = data.cohort.ImageUrl;
 
 	const userId = $page.params.userId;

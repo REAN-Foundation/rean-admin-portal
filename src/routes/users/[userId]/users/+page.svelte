@@ -7,15 +7,15 @@
 	import Icon from '@iconify/svelte';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
-    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
-
+  import { invalidate } from '$app/navigation';
+  import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
+  import toast from 'svelte-french-toast';
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
     let retrivedUsers;
 	$: users = data.users.Items;
-
+  console.log('retrivedUsers@', data.users.Items);
 	const userId = $page.params.userId;
 	const userRoute = `/users/${userId}/users`;
 	const editRoute = (id) => `/users/${userId}/users/${id}/edit`;
@@ -64,33 +64,34 @@
    
     $: console.log("selectedRole", selectedRoles);
     async function searchUser(model) {
-		let url = `/api/server/users/search?`;
-		if (sortOrder) url += `sortOrder=${sortOrder}`;
-		else url += `sortOrder=ascending`;
-		if (sortBy) url += `&sortBy=${sortBy}`;
-		if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
-		if (offset) url += `&pageIndex=${offset}`;
-		if (firstName) url += `&firstName=${firstName}`;
-		if (email) url += `&email=${email}`;
-		if (phone) url += `&phone=${phone}`;
-        if (selectedRoles.length > 0) url += `&roleIds=${selectedRoles}`;
-        console.log('URL: ' + url);
-		const res = await fetch(url, {
-			method: 'GET',
-			headers: { 'content-type': 'application/json' }
-		});
-		const searchResult = await res.json();
-		console.log('Response: ' + JSON.stringify(searchResult));
-        totalUsersCount = searchResult.TotalCount;
-        users = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+      console.log(model);
+      let url = `/api/server/users/search?`;
+      if (sortOrder) url += `sortOrder=${sortOrder}`;
+      else url += `sortOrder=ascending`;
+      if (sortBy) url += `&sortBy=${sortBy}`;
+      if (itemsPerPage) url += `&itemsPerPage=${itemsPerPage}`;
+      if (offset) url += `&pageIndex=${offset}`;
+      if (firstName) url += `&firstName=${firstName}`;
+      if (email) url += `&email=${email}`;
+      if (phone) url += `&phone=${phone}`;
+      if (selectedRoles.length > 0) url += `&roleIds=${selectedRoles}`;
+      console.log('URL: ' + url);
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: { 'content-type': 'application/json' }
+      });
+      const searchResult = await res.json();
+      console.log('Response: ' + JSON.stringify(searchResult));
+      totalUsersCount = searchResult.TotalCount;
+      users = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
 	}
 
 	$: {
-		users = users.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = totalUsersCount;
-        retrivedUsers = users.slice(
-		paginationSettings.page * paginationSettings.limit,
-		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+		  users = users.map((item, index) => ({ ...item, index: index + 1 }));
+      paginationSettings.size = totalUsersCount;
+      retrivedUsers = users.slice(
+      paginationSettings.page * paginationSettings.limit,
+      paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
     }
 
@@ -141,7 +142,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/users`, {
+    await fetch(`/api/server/users`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
@@ -200,7 +201,7 @@
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 						<td role="gridcell" aria-colindex={2} tabindex="0">
-							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
+							<a href={!row.IsPermitted ? null : viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
 						</td>
 						<td role="gridcell" aria-colindex={4} tabindex="0">
                             {row.Person.LastName || 'Not specified'}
@@ -213,9 +214,15 @@
 							>{row.Person.Email || 'Not specified'}</td
 						>
 						<td>
-							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
+              <button on:click={() => {
+                if (!row.IsPermitted) {
+                  toast.error('Permission denied: Only resource owner & system admin are allowed to view & edit.')
+                }
+              }}>
+							<a href={!row.IsPermitted ? null : editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
 								<Icon icon="material-symbols:edit-outline" class="text-lg" />
 							</a>
+            </button>
 						</td>
 						<td>
 							<Confirm
@@ -224,8 +231,14 @@
 								let:confirm={confirmThis}
 							>
 								<button
-									on:click|preventDefault={() => confirmThis(handleUserDelete, row.id)}
-									class="btn p-2 -my-1 hover:variant-soft-error"
+									on:click|preventDefault={() => {
+                    if (!row.IsPermitted) {
+                      toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
+                    } else {
+                      confirmThis(handleUserDelete, row.id)}
+                    }
+                  }
+   								class="btn p-2 -my-1 hover:variant-soft-error"
 								>
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>

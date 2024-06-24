@@ -5,15 +5,13 @@
 	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
-	import { Country } from 'country-state-city';
 	import type { PageServerData } from './$types';
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 
 	///////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
 	export let data: PageServerData;
-	let country = Country.getAllCountries();
 	const userId = $page.params.userId;
 	let imageResourceId = '';
 	let imageUrl = undefined;
@@ -54,7 +52,6 @@
 		console.log(Date.now().toString());
 		const response = await res.json();
 		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl_ = response.Data.FileResources[0].Url;
 			console.log('imageUrl', imageUrl);
 			const imageResourceId_ = response.Data.FileResources[0].id;
 			console.log('imageResourceId_', imageUrl);

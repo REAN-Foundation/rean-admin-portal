@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
-	// import { createDataTableStore, dataTableHandler } from '@skeletonlabs/skeleton';
 	import { browser } from '$app/environment';
 	import ItemDragDrop from '$lib/components/drag.and.drop/courses.drag.drop.svelte';
 	import SelectedDragDropItems from '$lib/components/drag.and.drop/selected.courses.drag.drop.svelte';
@@ -14,7 +12,6 @@
 
 	export let form;
   let eventTypes = [];
-	let index = Number;
 	eventTypes = eventTypes.map((item, index) => ({ ...item, index: index + 1 }));
 
 	// const dataTableStore = createDataTableStore(eventTypes, {
@@ -46,12 +43,8 @@
 
   console.log("eventTypeIds",$selectedItems)
   let name = undefined;
-	let sortBy = 'CreatedAt';
-	let sortOrder = 'ascending';
-	let itemsPerPage = 10;
-	let pageIndex = 0;
-
-	async function searchEventType(model) {
+async function searchEventType(model) {
+    console.log(model);
 		let url = `/api/server/gamification/event-types/search?`;
 		if (name) url += `&name=${name}`;
 		const res = await fetch(url, {

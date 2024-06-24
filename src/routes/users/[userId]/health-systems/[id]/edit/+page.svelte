@@ -16,7 +16,6 @@
 
     export let form;
     export let data: PageServerData;
-    let id = data.healthSystem.id;
     let healthSystemName = data.healthSystem.Name;
     let tags = data.healthSystem.Tags;
 

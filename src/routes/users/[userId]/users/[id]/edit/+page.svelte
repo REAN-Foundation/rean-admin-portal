@@ -4,9 +4,7 @@
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
   import { enhance } from '$app/forms';
-  import { showMessage } from '$lib/utils/message.utils';
-	import Image from '$lib/components/image.svelte';
-    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
+  import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	
 	//////////////////////////////////////////////////////////////////////
 
@@ -19,7 +17,6 @@
 	let role = data.user.Role.RoleName;
 	// let imageUrl = data.user.ImageUrl;
 	// $: avatarSource = imageUrl;
-	let password;
 	let splitPhoneNumber = phone.split('-');
 	//Original data
 	let _firstName = firstName;

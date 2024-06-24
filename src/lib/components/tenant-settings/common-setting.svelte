@@ -3,8 +3,7 @@
     import Icon from '@iconify/svelte';
     import Icons from '$lib/components/icons.svelte';
     import InfoIcon from '$lib/components/infoIcon.svelte';
-    import type { Common } from '$lib/types/tenant.settings.types';
-
+    
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const userId = $page.params.userId;

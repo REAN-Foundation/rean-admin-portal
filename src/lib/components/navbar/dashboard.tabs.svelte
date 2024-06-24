@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { dashboardMenu, type TabDefinition } from '../../components/navbar/navigation.tabs';
-	import { page } from '$app/stores';
+		import { page } from '$app/stores';
     import { createEventDispatcher } from 'svelte';
 
     const dispatch = createEventDispatcher();
@@ -10,8 +9,7 @@
         dispatch('downloadReport',{});
     }
 	export let userId = undefined;
-	const dashboardTabs: TabDefinition[] = dashboardMenu(userId);
-
+	
 	let homeLink = `/users/${userId}/home`;
 	let usersLink = `/users/${userId}/home/users-stats`;
 	// let rhgLink;

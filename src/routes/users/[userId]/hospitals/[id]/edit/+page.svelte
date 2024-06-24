@@ -16,7 +16,6 @@
 
     export let form;
     export let data: PageServerData;
-    let id = data.hospital.id;
     let hospitalName = data.hospital.Name;
     let healthSystemId = data.hospital.HealthSystemId;
     let healthSystemName = data.hospital.HealthSystemName;

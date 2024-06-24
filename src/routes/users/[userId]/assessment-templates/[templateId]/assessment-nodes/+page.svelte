@@ -4,7 +4,7 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Confirm from '$lib/components/modal/confirmModal.svelte';
 	import Icon from '@iconify/svelte';
-	import { Paginator, Toast, type PaginationSettings } from '@skeletonlabs/skeleton';
+	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
     import toast from 'svelte-french-toast';

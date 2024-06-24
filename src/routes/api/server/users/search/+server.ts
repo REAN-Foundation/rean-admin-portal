@@ -1,10 +1,13 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchUsers } from '$routes/api/services/reancare/user';
+import { searchUsers, addPermissionMatrix } from '$routes/api/services/reancare/user';
 //////////////////////////////////////////////////////////////
 
 export const GET = async (event: RequestEvent) => {
 	const sessionId = event.locals.sessionUser.sessionId;
-
+  const tenantId = event.locals.sessionUser.tenantId;
+  const userRole = event.locals.sessionUser.roleName;
+  const userId = event.locals.sessionUser.userId;
+  const userRoleId = event.locals.sessionUser.roleId;
 	const searchParams: URLSearchParams = event.url.searchParams;
 	const firstName = searchParams.get('firstName') ?? undefined;
 	const email = searchParams.get('email') ?? undefined;
@@ -30,6 +33,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		const response = await searchUsers(sessionId, searchParams);
 		const users = response.Data.Users;
+    users.Items = await addPermissionMatrix(users.Items, userRole, userId, tenantId, userRoleId);
 		return new Response(JSON.stringify(users));
 	} catch (err) {
 		console.error(`Error retriving users: ${err.message}`);

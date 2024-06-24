@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { PageServerData } from './$types';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';

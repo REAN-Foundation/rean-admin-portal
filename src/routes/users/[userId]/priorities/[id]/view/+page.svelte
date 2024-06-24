@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
-	import { show } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
-	import { onMount } from 'svelte';
 	import type { PageServerData } from './$types';
 
 	///////////////////////////////////////////////////////////////////////////////

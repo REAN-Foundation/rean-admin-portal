@@ -13,7 +13,6 @@
 	const editRoute = `/users/${userId}/careplan/careplans/${careplanId}/edit`;
 	const viewRoute = `/users/${userId}/careplan/careplans/${careplanId}/view`;
 	const careplansRoute = `/users/${userId}/careplan/careplans`;
-	const schedulingRoute = `/users/${userId}/careplan/careplans/${careplanId}/scheduling`;
 
 	export let form;
 	export let data: PageServerData;

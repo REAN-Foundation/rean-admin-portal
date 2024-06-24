@@ -1,18 +1,17 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
-    import { showMessage } from '$lib/utils/message.utils.js';
 	import Icon from '@iconify/svelte';
-    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
+  import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
+  import type { PageServerData } from '../$types.js';
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
+  export let data: PageServerData;
+  let userRoles = data.UserRoles;
 	const userId = $page.params.userId;
-	let imageResourceId = '';
-	let imageUrl = undefined;
-	let fileinput;
-    let selectedUserRoleId = undefined;
+  let selectedUserRoleId = undefined;
 	const createRoute = `/users/${userId}/users/create`;
 	const userRoute = `/users/${userId}/users`;
 
@@ -21,46 +20,46 @@
 		{ name: 'Create', path: createRoute }
 	];
 
-	const upload = async (imgBase64, filename) => {
-		const data = {};
-		console.log(imgBase64);
-		const imgData = imgBase64.split(',');
-		data['image'] = imgData[1];
-		console.log(JSON.stringify(data));
-		const res = await fetch(`/api/server/file-resources/upload`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Accept: 'application/json',
-				filename: filename
-			},
-			body: JSON.stringify(data)
-		});
-		console.log(Date.now().toString());
-		const response = await res.json();
-		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl_ = response.Data.FileResources[0].Url;
-			console.log('imageUrl', imageUrl);
-			const imageResourceId_ = response.Data.FileResources[0].id;
-			console.log('imageResourceId_', imageUrl);
-			if (imageResourceId_) {
-				imageResourceId = imageResourceId_;
-			}
-		} else {
-			showMessage(response.Message, 'error');
-		}
-	};
+	// const upload = async (imgBase64, filename) => {
+	// 	const data = {};
+	// 	console.log(imgBase64);
+	// 	const imgData = imgBase64.split(',');
+	// 	data['image'] = imgData[1];
+	// 	console.log(JSON.stringify(data));
+	// 	const res = await fetch(`/api/server/file-resources/upload`, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 			Accept: 'application/json',
+	// 			filename: filename
+	// 		},
+	// 		body: JSON.stringify(data)
+	// 	});
+	// 	console.log(Date.now().toString());
+	// 	const response = await res.json();
+	// 	if (response.Status === 'success' && response.HttpCode === 201) {
+	// 		// const imageUrl_ = response.Data.FileResources[0].Url;
+	// 		console.log('imageUrl', imageUrl);
+	// 		const imageResourceId_ = response.Data.FileResources[0].id;
+	// 		console.log('imageResourceId_', imageUrl);
+	// 		if (imageResourceId_) {
+	// 			imageResourceId = imageResourceId_;
+	// 		}
+	// 	} else {
+	// 		showMessage(response.Message, 'error');
+	// 	}
+	// };
 
-	const onFileSelected = async (e) => {
-		let f = e.target.files[0];
-		const filename = f.name;
-		let reader = new FileReader();
-		reader.readAsDataURL(f);
-		reader.onload = async (e) => {
-			fileinput = e.target.result;
-			await upload(e.target.result, filename);
-		};
-	};
+	// const onFileSelected = async (e) => {
+	// 	let f = e.target.files[0];
+	// 	const filename = f.name;
+	// 	let reader = new FileReader();
+	// 	reader.readAsDataURL(f);
+	// 	reader.onload = async (e) => {
+	// 		fileinput = e.target.result;
+	// 		await upload(e.target.result, filename);
+	// 	};
+	// };
 	
     function getRoleIdByRoleName(event) {
         const selectedUserRole = event.target.value;
@@ -188,14 +187,11 @@
                         on:change={getRoleIdByRoleName}
 						placeholder="Select role here..."
 					>
-        				<option value="Tenant admin">Tenant Admin</option>
-						<option value="Tenant user">Tenant User</option>
-                        <option value="System user">System User</option>
-                        <!-- <option value="System admin">System Admin</option> -->
-                        
-                        
+            {#each userRoles as role}
+            <option value={`${role.Value}`}>{role.Title}</option>
+            {/each}
 					</select>
-                    <input type="hidden" name="selectedUserRoleId" bind:value={selectedUserRoleId} />
+          <input type="hidden" name="selectedUserRoleId" bind:value={selectedUserRoleId} />
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

@@ -24,12 +24,6 @@
 	let _detailedInformation = detailedInformation;
 	let _additionalResources = additionalResources;
 	let _tags = tags;
-	let retrievedTags = '';
-	let tagsPlaceholder = 'Enter a tags here...';
-
-	function handleTags(event) {
-		retrievedTags = event.detail.tags;
-	}
 
 	function handleReset() {
 		topicName = _topicName;

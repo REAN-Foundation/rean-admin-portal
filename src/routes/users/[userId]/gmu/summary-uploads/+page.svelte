@@ -1,11 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     export let data
-    let totalPatient ='';
-    let arrivedPatient = '';
-    let notarrived ='';
-    let repliedYes ='';
-    let repliedNo = '';
     const appointmentReport = data.AppointmentReport;
     console.log(appointmentReport)
     let summary = appointmentReport['Summary'];

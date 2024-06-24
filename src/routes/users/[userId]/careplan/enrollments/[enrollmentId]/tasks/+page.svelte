@@ -16,7 +16,6 @@
 	const enrollmentId = $page.params.enrollmentId;
 	let enrollmentsTasks = data.enrollmentTask.Items;
 	let participantResponse = data.participantResponse;
-	let id = enrollmentsTasks.id;
 	let enrollmentDsipId = data.enrollment;
 	let enrollmentCode = enrollmentDsipId.DisplayId;
 
@@ -65,6 +64,7 @@
 	];
 
 	async function searchEnrollments(model) {
+    console.log(model);
 		let url = `/api/server/careplan/enrollment-task/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;

@@ -8,7 +8,6 @@
 	//////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	let id = data.badgeCategory.id;
 	let name = data.badgeCategory.Name;
 	let description = (data.badgeCategory.Description !== null && data.badgeCategory.Description ) ? data.badgeCategory.Description: 'Not specified';
   let imageUrl = data.badgeCategory.ImageUrl;

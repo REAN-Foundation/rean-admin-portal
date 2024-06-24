@@ -6,9 +6,8 @@
 	import { Helper } from '$lib/utils/helper';
 	import Icon from '@iconify/svelte';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
-	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
+  import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +46,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchTenant(model) {
+    console.log(model);
 		let url = `/api/server/tenants/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
@@ -127,7 +127,7 @@
 	};
 
 	async function Delete(model) {
-		const response = await fetch(`/api/server/tenants`, {
+		await fetch(`/api/server/tenants`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }

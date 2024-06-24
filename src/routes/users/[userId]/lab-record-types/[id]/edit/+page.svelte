@@ -7,7 +7,6 @@
 
 	export let form;
 	export let data: PageServerData;
-	let initiaData = {};
 	let id = data.labRecordType.id;
 	let typeName = data.labRecordType.TypeName;
 	let displayName = data.labRecordType.DisplayName;

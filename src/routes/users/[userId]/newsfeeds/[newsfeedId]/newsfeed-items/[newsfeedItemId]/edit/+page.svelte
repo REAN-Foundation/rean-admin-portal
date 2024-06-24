@@ -10,7 +10,6 @@
 
 	export let form;
 	export let data: PageServerData;
-	let initiaData = {};
 	let id = data.newsfeedItem.id;
 	let title = data.newsfeedItem.Title;
 	let description = data.newsfeedItem.Description;
@@ -31,7 +30,6 @@
 	let _authorName = authorName;
 	let _authorEmail = authorEmail;
 	let _authorLink = authorLink;
-	let _publishingDate = publishingDate;
 	let _image = image;
 
 	function handleReset() {

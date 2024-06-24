@@ -11,9 +11,13 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     if (! event.locals.sessionUser) {
         throw error (401, 'Unauthorized Access');
     }
-    if (event.locals.sessionUser.roleName === 'System admin') {
+    if (event.locals.sessionUser.roleName === 'System admin' ||
+        event.locals.sessionUser.roleName === 'System user'
+      ) {
         response = await getDailyStatistics(sessionId);
-     } else if (event.locals.sessionUser.roleName === 'Tenant admin') {
+     } else if (event.locals.sessionUser.roleName === 'Tenant admin' ||
+      event.locals.sessionUser.roleName === 'Tenant user'
+     ) {
         response = await getDailyTenantStatistics(sessionId, event.locals.sessionUser.tenantId);
      } else {
         throw error (401, 'Unauthorized Access');

@@ -2,21 +2,16 @@
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Image from '$lib/components/image.svelte';
-	import { showMessage } from '$lib/utils/message.utils';
 	import Icon from '@iconify/svelte';
 	import InputChip from '$lib/components/input-chips.svelte';
 	import type { PageServerData } from './$types';
     import { enhance } from '$app/forms';
     
     const MAX_FILE_SIZE = 1024 * 150;
-	let fileinput;
     let symptomImage;
-	let retrievedTags = '';
-	let tagsPlaceholder = 'Enter a tags here...';
 
 	export let form;
 	export let data: PageServerData;
-	let initiaData = {};
 	let id = data.symptom.id;
 	let symptom = data.symptom.Symptom;
 	let description = data.symptom.Description;
@@ -61,38 +56,6 @@
 		}
 	];
 
-    const upload = async (imgBase64, filename) => {
-		const data = {};
-		console.log(imgBase64);
-		const imgData = imgBase64.split(',');
-		data['image'] = imgData[1];
-		console.log(JSON.stringify(data));
-		const res = await fetch(`/api/server/file-resources/upload`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Accept: 'application/json',
-				filename: filename
-			},
-			body: JSON.stringify(data)
-		});
-		console.log(Date.now().toString());
-		const response = await res.json();
-		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl = response.Data.FileResources[0].url;
-			console.log('imageResourceId', imageUrl);
-			const imageResourceId_ = response.Data.FileResources[0].id;
-			console.log('ImageResource', imageResourceId_);
-			if (imageResourceId_) {
-				imageResourceId = imageResourceId_;
-                return true;
-			}
-			console.log(imageResourceId);
-		} else {
-			showMessage(response.Message, 'error');
-            return false;
-		}
-	};
 
   //   const onFileSelected = async (e) => {
 	// 	let f = e.target.files[0];
