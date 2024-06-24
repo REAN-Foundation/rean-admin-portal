@@ -64,6 +64,7 @@
    
     $: console.log("selectedRole", selectedRoles);
     async function searchUser(model) {
+      console.log(model);
       let url = `/api/server/users/search?`;
       if (sortOrder) url += `sortOrder=${sortOrder}`;
       else url += `sortOrder=ascending`;

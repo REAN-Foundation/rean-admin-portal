@@ -188,7 +188,7 @@
 						placeholder="Select role here..."
 					>
             {#each userRoles as role}
-            <option value={role.value}>{role.Title}</option>
+            <option value={`${role.Value}`}>{role.Title}</option>
             {/each}
 					</select>
           <input type="hidden" name="selectedUserRoleId" bind:value={selectedUserRoleId} />

@@ -208,8 +208,8 @@ export const getUserRoleList = async (userRole: string) => {
   if (userRole === "System admin") {
     return [
       {
-        Title : 'System Admin',
-        Value : 'System admin'
+        Title : 'System User',
+        Value : 'System user'
       },
       {
         Title : 'Tenant User',
