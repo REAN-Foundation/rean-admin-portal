@@ -12,6 +12,7 @@
     import { errorMessage } from '$lib/utils/message.utils';
 		import { z } from 'zod';
 		import toast from 'svelte-french-toast';
+		import PasswordInput from '$lib/components/input/password.input.svelte';
 
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -148,16 +149,26 @@
 										<span class="text-error-500">{errors.resetCode}</span>
 									{/if}
 								</label>
+								<!-- svelte-ignore a11y-label-has-associated-control -->
 								<label>
 									<span class="text-primary-500">New Password</span>
-									<input type="password" bind:value={newPassword} required class="input mb-4 mt-2" />
+									<div class="mb-4 mt-2">
+										<PasswordInput bind:password ={newPassword} name = "newPassword"/>
+									</div>
+				
+									<!-- <input type="password" bind:value={newPassword} required class="input mb-4 mt-2" /> -->
 									{#if errors.newPassword}
 										<span class="text-error-500">{errors.newPassword}</span>
 									{/if}
 								</label>
+								<!-- svelte-ignore a11y-label-has-associated-control -->
 								<label>
 									<span class="text-primary-500">Confirm New Password</span>
-									<input type="password" bind:value={confirmPassword} required class="input mb-4" />
+									<div class="mb-4 mt-2">
+										<PasswordInput bind:password= {confirmPassword} name = 'confirmPassword'/>
+									</div>
+									
+									<!-- <input type="password" bind:value={confirmPassword} required class="input mb-4" /> -->
 									{#if errors.confirmPassword}
 										<span class="text-error-500">{errors.confirmPassword}</span>
 									{/if}
@@ -225,7 +236,8 @@
 									</span>
 								</div>
 							</label>
-							<input type="password" name="password" required class="input" />
+							<PasswordInput/>
+							<!-- <input type="password" name="password" required class="input" /> -->
 							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<label class="lable">
 								<!-- svelte-ignore a11y-click-events-have-key-events -->
