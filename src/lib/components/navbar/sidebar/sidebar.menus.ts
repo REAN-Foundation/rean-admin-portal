@@ -1,6 +1,8 @@
 import type { FeatureOptions } from "$lib/system.types";
 import { getFeatureOptions } from '$lib/options/options.selector';
 import type{ SidebarMenu, NavigationMenu, TenantSettings } from "./sidebar.types";
+import { get } from "svelte/store";
+import { client } from "../../../store/general.store";
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -931,8 +933,10 @@ function addGMUMenus(
     userId: string,
     userRole: string,
     tenantSettings: any,
+      
     options: FeatureOptions): NavigationMenu[] {
 
+        const clientValue = get(client);
         const menuList: SidebarMenu[] = [];
 
         const gmu: SidebarMenu = {
@@ -946,9 +950,9 @@ function addGMUMenus(
     
         const pdfUpload: SidebarMenu = {
             name    : 'Appointment-pdf-Upload',
-            title   : 'PDF Upload',
+            title   : 'Appointment Upload',
             icon    : 'mdi:event-edit',
-            link    : `/users/${userId}/gmu/appointment-uploads`,
+            link    : `/users/${userId}/${clientValue}/appointment-uploads`,
             children: []
         };
         menuList.push(pdfUpload);
@@ -957,7 +961,7 @@ function addGMUMenus(
             name    : 'Appointment-Status-Report',
             title   : 'Status Report',
             icon    : 'octicon:id-badge-16',
-            link    : `/users/${userId}/gmu/summary-uploads`,
+            link    : `/users/${userId}/${clientValue}/summary-uploads`,
             children: []
         };
         menuList.push(statusReport);

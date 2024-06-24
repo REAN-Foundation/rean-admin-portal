@@ -21,7 +21,7 @@ export const uploadAppoinmentPdf = async (fileName: string, filePath: string) =>
     const s3 = getS3Client();
 
     const bucketName = BUCKET_NAME;
-    const filePathOnS3 = `${fileName}`; // Replace with your desired path and filename
+    const filePathOnS3 = `appointments/${fileName}`; // Replace with your desired path and filename
     const fileContent = fs.createReadStream(filePath); // Replace with the content or buffer of your file
 
     const params = {

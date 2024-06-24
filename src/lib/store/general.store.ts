@@ -1,4 +1,5 @@
 import { writable, derived, get, type Writable } from 'svelte/store';
+import { clientPreference } from '../constants';
 
 ///////////////////////////////////////////////////////////////////
 
@@ -37,3 +38,4 @@ export const ageWiseUsersData = writable();
 export const tabSet = writable(0);
 export const selectedItems = writable([]);
 // export const items = writable([]);
+export const client = writable(clientPreference);
