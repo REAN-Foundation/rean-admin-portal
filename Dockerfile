@@ -36,7 +36,8 @@ RUN npm install
 ##
 ##
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
-ENV ORIGIN=https://rean-admin-portal-uat.services.reanfoundation.org
+ARG ORIGIN
+ENV ORIGIN=${ORIGIN}
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh"]
 
