@@ -21,11 +21,14 @@
 	import Icon from '@iconify/svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
+
+  //////////////////////////////////////////////////////////
+
   const expandedMenus = writable({});
 
   export let userId;
   export let username = '';
-  export let email = ''; 
+  export let email = '';
   
 	const dispatch = createEventDispatcher();
 	async function changePassword() {
@@ -43,17 +46,19 @@
 	}
 
   let menuItems = [
-    { name: 'My profile', link: '', action: () => myProfile(), icon:'material-symbols:Person' },
-    {
-      name: 'Authorization and security', subMenu: [
-        { name: 'Change Password', link: '', action: () => changePassword() },
-      ]
-    },
-    {
-      name: 'Miscellaneous', subMenu: [
-        { name: 'Logout', link: '',action: () => gotoLogout() },
-      ]
-    }
+    { name: 'My profile', link: '', action: () => myProfile(), icon:'material-symbols:person-outline'},
+    { name: 'Change Password', link: '', action: () => changePassword(), icon:'material-symbols:lock-outline'},
+    { name: 'Logout', link: '',action: () => gotoLogout(), icon:'material-symbols:logout'}
+    // {
+    //   name: 'Authorization and security', subMenu: [
+    //     { name: 'Change Password', link: '', action: () => changePassword() },
+    //   ]
+    // },
+    // {
+    //   name: 'Miscellaneous', subMenu: [
+    //     { name: 'Logout', link: '',action: () => gotoLogout() },
+    //   ]
+    // }
   ];
 
   function toggleMenu(name) {
@@ -65,8 +70,8 @@
 	
 </script>
 
-<div class="w-80 h-full">
-  <div class="px-2 py-2">
+<div class="w-72 h-full">
+  <!-- <div class="px-2 py-2">
     <div class="flex items-center gap-2">
       <img
         class="object-cover rounded-full h-16 w-16"
@@ -81,7 +86,41 @@
         <Icon icon="material-symbols:close-rounded" class="text-xl" />
       </button>
     </div>
-  </div>
+  </div> -->
+  <!-- <div class="px-2 py-2">
+    <div class="flex items-center gap-2">
+      <img
+        class="object-cover rounded-full h-16 w-16"
+        src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+        alt="avatar"
+      />
+      <div class="flex-1 min-w-0">
+        <h3 class="text-lg font-medium truncate">{username}</h3>
+        <p class="text-sm text-gray-500 truncate">{email}</p>
+      </div>
+      <button class="ml-auto btn variant-soft-error p-2" on:click>
+        <Icon icon="material-symbols:close-rounded" class="text-xl" />
+      </button>
+      </div>
+    </div> -->
+    <div class="relative px-2 py-2">
+      <button class="absolute top-2 right-2 btn variant-soft-error p-2" on:click>
+        <Icon icon="material-symbols:close-rounded" class="text-xl" />
+      </button>
+      <div class="flex flex-col items-center gap-2">
+        <div class="relative inline-block bg-primary-200 rounded-full h-16 w-16">
+          <img
+            class="object-cover rounded-full h-16 w-16"
+            src="/user.png"
+            alt="avatar"
+          />
+        </div>
+        <div class="text-center w-64">
+          <h3 class="text-lg font-medium truncate">{username}</h3>
+          <p class="text-sm text-gray-500 truncate">{email}</p>
+        </div>
+      </div>
+    </div>
   <div class="border-t border-primary-200 mt-2"></div>
   <ul class="py-4 space-y-2">
     {#each menuItems as item}
@@ -117,8 +156,12 @@
           <!-- <a href={item.link} class="block px-4 py-2 hover:bg-primary-100 rounded-md">
             {item.name}
           </a> -->
+         
           <button on:click={item.action} class="w-full text-left px-4 py-2 hover:bg-primary-100 rounded-md">
-            {item.name}
+            <div class="flex gap-4 items-start justify-start">
+              <Icon icon={item.icon} class='text-xl'/> 
+              {item.name}
+            </div>
           </button>
           
         {/if}

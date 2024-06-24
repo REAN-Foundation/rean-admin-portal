@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
   import Icon from '@iconify/svelte';
+	import PasswordInput from '$lib/components/input/password.input.svelte';
 
   /////////////////////////////////////////////////////////////////////
 
@@ -10,7 +11,6 @@
 	const userId = $page.params.userId;
   const homeRoute = `/users/${userId}/home`;
 	const changePasswordRoute = `/users/${userId}/change-password`;
-
 	const breadCrumbs = [
 		{ name: 'Change Password', path: changePasswordRoute }
 	];
@@ -39,12 +39,13 @@
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
         <td>Old Password *</td>
         <td>
-          <input
+          <!-- <input
             type="password"
             name="oldPassword"
             placeholder="Enter old password here..."
             class="input w-full {form?.errors?.oldPassword ? 'border-error-300 text-error-500' : ''}"
-          />
+          /> -->
+          <PasswordInput name = "oldPassword"/>
           {#if form?.errors?.oldPassword}
             <p class="text-error-500 text-xs">{form?.errors?.oldPassword[0]}</p>
           {/if}
@@ -53,12 +54,13 @@
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
         <td>New Password *</td>
         <td>
-          <input
+          <!-- <input
             type="password"
             name="newPassword"
             placeholder="Enter new password here..."
             class="input w-full {form?.errors?.newPassword ? 'border-error-300 text-error-500' : ''}"
-          />
+          /> -->
+          <PasswordInput name = "newPassword"/>
           {#if form?.errors?.newPassword}
             <p class="text-error-500 text-xs">{form?.errors?.newPassword[0]}</p>
           {/if}
@@ -67,12 +69,13 @@
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
         <td>Confirm New Password *</td>
         <td>
-          <input
+          <!-- <input
             type="password"
             name="confirmNewPassword"
             placeholder="Confirm new password here..."
             class="input w-full {form?.errors?.confirmNewPassword ? 'border-error-300 text-error-500' : ''}"
-          />
+          /> -->
+          <PasswordInput name = "confirmNewPassword"/>
           {#if form?.errors?.confirmNewPassword}
             <p class="text-error-500 text-xs">{form?.errors?.confirmNewPassword[0]}</p>
           {/if}

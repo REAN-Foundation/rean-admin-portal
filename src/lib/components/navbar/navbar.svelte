@@ -43,7 +43,7 @@
     let showSidebar = false;
 </script>
 
-<AppShell class="w-full">
+<AppShell class="w-full bg-secondary-50">
     <svelte:fragment slot="header">
         <AppBar
             gridColumns="grid-cols-3"
@@ -93,7 +93,6 @@
         </p>
     </svelte:fragment>
 </AppShell>
-
 <Drawer>
     {#if $drawerStore.id === 'rightSidebar'}
         <SettingMenu on:click={drawerRightClose} on:logout userId ={userId} username={username} email={email}/>

@@ -9,20 +9,23 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
-    import { SYSTEM_ID } from '../../../../../src/lib/constants';
+  import { invalidate } from '$app/navigation';
+  import { SYSTEM_ID } from '../../../../../src/lib/constants';
+  import { onMount } from 'svelte';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	const activeRoles = ['System admin', 'System user', 'Tenant admin', 'Tenant user', 'Paitent','Doctor'];
 	let personTypes = data.personRoleTypes;
-    $: console.log('PersonRoleTypes', personTypes);
+    // $: console.log('PersonRoleTypes', personTypes);
 	let retrivedTypes;
+	$:retrivedTypes
     $: console.log('retrivedTypes', retrivedTypes);
     let roleName = "Role Name";
     let sortOrder = false;
 
-    const userId = $page.params.userId;
+  const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/person-role-types/create`;
 	const editRoute = (id) => `/users/${userId}/person-role-types/${id}/edit`;
 	const viewRoute = (id) => `/users/${userId}/person-role-types/${id}/view`;
@@ -30,13 +33,28 @@
 
 	const breadCrumbs = [{ name: 'User Roles', path: personRoleTypesRoute }];
 
+	function setActiveRoles() {
+    personTypes = personTypes.map(role => {
+      if (activeRoles.includes(role.RoleName)) {
+        return { ...role, isActive: true };
+      }
+      return { ...role, isActive: false };
+    });
+  }
+	
+	onMount(() => {
+  	setActiveRoles();
+  });
+
+	$:setActiveRoles()
+
     let totalPersonRoleCount = data.personRoleTypes.length
     let items = 10;
     let itemsPerPage = 10;
 
     sort(sortOrder)
 	$:{
-		personTypes = data.personRoleTypes;
+		// personTypes = data.personRoleTypes;
 		sort(sortOrder)
 		personTypes = personTypes.map((item, index) => ({ ...item, index: index + 1 }));
 	}
@@ -121,6 +139,7 @@
                    </button>
                 </th>
 				<th>Description</th>
+				<th data-sort="isActive">isActive</th>
 				<th data-sort="CreatedAt">Created Date</th>
 				<th />
 				<th />
@@ -139,6 +158,7 @@
 							<a href={viewRoute(row.id)}>{Helper.truncateText(row.RoleName, 20)} </a>
 						</td>
 						<td>{row.Description !== null ? Helper.truncateText(row.Description, 40) : 'Not specified'} </td>
+						<td>{row.isActive ? 'Yes' : 'No'}</td>
 						<td>{date.format(new Date(row.CreatedAt), 'DD-MMM-YYYY')}</td>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">

@@ -4,7 +4,9 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
   import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
-  import type { PageServerData } from '../$types.js';
+  import type { PageServerData } from '../$types.ts';
+	import PasswordInput from '$lib/components/input/password.input.svelte';
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
@@ -65,6 +67,7 @@
         const selectedUserRole = event.target.value;
         const tmp = LocalStorageUtils.getItem('personRoles');
         const personRoles = JSON.parse(tmp);
+				console.log ('personRoles', personRoles)
         const selectedRole = personRoles?.find((x) => x.RoleName === selectedUserRole);
         if (selectedRole) {
             selectedUserRoleId = selectedRole.id;
@@ -197,14 +200,15 @@
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Password *</td>
 				<td>
-					<input
+					<!-- <input
 						type="password"
 						name="password"
 						placeholder="Enter password here..."
 						class="input w-full {form?.errors?.password
 							? 'border-error-300'
 							: 'border-primary-200'}"
-					/>
+					/> -->
+						<PasswordInput/>
 					{#if form?.errors?.password}
 						<p class="text-error-500 text-xs">{form?.errors?.password[0]}</p>
 					{/if}
