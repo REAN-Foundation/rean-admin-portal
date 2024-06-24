@@ -108,11 +108,13 @@
         <Icon icon="material-symbols:close-rounded" class="text-xl" />
       </button>
       <div class="flex flex-col items-center gap-2">
-        <img
-          class="object-cover rounded-full h-16 w-16"
-          src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
-          alt="avatar"
-        />
+        <div class="relative inline-block bg-primary-200 rounded-full h-16 w-16">
+          <img
+            class="object-cover rounded-full h-16 w-16"
+            src="/user.png"
+            alt="avatar"
+          />
+        </div>
         <div class="text-center w-64">
           <h3 class="text-lg font-medium truncate">{username}</h3>
           <p class="text-sm text-gray-500 truncate">{email}</p>
