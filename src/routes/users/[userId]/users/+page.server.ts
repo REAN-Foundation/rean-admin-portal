@@ -40,7 +40,7 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 		throw error(response.HttpCode, response.Message);
 	}
 	const users = response.Data.Users;
-  users.Items = await addPermissionMatrix(users.Items, userRole, userId, tenantId, userRoleId);
+  users.Items = await addPermissionMatrix(sessionId, users.Items, userRole, userId, tenantId, userRoleId);
   console.log('User Role After Add Permission Matrix', users.Items);
 	return {
 		users,

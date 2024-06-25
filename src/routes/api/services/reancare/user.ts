@@ -2,6 +2,7 @@ import type { LoginModel } from '$lib/types/domain.models';
 import { Helper } from '$lib/utils/helper';
 import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL } from '$env/static/private';
 import { del, get, post, put } from './common.reancare';
+import { searchPersonRoleTypes } from './person-role-types';
 ////////////////////////////////////////////////////////////////
 
 export const login = async (roleId: string, password: string, username?: string, email?: string, phone?: string) => {
@@ -233,10 +234,17 @@ export const getUserRoleList = async (userRole: string) => {
   return [];
 }
 
-export const addPermissionMatrix = async (userRoleList: any[], userRole?: string, userId?: string, tenantId?: string, roleId?: string) => {
-  console.log('User Role',userRole);
+export const addPermissionMatrix = async (sessionId: string, userRoleList: any[], userRole?: string, userId?: string, tenantId?: string, roleId?: string) => {
   const permissionMatrix: any[] = [];
   
+  const response = await searchPersonRoleTypes(sessionId)
+  let selectedUserRoleId;
+  const personRoleTypes = response.Data.PersonRoleTypes
+	const selectedRole = personRoleTypes?.find((x) => x.RoleName === 'Tenant user');
+  if (selectedRole) {
+    selectedUserRoleId = selectedRole.id;
+  }
+
   if (userRole === 'System admin') {
     userRoleList.forEach((userRole) => {
       permissionMatrix.push({...userRole, IsPermitted: 1});
@@ -245,9 +253,11 @@ export const addPermissionMatrix = async (userRoleList: any[], userRole?: string
 
   if (userRole === 'Tenant admin') {
       userRoleList.forEach((userRole) => {
-      if (userRole.RoleId === roleId && 
+      if ((userRole.RoleId === roleId && 
         userRole.TenantId === tenantId && 
-        userRole.id === userId) {
+        userRole.id === userId) ||
+      (userRole.TenantId === tenantId && 
+        userRole.RoleId === selectedUserRoleId)) {
         permissionMatrix.push({...userRole, IsPermitted: 1});
       } else {
         permissionMatrix.push({...userRole, IsPermitted: 0});
