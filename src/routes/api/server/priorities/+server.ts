@@ -19,7 +19,7 @@ export const DELETE = async (event: RequestEvent) => {
 			);
 	}
 	throw redirect(
-		successMessage('Priorite deleted successfully!'),
+		successMessage('Priority deleted successfully!'),
 		event
 		);	
 };

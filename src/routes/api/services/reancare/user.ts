@@ -264,5 +264,6 @@ export const addPermissionMatrix = async (sessionId: string, userRoleList: any[]
       }
     })
   }
+  // console.log('Permission Matrix', permissionMatrix)
   return permissionMatrix.length > 0  ? permissionMatrix : userRoleList;
 }

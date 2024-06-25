@@ -219,7 +219,7 @@
                                     />
                                 </button>
                                 <span slot="title"> Delete </span>
-                                <span slot="description"> Are you sure you want to delete a health system? </span>
+                                <span slot="description"> Are you sure you want to delete a health system? Hospitals associated with it will also get deleted. </span>
                             </Confirm>
                         </td>
                     </tr>
