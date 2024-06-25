@@ -1,13 +1,13 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import type { RequestEvent } from '@sveltejs/kit';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createOrganization } from '../../../../api/services/organizations';
-import { createAddress } from '../../../../api/services/addresses';
+import { createOrganization } from '../../../../api/services/reancare/organizations';
+import { createAddress } from '../../../../api/services/reancare/addresses';
 import type { OrganizationTypes } from '$lib/types/domain.models';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import type { PageServerLoad } from './$types';
-import { getOrganizationTypes } from '../../../../api/services/types';
+import { getOrganizationTypes } from '../../../../api/services/reancare/types';
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,7 @@ const createOrganizationSchema = zfd.formData({
 	country: z.string().optional(),
 	postalCode: zfd.numeric(z.number().optional()),
 	imageResourceId: z.string().optional(),
-	isHealthFacility: zfd.checkbox({ trueValue: 'true' })
+	isHealthFacility: zfd.checkbox()
 });
 
 export const actions = {
@@ -81,6 +81,8 @@ export const actions = {
 		const addressesId_ = addressResponse.Data.Address.id;
 		const addressesId = addressesId_.split(',');
 
+		console.log("Address---",addressResponse.Data.Address);
+
 		if (addressResponse.Status === 'failure' || addressResponse.HttpCode !== 201) {
 			throw redirect(303, '/organizations', errorMessage(addressResponse.Message), event);
 		}
@@ -98,6 +100,7 @@ export const actions = {
 			result.isHealthFacility
 		);
 
+		console.log("Organization",response.Data.Organization);
 		const id = response.Data.Organization.id;
 
 		if (response.Status === 'failure' || response.HttpCode !== 201) {
@@ -106,7 +109,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/organizations/${id}/view`,
-			successMessage(`Organization created successfully !`),
+			successMessage(`Organization created successfully!`),
 			event
 		);
 	}

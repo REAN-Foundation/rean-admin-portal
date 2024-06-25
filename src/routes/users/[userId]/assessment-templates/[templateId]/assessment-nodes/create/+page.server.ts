@@ -9,41 +9,37 @@ import {
 	createAssessmentNode,
 	getQueryResponseTypes,
 	searchAssessmentNodes
-} from '../../../../../../api/services/assessment-nodes';
+} from '../../../../../../api/services/reancare/assessments/assessment-nodes';
 
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+	const templateId = event.params.templateId;
+	const searchParams = {
+        templateId: templateId
+    };
+    const _queryResponseTypes = await getQueryResponseTypes(sessionId);
+    const response = await searchAssessmentNodes(sessionId, searchParams);
 
-	try {
-		const templateId = event.params.templateId;
-		const searchParams = {
-			templateId: templateId
-		};
-		const _queryResponseTypes = await getQueryResponseTypes(sessionId);
-		const response = await searchAssessmentNodes(sessionId, searchParams);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const queryResponseTypes = _queryResponseTypes.Data.QueryResponseTypes;
+    const assessmentNodes = response.Data.AssessmentNodeRecords.Items;
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const queryResponseTypes = _queryResponseTypes.Data.QueryResponseTypes;
-		const assessmentNodes = response.Data.AssessmentNodeRecords.Items;
-
-		return {
-			queryResponseTypes,
-			assessmentNodes,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving query response types: ${error.message}`);
-	}
+    return {
+        queryResponseTypes,
+        assessmentNodes,
+        message: response.Message
+    };	
+	
 };
 
 const createAssessmentNodeSchema = zfd.formData({
 	nodeType: z.string(),
 	parentNodeId: z.string().uuid(),
-	title: z.string().min(3).max(256),
+	title: z.string().min(4).max(256),
 	description: z.string().optional(),
 	sequence: zfd.numeric(z.number().optional()),
 	queryType: z.string().optional(),
@@ -118,7 +114,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/assessment-templates/${templateId}/assessment-nodes/${nodeId}/view`,
-			successMessage(`Assessment node created successfully !`),
+			successMessage(`Assessment node created successfully!`),
 			event
 		);
 	}

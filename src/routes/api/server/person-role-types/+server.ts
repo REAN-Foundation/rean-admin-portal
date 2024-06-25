@@ -1,18 +1,25 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deletePersonRoleType } from '../../services/person-role-types';
+import { deletePersonRoleType } from '../../services/reancare/person-role-types';
+import { errorMessage, successMessage } from '$lib/utils/message.utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
 //////////////////////////////////////////////////////////////
 
 export const DELETE = async (event: RequestEvent) => {
 	const request = event.request;
 	const data = await request.json();
-
-	try {
-		console.log('Inside person role type server endpoints');
-		const response = await deletePersonRoleType(data.sessionId, data.personRoleTypeId);
-		return new Response(response.message);
-	} catch (err) {
-		console.error(`Error deleting person role type: ${err.message}`);
-		return new Response(err.message);
+	console.log('Inside person role type server endpoints');
+	let response;
+	try{
+		response = await deletePersonRoleType(data.sessionId, data.personRoleTypeId);
+	}catch(error){
+		throw redirect(
+			errorMessage('Error deleting person role type.'), 
+			event
+			);
 	}
+	throw redirect(
+		successMessage('User role deleted successfully!'),
+		event
+		);	
 };

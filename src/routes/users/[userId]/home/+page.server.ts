@@ -1,83 +1,45 @@
-import type {  RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getActiveUsers, getAppDownloadsData, getDeletdUsers, getDeviceDetailWiseUsers, getEnrollmetUsers, getGenderWiseUsers, getMaritalStatusWiseUsers, getOverallUsers, getTolalUsers } from '$routes/api/services/statistics';
+import { error, type RequestEvent } from '@sveltejs/kit';
+import { getDailyStatistics, getDailyTenantStatistics } from "../../../api/services/reancare/statistics"
 
-////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
-	const sessionId = event.cookies.get('sessionId');
-	try {
-    const years = ["2020", "2021", "2022", "2023"];
-    const totalUsersArray = []
-    for(const y of years){
-     const searchParams = {
-        year: y,
-      }
-      const _totalUsers = await getTolalUsers(sessionId,searchParams);
-      const totalUsers = _totalUsers.Data.TotalUsers.count;
-      totalUsersArray.push(totalUsers);
+    const sessionId = event.cookies.get('sessionId');
+    let response;
+
+    if (! event.locals.sessionUser) {
+        throw error (401, 'Unauthorized Access');
+    }
+    if (event.locals.sessionUser.roleName === 'System admin' ||
+        event.locals.sessionUser.roleName === 'System user'
+      ) {
+        response = await getDailyStatistics(sessionId);
+     } else if (event.locals.sessionUser.roleName === 'Tenant admin' ||
+      event.locals.sessionUser.roleName === 'Tenant user'
+     ) {
+        response = await getDailyTenantStatistics(sessionId, event.locals.sessionUser.tenantId);
+     } else {
+        throw error (401, 'Unauthorized Access');
     }
 
-    const androidUsersArray = []
-    for(const y of years){
-     const searchParams = {
-        year: y,
-      }
-      const _deviceDetailWiseUsers = await getDeviceDetailWiseUsers(sessionId,searchParams);
-      const androidUsers = _deviceDetailWiseUsers.Data.DeviceDetailWiseUsers.AndroidUsers.Count;
-      androidUsersArray.push(androidUsers);
+    if (!response || !response.Data.DailyStatistics.DashboardStats) {
+        throw error(404, 'Daily user statistics data not found');
+    }
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
     }
 
-    const iOSUsersArray = []
-    for(const y of years){
-     const searchParams = {
-        year: y,
-      }
-      const _deviceDetailWiseUsers = await getDeviceDetailWiseUsers(sessionId,searchParams);
-      const iOSUsers = _deviceDetailWiseUsers.Data.DeviceDetailWiseUsers.IOSUsers.Count;
-      iOSUsersArray.push(iOSUsers);
-    }
-    console.log("totalUsersArray",totalUsersArray);
-    console.log("totalUsersArray",androidUsersArray);
-    console.log("totalUsersArray",iOSUsersArray);
+    const userCountStats = response.Data.DailyStatistics.DashboardStats.UserStatistics.UsersCountStats;
+    const deviceDetailsStats = response.Data.DailyStatistics.DashboardStats.UserStatistics.DeviceDetailWiseUsers;
+    const userCountByYears = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseUserCount;
+    const deviceDetailsByYears = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseDeviceDetails;
 
-		const _totalUsers = await getTolalUsers(sessionId);
-    const _activeUsers = await getActiveUsers(sessionId);
-    const _deletedUsers = await getDeletdUsers(sessionId);
-    const _deviceDetailWiseUsers = await getDeviceDetailWiseUsers(sessionId);
-    const _enrollmentUsers = await getEnrollmetUsers(sessionId);
-    const _appDownloadsData = await getAppDownloadsData(sessionId);
-    const _overallUsersData = await getOverallUsers(sessionId);
-
-    const totalUsers = _totalUsers.Data.TotalUsers;
-    const activeUsers = _activeUsers.Data.ActiveUsers;
-    const deletedUsers = _deletedUsers.Data.DeletedUsers;
-    const deviceDetailWiseUsers = _deviceDetailWiseUsers.Data.DeviceDetailWiseUsers;
-    const enrollmentUsers = _enrollmentUsers.Data.EnrollmentUsers;
-    const appDownloadsData = _appDownloadsData.Data.AppDownload;
-    const overallUsersData = _overallUsersData.Data.OverallUsers;
-
-    // console.log("totalUsers",totalUsers);
-    // console.log("activeUsers",activeUsers);
-    // console.log("deletedUsers",deletedUsers);
-    // console.log("ageWisedeviceDetailWiseUsersUsers",deviceDetailWiseUsers);
-
-		return {
-      sessionId,
-			totalUsers,
-      activeUsers,
-      deletedUsers,
-      deviceDetailWiseUsers,
-      androidUsersArray,
-      totalUsersArray,
-      iOSUsersArray,
-      years,
-      enrollmentUsers,
-      appDownloadsData,
-      overallUsersData
-		};
-
-	} catch (error) {
-		console.error(`Error retriving users data: ${error.message}`);
-	}
+    return {
+        sessionId,
+        userCountStats,
+        userCountByYears,
+        deviceDetailsStats,
+        deviceDetailsByYears,
+    };
 };

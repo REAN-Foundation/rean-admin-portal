@@ -14,7 +14,7 @@ on:
     branches: [main]
 
 jobs:
-  
+
   Publish-Release:
     runs-on: ubuntu-latest
     steps:
@@ -25,11 +25,11 @@ jobs:
           publish : true
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
-           
+
     outputs:
       release_id: ${{ steps.new_publish.outputs.id }}
       release_name: ${{ steps.new_publish.outputs.tag_name }}
-    
+
 
   Deploy-ECS:
     needs: Publish-Release

@@ -3,15 +3,15 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createNotification } from '../../../../api/services/notifications';
+import { createNotification } from '../../../../api/services/reancare/notifications';
 
 /////////////////////////////////////////////////////////////////////////
 
 const createNotificationSchema = zfd.formData({
 	title: z.string().min(8).max(64),
 	body: z.string().optional(),
-	type: z.string().min(3).max(64),
-	broadcastToAll: zfd.checkbox({ trueValue: 'true' }),
+	type: z.string().optional(),
+	broadcastToAll: zfd.checkbox(),
 	imageUrl: z.string().optional()
 });
 
@@ -23,6 +23,7 @@ export const actions = {
 		const formData = Object.fromEntries(await request.formData());
 		type NotificationSchema = z.infer<typeof createNotificationSchema>;
 		let result: NotificationSchema = {};
+		console.log('result', result);
 		try {
 			result = createNotificationSchema.parse(formData);
 			console.log('result', result);
@@ -51,7 +52,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/notifications/${id}/view`,
-			successMessage(`Notification created successfully !`),
+			successMessage(`Notification created successfully!`),
 			event
 		);
 	}

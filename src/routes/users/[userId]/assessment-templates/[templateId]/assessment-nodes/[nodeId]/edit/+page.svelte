@@ -1,19 +1,15 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
-	import { faMultiply } from '@fortawesome/free-solid-svg-icons';
-	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import { page } from '$app/stores';
+	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
+	import Icon from '@iconify/svelte';
+	import Choice from '../../create/choice.svelte';
 	import type { PageServerData } from './$types';
-	import SingleChoice from '../../create/single.choice.svelte';
-	import MultipleChoice from '../../create/multiple.choice.svelte';
+    import { enhance } from '$app/forms';
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
 	export let data: PageServerData;
-	const queryResponseTypes = data.queryResponseTypes;
-	const assessmentNodes = data.assessmentNodes;
-	let id = data.assessmentNode.id;
 	let nodeType = data.assessmentNode.NodeType;
 	let title = data.assessmentNode.Title;
 	let description = data.assessmentNode.Description;
@@ -21,7 +17,6 @@
 	let options = data.assessmentNode.Options ?? [];
 	let optionValueStore = options;
 	let message = data.assessmentNode.Message ?? null;
-	let parentNodeId = data.assessmentNode.ParentNodeId;
 	let sequence = data.assessmentNode.Sequence;
 
 	//Original data
@@ -30,13 +25,15 @@
 	let _description = description;
 	let _queryType = queryType;
 	let _sequence = sequence;
+	let _message = message;
 
 	function handleReset() {
 		nodeType = _nodeType;
 		title = _title;
 		description = _description;
 		queryType = _queryType;
-		sequence = _sequence
+		sequence = _sequence;
+		message = _message;
 	}
 
 	const userId = $page.params.userId;
@@ -46,225 +43,160 @@
 	const editRoute = `/users/${userId}/assessment-templates/${templateId}/assessment-nodes/${nodeId}/edit`;
 	const viewRoute = `/users/${userId}/assessment-templates/${templateId}/assessment-nodes/${nodeId}/view`;
 	const assessmentNodeRoutes = `/users/${userId}/assessment-templates/${templateId}/assessment-nodes`;
-	const assessmentTemplateView =`/users/${userId}/assessment-templates/${templateId}/view`
+	const assessmentTemplateView = `/users/${userId}/assessment-templates/${templateId}/view`;
 
 	const breadCrumbs = [
-		{
-			name: 'Assessments',
-			path: assessmentsRoutes
-		},
-		{
-			name: 'Assessment-View',
-			path: assessmentTemplateView
-		},
-		{
-			name: 'Assessment-Nodes',
-			path: assessmentNodeRoutes
-		},
-		{
-			name: 'Edit',
-			path: editRoute
-		}
+		{ name: 'Assessments', path: assessmentsRoutes },
+		{ name: 'Assessment-View', path: assessmentTemplateView },
+		{ name: 'Assessment-Nodes', path: assessmentNodeRoutes },
+		{ name: 'Edit', path: editRoute }
 	];
 	let selectedNodeType = nodeType;
 	let selectedQueryType = queryType;
 
-	const onSelectNodeType = (val) => {
-		selectedNodeType = val.target.value;
-	};
-
-	const onSelectQueryResponseType = (val) => {
-		selectedQueryType = val.target.value;
-	};
+	const onSelectQueryResponseType = (val) => (selectedQueryType = val.target.value);
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
-<div>
-	<form
-		method="post"
-		action="?/updateAssessmentNodeAction"
-		class="w-full lg:mt-10 md:mt-8 sm:mt-6 lg:max-w-4xl md:max-w-xl sm:max-w-lg bg-[#ECE4FC] mt-6 mb-20  rounded-lg mx-auto"
-	>
-		<div class="w-full  h-14 rounded-t-lg p-3  bg-[#7165E3]">
-			<div class="ml-3 relative flex flex-row text-white text-xl">
-				Edit Assessment Node
-				<a href={viewRoute}>
-					<Fa
-						icon={faMultiply}
-						size="lg"
-						class="absolute right-0 lg:pr-3 md:pr-2 pr-0 text-white"
+<form
+	method="post"
+	action="?/updateAssessmentNodeAction"
+	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
+	use:enhance
+>
+	<table class="table">
+		<thead class="!variant-soft-secondary">
+			<tr>
+				<th>Edit Assessment Node</th>
+				<th class="text-end">
+					<a href={viewRoute} class="btn p-2 -my-2 variant-soft-secondary">
+						<Icon icon="material-symbols:close-rounded" class="text-lg" />
+					</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody class="!bg-white dark:!bg-inherit">
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Node Type *</td>
+				<td>
+				<input
+						type="text"
+						disabled
+						bind:value={nodeType}
+						class="input"
 					/>
-				</a>
-			</div>
-		</div>
+					<input
+						type="hidden"
+						name="nodeType"
+						bind:value={nodeType}
+						class="input"
+					/>
+				</td>
 
-		<div class="flex items-center mb-4 mt-10 mx-16">
-			<div class="w-1/2 md:w-1/3 lg:w-1/3">
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label class="label">
-					<span>Node Type *</span>
-				</label>
-			</div>
-			<div class="w-1/2 md:w-2/3 lg:w-2/3">
-				<select
-					name="nodeType"
-					bind:value={nodeType}
-					placeholder="Select node type here..."
-					class="select w-full"
-					on:change={(val) => onSelectNodeType(val)}
-				>
-					<option selected>{nodeType}</option>
-					<option>Question</option>
-					<option>Message</option>
-					<option>Node List</option>
-				</select>
-			</div>
-		</div>
-
-		<div class="flex items-center my-4 mx-16">
-			<div class="w-1/2 md:w-1/3 lg:w-1/3">
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label class="label">
-					<span>Title *</span>
-				</label>
-			</div>
-			<div class="w-1/2 md:w-2/3 lg:w-2/3">
-				<input
-					type="text"
-					name="title"
-					bind:value={title}
-					placeholder="Enter title here..."
-					required
-					class="input w-full {form?.errors?.title
-						? 'border-error-300 text-error-500'
-						: 'border-primary-200 text-primary-500'}"
-				/>
-				{#if form?.errors?.title}
-					<p class="text-error-500 text-xs">{form?.errors?.title[0]}</p>
-				{/if}
-			</div>
-		</div>
-
-		<div class="flex items-start mt-4 mx-16">
-			<div class="w-1/2 md:w-1/3 lg:w-1/3">
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label class="label mt-2">
-					<span>Description</span>
-				</label>
-			</div>
-			<div class="w-1/2 md:w-2/3 lg:w-2/3">
-				<textarea
-					name="description"
-					bind:value={description}
-					placeholder="Enter description here..."
-					class="textarea w-full
-					{form?.errors?.description
-						? 'border-error-300 text-error-500'
-						: 'border-primary-200 text-primary-500'}"
-				/>
-				{#if form?.errors?.description}
-					<p class="text-error-500 text-xs">{form?.errors?.description[0]}</p>
-				{/if}
-			</div>
-		</div>
-
-		<div class="flex items-center my-4 lg:mx-16 md:mx-12 mx-10">
-			<div class="w-1/2 md:w-1/3 lg:w-1/3 ">
-				<!-- svelte-ignore a11y-label-has-associated-control -->
-				<label class="label">
-					<span>Sequence</span>
-				</label>
-			</div>
-			<div class="w-1/2 md:w-2/3 lg:w-2/3">
-				<input
-					type="number"
-					name="sequence"
-					placeholder="Enter sequence here..."
-					class="input w-full {form?.errors?.sequence
-						? 'border-error-300 text-error-500'
-						: 'border-primary-200 text-primary-500'}"
-					bind:value={sequence}
-				/>
-				{#if form?.errors?.sequence}
-					<p class="text-error-500 text-xs">{form?.errors?.sequence[0]}</p>
-				{/if}
-			</div>
-		</div>
-
-		{#if selectedNodeType === 'Question'}
-			<div class="flex items-center mb-4 mt-2 mx-16">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span>Query Response Type *</span>
-					</label>
-				</div>
-				<div class="w-1/2 md:w-2/3 lg:w-2/3">
+				<!-- <td>
 					<select
-						id="mySelect"
-						name="queryType"
-						class="select select-info w-full"
-						placeholder="Select query type here..."
-						on:change={(val) => onSelectQueryResponseType(val)}
+						name="nodeType"
+						bind:value={nodeType}
+						placeholder="Select node type here..."
+						class="select select-info"
+						on:change={(val) => onSelectNodeType(val)}
 					>
-						<option selected value={queryType}>{queryType}</option>
-						{#each queryResponseTypes as responseType}
-							<option value={responseType}>{responseType}</option>
-						{/each}
+						<option selected>{nodeType}</option>
+						<option>Question</option>
+						<option>Message</option>
+						<option>Node List</option>
 					</select>
-				</div>
-			</div>
-			<div>
-				{#if selectedQueryType === 'Single Choice Selection'}
-					<SingleChoice {optionValueStore} />
-				{:else if selectedQueryType === 'Multi Choice Selection'}
-					<MultipleChoice {optionValueStore} />
-				{/if}
-			</div>
-		{:else if selectedNodeType === 'Message'}
-			<div class="flex items-start mb-4 mt-2 mx-16">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label mt-2">
-						<span>Message *</span>
-					</label>
-				</div>
-				<div class="w-1/2 md:w-2/3 lg:w-2/3">
-					<textarea
-						name="message"
+				</td> -->
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Title *</td>
+				<td>
+					<input
+						type="text"
+						name="title"
 						required
-						placeholder="Enter message here..."
-						bind:value={message}
-						class="textarea w-full
-						{form?.errors?.message ? 'border-error-300 text-error-500' : 'border-primary-200 text-primary-500'}"
+						bind:value={title}
+						placeholder="Enter title here..."
+						class="input w-full
+						{form?.errors?.title ? 'border-error-300 text-error-500' : ''}"
 					/>
-					{#if form?.errors?.message}
-						<p class="text-error-500 text-xs">{form?.errors?.message[0]}</p>
+					{#if form?.errors?.title}
+						<p class="text-error-500 text-xs">{form?.errors?.title[0]}</p>
 					{/if}
-				</div>
-			</div>
-		{:else}
-			<div />
-		{/if}
-		<div class="flex items-center my-8 lg:mx-16 md:mx-12 mx-4 ">
-			<div class="lg:w-1/2 md:w-1/2 sm:w-1/2 " />
-			<div class="lg:w-1/4 md:w-1/4 sm:w-1/4 ">
-				<button
-					type="button"
-					on:click={handleReset}
-					class="btn variant-ringed-primary text-primary-500 lg:w-40 lg:ml-8 md:ml-6 sm:ml-1 mb-10"
-				>
-					Reset</button
-				>
-			</div>
-			<div class="lg:w-1/4 md:w-1/4 sm:w-1/4 ">
-				<button
-					type="submit"
-					class="btn variant-filled-primary lg:w-40 lg:ml-8 md:ml-6 sm:ml-2 mb-10"
-					>Submit
-				</button>
-			</div>
-		</div>
-	</form>
-</div>
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td class="align-top">Description</td>
+				<td>
+					<textarea
+						name="description"
+						bind:value={description}
+						placeholder="Enter description here..."
+						class="input"
+					/>
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Sequence</td>
+				<td>
+					<input
+						type="number"
+						name="sequence"
+						placeholder="Enter sequence here..."
+						class="input"
+						bind:value={sequence}
+					/>
+				</td>
+			</tr>
+			{#if selectedNodeType === 'Question'}
+				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+					<td class="align-top">Query Response Type *</td>
+					<td>
+						<select
+							id="mySelect"
+							name="queryType"
+							disabled
+							class="select select-info w-full"
+							placeholder="Select query type here..."
+							bind:value={queryType}
+							on:change={(val) => onSelectQueryResponseType(val)}
+						>
+							<option selected value={queryType}>{queryType}</option>
+							<!-- {#each queryResponseTypes as responseType}
+								<option disabled value={responseType}>{responseType}</option>
+							{/each} -->
+						</select>
+					</td>
+				</tr>
+				{#if selectedQueryType === 'Single Choice Selection' || selectedQueryType === 'Multi Choice Selection'}
+					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+						<td class="align-top">Options</td>
+						<td><Choice {optionValueStore} readonly={true}/></td>
+					</tr>
+				{/if}
+			{:else if selectedNodeType === 'Message'}
+				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+					<td>Message *</td>
+					<td>
+						<textarea
+							name="message"
+							required
+							placeholder="Enter message here..."
+							bind:value={message}
+							disabled
+							class="textarea w-full
+						{form?.errors?.message ? 'border-error-300 text-error-500' : ''}"
+						/>
+					</td>
+				</tr>
+			{:else}
+				<tr />
+			{/if}
+		</tbody>
+	</table>
+	<div class="flex gap-2 p-2 justify-end">
+		<button type="button" on:click={handleReset} class="btn variant-soft-secondary">Reset</button>
+		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+	</div>
+</form>

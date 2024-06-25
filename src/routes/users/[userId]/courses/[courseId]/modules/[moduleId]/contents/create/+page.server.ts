@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createCourseContent } from '../../../../../../../../api/services/course.contents';
+import { createCourseContent } from '../../../../../../../../api/services/reancare/course.contents';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +61,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${id}/view`,
-			successMessage(`Content created successfully !`),
+			successMessage(`Content created successfully!`),
 			event
 		);
 	}

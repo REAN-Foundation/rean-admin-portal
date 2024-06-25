@@ -46,6 +46,7 @@ const organizations: TabDefinition = {
     path: `/users/userId/organizations`,
     default: false,
 };
+
 const notices: TabDefinition = {
     name: 'Notices',
     path: `/users/userId/notices`,

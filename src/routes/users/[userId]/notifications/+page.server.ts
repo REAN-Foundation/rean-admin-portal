@@ -1,7 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchNotifications } from '../../../api/services/notifications';
+import { searchNotifications } from '../../../api/services/reancare/notifications';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -13,7 +13,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		if (response.Status === 'failure' || response.HttpCode !== 200) {
 			throw error(response.HttpCode, response.Message);
 		}
-		const notification = response.Data.NotificationRecords.Items;
+		const notification = response.Data.NotificationRecords;
 		return {
 			notification,
 			sessionId,

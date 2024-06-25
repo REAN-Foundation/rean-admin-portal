@@ -1,25 +1,23 @@
-import type { RequestEvent } from '@sveltejs/kit';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { searchAssessmentTemplates } from '../../../api/services/assessment-templates';
+import { searchAssessmentTemplates } from '../../../api/services/reancare/assessments/assessment-templates';
 
 ////////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
-	const sessionId = event.cookies.get('sessionId');
-
-	try {
-		const response = await searchAssessmentTemplates(sessionId);
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const assessmentTemplate = response.Data.AssessmentTemplateRecords.Items;
-		return {
-			assessmentTemplate,
-			sessionId,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving assessment templates: ${error.message}`);
-	}
+export const load: PageServerLoad = async ({cookies,depends}) => {
+	const sessionId = cookies.get('sessionId');
+	depends('app:assessmentTemplate')
+    const response = await searchAssessmentTemplates(sessionId,{
+        orderBy: "Title",
+        order: "ascending"
+    });
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const assessmentTemplate = response.Data.AssessmentTemplateRecords;
+    return {
+        assessmentTemplate,
+        sessionId,
+        message: response.Message,
+    };		
 };

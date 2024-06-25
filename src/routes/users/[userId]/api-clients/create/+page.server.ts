@@ -1,7 +1,7 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createApiClient } from '../../../../api/services/api-clients';
+import { createApiClient } from '../../../../api/services/reancare/api-clients';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/api-clients/${id}/view`,
-			successMessage(`Api client created successfully !`),
+			successMessage(`Api client created successfully!`),
 			event
 		);
 	}

@@ -7,30 +7,26 @@ import type { PageServerLoad } from './$types';
 import {
 	getAssessmentTemplateById,
 	updateAssessmentTemplate
-} from '../../../../../api/services/assessment-templates';
+} from '../../../../../api/services/reancare/assessments/assessment-templates';
 
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const assessmentTemplateId = event.params.templateId;
+    const response = await getAssessmentTemplateById(sessionId, assessmentTemplateId);
 
-	try {
-		const assessmentTemplateId = event.params.templateId;
-		const response = await getAssessmentTemplateById(sessionId, assessmentTemplateId);
-
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const assessmentTemplate = response.Data.AssessmentTemplate;
-		const id = response.Data.AssessmentTemplate.id;
-		return {
-			location: `${id}/edit`,
-			assessmentTemplate,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving assessments: ${error.message}`);
-	}
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const assessmentTemplate = response.Data.AssessmentTemplate;
+    const id = response.Data.AssessmentTemplate.id;
+    return {
+        location: `${id}/edit`,
+        assessmentTemplate,
+        message: response.Message
+    };
+	
 };
 
 const updateAssessmentTemplateSchema = zfd.formData({
@@ -93,7 +89,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/assessment-templates/${id}/view`,
-			successMessage(`Assessment template updated successfully !`),
+			successMessage(`Assessment updated successfully!`),
 			event
 		);
 	}

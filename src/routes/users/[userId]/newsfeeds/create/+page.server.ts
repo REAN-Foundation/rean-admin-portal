@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createNewsfeed } from '../../../../api/services/newsfeeds';
+import { createNewsfeed } from '../../../../api/services/reancare/newsfeeds';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -45,7 +45,7 @@ export const actions = {
 				errors
 			};
 		}
-
+		
 		const response = await createNewsfeed(
 			sessionId,
 			result.title,
@@ -66,7 +66,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/newsfeeds/${newsfeedId}/view`,
-			successMessage(`Newsfeed created successfully !`),
+			successMessage(`Newsfeed created successfully!`),
 			event
 		);
 	}

@@ -5,35 +5,31 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { PageServerLoad } from './$types';
-import { getSymptomById, updateSymptom } from '../../../../../api/services/symptoms';
+import { getSymptomById, updateSymptom } from '../../../../../api/services/reancare/symptoms';
 
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const symptomId = event.params.id;
+    const response = await getSymptomById(sessionId, symptomId);
 
-	try {
-		const symptomId = event.params.id;
-		const response = await getSymptomById(sessionId, symptomId);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const symptom = response.Data.SymptomType;
+    const imageResourceId = symptom.ImageResourceId;
+    if (imageResourceId) {
+        symptom['ImageUrl'] =
+            BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
+    } else {
+        symptom['ImageUrl'] = null;
+    }
+    return {
+        sessionId,
+        symptom
+    };
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const symptom = response.Data.SymptomType;
-		const imageResourceId = symptom.ImageResourceId;
-		if (imageResourceId) {
-			symptom['ImageUrl'] =
-				BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
-		} else {
-			symptom['ImageUrl'] = null;
-		}
-		return {
-			sessionId,
-			symptom
-		};
-	} catch (error) {
-		console.error(`Error retriving symptom: ${error.message}`);
-	}
 };
 
 const updateSymptomSchema = zfd.formData({
@@ -90,7 +86,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/symptoms/${id}/view`,
-			successMessage(`Symptom updated successfully !`),
+			successMessage(`Symptom updated successfully!`),
 			event
 		);
 	}

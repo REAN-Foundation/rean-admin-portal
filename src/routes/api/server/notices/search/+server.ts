@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { page } from '$app/stores';
-import { searchNotices } from '../../../services/notices';
+import { searchNotices } from '../../../services/reancare/notices';
 
 //////////////////////////////////////////////////////////////
 
@@ -12,7 +12,7 @@ export const GET = async (event: RequestEvent) => {
 	const daysActive = searchParams.get('daysActive') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
-	const itemsPerPage_ = searchParams.get('pageIndex');
+	const itemsPerPage_ = searchParams.get('itemsPerPage');
 	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 25;
 	const pageIndex_ = searchParams.get('pageIndex');
 	const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;

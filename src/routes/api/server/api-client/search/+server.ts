@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { searchApiClients } from '../../../services/api-clients';
+import { searchApiClients } from '../../../services/reancare/api-clients';
 
 //////////////////////////////////////////////////////////////
 
@@ -11,7 +11,7 @@ export const GET = async (event: RequestEvent) => {
 	const clientEmail = searchParams.get('clientEmail') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
-	const itemsPerPage_ = searchParams.get('pageIndex');
+	const itemsPerPage_ = searchParams.get('itemsPerPage');
 	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 10;
 	const pageIndex_ = searchParams.get('pageIndex');
 	const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;
@@ -26,9 +26,8 @@ export const GET = async (event: RequestEvent) => {
 			pageIndex: pageIndex
 		};
 		const response = await searchApiClients(sessionId, searchParams);
-		const items = response.Data.ApiClientRecords.Items;
-
-		return new Response(JSON.stringify(items));
+		const items = response.Data.ClientAppRecords;
+         return new Response(JSON.stringify(items));
 	} catch (err) {
 		console.error(`Error retriving asset: ${err.message}`);
 		return new Response(err.message);

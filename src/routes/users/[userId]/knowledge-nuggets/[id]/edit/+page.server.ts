@@ -7,31 +7,27 @@ import type { PageServerLoad } from './$types';
 import {
 	getKnowledgeNuggetById,
 	updateKnowledgeNugget
-} from '../../../../../api/services/knowledge-nuggets';
+} from '../../../../../api/services/reancare/knowledge-nuggets';
 
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const knowledgeNuggetsId = event.params.id;
+    const response = await getKnowledgeNuggetById(sessionId, knowledgeNuggetsId);
 
-	try {
-		const knowledgeNuggetsId = event.params.id;
-		const response = await getKnowledgeNuggetById(sessionId, knowledgeNuggetsId);
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const KnowledgeNugget = response.Data.KnowledgeNugget;
+    console.log(KnowledgeNugget);
+    const id = response.Data.KnowledgeNugget.id;
+    return {
+        location: `${id}/edit`,
+        KnowledgeNugget,
+        message: response.Message
+    };
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const KnowledgeNugget = response.Data.KnowledgeNugget;
-		console.log(KnowledgeNugget);
-		const id = response.Data.KnowledgeNugget.id;
-		return {
-			location: `${id}/edit`,
-			KnowledgeNugget,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving knowledge nuggets: ${error.message}`);
-	}
 };
 
 const updateKnowledgeNuggetSchema = zfd.formData({
@@ -95,7 +91,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/knowledge-nuggets/${id}/view`,
-			successMessage(`Knowledge nuggets updated successfully !`),
+			successMessage(`Knowledge nuggets updated successfully!`),
 			event
 		);
 	}

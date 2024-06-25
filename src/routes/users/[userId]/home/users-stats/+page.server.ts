@@ -1,86 +1,73 @@
-import type {  RequestEvent } from '@sveltejs/kit';
+import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getActiveUsers, getAddictioDistribution, getAgeWiseUsers, getBiometricsDistribution, getCountryWiseUsers, getGenderWiseUsers, getHealthPillarDistribution, getMajorAilment, getMaritalStatusWiseUsers, getObesityDistribution, getRoleDistribution, getTolalUsers } from '$routes/api/services/statistics';
+import { getDailyStatistics, getDailyTenantStatistics } from '$routes/api/services/reancare/statistics';
 
 ////////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
-	const sessionId = event.cookies.get('sessionId');
-	try {
-    const years = ["2020", "2021", "2022", "2023"];
-    const ageWiseUsersArray = []
-    for(const y of years){
-     const searchParams = {
-        year: y,
-      }
-      const _ageWiseUsers = await getAgeWiseUsers(sessionId,searchParams);
-      const genderWiseUsers = _ageWiseUsers.Data.AgeWiseUsers;
-      ageWiseUsersArray.push(genderWiseUsers);
+    const sessionId = event.cookies.get('sessionId');
+
+    let response;
+
+    if (! event.locals.sessionUser) {
+        throw error (401, 'Unauthorized Access');
     }
 
-
-    const searchParams = {
-      year : '2023'
+    if (event.locals.sessionUser.roleName === 'System admin' ||
+      event.locals.sessionUser.roleName === 'System user'
+    ) {
+        response = await getDailyStatistics(sessionId);
+    } else if (event.locals.sessionUser.roleName === 'Tenant admin' ||
+      event.locals.sessionUser.roleName === 'Tenant user'
+    ) {
+        response = await getDailyTenantStatistics(sessionId, event.locals.sessionUser.tenantId);
+    } else {
+        throw error (401, 'Unauthorized Access');
     }
-		const _totalUsers = await getTolalUsers(sessionId);
-    const _activeUsers = await getActiveUsers(sessionId);
-    const _ageWiseUsers = await getAgeWiseUsers(sessionId);
-    const _genderWiseUsers = await getGenderWiseUsers(sessionId);
-    const _maritalStatusWiseUsers = await getMaritalStatusWiseUsers(sessionId);
-    const _countryWiseUsers = await getCountryWiseUsers(sessionId);
-    const _majorAilment = await getMajorAilment(sessionId);
-    const _obesityDistribution = await getObesityDistribution(sessionId);
-    const _addictionDistribution = await getAddictioDistribution(sessionId);
-    const _healthPillarDistribution = await getHealthPillarDistribution(sessionId);
-    const _healthPillarDistributionMonthly = await getHealthPillarDistribution(sessionId, searchParams);
-    const _roleDistribution = await getRoleDistribution(sessionId);
-    const _biometricsDistribution = await getBiometricsDistribution(sessionId);
-    const _biometricsDistributionMonthly = await getBiometricsDistribution(sessionId, searchParams);
-
-    const totalUsers = _totalUsers.Data.TotalUsers;
-    const activeUsers = _activeUsers.Data.ActiveUsers;
-    const ageWiseUsers = _ageWiseUsers.Data.AgeWiseUsers;
-    const genderWiseUsers  = _genderWiseUsers.Data.GenderWiseUsers;
-    const maritalStatusWiseUsers  = _maritalStatusWiseUsers.Data.MaritalStatusWiseUsers;
-    const countryWiseUsers  = _countryWiseUsers.Data.CountryWiseUsers;
-    const majorAilment  = _majorAilment.Data.MajorAilmentDistribution;
-    const obesityDistribution  = _obesityDistribution.Data.ObesityDistribution;
-    const addictionDistribution  = _addictionDistribution.Data.AddictionDistribution;
-    const healthPillarDistribution  = _healthPillarDistribution.Data.HealthPillarDistribution;
-    const healthPillarDistributionMonthly  = _healthPillarDistributionMonthly.Data.HealthPillarDistribution;
-    const roleDistribution  = _roleDistribution.Data.RoleDistribution;
-    const biometricsDistribution  = _biometricsDistribution.Data.Biometrics;
-    const biometricsDistributionMonthly  = _biometricsDistributionMonthly.Data.Biometrics;
-
-    console.log("totalUsers",totalUsers);
-    console.log("activeUsers",activeUsers);
-    console.log("ageWiseUsers",ageWiseUsers);
-    console.log("genderWiseUsers",genderWiseUsers);
-    console.log("maritalStatusWiseUsers",maritalStatusWiseUsers);
-    console.log("obesityDistribution",obesityDistribution);
-    console.log("addictionDistribution",addictionDistribution);
-    console.log("healthPillarDistributionMonthly",healthPillarDistributionMonthly);
-    console.log("roleDistribution",roleDistribution);
-
-		return {
-      sessionId,
-			totalUsers,
-      activeUsers,
-      ageWiseUsers,
-      genderWiseUsers,
-      maritalStatusWiseUsers,
-      countryWiseUsers,
-      majorAilment,
-      obesityDistribution,
-      addictionDistribution,
-      healthPillarDistribution,
-      healthPillarDistributionMonthly,
-      roleDistribution,
-      biometricsDistribution,
-      biometricsDistributionMonthly
-		};
     
-	} catch (error) {
-		console.error(`Error retriving users data: ${error.message}`);
-	}
+    if (!response) {
+        throw error(404, 'Daily user statistics data not found');
+    }
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    
+    const overallUsersData = response.Data.DailyStatistics.DashboardStats.UserStatistics.UsersCountStats;
+    const ageWiseUsers = response.Data.DailyStatistics.DashboardStats.UserStatistics.AgeWiseUsers;
+    const genderWiseUsers = response.Data.DailyStatistics.DashboardStats.UserStatistics.GenderWiseUsers;
+    const maritalStatusWiseUsers = response.Data.DailyStatistics.DashboardStats.UserStatistics.MaritalStatusWiseUsers;
+    // const countryWiseUsers = response.Data.DailyStatistics.DashboardStats.UserStatistics.CountryWiseUsers;
+    const majorAilment = response.Data.DailyStatistics.DashboardStats.UserStatistics.MajorAilmentDistribution;
+    const addictionDistribution = response.Data.DailyStatistics.DashboardStats.UserStatistics.AddictionDistribution;
+    const deviceDetailWiseUsers = response.Data.DailyStatistics.DashboardStats.UserStatistics.DeviceDetailWiseUsers;
+    const yearWiseAgeDetails = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseAgeDetails;
+    const yearWiseGenderDetails = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseGenderDetails;
+    const yearWiseMaritalDetails = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseMaritalDetails;
+    const yearWiseMajorAilmentDistributionDetails = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseMajorAilmentDistributionDetails;
+    const yearWiseAddictionDistributionDetails = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseAddictionDistributionDetails;
+    const years: any[] = [];
+    const yearWiseUserCount = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseUserCount;
+    yearWiseUserCount.forEach((value) => {
+        years.push({
+            year: value.year
+        });
+    });
+    
+    return {
+        sessionId,
+        ageWiseUsers,
+        genderWiseUsers,
+        maritalStatusWiseUsers,
+        // countryWiseUsers,
+        majorAilment,
+        addictionDistribution,
+        overallUsersData,
+        deviceDetailWiseUsers,
+        yearWiseAgeDetails,
+        yearWiseGenderDetails,
+        yearWiseMaritalDetails,
+        yearWiseMajorAilmentDistributionDetails,
+        yearWiseAddictionDistributionDetails,
+        years
+    };
 };

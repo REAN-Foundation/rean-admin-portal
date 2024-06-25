@@ -1,12 +1,24 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
+	import {
+		getChartColors,
+		getTickColorLight,
+		getTickColorDark
+  	} from '$lib/themes/theme.selector';
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  const chartColors = getChartColors();
+  const tickColorLight = getTickColorLight();
+  const tickColorDark = getTickColorDark();
+
 	export let labels: string[];
 	export let data: number[];
 	export let title: string;
 
 	$:data;
-
+    $:labels
 	let pieChart;
 	let ctx;
 
@@ -19,51 +31,50 @@
 				datasets: [
 					{
 						data: data,
-						backgroundColor: ['#351e61', '#5832A1', '#7165E3', '#ECE4FC'],
-						hoverBackgroundColor: ['#422679', '#8a70bd', '#9c93eb', '#f2ecfd']
+						backgroundColor: chartColors,
+						hoverBackgroundColor: chartColors
 					}
 				]
 			},
 			options: {
 				responsive: true,
-				layout: {
-					padding: {
-						left: 10,
-						right:10, 
-						top: 10,
-						bottom:10
-					}
-				},
+				// layout: {
+				// 	padding: {
+				// 		left: 10,
+				// 		right:10,
+				// 		top: 10,
+				// 		bottom:10
+				// 	}
+				// },
 				plugins: {
 					legend: {
 						display: true,
-						position: 'bottom',
+						position: 'right',
 						labels: {
-							boxWidth:10,
-							boxHeight:10,
-							color: '#5832A1',
+							boxWidth: 10,
+							boxHeight: 10,
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
 						}
 					},
 					title: {
-					    display: true,
-					    text: title,
-					    position: "top",
-							color: '#5832A1',
-							align:'center',
-							padding:20,
-							font:{
-					  size: 22,
-					  weight: 'normal',
-					  lineHeight: 1.2,
-							},
-					},
+						display: false,
+						text: title,
+						position: 'top',
+						color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
+						align: 'center',
+						padding: 20,
+						font: {
+							size: 22,
+							weight: 'normal',
+							lineHeight: 1.2
+						}
+					}
 				}
 			}
 		});
 	});
-
 </script>
 
-<div class="">
+<div>
 	<canvas id="pieChart" bind:this={pieChart} />
 </div>

@@ -4,30 +4,25 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { getGoalById, updateGoal } from '../../../../../api/services/goals';
+import { getGoalById, updateGoal } from '../../../../../api/services/reancare/goals';
 
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
 	const sessionId = event.cookies.get('sessionId');
+    const goalId = event.params.id;
+    const response = await getGoalById(sessionId, goalId);
 
-	try {
-		const goalId = event.params.id;
-		const response = await getGoalById(sessionId, goalId);
-
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw error(response.HttpCode, response.Message);
-		}
-		const goal = response.Data.GoalType;
-		const id = response.Data.GoalType.id;
-		return {
-			location: `${id}/edit`,
-			goal,
-			message: response.Message
-		};
-	} catch (error) {
-		console.error(`Error retriving goals: ${error.message}`);
-	}
+    if (response.Status === 'failure' || response.HttpCode !== 200) {
+        throw error(response.HttpCode, response.Message);
+    }
+    const goal = response.Data.GoalType;
+    const id = response.Data.GoalType.id;
+    return {
+        location: `${id}/edit`,
+        goal,
+        message: response.Message
+    };
 };
 
 const updateGoalTypeSchema = zfd.formData({
@@ -72,7 +67,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/goals/${id}/view`,
-			successMessage(`Goal type updated successfully !`),
+			successMessage(`Goal type updated successfully!`),
 			event
 		);
 	}

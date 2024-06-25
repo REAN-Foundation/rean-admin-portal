@@ -1,6 +1,6 @@
 import type { RequestEvent } from '@sveltejs/kit';
 import { page } from '$app/stores';
-import { searchModules } from '../../../services/modules';
+import { searchModules } from '../../../services/reancare/modules';
 
 //////////////////////////////////////////////////////////////
 
@@ -9,18 +9,22 @@ export const GET = async (event: RequestEvent) => {
 
 	const searchParams: URLSearchParams = event.url.searchParams;
 	const name = searchParams.get('name') ?? undefined;
+    const courseId = searchParams.get('courseId') ?? undefined;
+    const durationInMins = searchParams.get('durationInMins') ?? undefined;
 	const description = searchParams.get('description') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
-	const itemsPerPage_ = searchParams.get('pageIndex');
-	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 25;
+	const itemsPerPage_ = searchParams.get('itemsPerPage');
+	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 10;
 	const pageIndex_ = searchParams.get('pageIndex');
 	const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;
 
 	try {
 		const searchParams = {
 			name,
-			Description: description,
+            courseId,
+            durationInMins,
+            Description: description,
 			orderBy: sortBy,
 			order: sortOrder,
 			itemsPerPage,
@@ -28,7 +32,7 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchModules(sessionId, searchParams);
-		const items = response.Data.Items;
+		const items = response.Data.CourseModules.Items;
 		console.log('data==/////', response);
 
 		return new Response(JSON.stringify(items));

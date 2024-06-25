@@ -1,14 +1,40 @@
 <script lang="ts">
 	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	import { browser } from '$app/environment';
-	import { personRolesStore, genderTypesStore } from '$lib/store/general.store';
+	import { personRolesStore } from '$lib/store/general.store';
 	import type { PageServerData } from './$types';
+	import {
+		getPublicLogoImageSource,
+		getPublicFooterText,
+		getPublicFooterLink,
+		getSystemName,
+	} from '$lib/themes/theme.selector';
+    import { errorMessage } from '$lib/utils/message.utils';
+		import { z } from 'zod';
+		import toast from 'svelte-french-toast';
+		import PasswordInput from '$lib/components/input/password.input.svelte';
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	const logoImageSource = getPublicLogoImageSource();
+  const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
+  const footerLink = getPublicFooterLink();
 
 	export let data: PageServerData;
+
 	personRolesStore.set(data.roles);
 	LocalStorageUtils.setItem('personRoles', JSON.stringify(data.roles));
-	let personRoles = [],
-		loginRoleId = 1;
+	let personRoles = [];
+	let loginRoleId = 1;
+	let showForgotPassword = false;
+	let showResetPassword = false;
+
+	let email = '';
+	let resetCode = '';
+	let newPassword = '';
+	let confirmPassword = '';
+	let errors: Record<string, string[]> = {};
+	let activeTab = 'username';
 
 	if (browser) {
 		const tmp = LocalStorageUtils.getItem('personRoles');
@@ -19,72 +45,231 @@
 		}
 		LocalStorageUtils.removeItem('prevUrl');
 	}
+
+	const systemName = getSystemName();
+
+	const resetPasswordSchema = z.object({
+		email: z.string().email({ message: 'Invalid email address' }),
+		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
+		newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+		confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+	}).refine(data => data.newPassword === data.confirmPassword, {
+		message: "New password and confirm new password must match",
+		path: ['confirmPassword'],
+	});
+
+	async function handleForgotPassword() {
+		const response = await fetch(`/api/server/users/send-reset-code`, {
+			method: 'POST',
+			body: JSON.stringify({ email }),
+			headers: { 'content-type': 'application/json' }
+		});
+
+		const res =  await response.json();
+		console.log("res...........", res)
+		if (res.Status === "success") {
+			toast.success(res.Message)
+			showResetPassword = true;
+			showForgotPassword = false;
+		} else {
+			toast.error(res.Message);
+		}
+	}
+
+	async function handleResetPassword() {
+		errors = {};
+		try {
+			resetPasswordSchema.parse({ email, resetCode, newPassword, confirmPassword });
+
+			const response = await fetch('/api/server/users/reset-password', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ email, resetCode, newPassword })
+		});
+		const res =  await response.json();
+		if (res.Status === "success") {
+			toast.success(res.Message)
+			showResetPassword = false;
+			showForgotPassword = false;
+		} else {
+			toast.error(res.Message);
+		}
+		} catch (err) {
+			if (err instanceof z.ZodError) {
+				errors = err.flatten().fieldErrors;
+			} else {
+				errorMessage('An unexpected error occurred');
+			}
+		}
+	}
+
 </script>
 
 <svelte:head>
-	<title>REAN careplans</title>
+	<title>{systemName}</title>
 	<meta name="description" content="REAN careplans" />
 </svelte:head>
 <body>
-	<div class="nav h-12 w-full bg-secondary-500" />
+	<div class="nav h-12 w-full bg-primary-700" />
 	<div class="w-full h-full" id="background-image">
-		<div class="bg-back-ground h-full w-full">
-			<!-- <div class="h-10 w-screen shadow-xl mb-4 bg-[#7165E3]" /> -->
+		<div class="bg-back-ground h-full w-full bg-primary-50">
 			<div class="h-full w-full px-3">
-				<div class=" flex justify-center flex-col items-center">
+				<div class="flex justify-center flex-col items-center">
 					<img
 						class="ct-image w-36 mt-7 mb-7"
 						alt="logo"
-						src="https://www.reanfoundation.org/wp-content/uploads/2021/10/REAN-Foundation-brand-Logo.png"
+						src={logoImageSource}
 					/>
-					<form
-						method="post"
-						action="?/login"
-						class=" shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-tertiary-500"
-					>
-						<!-- <input class="hidden" type="number" name="loginRoleId" value={loginRoleId}> -->
-						<div class="hidden">
-							<input name="loginRoleId" class="hidden" value={loginRoleId} />
+					{#if showForgotPassword}
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+							<h2 class="text-center text-xl mb-4">Forgot Password</h2>
+							<form on:submit|preventDefault={handleForgotPassword}>
+								<label class="mb-2">
+									<span class="text-primary-500">Email</span>
+									<input type="email" bind:value={email} required class="input mb-4 mt-2" />
+								</label>
+								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Send Reset Code</button>
+								<button type="button" class="btn variant-filled-secondary mb-6 w-full" on:click={() => { showForgotPassword = false; }}>Back to Login</button>
+							</form>
 						</div>
+					{:else if showResetPassword}
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+							<h2 class="text-center text-xl mb-4">Reset Password</h2>
+							<form on:submit|preventDefault={handleResetPassword}>
+								<label class="hidden">
+									<span class="text-primary-500">Email</span>
+									<input type="email"value={email} required class="input mb-4" />
+								</label>
+								<label>
+									<span class="text-primary-500">Reset Code</span>
+									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
+									{#if errors.resetCode}
+										<span class="text-error-500">{errors.resetCode}</span>
+									{/if}
+								</label>
+								<!-- svelte-ignore a11y-label-has-associated-control -->
+								<label>
+									<span class="text-primary-500">New Password</span>
+									<div class="mb-4 mt-2">
+										<PasswordInput bind:password ={newPassword} name = "newPassword"/>
+									</div>
+				
+									<!-- <input type="password" bind:value={newPassword} required class="input mb-4 mt-2" /> -->
+									{#if errors.newPassword}
+										<span class="text-error-500">{errors.newPassword}</span>
+									{/if}
+								</label>
+								<!-- svelte-ignore a11y-label-has-associated-control -->
+								<label>
+									<span class="text-primary-500">Confirm New Password</span>
+									<div class="mb-4 mt-2">
+										<PasswordInput bind:password= {confirmPassword} name = 'confirmPassword'/>
+									</div>
+									
+									<!-- <input type="password" bind:value={confirmPassword} required class="input mb-4" /> -->
+									{#if errors.confirmPassword}
+										<span class="text-error-500">{errors.confirmPassword}</span>
+									{/if}
+								</label>
+								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Reset Password</button>
+								<button type="button" class="btn variant-filled-secondary mb-6 w-full" on:click={() => { showResetPassword = false; }}>Back to Login</button>
+							</form>
+						</div>
+					{:else}
+					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+						<input name="roleId" bind:value={loginRoleId} class="hidden"/>
+						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<div class="justify-center w-full mt-5 h-50">
-							<!-- svelte-ignore a11y-label-has-associated-control -->
-							<label class="mb-2" for="username">
-								<span class="text-primary-500">Username / Email</span>
-								<span class="label-text-alt" />
-							</label>
-							<input type="text" name="username" required class="input mb-4" />
-							<!-- svelte-ignore a11y-label-has-associated-control -->
+							<div class="flex gap-6 mb-4">
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="username" bind:group={activeTab} />Username
+								</div>
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="email" bind:group={activeTab} /> Email
+								</div>
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="phone" bind:group={activeTab} /> Phone
+								</div>
+							</div>
+							{#if activeTab === 'username'}
+								<label class="mb-2" for="username">
+									<span class="text-primary-500">Username</span>
+									<span class="label-text-alt" />
+								</label>
+								<input type="text" name="username" required class="input mb-4" />
+							{/if}
+							{#if activeTab === 'email'}
+								<label class="mb-2" for="email">
+									<span class="text-primary-500">Email</span>
+									<span class="label-text-alt" />
+								</label>
+								<input type="email" name="email" required class="input mb-4" />
+							{/if}
+							{#if activeTab === 'phone'}
+							<div class="flex gap-4 mb-4">
+								<div class="flex flex-col">
+									<label class="mb-2" for="countryCode">
+										<span class="text-primary-500">Phone</span>
+										<span class="label-text-alt" />
+									</label>
+									<div class="flex flex-row gap-5">
+										<div class="w-1/3">
+											<select name="countryCode" required class="input">
+												<option value="+1">+1</option>
+												<option value="+91">+91</option>
+											</select>
+										</div>
+									<div class="w-2/3">
+										<input type="tel" name="phone" required class="input" />
+									</div>
+									</div>
+								</div>
+							</div>
+							{/if}
 							<label class="mb-2" for="password">
 								<div class="grid grid-flow-col">
-									<span class="text-left text-primary-500">Password / OTP</span>
-									<!-- svelte-ignore a11y-click-events-have-key-events -->
-									<span class="text-right text-primary-500" on:click><b>Generate OTP</b></span>
+									<span class="text-left text-primary-500">Password</span>
+									<span class="text-right text-primary-500 ml-4 sm:ml-12 invisible">
+										<b>Generate OTP</b>
+									</span>
 								</div>
 							</label>
-							<input type="password" name="password" required class=" input" />
-							<!-- svelte-ignore a11y-label-has-associated-control -->
+							<PasswordInput/>
+							<!-- <input type="password" name="password" required class="input" /> -->
+							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<label class="lable">
-								<span class=" text-primary-500"><b>Forgot Password?</b></span>
-							</label><br />
-							<button
-								type="submit"
-								class="btn bg-primary-500 w-40 ml-20 lg:ml-52 md:ml-52 sm:ml-52  h-10 mb-8 font-semibold tracking-wide rounded-lg text-surface-500 mt-6"
-							>
-								Login
-							</button>
+								<!-- svelte-ignore a11y-click-events-have-key-events -->
+								<!-- svelte-ignore a11y-no-static-element-interactions -->
+								<span class="text-primary-500 cursor-pointer" on:click={() => { showForgotPassword = true; }}>
+									<b>Forgot Password?</b>
+								</span>
+							</label>
+							<br />
+							<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Login</button>
 						</div>
 					</form>
+					{/if}
 				</div>
 			</div>
 		</div>
 	</div>
-	<footer class="text-center w-full fixed bottom-0 h-11 bg-primary-500">
-		<a href="https://reanfoundation.org">
-			<p
-				class="mt-3 text-surface-500 text-sm hover:underline-offset-3 hover:underline decoration-indigo-500"
-			>
-				&#xa9; 2022 REAN Foundation
-			</p></a
-		>
+	<footer class="w-full fixed bottom-0 bg-primary-900 text-center p-2">
+		<a href={footerLink} class="!text-white">{footerText}</a>
 	</footer>
 </body>
+
+<style>
+  .radio-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .radio-group input {
+    margin-right: 0.5rem;
+  }
+  .tab-content {
+    margin-top: 1rem;
+  }
+</style>

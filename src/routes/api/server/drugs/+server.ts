@@ -1,18 +1,25 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteDrug } from '../../services/drugs';
+import { deleteDrug } from '../../services/reancare/drugs';
+import { errorMessage, successMessage } from '$lib/utils/message.utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
 //////////////////////////////////////////////////////////////
 
 export const DELETE = async (event: RequestEvent) => {
 	const request = event.request;
 	const data = await request.json();
-
-	try {
-		console.log('Inside drug server endpoints');
-		const response = await deleteDrug(data.sessionId, data.drugId);
-		return new Response(response.message);
-	} catch (err) {
-		console.error(`Error deleting drug: ${err.message}`);
-		return new Response(err.message);
+	console.log('Inside drug server endpoints');
+	let response;
+	try{
+		response = await deleteDrug(data.sessionId, data.drugId);
+	}catch(error){
+		throw redirect(
+			errorMessage('Error deleting drug.'), 
+			event
+			);
 	}
+	throw redirect(
+		successMessage('Drug deleted successfully!'),
+		event
+		);	
 };

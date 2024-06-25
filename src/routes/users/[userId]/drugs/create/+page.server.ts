@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createDrug } from '../../../../api/services/drugs';
+import { createDrug } from '../../../../api/services/reancare/drugs';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +58,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/drugs/${id}/view`,
-			successMessage(`Drug created successfully !`),
+			successMessage(`Drug created successfully!`),
 			event
 		);
 	}

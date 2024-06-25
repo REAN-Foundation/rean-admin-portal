@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createPriority } from '../../../../api/services/priorities';
+import { createPriority } from '../../../../api/services/reancare/priorities';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +48,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/priorities/${id}/view`,
-			successMessage(`Priority created successfully !`),
+			successMessage(`Priority created successfully!`),
 			event
 		);
 	}

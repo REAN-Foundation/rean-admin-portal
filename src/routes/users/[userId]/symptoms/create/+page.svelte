@@ -1,217 +1,235 @@
 <script lang="ts">
-	import Fa from 'svelte-fa';
-	import { faMultiply } from '@fortawesome/free-solid-svg-icons';
-	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import { page } from '$app/stores';
-	import { showMessage } from '$lib/utils/message.utils';
-	import { InputChip } from '@skeletonlabs/skeleton';
-
-	let retrievedTags = '';
-	let tagsPlaceholder = 'Enter a tags here...';
+	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
+	import Icon from '@iconify/svelte';
+	import InputChip from '$lib/components/input-chips.svelte';
+  import { enhance } from '$app/forms';
+ 
+////////////////////////////////////////////////////////////////////////
 
 	export let form;
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
-	let fileinput;
-
+  let symptomImage;
+    let errorMessage = {
+        Text: 'Max file upload size 150 KB',
+        Colour: 'border-b-surface-700'
+    }
+  const MAX_FILE_SIZE = 1024 * 150;
 	const createRoute = `/users/${userId}/symptoms/create`;
 	const symptomRoute = `/users/${userId}/symptoms`;
 
 	const breadCrumbs = [
-		{
-			name: 'Symptoms',
-			path: symptomRoute
-		},
-		{
-			name: 'Create',
-			path: createRoute
-		}
+		{ name: 'Symptoms', path: symptomRoute },
+		{ name: 'Create', path: createRoute }
 	];
 
-	const upload = async (imgBase64, filename) => {
-		const data = {};
-		console.log(imgBase64);
-		const imgData = imgBase64.split(',');
-		data['image'] = imgData[1];
-		console.log(JSON.stringify(data));
-		const res = await fetch(`/api/server/file-resources/upload`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Accept: 'application/json',
-				filename: filename
-			},
-			body: JSON.stringify(data)
-		});
-		console.log(Date.now().toString());
-		const response = await res.json();
-		if (response.Status === 'success' && response.HttpCode === 201) {
-			const imageUrl = response.Data.FileResources[0].url;
-			console.log('imageResourceId', imageUrl);
-			const imageResourceId_ = response.Data.FileResources[0].id;
-			console.log('ImageResource', imageResourceId_);
-			if (imageResourceId_) {
-				imageResourceId = imageResourceId_;
-			}
-			console.log(imageResourceId);
-		} else {
-			showMessage(response.Message, 'error');
-		}
-	};
+	// const upload = async (imgBase64, filename) => {
+	// 	const data = {};
+	// 	console.log(imgBase64);
+	// 	const imgData = imgBase64.split(',');
+	// 	data['image'] = imgData[1];
+	// 	console.log(JSON.stringify(data));
+	// 	const res = await fetch(`/api/server/file-resources/upload`, {
+	// 		method: 'POST',
+	// 		headers: {
+	// 			'Content-Type': 'multipart/form-data',
+	// 			Accept: 'application/json',
+	// 			filename: filename
+	// 		},
+	// 		body: JSON.stringify(data)
+	// 	});
+	// 	console.log(Date.now().toString());
+	// 	const response = await res.json();
+	// 	if (response.Status === 'success' && response.HttpCode === 201) {
+	// 		const imageUrl = response.Data.FileResources[0].url;
+	// 		console.log('imageResourceId', imageUrl);
+	// 		const imageResourceId_ = response.Data.FileResources[0].id;
+	// 		console.log('ImageResource', imageResourceId_);
+	// 		if (imageResourceId_) {
+	// 			imageResourceId = imageResourceId_;
+  //               return true;
+	// 		}
+	// 		console.log(imageResourceId);
+	// 	} else {
+	// 		showMessage(response.Message, 'error');
+  //           return false;
+	// 	}
+	// };
 
-	const onFileSelected = async (e) => {
-		let f = e.target.files[0];
-		const filename = f.name;
-		let reader = new FileReader();
-		reader.readAsDataURL(f);
-		reader.onload = async (e) => {
-			fileinput = e.target.result;
-			await upload(e.target.result, filename);
-		};
-	};
+	// const onFileSelected = async (e) => {
+	// 	let f = e.target.files[0];
+  //       const fileSize = f.size;
+  //       if (fileSize > MAX_FILE_SIZE) {
+  //           errorMessage.Text = "File should be less than 150 KB";
+  //           errorMessage.Colour = 'text-error-500'
+  //           symptomImage.value = null;
+  //           return;
+  //       }
+  //       errorMessage.Text = 'Please wait file upload is in progress';
+  //       errorMessage.Colour = 'text-error-500';
+  //       console.log(`File size: ${fileSize} bytes`);
+	// 	const filename = f.name;
+	// 	let reader = new FileReader();
+	// 	// reader.readAsDataURL(f);
+	// 	reader.onload = async (e) => {
+	// 		fileinput = e.target.result;
+	// 		const isFileUploaded = await upload(e.target.result, filename);
+  //           if (isFileUploaded) {
+  //               errorMessage.Text = "File uploaded successfully";
+  //               errorMessage.Colour = 'text-success-500'
+  //               return;
+  //           }
+  //           errorMessage.Text = 'Error in file upload';
+  //           errorMessage.Colour = 'text-error-500'
+  //           symptomImage.value = null;
+  //           return;
+	// 	};
+	// };
+
+const onFileSelected = async (e) => {
+    let file = e.target.files[0];
+    const fileSize = file.size;
+    if (fileSize > MAX_FILE_SIZE) {
+      errorMessage.Text = "File should be less than 150 KB";
+      errorMessage.Colour = 'text-error-500';
+      symptomImage.value = null;
+      return;
+    }
+
+    errorMessage.Text = 'Please wait, file upload is in progress';
+    errorMessage.Colour = 'text-error-500';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('filename', file.name);
+
+    try {
+      const res = await fetch(`/api/server/file-resources/upload`, {
+			// 	headers: {
+			// 	'Content-Type': 'application/json',
+			// 	Accept: 'application/json',
+			// },
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText);
+      }
+
+      const response = await res.json();
+			
+      if (response.Status === 'success' && response.HttpCode === 201) {
+        errorMessage.Text = "File uploaded successfully";
+        errorMessage.Colour = 'text-success-500';
+				const imageUrl = response.Data.FileResources[0].url;
+				console.log('imageResourceId', imageUrl);
+				const imageResourceId_ = response.Data.FileResources[0].id;
+				console.log('ImageResource', imageResourceId_);
+				if (imageResourceId_) {
+					imageResourceId = imageResourceId_;
+									return true;
+				}
+				console.log(imageResourceId);
+      
+      } else {
+        errorMessage.Text = response.Message;
+        errorMessage.Colour = 'text-error-500';
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      errorMessage.Text = 'Error uploading file: ' + error.message;
+      errorMessage.Colour = 'text-error-500';
+    }
+	}
 </script>
 
-<main class="h-screen mb-10">
-	<BreadCrumbs crumbs={breadCrumbs} />
+<BreadCrumbs crumbs={breadCrumbs} />
 
-	<div class="">
-		<form
-			method="post"
-			action="?/createSymptomAction"
-			class="w-full bg-[#ECE4FC] lg:mt-10 md:mt-8 sm:mt-6 mb-10 mt-4 lg:max-w-4xl md:max-w-xl sm:max-w-lg  rounded-lg mx-auto"
-		>
-			<div class="w-full  h-14 rounded-t-lg p-3  bg-[#7165E3]">
-				<div class="ml-3 relative flex flex-row text-white text-xl">
-					Create Symptom
-					<a href={symptomRoute}>
-						<Fa
-							icon={faMultiply}
-							size="lg"
-							class="absolute right-0 lg:pr-3 md:pr-2 pr-0 text-white"
-						/>
+<form
+	method="post"
+  enctype="multipart/form-data"
+	action="?/createSymptomAction"
+	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
+	use:enhance
+>
+	<table class="table">
+		<thead class="!variant-soft-secondary">
+			<tr>
+				<th>Create Symptom</th>
+				<th class="text-end">
+					<a href={symptomRoute} class="btn p-2 -my-2 variant-soft-secondary">
+						<Icon icon="material-symbols:close-rounded" class="text-lg" />
 					</a>
-				</div>
-			</div>
-
-			<div class="flex items-center mb-4 mt-10 lg:mx-16 md:mx-12 mx-10">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3 ">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span>Symptom *</span>
-					</label>
-				</div>
-				<div class="w-1/2 md:w-2/3 lg:w-2/3">
+				</th>
+			</tr>
+		</thead>
+		<tbody class="!bg-white dark:!bg-inherit">
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Symptom *</td>
+				<td>
 					<input
 						type="text"
 						name="symptom"
 						required
 						placeholder="Enter symptom here..."
-						class="input w-full {form?.errors?.symptom
-							? 'border-error-300 text-error-500'
-							: 'border-primary-200 text-primary-500'}"
-						value={form?.data?.symptom ?? ''}
+						class="input w-full {form?.errors?.symptom ? 'border-error-300 text-error-500' : ''}"
 					/>
 					{#if form?.errors?.symptom}
 						<p class="text-error-500 text-xs">{form?.errors?.symptom[0]}</p>
 					{/if}
-				</div>
-			</div>
-
-			<div class="flex items-start mb-2 lg:mx-16 md:mx-12 mx-10">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3 ">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span>Description</span>
-					</label>
-				</div>
-				<div class="w-1/2 md:w-2/3 lg:w-2/3">
-					<textarea
-						name="description"
-						placeholder="Enter description here..."
-						class="textarea w-full {form?.errors?.description
-							? 'border-error-300 text-error-500'
-							: 'border-primary-200 text-primary-500'}"
-					/>
-					{#if form?.errors?.description}
-						<p class="text-error-500 text-xs">{form?.errors?.description[0]}</p>
-					{/if}
-				</div>
-			</div>
-
-			<div class="flex items-start mb-4 lg:mx-16 md:mx-12 mx-10">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3 ">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span>Tags</span>
-					</label>
-				</div>
-				<div class="w-1/2 md:w-2/3 lg:w-2/3">
-					<InputChip
-						chips="variant-filled-error rounded-2xl"
-						name="tags"
-						placeholder={tagsPlaceholder}
-					/>
-					{#if form?.errors?.tags}
-						<p class="text-error-500 text-xs">{form?.errors?.tags[0]}</p>
-					{/if}
-				</div>
-			</div>
-
-			<div class="flex items-center mb-4 lg:mx-16 md:mx-12 mx-10">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3 ">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span>Language *</span>
-					</label>
-				</div>
-				<div class="w-1/2 md:w-2/3 lg:w-2/3">
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td class="align-top">Description</td>
+				<td>
+					<textarea name="description" placeholder="Enter description here..." class="textarea" />
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td class="align-top">Tags</td>
+				<td>
+					<InputChip chips="variant-filled-error rounded-2xl" name="tags" />
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Language *</td>
+				<td>
 					<input
 						type="text"
 						name="language"
 						required
 						placeholder="Enter language here..."
-						class="input w-full {form?.errors?.language
-							? 'border-error-300 text-error-500'
-							: 'border-primary-200 text-primary-500'}"
-						value={form?.data?.language ?? ''}
+						class="input w-full {form?.errors?.language ? 'border-error-300 text-error-500' : ''}"
 					/>
 					{#if form?.errors?.language}
 						<p class="text-error-500 text-xs">{form?.errors?.language[0]}</p>
 					{/if}
-				</div>
-			</div>
-
-			<div class="flex items-center my-4 lg:mx-16 md:mx-12 mx-10">
-				<div class="w-1/2 md:w-1/3 lg:w-1/3 ">
-					<!-- svelte-ignore a11y-label-has-associated-control -->
-					<label class="label">
-						<span>Image *</span>
-					</label>
-				</div>
-				<div class="flex flex-row gap-8 w-1/2 md:w-2/3 lg:w-2/3 ">
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td class="align-top">Image *</td>
+				<td>
 					<input
-						accept="image/png, image/jpeg"
+						name="fileinput"
 						type="file"
 						required
-						id="fileUpload"
-						class="input"
-						name="fileinput"
+						class="true input w-full"
 						placeholder="Image"
+                        bind:this={symptomImage}
 						on:change={async (e) => await onFileSelected(e)}
 					/>
+                    {#if errorMessage}
+                        <p class= {`${errorMessage.Colour}`}>{errorMessage.Text}</p>
+                    {/if}
 					<input type="hidden" name="imageResourceId" value={imageResourceId} />
-					{#if form?.errors?.imageResourceId}
-						<p class="text-error-500 text-xs">{form?.errors?.imageResourceId[0]}</p>
-					{/if}
-				</div>
-			</div>
-
-			<div class="flex items-center mt-7 lg:mx-16 md:mx-12 mr-10">
-				<div class="w-3/4" />
-				<div class="w-1/4 ">
-					<button type="submit" class="btn variant-filled-primary w-full mb-10 "> Submit </button>
-				</div>
-			</div>
-		</form>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="flex gap-2 p-2 justify-end">
+		<button type="submit" class="btn variant-filled-secondary">Submit</button>
 	</div>
-</main>
+</form>

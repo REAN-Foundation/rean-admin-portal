@@ -1,7 +1,7 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { BACKEND_API_URL } from '$env/static/private';
 import type { PageServerLoad } from './$types';
-import { getOrganizationById } from '../../../../../api/services/organizations';
+import { getOrganizationById } from '../../../../../api/services/reancare/organizations';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -18,6 +18,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		const imageResourceId = organization.ImageResourceId;
 
 		const id = response.Data.Organization.id;
+		console.log("organization", organization.Adresseses);
 
 		if (imageResourceId) {
 			organization['ImageUrl'] =

@@ -4,7 +4,7 @@ import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
-import { getModuleById, updateModule } from '../../../../../../../api/services/modules';
+import { getModuleById, updateModule } from '../../../../../../../api/services/reancare/modules';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -78,7 +78,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/courses/${courseId}/modules/${id}/view`,
-			successMessage(`Module updated successfully !`),
+			successMessage(`Module updated successfully!`),
 			event
 		);
 	}

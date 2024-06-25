@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createPersonRoleType } from '../../../../api/services/person-role-types';
+import { createPersonRoleType } from '../../../../api/services/reancare/person-role-types';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +49,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/person-role-types/${id}/view`,
-			successMessage(`Person role type created successfully !`),
+			successMessage(`User role created successfully!`),
 			event
 		);
 	}

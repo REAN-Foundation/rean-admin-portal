@@ -1,18 +1,25 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteSymptom } from '../../services/symptoms';
+import { deleteSymptom } from '../../services/reancare/symptoms';
+import { errorMessage, successMessage } from '$lib/utils/message.utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
 //////////////////////////////////////////////////////////////
 
 export const DELETE = async (event: RequestEvent) => {
 	const request = event.request;
 	const data = await request.json();
-
-	try {
-		console.log('Inside symptom server endpoints');
-		const response = await deleteSymptom(data.sessionId, data.symptomId);
-		return new Response(response.message);
-	} catch (err) {
-		console.error(`Error deleting symptom: ${err.message}`);
-		return new Response(err.message);
+	console.log('Inside symptom server endpoints');
+	let response;
+	try{
+		response = await deleteSymptom(data.sessionId, data.symptomId);
+	}catch(error){
+		throw redirect(
+			errorMessage('Error deleting symptom.'), 
+			event
+			);
 	}
+	throw redirect(
+		successMessage(response.Message),
+		event
+		);	
 };

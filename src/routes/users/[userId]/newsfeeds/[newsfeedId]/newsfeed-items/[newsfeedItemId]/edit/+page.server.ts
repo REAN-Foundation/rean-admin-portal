@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getNewsfeedItemById,
 	updateNewsfeedItem
-} from '../../../../../../../api/services/newsfeed-items';
+} from '../../../../../../../api/services/reancare/newsfeed-items';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -87,7 +87,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/newsfeeds/${newsfeedId}/newsfeed-items/${id}/view`,
-			successMessage(`Newsfeed item updated successfully !`),
+			successMessage(`Newsfeed item updated successfully!`),
 			event
 		);
 	}

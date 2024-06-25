@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createKnowledgeNugget } from '../../../../api/services/knowledge-nuggets';
+import { createKnowledgeNugget } from '../../../../api/services/reancare/knowledge-nuggets';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -66,7 +66,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/knowledge-nuggets/${id}/view`,
-			successMessage(`Knowledge nuggets created successfully !`),
+			successMessage(`Knowledge nuggets created successfully!`),
 			event
 		);
 	}

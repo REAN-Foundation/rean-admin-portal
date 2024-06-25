@@ -1,11 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
-	export let labels: string[] = [];
+	import {
+		getChartColors,
+		getTickColorLight,
+		getTickColorDark
+  	} from '$lib/themes/theme.selector';
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  const chartColors = getChartColors();
+  const tickColorLight = getTickColorLight();
+  const tickColorDark = getTickColorDark();
+
+  export let labels: string[] = [];
 	export let dataSource: number[] = [];
 	export let title;
 	let barChart;
 	let ctx;
+	$:dataSource;
+	$:labels
 
 	onMount(() => {
 		ctx = barChart.getContext('2d');
@@ -16,8 +30,8 @@
 				datasets: [
 					{
 						data: dataSource,
-						backgroundColor: ['#351e61', '#5832A1', '#7165E3', '#ECE4FC'],
-						borderColor: ['#351e61', '#5832A1', '#7165E3', '#ECE4FC'],
+						backgroundColor: chartColors,
+						borderColor: chartColors,
 						borderWidth: 1
 					}
 				]
@@ -25,15 +39,15 @@
 			options: {
 				responsive: true,
 				maintainAspectRatio: false,
-				indexAxis: "x",
+				indexAxis: 'x',
 				scales: {
 					x: {
 						grid: {
 							display: false
 						},
 						ticks: {
-							color: '#5832A1'
-						},
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+						}
 					},
 					y: {
 						beginAtZero: true,
@@ -41,37 +55,37 @@
 							display: false
 						},
 						ticks: {
-							color: '#5832A1' // set y-axis label color here
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight // set y-axis label color here
 						}
 					}
 				},
 				layout: {
-          padding: {
-            bottom: 20, // Adjust the bottom padding value as needed
-          },
-        },
+					padding: {
+						bottom: 20 // Adjust the bottom padding value as needed
+					}
+				},
 				plugins: {
 					legend: {
 						display: false,
 						position: 'top',
 						align: 'center',
 						labels: {
-							color: '#5832A1'
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
 						}
 					},
 					title: {
-					    display: true,
-					    text: title,
-					    position: "top",
-							color: '#5832A1',
-							align:'center',
-							padding:20,
-							font:{
-					  size: 22,
-					  weight: 'normal',
-					  lineHeight: 1.2,
-							},
-					},
+						display: false,
+						text: title,
+						position: 'top',
+						color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
+						align: 'center',
+						padding: 20,
+						font: {
+							size: 22,
+							weight: 'normal',
+							lineHeight: 1.2
+						}
+					}
 				}
 			}
 		});

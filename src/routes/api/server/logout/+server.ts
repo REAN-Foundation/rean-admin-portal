@@ -1,7 +1,7 @@
 import { CookieUtils } from '$lib/utils/cookie.utils';
-import { SessionManager } from '../../session.manager';
+import { SessionManager } from '../../sessions/session.manager';
 import { redirect, type RequestEvent } from '@sveltejs/kit';
-import { logout } from '../../services/user';
+import { logout } from '../../services/reancare/user';
 
 ////////////////////////////////////////////////////////////////
 

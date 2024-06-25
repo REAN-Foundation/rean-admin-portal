@@ -5,8 +5,8 @@ import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from '../$types';
-import { createLearningJourney } from '../../../../api/services/learning-journeys';
-import { searchCourses } from '../../../../api/services/courses';
+import { createLearningJourney } from '../../../../api/services/reancare/learning-journeys';
+import { searchCourses } from '../../../../api/services/reancare/courses';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -93,7 +93,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/learning-journeys/${learningPathId}/view`,
-			successMessage(`Learning journey created successfully !`),
+			successMessage(`Learning journey created successfully!`),
 			event
 		);
 	}

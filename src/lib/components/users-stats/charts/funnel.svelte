@@ -2,8 +2,16 @@
 	import { onMount } from 'svelte';
 	import Chart, { LinearScale, CategoryScale } from 'chart.js/auto';
 	import { FunnelController, TrapezoidElement } from 'chartjs-chart-funnel';
-	import datalabels from 'chartjs-plugin-datalabels';
-  export let labels: string[];
+	import {
+		getChartColors,
+
+  	} from '$lib/themes/theme.selector';
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  const chartColors = getChartColors();
+
+    export let labels: string[];
 	export let dataSource: number[];
 
 	Chart.register(FunnelController, TrapezoidElement, LinearScale, CategoryScale);
@@ -20,8 +28,8 @@
 				datasets: [
 					{
             data:dataSource,
-						backgroundColor: ['#351e61', '#5832A1', '#7165E3', '#ECE4FC'],
-						borderColor: ['#351e61', '#5832A1', '#7165E3', '#ECE4FC'],
+						backgroundColor: chartColors,
+						borderColor: chartColors,
 						borderWidth: 1
 					},
       //     datalabels: {

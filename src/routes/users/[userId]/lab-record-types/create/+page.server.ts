@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createLabRecordType } from '../../../../api/services/lab-record-types';
+import { createLabRecordType } from '../../../../api/services/reancare/lab-record-types';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -63,7 +63,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/lab-record-types/${id}/view`,
-			successMessage(`Lab record type created successfully !`),
+			successMessage(`Lab record created successfully!`),
 			event
 		);
 	}

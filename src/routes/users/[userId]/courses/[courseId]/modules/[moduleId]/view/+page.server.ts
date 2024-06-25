@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getModuleById } from '../../../../../../../api/services/modules';
+import { getModuleById } from '../../../../../../../api/services/reancare/modules';
 
 ////////////////////////////////////////////////////////////////////////////
 

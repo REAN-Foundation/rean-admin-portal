@@ -1,4 +1,4 @@
-import { getFileResourceById } from '../../../services/file.resource';
+import { getFileResourceById } from '../../../services/reancare/file.resource';
 
 //////////////////////////////////////////////////////////////
 

@@ -8,6 +8,17 @@
     ArcElement,
     CategoryScale,
   } from 'chart.js';
+  import {
+    getChartColors,
+    getHoverChartColors,
+
+  } from '$lib/themes/theme.selector';
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  const chartColors = getChartColors();
+  const hoverChartColors = getHoverChartColors();
+
 
   export let ageWiseUsers;
 
@@ -26,26 +37,14 @@
   datasets: [
     {
       data:sourceData,
-      backgroundColor: [
-        '#351e61',
-        '#5832A1',
-        '#7165E3',
-        '#ECE4FC',
-      
-      ],
-      hoverBackgroundColor: [
-        '#422679',
-        '#8a70bd',
-        '#9c93eb',
-        '#f2ecfd',
-      ],
+      backgroundColor: chartColors,
+      hoverBackgroundColor: hoverChartColors,
     },
   ],
 };
 
  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
- 
+
 </script>
 
 <Pie id="dataSource" bind:this={ageWiseUsers} {data} options={{ responsive: true }} />
-

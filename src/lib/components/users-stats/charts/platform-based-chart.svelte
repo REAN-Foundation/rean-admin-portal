@@ -1,10 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
+	import {
+		getTickColorLight,
+		getTickColorDark
+  	} from '$lib/themes/theme.selector';
+
+  /////////////////////////////////////////////////////////////////////////////
+
+  const tickColorLight = getTickColorLight();
+  const tickColorDark = getTickColorDark();
+
 	export let lables: string[] = [];
-	export let totalUsersData: number[] = [];
-	export let androidUsersData: number[] = [];
-	export let iOSUsersData: number[] = [];
+	export let totalUsers: number[] = [];
+	export let androidUsers: number[] = [];
+	export let iOSUsers: number[] = [];
 	let barChart;
 	let ctx;
 
@@ -17,19 +27,19 @@
 				datasets: [
 					{
 						label: 'Total users',
-						data: totalUsersData,
+						data: totalUsers,
 						borderColor: 'green',
 						fill: false
 					},
 					{
 						label: 'Android users',
-						data: androidUsersData,
+						data: androidUsers,
 						borderColor: 'blue',
 						fill: false
 					},
 					{
-						label: 'IOS users',
-						data: iOSUsersData,
+						label: 'iOS users',
+						data: iOSUsers,
 						borderColor: 'purple',
 						fill: false
 					}
@@ -44,7 +54,7 @@
 							display: false
 						},
 						ticks: {
-							color: '#5832A1' // set x-axis label color here
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight // set x-axis label color here
 						}
 					},
 					y: {
@@ -52,24 +62,24 @@
 							display: false
 						},
 						ticks: {
-							color: '#5832A1' // set y-axis label color here
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight // set y-axis label color here
 						}
 					}
 				},
 				layout: {
-          padding: {
-            bottom: 20, // Adjust the bottom padding value as needed
-          },
-        },
+					padding: {
+						bottom: 20 // Adjust the bottom padding value as needed
+					}
+				},
 				plugins: {
 					legend: {
 						display: true,
 						position: 'top',
 						align: 'center',
 						labels: {
-							color: '#5832A1',
-							boxWidth:10,
-							boxHeight:10,
+							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
+							boxWidth: 10,
+							boxHeight: 10
 						}
 					}
 				}

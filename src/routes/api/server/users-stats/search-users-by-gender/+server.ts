@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { getGenderWiseUsers } from '$routes/api/services/statistics';
+import { getGenderWiseUsers } from '$routes/api/services/reancare/statistics';
 
 //////////////////////////////////////////////////////////////
 

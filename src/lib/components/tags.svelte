@@ -1,5 +1,4 @@
 <script lang="ts">
-	// @ts-nocheck
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 	let tag = '';
@@ -216,7 +215,8 @@
 			"'": '&#x27;',
 			'/': '&#x2F;'
 		};
-		return ('' + string).replace(/[&<>"'\/]/g, (match) => htmlEscapes[match]);
+		// return ('' + string).replace(/[&<>"'\/]/g, (match) => htmlEscapes[match]);
+    return ('' + string).replace(/[&<>"']/g, (match) => htmlEscapes[match]);
 	}
 
 	function buildMatchMarkup(search, value) {
@@ -334,7 +334,6 @@
 	class:sti-layout-disable={disable}
 	bind:this={layoutElement}
 >
-
 	<label for={id} class={labelShow ? '' : 'sr-only'}>{labelText}</label>
 
 	{#if tags.length > 0}
@@ -393,10 +392,8 @@
 	/* CSS svelte-tags-input */
 	.svelte-tags-input,
 	/* .svelte-tags-input-tag, */
-	.svelte-tags-input-matchs{
-	/* .svelte-tags-input-layout label { */
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-			'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+	.svelte-tags-input-matchs {
+		/* .svelte-tags-input-layout label { */
 		font-size: 14px;
 		padding: 2px 5px;
 	}

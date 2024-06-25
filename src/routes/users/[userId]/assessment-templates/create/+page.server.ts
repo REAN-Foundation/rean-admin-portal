@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createAssessmentTemplate } from '../../../../api/services/assessment-templates';
+import { createAssessmentTemplate } from '../../../../api/services/reancare/assessments/assessment-templates';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -13,8 +13,8 @@ const createAssessmentTemplateSchema = zfd.formData({
 	type: z.string(),
 	provider: z.string().optional(),
 	providerAssessmentCode: z.string().optional(),
-	serveListNodeChildrenAtOnce: zfd.checkbox({ trueValue: 'true' }),
-	scoringApplicable: zfd.checkbox({ trueValue: 'true' })
+	serveListNodeChildrenAtOnce: zfd.checkbox(),
+	scoringApplicable: zfd.checkbox()
 });
 
 export const actions = {
@@ -64,7 +64,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/assessment-templates/${id}/view`,
-			successMessage(`Assessment template created successfully !`),
+			successMessage(`Assessment created successfully!`),
 			event
 		);
 	}

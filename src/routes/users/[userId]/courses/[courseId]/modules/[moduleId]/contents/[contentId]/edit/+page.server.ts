@@ -7,7 +7,7 @@ import type { PageServerLoad } from './$types';
 import {
 	getCourseContentById,
 	updateCourseContent
-} from '../../../../../../../../../api/services/course.contents';
+} from '../../../../../../../../../api/services/reancare/course.contents';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -86,7 +86,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/courses/${courseId}/modules/${moduleId}/contents/${id}/view`,
-			successMessage(`Content updated successfully !`),
+			successMessage(`Content updated successfully!`),
 			event
 		);
 	}

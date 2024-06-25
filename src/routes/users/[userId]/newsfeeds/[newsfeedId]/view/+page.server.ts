@@ -1,6 +1,6 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getNewsfeedById } from '../../../../../api/services/newsfeeds';
+import { getNewsfeedById } from '../../../../../api/services/reancare/newsfeeds';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +17,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 		const newsfeed = response.Data.Rssfeed;
 		const id = response.Data.Rssfeed.id;
 		return {
+			sessionId,
 			location: `${id}/edit`,
 			newsfeed,
 			message: response.Message

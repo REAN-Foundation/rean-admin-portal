@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createSymptom } from '../../../../api/services/symptoms';
+import { createSymptom } from '../../../../api/services/reancare/symptoms';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,7 @@ const createSymptomSchema = zfd.formData({
 	description: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	language: z.string().optional(),
-	imageResourceId: z.string().optional()
+	imageResourceId: z.string().uuid()
 });
 
 export const actions = {
@@ -42,7 +42,7 @@ export const actions = {
 			};
 		}
 
-		const response = await createSymptom(
+  		const response = await createSymptom(
 			sessionId,
 			result.symptom,
 			result.description,
@@ -58,7 +58,7 @@ export const actions = {
 		throw redirect(
 			303,
 			`/users/${userId}/symptoms/${id}/view`,
-			successMessage(`Symptom created successfully !`),
+			successMessage(`Symptom created successfully!`),
 			event
 		);
 	}

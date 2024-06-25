@@ -1,18 +1,25 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { deleteNewsfeed } from '../../services/newsfeeds';
+import { deleteNewsfeed } from '../../services/reancare/newsfeeds';
+import { errorMessage, successMessage } from '$lib/utils/message.utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
 //////////////////////////////////////////////////////////////
 
 export const DELETE = async (event: RequestEvent) => {
 	const request = event.request;
 	const data = await request.json();
-
-	try {
-		console.log('Inside newsfeed server endpoints');
-		const response = await deleteNewsfeed(data.sessionId, data.newsfeedId);
-		return new Response(response.message);
-	} catch (err) {
-		console.error(`Error deleting newsfeed: ${err.message}`);
-		return new Response(err.message);
+	console.log('Inside newsfeed server endpoints');
+	let response;
+	try{
+		response = await deleteNewsfeed(data.sessionId, data.newsfeedId);
+	}catch(error){
+		throw redirect(
+			errorMessage('Error deleting newsfeed.'), 
+			event
+			);
 	}
+	throw redirect(
+		successMessage(response.Message),
+		event
+		);	
 };

@@ -1,17 +1,24 @@
 import { API_CLIENT_INTERNAL_KEY } from '$env/static/private';
 import { error } from '@sveltejs/kit';
-import { SessionManager } from '../session.manager';
+import { SessionManager } from '../sessions/session.manager';
 import chalk from 'chalk';
 
 /////////////////////////////////////////////////////////////////////////
 
-export const get_ = async (sessionId: string, url: string, authorizeUser = false) => {
+export const get_ = async (
+	sessionId: string,
+	url: string,
+	authorizeUser = false,
+    xApiKey?
+) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
-	console.log(`accessToken = ${accessToken}`);
+	// console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -31,7 +38,6 @@ export const get_ = async (sessionId: string, url: string, authorizeUser = false
 		}
 	}
 	console.log(chalk.green(`get_ response message: ${response.Message}`));
-	// console.log(chalk.green(`get_ response: ${JSON.stringify(response, null, 2)}`));
 	return response;
 };
 
@@ -39,14 +45,16 @@ export const post_ = async (
 	sessionId: string,
 	url: string,
 	bodyObj: unknown,
-	authorizeUser = false
+	authorizeUser = false,
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
-	//console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -72,14 +80,16 @@ export const put_ = async (
 	sessionId: string,
 	url: string,
 	bodyObj: unknown,
-	authorizeUser = false
+	authorizeUser = false,
+    xApiKey?
 ) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
-	//console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
@@ -89,7 +99,6 @@ export const put_ = async (
 		body,
 		headers
 	});
-
 	const response = await res.json();
 	if (response.Status === 'failure' || (response.HttpCode !== 200 && response.HttpCode !== 201)) {
 		console.log(chalk.red(`put_ response message: ${response.Message}`));
@@ -99,13 +108,19 @@ export const put_ = async (
 	return response;
 };
 
-export const delete_ = async (sessionId: string, url: string, authorizeUser = false) => {
+export const delete_ = async (
+	sessionId: string,
+	url: string,
+	authorizeUser = false,
+    xApiKey?
+) => {
 	const session = await SessionManager.getSession(sessionId);
 	const accessToken = session.accessToken;
-	//console.log(`accessToken = ${accessToken}`);
 	const headers = {};
 	headers['Content-Type'] = 'application/json';
-	headers['x-api-key'] = API_CLIENT_INTERNAL_KEY;
+    if (xApiKey) {
+        headers['x-api-key'] = xApiKey;
+    }
 	if (authorizeUser) {
 		headers['Authorization'] = `Bearer ${accessToken}`;
 	}
