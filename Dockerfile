@@ -30,9 +30,9 @@ COPY --from=builder ./app/ ./
 # COPY --from=builder ./app/build .
 # COPY --from=builder ./app/entrypoint.sh ./
 
-RUN npm install
+RUN npm install --production
 
-# # COPY . /app
+COPY . /app
 ##
 ##
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
