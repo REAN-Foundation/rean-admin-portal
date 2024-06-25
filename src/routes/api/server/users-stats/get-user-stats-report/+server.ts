@@ -12,7 +12,7 @@ export const GET = async (event: RequestEvent) => {
     const roleId = event.locals.sessionUser.roleId;
     let response;
 	try {
-        if (roleId == "1") {
+        if (roleId == "1" || roleId == "2") {
             response = await getDailySystemStatistics(sessionId);
         } else {
             response = await getDailyTenantStatistics(sessionId, tenantId);

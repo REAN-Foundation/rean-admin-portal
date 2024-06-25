@@ -25,8 +25,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 };
 
 const createUserSchema = zfd.formData({
-	firstName: z.string().min(3).max(256),
-	lastName: z.string().min(3).max(256),
+	firstName: z.string().min(1).max(256),
+	lastName: z.string().min(1).max(256),
 	phone: z.string().min(10).max(64),
 	email: z.string().email().min(10).max(64),
 	role: z.string().min(10).max(64),

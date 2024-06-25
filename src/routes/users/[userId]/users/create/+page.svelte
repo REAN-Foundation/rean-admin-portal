@@ -209,9 +209,9 @@
 							: 'border-primary-200'}"
 					/> -->
 						<PasswordInput/>
-					{#if form?.errors?.password}
-						<p class="text-error-500 text-xs">{form?.errors?.password[0]}</p>
-					{/if}
+					<!-- {#if form?.errors?.password} -->
+						<p class="border-b-surface-700">Password should be of minimum 8 characters & contain at least 1 capital letter , 1 digit & 1 special character</p>
+					<!-- {/if} -->
 				</td>
 			</tr>
 			<!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
