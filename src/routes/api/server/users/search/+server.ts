@@ -25,16 +25,19 @@ export const GET = async (event: RequestEvent) => {
 			firstName,
 			phone,
 			email,
-            roleIds,
+      roleIds,
 			orderBy: sortBy,
 			order: sortOrder,
 			itemsPerPage,
 			pageIndex
 		};
 		const response = await searchUsers(sessionId, searchParams);
+    
 		const users = response.Data.Users;
-    users.Items = await addPermissionMatrix(users.Items, userRole, userId, tenantId, userRoleId);
-		return new Response(JSON.stringify(users));
+    // console.log("---",  users);
+    users.Items = await addPermissionMatrix(sessionId, users.Items, userRole, userId, tenantId, userRoleId);
+		// console.log("***",  users);
+    return new Response(JSON.stringify(users));
 	} catch (err) {
 		console.error(`Error retriving users: ${err.message}`);
 		return new Response(err.message);

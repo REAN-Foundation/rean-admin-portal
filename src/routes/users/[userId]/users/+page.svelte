@@ -37,7 +37,7 @@
 	let isSortingEmail = false;
 	let isSortingPhone = false;
 	let items = 10;
-    let selectedRoles = [];
+    let selectedRoles = data.selectedRoles;
 
 	let paginationSettings = {
 		page: 0,
@@ -52,15 +52,15 @@
         }
     }
 
-    const tmp = LocalStorageUtils.getItem('personRoles');
-    const personRoles = JSON.parse(tmp);
-    personRoles?.map((x) => {
-        if (x.RoleName === "System admin" || 
-            x.RoleName === "System user"  ||
-            x.RoleName === "Tenant admin" ||
-            x.RoleName === "Tenant user") {
-                selectedRoles.push(x.id);
-            }});
+    // const tmp = LocalStorageUtils.getItem('personRoles');
+    // const personRoles = JSON.parse(tmp);
+    // personRoles?.map((x) => {
+    //     if (x.RoleName === "System admin" || 
+    //         x.RoleName === "System user"  ||
+    //         x.RoleName === "Tenant admin" ||
+    //         x.RoleName === "Tenant user") {
+    //             selectedRoles.push(x.id);
+    //         }});
    
     $: console.log("selectedRole", selectedRoles);
     async function searchUser(model) {
@@ -81,6 +81,7 @@
         headers: { 'content-type': 'application/json' }
       });
       const searchResult = await res.json();
+      console.log('URL  : ' + url)
       console.log('Response: ' + JSON.stringify(searchResult));
       totalUsersCount = searchResult.TotalCount;
       users = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
