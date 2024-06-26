@@ -22,7 +22,7 @@
 			ratio: `${Math.ceil(usersCount.NotDeletedUsers.Ratio)}`
 		},
 		{
-			usersDetail: 'Users With Active Session',
+			usersDetail: 'Current Active Users',
 			count: usersCount.UsersWithActiveSession.Count,
 			ratio: `${Math.ceil(usersCount.UsersWithActiveSession.Ratio)}`
 		},
@@ -210,7 +210,7 @@
 										<td
 											style="width:10%;"
 											class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
-											>Total Users</td
+											>Onboarded Users</td
 										>
 										<td
 											style="width:10%;"
