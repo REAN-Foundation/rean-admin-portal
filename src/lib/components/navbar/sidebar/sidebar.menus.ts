@@ -946,9 +946,9 @@ function addGMUMenus(
     
         const pdfUpload: SidebarMenu = {
             name    : 'Appointment-pdf-Upload',
-            title   : 'PDF Upload',
+            title   : 'Set Appointment',
             icon    : 'mdi:event-edit',
-            link    : `/users/${userId}/gmu/appointment-uploads`,
+            link    : `/users/${userId}/appointment-followup/set-appointment`,
             children: []
         };
         menuList.push(pdfUpload);
@@ -957,7 +957,7 @@ function addGMUMenus(
             name    : 'Appointment-Status-Report',
             title   : 'Status Report',
             icon    : 'octicon:id-badge-16',
-            link    : `/users/${userId}/gmu/summary-uploads`,
+            link    : `/users/${userId}/appointment-followup/summary-uploads`,
             children: []
         };
         menuList.push(statusReport);

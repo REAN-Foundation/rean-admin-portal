@@ -8,8 +8,8 @@
     let notarrived ='';
     let repliedYes ='';
     let repliedNo = '';
-
-    const appointmentReport = data.AppointmentReport;
+    const tenant = data.AppointmentReport.tenant
+    const appointmentReport = data.AppointmentReport.data;
     console.log(appointmentReport)
     let summary = appointmentReport['Summary'];
     let filedata = appointmentReport['File_data'];
@@ -17,19 +17,23 @@
     // console.log(filedata[0].Appointment_time)
     type TableRow = {
         srNo: number;
-        facilityName: string;
+        patientName: string;
+        hospitalName: string;
+        emrId: string
         patientPhoneNo: string;
-        participantCode: string;
-        nextAppointmentDate: string;
+        patientStatus: string;
+        appointmentTime: string;
         replied: string;
     };
     let numRows = appointmentReport['File_data'].length;;
     let tableData: TableRow[] = Array.from({ length: numRows }, (_, i) => ({
         srNo: i + 1,
-        facilityName: '',
+        patientName: '',
+        hospitalName: '',
+        emrId: '',
         patientPhoneNo: '',
-        participantCode: '',
-        nextAppointmentDate: '',
+        patientStatus: '',
+        appointmentTime: '',
         replied: ''
     }));
  
@@ -37,22 +41,30 @@
     // function to add patient name
     function addPatientName(newPatientName: string, rowNumber: number): void {
         // Update the specified row with the new patient name
-        tableData[rowNumber].facilityName = newPatientName;
+        tableData[rowNumber].patientName = newPatientName ? newPatientName : null;
+    }
+    function addHospitalName(newHospitalName: string, rowNumber: number): void {
+        // Update the specified row with the new patient name
+        tableData[rowNumber].hospitalName = newHospitalName ? newHospitalName : null;
+    }
+    function addEMRId(newEMRId: string, rowNumber: number): void {
+        // Update the specified row with the new patient name
+        tableData[rowNumber].emrId = newEMRId ? newEMRId : null;
     }
     // function to add patient phone number
     function addPatientPhoneNo(newPatientPhoneNo: string, rowNumber: number): void {
         // Update the specified row with the new phone number
-        tableData[rowNumber].patientPhoneNo = newPatientPhoneNo;
+        tableData[rowNumber].patientPhoneNo =  newPatientPhoneNo ? newPatientPhoneNo : null;
     }
     // function to add patient status
     function addPatientStatus(newPatientStatus: string, rowNumber: number): void {
         // Update the specified row with the new patient status
-        tableData[rowNumber].participantCode = newPatientStatus;
+        tableData[rowNumber].patientStatus = newPatientStatus ? newPatientStatus : null ;
     }
     // function to add appointment time
     function addAppointmentTime(newAppointmentTime: string, rowNumber: number): void {
         // Update the specified row with the new appointment time
-        tableData[rowNumber].nextAppointmentDate = newAppointmentTime;
+        tableData[rowNumber].appointmentTime = newAppointmentTime ?  newAppointmentTime : null;
     }
     // function to add replied
     function addReplied(newReplied: string, rowNumber: number): void {
@@ -62,10 +74,12 @@
     onMount(() => {
         setTimeout(() => {
                     for (let i = 0; i < appointmentReport['File_data'].length; i++) {
-                        addPatientName(`${filedata[i].Facilityname}`,i);
+                        addPatientName(`${filedata[i].Name_of_patient}`,i);
+                        addHospitalName(`${filedata[i].Facilityname}`,i)
+                        addEMRId(`${filedata[i].Participant_code}`,i)
                         addPatientPhoneNo(`${filedata[i].Phone_number}`,i);
-                        addPatientStatus(`${filedata[i].Participant_code}`, i);
-                        addAppointmentTime(`${filedata[i].Next_appointment_date}`, i);
+                        addPatientStatus(`${filedata[i].Patient_status}`, i);
+                        addAppointmentTime(`${filedata[i].Appointment_time}`, i);
                         addReplied(`${filedata[i].Patient_replied}`, i);
                      }
                 }, 1000); 
@@ -74,7 +88,7 @@
 </script>
 
     <div>
-        <h1 class="text-2xl text-center">Summary of Appointment GGHN</h1>
+        <h1 class="text-2xl text-center">Summary of Appointment {tenant}</h1>
     </div>
        <div>
     <p class="text-lg text-right justify-end ">Date {summary['Date']}</p>
@@ -117,23 +131,26 @@
     <table class="bg-white text-center">
         <tr class="border-black rounded-2xl">
             <th class="bg-[#7165E3] text-white border px-4 py-2 font-normal">Sr.no</th>
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Facility Name</th>
+            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Patient Name</th>
+            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Hospital Name</th>
+            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">EMRID</th>
             <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Phone No</th
             >
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Participant Code</th>
-            <!--As appointment date is same to all and we donot have specific time-->
-            <!-- <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Next Appointment</th> -->
+            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Status</th>
+            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Appointment Time</th>
             
             <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Replied</th>
         </tr>
-        {#each tableData as { srNo, facilityName, patientPhoneNo, participantCode, nextAppointmentDate, replied }}
+        {#each tableData as { srNo, patientName, hospitalName, emrId, patientPhoneNo, patientStatus, appointmentTime, replied }}
             <tr>
                 <td class="border px-2 py-2">{srNo}</td>
-                <td class="border px-2 sm:px-8 py-2 text-left">{facilityName}</td>
+                <td class="border px-2 py-2 text-left">{patientName}</td>
+                <td class="border px-2 py-2 text-left">{hospitalName}</td>
+                <td class="border px-2 sm:px-8 py-2 text-left">{emrId}</td>
                 <td class="border px-2 sm:px-8 py-2">{patientPhoneNo}</td>
-                <td class="border px-2 sm:px-8 py-2">{participantCode}</td>
+                <td class="border px-2 sm:px-8 py-2">{patientStatus}</td>
                   <!--As appointment date is same to all and we donot have specific time-->
-                <!-- <td class="border px-2 sm:px-8 py-2">{nextAppointmentDate}</td> -->
+                <td class="border px-2 sm:px-8 py-2">{ appointmentTime}</td>
                 <td class="border px-2 sm:px-8 py-2">{replied}</td>
             </tr>
         {/each}
