@@ -16,13 +16,13 @@ export const actions = {
   console.log('in +page.server date is',date)
     if (typeof date === 'string') {
      const res = await handleDateSubmission(date);
-     console.log("response.status",res.status)
-     const response = await res.json();
-     if (response.Status === "Success") 
-      {
-        throw redirect(303, `/users/${userId}/gghn/summary-uploads`, successMessage(response.Message), event)
-      }
-    throw redirect(303, `/users/${userId}/gghn/appointment-date`, errorMessage(response.Message), event)
+    //  const response = await res.json();
+    //  console.log("response.status",res.status)
+    //  if (res.status === 201) 
+    //   {
+    //     throw redirect(303, `/users/${userId}/gghn/summary-uploads`, successMessage("response.Message"), event)
+    //   }
+    throw redirect(303, `/users/${userId}/gghn/appointment-uploads`, successMessage("Reminder set!"), event)
     }
   }
 };
