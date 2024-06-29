@@ -99,7 +99,7 @@
 	};
 
 	async function updateScoringCondition(model) {
-		const response = await fetch(`/api/server/assessment-nodes/update-scoring-condition`, {
+		const response = await fetch(`/api/server/assessments/assessment-nodes/update-scoring-condition`, {
 			method: 'POST',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
@@ -107,6 +107,7 @@
 		const resp = await response.text();
 		const scoringCondition = JSON.parse(resp);
 		resolutionScore = scoringCondition.ResolutionScore;
+		console.log('resolutionScore-------',resolutionScore)
 		console.log(response);
 	}
 </script>
