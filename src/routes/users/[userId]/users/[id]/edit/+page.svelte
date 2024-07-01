@@ -210,6 +210,7 @@
 						name="roleId"
 						class="select w-full"
 						placeholder="Select role here..."
+            disabled
 						bind:value={role}
 						on:change={getRoleIdByRoleName}
 					>

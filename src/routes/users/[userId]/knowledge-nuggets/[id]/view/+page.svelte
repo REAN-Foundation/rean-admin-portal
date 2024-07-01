@@ -55,17 +55,17 @@
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Brief Information</td>
-				<td class="!whitespace-normal">{briefInformation}</td>
+				<td class="!whitespace-normal">{briefInformation ? briefInformation : 'Not specified'}</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Detailed Information</td>
-				<td class="!whitespace-normal">{detailedInformation}</td>
+				<td class="!whitespace-normal">{detailedInformation? detailedInformation : 'Not specified'}</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Additional Resource</td>
 				<td>
 					{#if additionalResources.length <= 0}
-						Additional resource not specified
+          Not specified
 					{:else}
 						<ul>
 							{#each additionalResources.split(',') as a}

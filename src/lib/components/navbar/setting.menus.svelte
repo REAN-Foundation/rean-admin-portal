@@ -46,7 +46,7 @@
 	}
 
   let menuItems = [
-    { name: 'My profile', link: '', action: () => myProfile(), icon:'material-symbols:person-outline'},
+    { name: 'My Profile', link: '', action: () => myProfile(), icon:'material-symbols:person-outline'},
     { name: 'Change Password', link: '', action: () => changePassword(), icon:'material-symbols:lock-outline'},
     { name: 'Logout', link: '',action: () => gotoLogout(), icon:'material-symbols:logout'}
     // {
