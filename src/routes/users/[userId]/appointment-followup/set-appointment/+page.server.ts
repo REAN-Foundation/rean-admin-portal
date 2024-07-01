@@ -1,17 +1,16 @@
 // src/routes/+page.server.ts
 // import type { Actions } from './$types';
 import { error, type RequestEvent, type ServerLoadEvent } from '@sveltejs/kit';
-import { handleDateSubmission } from '../../../../api/server/gghn/appointment-date/+server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
-import type { PageData } from './$types';
 import { Helper } from '$lib/utils/helper';
 import { Event } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { writeFile } from 'node:fs/promises';
 import toast, { Toaster } from 'svelte-french-toast';
 import { uploadAppoinmentPdf } from "../../../../api/services/gmu/appointment-upload";
+import { handleDateSubmission } from '$routes/api/services/gghn/appointment-set';
 // //////////////////////////////////////
 
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {

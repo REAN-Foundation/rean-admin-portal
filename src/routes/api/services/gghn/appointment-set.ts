@@ -10,9 +10,9 @@ export async function handleDateSubmission(date: string) {
       method: 'POST'
     });
 
-    // if (response.headers.get('Content-Type') != 'application/json'){
-    //     throw new Error ("Received non-JSON response")
-    // }
+    if (response.headers.get('Content-Type') != 'application/json'){
+        throw new Error ("Received non-JSON response")
+    }
 
     if (!response.ok) {
       throw new Error('Network response was not ok');

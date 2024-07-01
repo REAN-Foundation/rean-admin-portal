@@ -130,7 +130,7 @@
 <div class="flex justify-center mt-4 overflow-auto">
     <table class="bg-white text-center">
         <tr class="border-black rounded-2xl">
-            <th class="bg-[#7165E3] text-white border px-4 py-2 font-normal">Sr.no</th>
+            <th class="bg-[#7165E3] text-white border px-2 py-2 font-normal">Sr.no</th>
             <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Patient Name</th>
             <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Hospital Name</th>
             <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">EMRID</th>
