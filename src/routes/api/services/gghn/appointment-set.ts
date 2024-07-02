@@ -9,19 +9,13 @@ export async function handleDateSubmission(date: string) {
     const response = await fetch(url.toString(), {
       method: 'POST'
     });
-
-    if (response.headers.get('Content-Type') != 'application/json'){
-        throw new Error ("Received non-JSON response")
-    }
-
-    if (!response.ok) {
+      console.log("response*..",response)
+      if (!response.ok) {
       throw new Error('Network response was not ok');
     }
     return (response)
-    // const data = await response.json();
-    console.log('in serverside page',date)
-    // Do something with the data
+   
   } catch (error) {
-    console.error('Error fetching data:', error);
-  }
+    throw new Error('Error in setting appointment:',error);
+      }
 }
