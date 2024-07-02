@@ -1,7 +1,7 @@
 import { type Session } from "./session";
 import { type ISessionCache } from "./session.cache.interface";
 import { createClient, type RedisClientType } from 'redis';
-
+import { SESSION_CACHE_HOST } from "$env/static/private";
 ////////////////////////////////////////////////////////////////////////////////////////
 // Using KeyDB as a Redis cache
 // KeyDB is a high-performance fork of Redis with a focus on multithreading and memory efficiency
@@ -36,17 +36,20 @@ export class RedisCache implements ISessionCache {
     private _expiry = 60 * 60 * 24; // 24 hours
 
     constructor() {
-        // Create a client and connect to KeyDB
-        this._client = createClient({
-            socket: {
-                host: process.env.SESSION_CACHE_HOST || 'localhost',
-                port: process.env.SESSION_CACHE_PORT || 6379,
-            },
-            password: process.env.SESSION_CACHE_PASSWORD // if authentication is required
-        });
-        (async () => {
-            if (this._client) await this._client.connect();
-        })();
+        // Create a client and connect to redis 
+        try {
+            this._client = createClient({
+                url: SESSION_CACHE_HOST,
+            });
+            (async () => {
+                if (this._client) await this._client.connect();
+                console.log('Connected to Redis.');
+            })();
+            
+        } catch (error) {
+            console.log('Error in connected to Redis.', error);
+        }
+        
     }
 
     set = async (key: string, value: Session): Promise<void> => {
