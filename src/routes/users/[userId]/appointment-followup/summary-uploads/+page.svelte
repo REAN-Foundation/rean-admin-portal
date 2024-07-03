@@ -41,30 +41,30 @@
     // function to add patient name
     function addPatientName(newPatientName: string, rowNumber: number): void {
         // Update the specified row with the new patient name
-        tableData[rowNumber].patientName = newPatientName ? newPatientName : null;
+        tableData[rowNumber].patientName = newPatientName ? newPatientName : 'Not Specified';
     }
     function addHospitalName(newHospitalName: string, rowNumber: number): void {
         // Update the specified row with the new patient name
-        tableData[rowNumber].hospitalName = newHospitalName ? newHospitalName : null;
+        tableData[rowNumber].hospitalName = newHospitalName ? newHospitalName : 'Not Specified';
     }
     function addEMRId(newEMRId: string, rowNumber: number): void {
         // Update the specified row with the new patient name
-        tableData[rowNumber].emrId = newEMRId ? newEMRId : null;
+        tableData[rowNumber].emrId = newEMRId ? newEMRId : 'Not Specified';
     }
     // function to add patient phone number
     function addPatientPhoneNo(newPatientPhoneNo: string, rowNumber: number): void {
         // Update the specified row with the new phone number
-        tableData[rowNumber].patientPhoneNo =  newPatientPhoneNo ? newPatientPhoneNo : null;
+        tableData[rowNumber].patientPhoneNo =  newPatientPhoneNo ? newPatientPhoneNo : 'Not Specified';
     }
     // function to add patient status
     function addPatientStatus(newPatientStatus: string, rowNumber: number): void {
         // Update the specified row with the new patient status
-        tableData[rowNumber].patientStatus = newPatientStatus ? newPatientStatus : null ;
+        tableData[rowNumber].patientStatus = newPatientStatus ? newPatientStatus :'Not Specified' ;
     }
     // function to add appointment time
     function addAppointmentTime(newAppointmentTime: string, rowNumber: number): void {
         // Update the specified row with the new appointment time
-        tableData[rowNumber].appointmentTime = newAppointmentTime ?  newAppointmentTime : null;
+        tableData[rowNumber].appointmentTime = newAppointmentTime ?  newAppointmentTime : 'Not Specified';
     }
     // function to add replied
     function addReplied(newReplied: string, rowNumber: number): void {
@@ -74,13 +74,13 @@
     onMount(() => {
         setTimeout(() => {
                     for (let i = 0; i < appointmentReport['File_data'].length; i++) {
-                        addPatientName(`${filedata[i].Name_of_patient}`,i);
-                        addHospitalName(`${filedata[i].Facilityname}`,i)
-                        addEMRId(`${filedata[i].Participant_code}`,i)
-                        addPatientPhoneNo(`${filedata[i].Phone_number}`,i);
-                        addPatientStatus(`${filedata[i].Patient_status}`, i);
-                        addAppointmentTime(`${filedata[i].Appointment_time}`, i);
-                        addReplied(`${filedata[i].Patient_replied}`, i);
+                        addPatientName(`${filedata[i].name_of_patient}`,i);
+                        addHospitalName(`${filedata[i].facility_name}`,i)
+                        addEMRId(`${filedata[i].participant_code}`,i)
+                        addPatientPhoneNo(`${filedata[i].phone_number}`,i);
+                        addPatientStatus(`${filedata[i].patient_status}`, i);
+                        addAppointmentTime(`${filedata[i].appointment_time}`, i);
+                        addReplied(`${filedata[i].patient_replied}`, i);
                      }
                 }, 1000); 
             });
