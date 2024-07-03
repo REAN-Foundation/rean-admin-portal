@@ -1,7 +1,7 @@
 import { type Session } from "./session";
 import { type ISessionCache } from "./session.cache.interface";
 import { createClient, type RedisClientType } from 'redis';
-import { SESSION_CACHE_HOST } from "$env/static/private";
+import { SESSION_CACHE_HOST, SESSION_CACHE_PASSWORD } from "$env/static/private";
 ////////////////////////////////////////////////////////////////////////////////////////
 // Using KeyDB as a Redis cache
 // KeyDB is a high-performance fork of Redis with a focus on multithreading and memory efficiency
@@ -40,6 +40,7 @@ export class RedisCache implements ISessionCache {
         try {
             this._client = createClient({
                 url: SESSION_CACHE_HOST,
+                password: SESSION_CACHE_PASSWORD
             });
             (async () => {
                 if (this._client) await this._client.connect();
