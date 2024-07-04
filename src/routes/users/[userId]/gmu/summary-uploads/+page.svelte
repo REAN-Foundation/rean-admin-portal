@@ -71,11 +71,11 @@
     onMount(() => {
         setTimeout(() => {
                     for (let i = 0; i < appointmentReport['File_data'].length; i++) {
-                        addPatientName(`${filedata[i].Name_of_patient}`,i);
-                        addPatientPhoneNo(`${filedata[i].Phone_number}`,i);
-                        addPatientStatus(`${filedata[i].Patient_status}`, i);
-                        addAppointmentTime(`${filedata[i].Appointment_time}`, i);
-                        addReplied(`${filedata[i].Patient_replied}`, i);
+                        addPatientName(`${filedata[i].name_of_patient}`,i);
+                        addPatientPhoneNo(`${filedata[i].phone_number}`,i);
+                        addPatientStatus(`${filedata[i].patient_status}`, i);
+                        addAppointmentTime(`${filedata[i].appointment_time}`, i);
+                        addReplied(`${filedata[i].patient_replied}`, i);
                      }
                 }, 1000); 
             });

@@ -26,7 +26,7 @@ const userId = $page.params.userId;
 				<td> Add date*</td>
 				<td>
 					<input
-						type="date"
+						type="text"
 						class="input" 
 						name="date"
 						placeholder="YYYY-MM-D"

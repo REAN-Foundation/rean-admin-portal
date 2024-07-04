@@ -1,8 +1,10 @@
 import { GMU_URL } from '$env/static/private';
+import { GGHN_BOT_CLIENT_NAME } from '$env/static/private';
+const client = GGHN_BOT_CLIENT_NAME;
 const gmuUrl = GMU_URL;
 
 export async function handleDateSubmission(date: string) {
-    const url = new URL(`${gmuUrl}/appointment-schedules/gghn/set-reminders/date/${date}`);
+    const url = new URL(`${gmuUrl}/appointment-schedules/${client}/set-reminders/date/${date}`);
     // url.searchParams.append('date', date);
 
   try {
