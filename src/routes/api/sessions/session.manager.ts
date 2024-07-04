@@ -1,56 +1,77 @@
 import type { Session } from './session';
+import { SESSION_CACHE_TYPE } from '$env/static/private';
+import { InMemoryCache } from './inmemory.cache'
+import { RedisCache } from './redis.cache';
+import type { ISessionCache } from './session.cache.interface';
+import { building } from '$app/environment';
 
+/////////////////////////////////////////////////////////////////////////////
+
+const getCache = () => {
+    //code should not be executed during the build step.
+    if (!building) {
+        if (SESSION_CACHE_TYPE === 'in-memory') {
+            return new InMemoryCache();
+        }
+        return new RedisCache();
+    }
+};
+
+/////////////////////////////////////////////////////////////////////////////
 export class SessionManager {
 
-	static _sessions = [];
+  static _sessionCache: ISessionCache = getCache();
 
-	static addSession = (sessionId: string, session: Session): Promise<Session | null> => {
-		if (!session?.sessionId) {
+	static addSession = async (sessionId: string, session: Session): Promise<Session | null | undefined> => {
+    if (!session?.sessionId) {
 			return null;
 		}
 		console.log(`Adding session: ${JSON.stringify(session)}`);
-		const existingSession = SessionManager._sessions.find((x) => x.sessionId === sessionId);
-		if (existingSession) {
+
+    const existingSession = await SessionManager._sessionCache.has(sessionId);
+
+    if (existingSession) {
 			// Remove existing
-			SessionManager._sessions = SessionManager._sessions.filter((x) => x.sessionId !== sessionId);
+			await await SessionManager._sessionCache.delete(sessionId);
 		}
-		console.log(`Add new session: ${JSON.stringify(session, null, 2)}`);
-		SessionManager._sessions.push(session);
+
+    await SessionManager._sessionCache.set(sessionId, session);
+    
+    return Promise.resolve(session);
+	};
+
+	static getSession = async (sessionId): Promise<Session | null | undefined> => {
+		const session = await SessionManager._sessionCache.get(sessionId);
+    if (!session) return Promise.resolve(null);
+    console.log(`Retrieving existing session: ${session}`);
 		return Promise.resolve(session);
 	};
 
-	static getSession = (sessionId): Promise<Session | null> => {
-		const session = SessionManager._sessions.find((x) => x.sessionId === sessionId);
-		if (!session) return Promise.resolve(null);
-		// console.log(`Retrieving existing session: ${JSON.stringify(session, null, 2)}`);
-		return Promise.resolve(session);
-	};
-
-	static isValid = (sessionId): Promise<boolean> => {
+	static isValid = async (sessionId): Promise<boolean> => {
 		console.log(`Checking session validity!`);
-		//console.log(`${JSON.stringify(SessionManager._sessions, null, 2)}`);
-		const session = SessionManager._sessions.find((x) => x.sessionId === sessionId);
+		const session = await SessionManager._sessionCache.get(sessionId);
 		if (!session) {
 			return Promise.resolve(false);
 		}
-		//console.log(`Retrieving existing session: ${JSON.stringify(session, null, 2)}`);
+		
 		if (session.expiryDate < new Date()) {
 			return Promise.resolve(false);
 		}
 		return Promise.resolve(true);
 	};
 
-	static removeSession = (sessionId): Promise<Session | null> => {
-		const session = SessionManager._sessions.find((x) => x.sessionId === sessionId);
+	static removeSession = async (sessionId): Promise<Session | null> => {
+		const session = await SessionManager._sessionCache.get(sessionId);
+    console.log(`Removing session: ${session}`);
 		if (!session) {
 			return Promise.resolve(null);
 		}
-		SessionManager._sessions = SessionManager._sessions.filter((x) => x.sessionId !== sessionId);
-		console.log(`Removing session: ${JSON.stringify(session, null, 2)}`);
+		const _sessions = await SessionManager._sessionCache.delete(sessionId);
+		console.log(`Removing session: ${typeof _sessions}`);
 		return Promise.resolve(session);
 	};
 
-	static constructSession = async (user, accessToken: string, expiryDate: Date, refreshToken?: string): Promise<Session> => {
+	static constructSession = async (user, accessToken: string, expiryDate: Date, refreshToken?: string): Promise<Session | null | undefined> => {
 		console.log(`Constructing session!`);
 		console.log(`User: ${JSON.stringify(user, null, 2)}`);
 		// console.log(`Token: ${token}`);
@@ -62,7 +83,7 @@ export class SessionManager {
 		const session: Session = {
 			sessionId      : user.SessionId,
 			tenantId       : user.TenantId,
-            tenantCode     : user.TenantCode,
+      tenantCode     : user.TenantCode,
 			tenantName     : user.TenantName,
 			accessToken    : accessToken,
 			refreshToken   : refreshToken,
