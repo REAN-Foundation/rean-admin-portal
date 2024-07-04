@@ -9,12 +9,13 @@
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
     import toast from 'svelte-french-toast';
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
     let retrivedUsers;
 	$: users = data.users.Items;
-  console.log('retrivedUsers@', data.users.Items);
+    console.log('retrivedUsers@', data.users.Items);
 	const userId = $page.params.userId;
 	const userRoute = `/users/${userId}/users`;
 	const editRoute = (id) => `/users/${userId}/users/${id}/edit`;
