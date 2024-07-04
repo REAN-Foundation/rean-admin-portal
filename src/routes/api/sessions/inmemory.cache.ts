@@ -79,18 +79,3 @@ export class InMemoryCache implements ISessionCache {
     
 }
 
-// Usage example
-// const cache = new InMemoryCache<string, Session>();
-
-// cache.set('a', 1);
-// console.log(cache.get('a')); // Output: 1
-// console.log(cache.has('a')); // Output: true
-// console.log(cache.size()); // Output: 1
-
-// cache.delete('a');
-// console.log(cache.has('a')); // Output: false
-
-// cache.set('b', 2);
-// cache.set('c', 3);
-// cache.clear();
-// console.log(cache.size()); // Output: 0
