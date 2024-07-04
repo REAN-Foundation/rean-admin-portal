@@ -7,9 +7,8 @@
 	import Icon from '@iconify/svelte';
 	import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
 	import type { PageServerData } from './$types';
-  import { invalidate } from '$app/navigation';
-  import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
-  import toast from 'svelte-french-toast';
+    import { invalidate } from '$app/navigation';
+    import toast from 'svelte-french-toast';
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
