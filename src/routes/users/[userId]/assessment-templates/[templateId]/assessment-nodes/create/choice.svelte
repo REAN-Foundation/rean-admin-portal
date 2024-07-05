@@ -5,8 +5,10 @@
 	export let readonly = false;
 
 	const addOptionField = () => (optionValueStore = [...optionValueStore, { Text: '' }]);
-	const removeOptionField = () =>
-		(optionValueStore = optionValueStore.slice(0, optionValueStore.length - 1));
+	const removeOptionField = (value?: string) => {
+    optionValueStore = optionValueStore.filter(optionValue => optionValue.Text !== value);
+  }
+		
 </script>
 
 <div class="border dark:border-surface-700 flex flex-col rounded my-2 p-2 gap-2">
@@ -16,13 +18,13 @@
 				type="text"
 				class="input"
 				name="options"
-                required
+        required
 				bind:value={optionValueStore[i].Text}
 				placeholder="Add option here..."
 				disabled={readonly}
 			/>
 			{#if !readonly} 
-				<button class="btn p-2 variant-soft-error" on:click={removeOptionField}>
+				<button class="btn p-2 variant-soft-error" on:click|preventDefault={removeOptionField(optionValueStore[i].Text)}>
 					<Icon icon="material-symbols:close-rounded" />
 				</button>
 			{/if}
