@@ -4,14 +4,23 @@
     import Icons from '$lib/components/icons.svelte';
     import InfoIcon from '$lib/components/infoIcon.svelte';
     import { showMessage } from '$lib/utils/message.utils';
+    import { enhance } from '$app/forms';
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const userId = $page.params.userId;
     const tenantRoute = `/users/${userId}/tenants`;
+    
+    let selectedOption = '';
+    let subOption = '';
+    let selectOp = '';
+    let selectOption = '';
 
     let imageUrl = '';
     let fileinput;
+
+    export let isManual: boolean = false
+    export let isScheduleTrigger: boolean = true
      
     export let name: string;
     export let icon: string;
@@ -466,6 +475,388 @@
                     />
                 </div>
             </tr>
+
+
+
+            <tr class=" bg-white !border-b !border-b-secondary-100 dark:!border-b-surface-700">
+            <hr class="!border-b-secondary-100 dark:!border-b-surface-700" />
+            <div class="flex flex-row gap- 4 bg-white">
+                <Icons
+                    cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-4 w-14 ml-0 sm:ml-2 md:ml-5 lg:ml-10"
+                    h="100%"
+                    w="100%"
+                    iconPath="/tenant-setting/chatbot/message_channel.svg#icon"
+                />
+                <td class="flex-initial ml-0 sm:ml-2 md:ml-5 lg:ml-10">Appointment Follow-Up</td>
+                <InfoIcon
+                    cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                    h="100%"
+                    w="100%"
+                    iconPath="/tenant-setting/info.svg#icon"
+                    title={infoIconTitles.messageChannel}
+                />
+            </div>
+           <div class = "bg-white"> 
+                <div class =" flex sm:flex-col flex-col md:flex-col gap-6 lg:flex-row bg-white text-sm ml-0 sm:ml-2 md:ml-5 lg:ml-10 ">
+                <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                    <input type="radio" id="option1" name="option" value="option1" bind:group={selectedOption} />
+                    <label for="option1">Upload Appointment PDF</label>
+                </div>
+            
+                <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                    <input type="radio" id="option2" name="option" value="option2" bind:group={selectedOption} />
+                    <label for="option2">Use Appointment EHR API</label>
+                </div>
+                </div>
+            
+                {#if selectedOption === 'option2'}
+                <!-- <hr class="!border-b-secondary-100 dark:!border-b-surface-700" /> -->
+                    <div class="flex flex-row gap- 4 bg-white">
+                        <Icons
+                            cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-4 w-14 ml-0 sm:ml-2 md:ml-5 lg:ml-10"
+                            h="100%"
+                            w="100%"
+                            iconPath="/tenant-setting/chatbot/message_channel.svg#icon"
+                        />
+                        <td class="flex-initial ml-0 sm:ml-2 md:ml-5 lg:ml-10">Use Appointment EHR API</td>
+                        <InfoIcon
+                            cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                            h="100%"
+                            w="100%"
+                            iconPath="/tenant-setting/info.svg#icon"
+                            title={infoIconTitles.messageChannel}
+                        />
+                    </div>
+                <div class = "flex sm:flex-col flex-col md:flex-col gap-6  bg-white lg:flex-row text-sm ml-10 sm:ml-6 md:ml-7 lg:ml-20">
+	
+                    <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                        <input type="radio" id="option3" name="option" value="option3" bind:group={subOption} />
+                        <label for="option3">Integrate with custom API</label>
+                      </div>
+                
+                      <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                        <input type="radio" id="option4" name="option" value="option4" bind:group={subOption} />
+                        <label for="option4">Integrate with FHIR API</label>
+                      </div>
+                    </div>
+                
+                {/if}
+                </div>
+
+                {#if subOption === 'option3'}
+                <div class = "bg-white mt-2 mr-2 ml-0 sm:ml-2 md:ml-5 lg:ml-10">
+                <table class="table mx-auto bg-white">
+                    <thead>
+                    <tr class="content-left">
+                    <th class="text-left font-bold bg-white ">Trigger custom API</th>
+                    </tr>
+                    </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-start w-2/5">
+                                Provide Url*</td>
+                                <td class="text-start w-3/5">
+                                    <input
+                                        type="text"
+                                        class="true input w-[80%]"
+                                        name="Url"
+                                        required
+                                    />
+                                   </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-start w-2/5">
+                                Username*</td>
+                                <td class="text-start w-3/5">
+                                    <input
+                                        type="text"
+                                        class="true input w-[80%]"
+                                        name="Username"
+                                        required
+                                    />
+                                    </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-start w-2/5">
+                                Password*</td>
+                                <td class="text-start w-3/5">
+                                    <input
+                                        type="text"
+                                        class="true input w-[80%]"
+                                        name="password"
+                                        required
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                {/if}
+        
+        
+                {#if subOption === 'option4'}
+                <div class = "bg-white mt-2 mr-2 ml-0 sm:ml-2 md:ml-5 lg:ml-10">
+                <table class="table mx-auto bg-white">
+                    <thead>
+                    <tr class="content-left">
+                    <th class="text-left font-bold bg-white ">Trigger FHIR API</th>
+                    </tr>
+                    </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-start w-2/5">
+                                Provide Url*</td>
+                                <td class="text-start w-3/5">
+                                    <input
+                                        type="text"
+                                        class="true input w-[80%]"
+                                        name="Url"
+                                        required
+                                    />
+                                   </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-start w-2/5">
+                                Username*</td>
+                                <td class="text-start w-3/5">
+                                    <input
+                                        type="text"
+                                        class="true input w-[80%]"
+                                        name="Username"
+                                        required
+                                    />
+                                    </td>
+                            </tr>
+
+                            <tr>
+                                <td class="text-start w-2/5">
+                                Password*</td>
+                                <td class="text-start w-3/5">
+                                    <input
+                                        type="text"
+                                        class="true input w-[80%]"
+                                        name="password"
+                                        required
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                {/if}
+           <!-- </tr>
+           <hr class="!border-b-secondary-100 dark:!border-b-surface-700 mt-2" />
+           <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700"> -->
+            <div class = "bg-white">
+                <div class="flex flex-row gap- 4 bg-white mt-2">
+                    <Icons
+                        cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-4 w-14 ml-0 sm:ml-2 md:ml-5 lg:ml-10"
+                        h="100%"
+                        w="100%"
+                        iconPath="/tenant-setting/chatbot/message_channel.svg#icon"
+                    />
+                    <td class="flex-initial ml-0 sm:ml-2 md:ml-5 lg:ml-10">Follow-Up Mechanism</td>
+                    <InfoIcon
+                        cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                        h="100%"
+                        w="100%"
+                        iconPath="/tenant-setting/info.svg#icon"
+                        title={infoIconTitles.messageChannel}
+                    />
+                </div>
+
+                <div class="bg-white flex sm:flex-col flex-col md:flex-col lg:flex-row pb-2">
+                    <div class="flex flex-row ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                        {#if edit === true && isManual === true}
+                        <!-- {#if edit === true} -->
+                            <span class="tick text-green-500 mt-4">✔</span>
+                        {:else}
+                            <input
+                                type="checkbox"
+                                name="whatsApp"
+                                disabled={edit}
+                                bind:checked={isManual}
+                                class="mt-4 checkbox checkbox-primary border-primary-200 hover:border-primary-400 checkbox-md"
+                            />
+                        {/if}
+                        <Icons
+                            cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-3 ml-6"
+                            h="100%"
+                            w="100%"
+                            iconPath="/tenant-setting/chatbot/whatsapp.svg#icon"
+                        />
+                        <td class="ml-5">Manually Trigger Appointent Reminder</td>
+                        <InfoIcon
+                            cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                            h="100%"
+                            w="100%"
+                            iconPath="/tenant-setting/info.svg#icon"
+                            title={infoIconTitles.whatsapp}
+                        />
+                    </div>
+
+                    <div class="flex flex-row ml-10 sm:ml-16 md:ml-16 lg:ml-7 xl:ml-24">
+                        {#if edit === true && isScheduleTrigger === true}
+                            <span class="tick text-green-500 mt-4">✔</span>
+                        {:else}
+                            <input
+                                type="checkbox"
+                                name="telegram"
+                                disabled={edit}
+                                bind:checked={isScheduleTrigger}
+                                class="mt-4 checkbox checkbox-primary border-primary-200 hover:border-primary-400 checkbox-md"
+                            />
+                        {/if}
+                        <Icons
+                            cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-3 ml-6"
+                            h="100%"
+                            w="100%"
+                            iconPath="/tenant-setting/chatbot/telegram.svg#icon"
+                        />
+                        <td class="ml-5">Schedule Trigger for Appointment Reminder</td>
+                        <InfoIcon
+                            cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                            h="100%"
+                            w="100%"
+                            iconPath="/tenant-setting/info.svg#icon"
+                            title={infoIconTitles.telegram}
+                        />
+                    </div>
+                </div>
+            {#if edit === true && isScheduleTrigger === true}
+                <!-- <hr class="!border-b-secondary-100 dark:!border-b-surface-700" /> -->
+                <div class = "bg-white pb-2">
+                <div class="flex flex-row bg-white ml-4 mt-2">
+                        <Icons
+                        cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-3 ml-6"
+                        h="100%"
+                        w="100%"
+                        iconPath="/tenant-setting/chatbot/telegram.svg#icon"
+                    />
+                    <td class="ml-5">Schedule frequency</td>
+                    <InfoIcon
+                        cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                        h="100%"
+                        w="100%"
+                        iconPath="/tenant-setting/info.svg#icon"
+                        title={infoIconTitles.telegram}
+                    />
+                </div>  
+                    
+                            <div class =" flex sm:flex-col flex-col md:flex-col mt-3 pb-2 gap-6 lg:flex-row bg-white text-sm ml-0 sm:ml-2 md:ml-5 lg:ml-10 ">
+                            <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                                <input type="radio" id="option6" name="option" value="option6" bind:group={selectOp} />
+                                <label for="option6">Daily</label>
+                            </div>
+                        
+                            <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                                <input type="radio" id="option7" name="option" value="option7" bind:group={selectOp} />
+                                <label for="option7">Weekly</label>
+                            </div>
+
+                            <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                                <input type="radio" id="option8" name="option" value="option8" bind:group={selectOp} />
+                                <label for="option8">Monthly</label>
+                            </div>
+                        </div>
+                        </div>
+                        <!-- <hr class="!border-b-secondary-100 dark:!border-b-surface-700" /> -->
+                            <div class="flex flex-row bg-white pl-4 mt-2">
+                                <Icons
+                                cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-3 ml-6"
+                                h="100%"
+                                w="100%"
+                                iconPath="/tenant-setting/chatbot/telegram.svg#icon"
+                            />
+                            <td class="ml-5">Schedule Time</td>
+                            <InfoIcon
+                                cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                                h="100%"
+                                w="100%"
+                                iconPath="/tenant-setting/info.svg#icon"
+                                title={infoIconTitles.telegram}
+                            />
+                            </div>
+                         
+                                <div class = "bg-white mt-3 mr-2 ml-0 sm:ml-2 md:ml-5 lg:ml-10">
+                                    <table class="table mx-auto bg-white">
+                                        <thead>
+                                        </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-start w-2/5">
+                                                    Time*</td>
+                                                    <td class="text-start w-3/5">
+                                                        <input
+                                                            type="text"
+                                                            class="true input w-[80%]"
+                                                            name="Url"
+                                                            placeholder="HH:MM"
+                                                            required
+                                                        />
+                                                    </td>
+                                                </tr>
+                    
+                                                <tr>
+                                                    <td class="text-start w-2/5">
+                                                    TimeZone*</td>
+                                                    <td class="text-start w-3/5">
+                                                        <input
+                                                            type="text"
+                                                            class="true input w-[80%]"
+                                                            name="Username"
+                                                            required
+                                                        />
+                                                        </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- <hr class="!border-b-secondary-100 dark:!border-b-surface-700" /> -->
+                                    <div class = "bg-white">
+                                    <div class="flex flex-row bg-white ml-4 mt-2">
+                                        <Icons
+                                        cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-3 ml-6"
+                                        h="100%"
+                                        w="100%"
+                                        iconPath="/tenant-setting/chatbot/telegram.svg#icon"
+                                    />
+                                    <td class="ml-5">Follow-up messages</td>
+                                    <InfoIcon
+                                        cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 cursor-pointer fill-none mt-4"
+                                        h="100%"
+                                        w="100%"
+                                        iconPath="/tenant-setting/info.svg#icon"
+                                        title={infoIconTitles.telegram}
+                                    />
+                                </div>  
+                                        <div class = "bg-white"> 
+                                            <div class =" flex sm:flex-col flex-col md:flex-col mt-3 pb-2 gap-6 lg:flex-row bg-white text-sm ml-0 sm:ml-2 md:ml-5 lg:ml-10 ">
+                                            <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                                                <input type="radio" id="option1" name="option" value="option1" bind:group={selectOption} />
+                                                <label for="option1">1 Hour before</label>
+                                            </div>
+                                        
+                                            <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                                                <input type="radio" id="option2" name="option" value="option2" bind:group={selectOption} />
+                                                <label for="option2">1 Day before</label>
+                                            </div>
+                
+                                            <div class="flex flex-row gap-2 ml-10 sm:ml-16 md:ml-15 lg:ml-24">
+                                                <input type="radio" id="option3" name="option" value="option3" bind:group={selectOption} />
+                                                <label for="option3">1 Week before</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                             </div>      
+                            
+                       
+              {/if}   
+              </div>   
         </tbody>
+       
     </table>
 </form>
