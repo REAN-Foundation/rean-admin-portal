@@ -115,7 +115,7 @@ jobs:
           build-args: ORIGIN=${{ env.ORIGIN }}
           push: true
           # tags: ${{ steps.login-ecr.outputs.registry }}/rean-admin-portal:${{ steps.vars.outputs.branch }}_${{ steps.vars.outputs.sha_short }}
-          tags: public.ecr.aws/i9y2d4u3/rean-admin-portal:${{ needs.Publish-Release.outputs.release_name }}_${{ needs.Publish-Release.outputs.release_id }}
+          tags: public.ecr.aws/i9y2d4u3/rean-admin-portal-ahaprod:${{ needs.Publish-Release.outputs.release_name }}_${{ needs.Publish-Release.outputs.release_id }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           
@@ -130,7 +130,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: default
-          image: public.ecr.aws/i9y2d4u3/rean-admin-portal:${{ needs.Github-ECR-Tag-Check.outputs.release_name }}_${{ needs.Github-ECR-Tag-Check.outputs.release_id }}
+          image: public.ecr.aws/i9y2d4u3/rean-admin-portal-ahaprod:${{ needs.Github-ECR-Tag-Check.outputs.release_name }}_${{ needs.Github-ECR-Tag-Check.outputs.release_id }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
