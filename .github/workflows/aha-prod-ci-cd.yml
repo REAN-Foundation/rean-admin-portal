@@ -37,7 +37,7 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
         with:
            tag: ${{ github.event.inputs.Tag_name }}
-           repo: REAN-Foundation/rean-admin-portal
+           repo: REAN-Foundation/rean-admin-portal-ahaprod
 
       - name: Configure AWS credentials
         if: ${{ steps.checkTag.outputs.exists == 'true' }}
