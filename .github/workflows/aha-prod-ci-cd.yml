@@ -94,6 +94,11 @@ jobs:
       - name: Copy env file
         run: aws s3 cp s3://${{ secrets.ENV_FILE_BUCKET_PATH }}/.env ./.env 
 
+      - name: Show files
+        run: |
+            ls -l
+            cat ./app/.env
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
