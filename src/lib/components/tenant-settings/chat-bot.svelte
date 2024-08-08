@@ -10,7 +10,7 @@
 
     const userId = $page.params.userId;
     const tenantRoute = `/users/${userId}/tenants`;
-    
+    let selectedfrequecyOption = '';
     let selectedOption = '';
     let subOption = '';
     let selectOp = '';
@@ -20,7 +20,7 @@
     let fileinput;
 
     export let isManual: boolean = false
-    export let isScheduleTrigger: boolean = true
+    export let isScheduleTrigger: boolean = false
      
     export let name: string;
     export let icon: string;
@@ -119,6 +119,12 @@
             await upload(e.target.result, filename);
         };
     };
+
+
+    const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    // Dates of the month
+    const datesOfMonth = Array.from({ length: 31 }, (_, i) => i + 1);
 </script>
 
 <form
@@ -762,6 +768,33 @@
                                 <label for="option8">Monthly</label>
                             </div>
                         </div>
+                        {#if selectOp === 'option7'}
+                        <div>
+                            <h3>Select Day of the Week</h3>
+                            <div flex flex-row gap-2>
+                            {#each daysOfWeek as day}
+                                <div flex flex-col>
+                                    <input type="checkbox" id={day} name="days" value={day}>
+                                    <label for={day}>{day}</label>
+                                </div>
+                            {/each}
+                            </div>
+                        </div>
+                        {/if}
+                        {#if selectOp === 'option8'}
+                        <div>
+                            <h3>Select Date of the Month</h3>
+                            <div flex flex-row>
+                            {#each datesOfMonth as date}
+                                <div flex flex-col gap-2>
+                                    <input type="checkbox" id={"date" + date} name="dates" value={date}>
+                                    <label for={"date" + date}>{date}</label>
+                                </div>
+                            {/each}
+                            </div>
+                        </div>
+                        {/if}
+
                         </div>
                         <!-- <hr class="!border-b-secondary-100 dark:!border-b-surface-700" /> -->
                             <div class="flex flex-row bg-white pl-4 mt-2">

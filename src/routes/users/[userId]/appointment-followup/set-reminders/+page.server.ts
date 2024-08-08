@@ -1,7 +1,6 @@
 // src/routes/+page.server.ts
 // import type { Actions } from './$types';
 import { error, type RequestEvent, type ServerLoadEvent } from '@sveltejs/kit';
-import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
 import { Helper } from '$lib/utils/helper';
@@ -10,12 +9,14 @@ import * as fs from 'fs';
 import { writeFile } from 'node:fs/promises';
 import toast, { Toaster } from 'svelte-french-toast';
 import { uploadAppoinmentPdf } from "../../../../api/services/gmu/appointment-upload";
-import { handleDateSubmission } from '../../../../api/services/gghn/appointment-set';
+import { addCancellationDateSubmission, handleDateSubmission, viewCancelDates } from '../../../../api/services/gghn/appointment-set';
+import { redirect } from 'sveltekit-flash-message/server';
+import { any } from 'zod';
 
 // //////////////////////////////////////
 
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
-  const tenantData = event.locals.sessionUser
+  const tenantData = event.locals.sessionUser;
   if (!tenantData) {
     throw error(403, 'Not found');
   }
@@ -77,12 +78,83 @@ export const actions = {
         fs.unlinkSync(filePath);
         console.log('&&&&&&',response)
             if (!response.body.success || response.status !== 200) {
-                toast.success(response.body.message)
+              throw redirect(successMessage(response.body.success), event);
                }
-               toast.error(response.body.message)
+               throw redirect(errorMessage(response.body.success), event)
 
 
-      }
-    }
+      },
+      setCancelAction: async (event: RequestEvent) => {
+          const request = event.request;
+          const sessionId = event.locals.sessionUser.sessionId;
+          const tenantId =  event.locals.sessionUser.tenantId;
+          const tenantName = event.locals.sessionUser.tenantName;
+          const userId = event.params.userId; 
+          if (!sessionId || !tenantId || !tenantName) {
+            toast.error('Authentication error');
+          }
+          const formData = await request.formData();
+          const dates = formData.get('dates');
+      
+          if (dates) {
+            const parsedDates = JSON.parse(dates.toString());
+      
+            // Log the received dates to the console
+            console.log('Received dates:', parsedDates);
+            let res;
+            let unscheduled:any[] = []
+            for (const date of parsedDates) {
+              res = await addCancellationDateSubmission(date,sessionId!,tenantId!,tenantName);
+              // Add any additional processing for each date here
+              if(res.Status !== 'success'){
+                unscheduled.push(date)
+                // throw redirect(errorMessage(res.Message), event);
+              }
+            }
+            console.log(typeof unscheduled)
+            // let unscheduleDates = JSON.stringify(unscheduled);
+            // console.log("unscheduleDates",unscheduleDates);
+            console.log("unscheduled.lenght",unscheduled.length);
+            if (unscheduled.length === 0)
+              {
+                // throw redirect(errorMessage(unscheduleDates), event)
+                throw redirect(successMessage(res.Message), event);
+              }
+              else{
+                let note = `Appointments not schedule for ${unscheduled}`
+                throw redirect(errorMessage(note), event)
+              }
+          }
+    },
+    viewCancellationAction: async (event: RequestEvent) => {
+      const request = event.request;
+       let canceldate = [];
+      //  let datestring ='';
+      const sessionId = event.locals.sessionUser.sessionId;
+          const tenantId =  event.locals.sessionUser.tenantId;
+          const tenantName = event.locals.sessionUser.tenantName;
+          const userId = event.params.userId; 
+          if (!sessionId || !tenantId || !tenantName) {
+            toast.error('Authentication error');
+          }
+          const formData = await request.formData();
+          const startdate = formData.get('startdate');
+          const enddate = formData.get('enddate');
+          // const startDate = new Date(formstartdate);
+          // const endDate = new Date(formenddate);
+          console.log('Received start date:', startdate);
+          console.log('Received end date:', enddate);
+          canceldate = await viewCancelDates(startdate,enddate,sessionId!,tenantId!,tenantName);
+          console.log("canceldates...",canceldate)
+          return {
+            data: {
+              cancellationSet: true, 
+              resp: canceldate
+              } 
+           };
+    
+  },
+}
+ 
 
 

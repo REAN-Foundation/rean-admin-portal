@@ -83,7 +83,7 @@ export class SessionManager {
 		const session: Session = {
 			sessionId      : user.SessionId,
 			tenantId       : user.TenantId,
-      tenantCode     : user.TenantCode,
+      		tenantCode     : user.TenantCode,
 			tenantName     : user.TenantName,
 			accessToken    : accessToken,
 			refreshToken   : refreshToken,
