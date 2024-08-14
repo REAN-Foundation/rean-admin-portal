@@ -1,11 +1,11 @@
 // import type { RequestEvent } from "@sveltejs/kit"
-import { GMU_URL } from '$env/static/private';
-const gmuUrl = GMU_URL;
+import { FOLLOW_UP_URL } from '$env/static/private';
+const followUpUrl = FOLLOW_UP_URL;
 
 export const GET = async () =>{
   try{
     console.log('get endpoint called');
-    return await fetch(`${gmuUrl}/appointment-schedules/gghn/recent-status-report/recent-file`)
+    return await fetch(`${followUpUrl}/appointment-schedules/gghn/recent-status-report/recent-file`)
   }   
  catch(error)
  {

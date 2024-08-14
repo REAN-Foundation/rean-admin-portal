@@ -121,8 +121,8 @@ export const actions = {
                 throw redirect(successMessage(res.Message), event);
               }
               else{
-                let note = `Appointments not schedule for ${unscheduled}`
-                throw redirect(errorMessage(note), event)
+                let note = `Follow-up cancellation was already done for ${unscheduled} and for remaining dates cancellation scheduled successfully!`
+                throw redirect(successMessage(note), event)
               }
           }
     },

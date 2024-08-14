@@ -1,10 +1,10 @@
-import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL, GMU_URL } from '$env/static/private';
+import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL, FOLLOW_UP_URL } from '$env/static/private';
 import { get } from 'http';
 import { post } from '../reancare/common.reancare';
 import { get_ } from '../common';
 // import { split } from 'postcss/lib/list';
 // import { del, get, post, put } from ''./common.reancare';
-const gmuUrl = GMU_URL;
+const followUpUrl = FOLLOW_UP_URL;
 const baseUrl = BACKEND_API_URL;
 
 export async function handleDateSubmission(date: string) {
@@ -25,7 +25,7 @@ export async function handleDateSubmission(date: string) {
     console.log("dateStr....",dateStr)
    }
     // const dateString = dateStr
-    const url = new URL(`${gmuUrl}/appointment-schedules/gghn/set-reminders/date/${dateStr}`);
+    const url = new URL(`${followUpUrl}/appointment-schedules/gghn/set-reminders/date/${dateStr}`);
     // url.searchParams.append('date', date);
 
   try {

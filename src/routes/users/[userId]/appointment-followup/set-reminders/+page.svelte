@@ -80,7 +80,7 @@ const handleSubmit = (event) => {
 		<table class="table">
 			<thead class="!variant-soft-secondary">
 				<tr>
-					<th>Date of Appointment</th>
+					<th>Trigger Follow-Up Reminder </th>
 				</tr>
 			</thead>
 			<tbody class="!bg-white dark:!bg-inherit">
@@ -114,18 +114,18 @@ const handleSubmit = (event) => {
   <table class="table">
     <thead class="!variant-soft-secondary">
       <tr>
-        <th>Cancel Appointment follow-up</th>
+        <th>Cancel Scheduled Follow-Up   </th>
       </tr>
     </thead>
     <tbody class="!bg-white dark:!bg-inherit">
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-        <td>Select dates for follow-up cancellation</td>
+        <td>Select dates for follow-up cancellation*</td>
         <td>
           <input
             id="datePicker"
             type="text"
             class="input"
-            placeholder="YYYY-MM-DD"
+            placeholder="Click here to select date"
             required
             readonly
           />
@@ -157,7 +157,7 @@ const handleSubmit = (event) => {
 			</thead>
 			<tbody class="!bg-white dark:!bg-inherit">
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-					<td> Start date*</td>
+					<td> From date*</td>
 					<td>
 						<input
 							type="date"
@@ -171,7 +171,7 @@ const handleSubmit = (event) => {
 					</td>
 				</tr>
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-					<td> End date*</td>
+					<td> To date*</td>
 					<td>
 						<input
 							type="date"
