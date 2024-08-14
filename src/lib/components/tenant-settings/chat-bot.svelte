@@ -491,7 +491,7 @@
                     cls="stroke-slate-800 dark:!stroke-surface-100 stroke-2 fill-none mt-4 w-14 ml-0 sm:ml-2 md:ml-5 lg:ml-10"
                     h="100%"
                     w="100%"
-                    iconPath="/tenant-setting/chatbot/message_channel.svg#icon"
+                    iconPath="/tenant-setting/chatbot/appointment_follow_up.svg#icon"
                 />
                 <td class="flex-initial ml-0 sm:ml-2 md:ml-5 lg:ml-10">Appointment Follow-Up</td>
                 <InfoIcon
