@@ -130,28 +130,28 @@
 <div class="flex justify-center mt-4 overflow-auto">
     <table class="bg-white text-center">
         <tr class="border-black rounded-2xl">
-            <th class="bg-[#7165E3] text-white border px-2 py-2 font-normal">Sr.no</th>
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Patient Name</th>
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">Hospital Name</th>
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-16 py-2 font-normal">EMRID</th>
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Phone No</th
+            <th class="bg-[#7165E3] text-white border px-1 py-1 font-normal">Sr.no</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Patient Name</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Hospital Name</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">EMRID</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Phone No</th
             >
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Status</th>
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Appointment Time</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Status</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Appointment Time</th>
             
-            <th class="bg-[#7165E3] text-white border px-2 sm:px-14 py-2 font-normal">Replied</th>
+            <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Replied</th>
         </tr>
         {#each tableData as { srNo, patientName, hospitalName, emrId, patientPhoneNo, patientStatus, appointmentTime, replied }}
             <tr>
-                <td class="border px-2 py-2">{srNo}</td>
-                <td class="border px-2 py-2 text-left">{patientName}</td>
-                <td class="border px-2 py-2 text-left">{hospitalName}</td>
-                <td class="border px-2 sm:px-8 py-2 text-left">{emrId}</td>
-                <td class="border px-2 sm:px-8 py-2">{patientPhoneNo}</td>
-                <td class="border px-2 sm:px-8 py-2">{patientStatus}</td>
+                <td class="border px-1 py-1">{srNo}</td>
+                <td class="border px-1 py-1 text-center">{patientName}</td>
+                <td class="border px-1 py-1 text-center">{hospitalName}</td>
+                <td class="border px-1 sm:px-8 py-1 text-center">{emrId}</td>
+                <td class="border px-1 sm:px-8 py-1">{patientPhoneNo}</td>
+                <td class="border px-1 sm:px-8 py-1">{patientStatus}</td>
                   <!--As appointment date is same to all and we donot have specific time-->
-                <td class="border px-2 sm:px-8 py-2">{ appointmentTime}</td>
-                <td class="border px-2 sm:px-8 py-2">{replied}</td>
+                <td class="border px-1 sm:px-8 py-1">{ appointmentTime}</td>
+                <td class="border px-1 sm:px-8 py-1">{replied}</td>
             </tr>
         {/each}
     </table>
