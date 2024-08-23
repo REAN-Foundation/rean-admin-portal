@@ -24,22 +24,22 @@ export const login = async (roleId: string, password: string, username?: string,
     return response;
 };
 
-const getLoginModel = (roleId:string, password: string, username?: string, email?: string, phone?: string): LoginModel => {
-    const loginModel: LoginModel = {
-        Password: password,
-		LoginRoleId:roleId
-    };
+const getLoginModel = (roleId: string, password: string, username?: string, email?: string, phone?: string): LoginModel => {
+  const loginModel: LoginModel = {
+    Password: password,
+    LoginRoleId: roleId
+  };
 
-    if (username){
-        loginModel.UserName = username
-    }
-    if (phone){
-        loginModel.Phone = phone
-    }
-    if (email){
-        loginModel.Email = email
-    }
-	return loginModel;
+  if (username) {
+    loginModel.UserName = username;
+  }
+  if (phone) {
+    loginModel.Phone = phone;
+  }
+  if (email) {
+    loginModel.Email = email;
+  }
+  return loginModel;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +236,7 @@ export const getUserRoleList = async (userRole: string) => {
 
 export const addPermissionMatrix = async (sessionId: string, userRoleList: any[], userRole?: string, userId?: string, tenantId?: string, roleId?: string) => {
   const permissionMatrix: any[] = [];
-  
+
   const response = await searchPersonRoleTypes(sessionId)
   let selectedUserRoleId;
   const personRoleTypes = response.Data.PersonRoleTypes
@@ -253,10 +253,10 @@ export const addPermissionMatrix = async (sessionId: string, userRoleList: any[]
 
   if (userRole === 'Tenant admin') {
       userRoleList.forEach((userRole) => {
-      if ((userRole.RoleId === roleId && 
-        userRole.TenantId === tenantId && 
+      if ((userRole.RoleId === roleId &&
+        userRole.TenantId === tenantId &&
         userRole.id === userId) ||
-      (userRole.TenantId === tenantId && 
+      (userRole.TenantId === tenantId &&
         userRole.RoleId === selectedUserRoleId)) {
         permissionMatrix.push({...userRole, IsPermitted: 1});
       } else {

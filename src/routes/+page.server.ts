@@ -38,7 +38,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 // 		console.log(Object.fromEntries(data));
 
 // 		const username = data.has('username') ? (data.get('username') as string) : null;
-		
 // 		const password = data.has('password') ? (data.get('password') as string) : null;
 // 		const loginRoleId_ = data.has('loginRoleId') ? data.get('loginRoleId') : null;
 // 		const loginRoleId = loginRoleId_.valueOf() as number;
@@ -71,7 +70,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 // 		console.log(JSON.stringify(userSession, null, 2));
 
 // 		CookieUtils.setCookieHeader(event, 'sessionId', sessionId);
-      
+
 // 		throw redirect(303, `/users/${userId}/home`, successMessage(`Login successful!`), event);
 // 	}
 // };
@@ -86,6 +85,7 @@ const loginSchema = zfd.formData({
 });
 
 export const actions = {
+
 	login: async (event: RequestEvent) => {
 		const request = event.request;
 		const data = await request.formData();
@@ -137,7 +137,7 @@ export const actions = {
 		const user = response.Data.User;
 		user.SessionId = response.Data.SessionId;
 		const accessToken = response.Data.AccessToken;
-    const refreshToken = response.Data.RefreshToken;
+    	const refreshToken = response.Data.RefreshToken;
 		const expiryDate = new Date(response.Data.SessionValidTill);
 		const sessionId = response.Data.SessionId;
 		const userId: string = response.Data.User.id;
@@ -152,7 +152,7 @@ export const actions = {
 		console.log(JSON.stringify(userSession, null, 2));
 
 		CookieUtils.setCookieHeader(event, 'sessionId', sessionId);
-      
+
 		throw redirect(303, `/users/${userId}/home`, successMessage(`Login successful!`), event);
 	}
 };

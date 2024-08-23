@@ -10,16 +10,16 @@ export const DELETE = async (event: RequestEvent) => {
 	const data = await request.json();
 	console.log('Inside notification server endpoints');
 	let response;
-	try{
+	try {
 		response = await deleteNotification(data.sessionId, data.notificationId);
-	}catch(error){
+	} catch (error) {
 		throw redirect(
-			errorMessage('Error deleting notification.'), 
+			errorMessage('Error deleting notification.'),
 			event
-			);
+		);
 	}
 	throw redirect(
 		successMessage(response.Message),
 		event
-		);	
+	);
 };
