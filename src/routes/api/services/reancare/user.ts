@@ -3,10 +3,12 @@ import { Helper } from '$lib/utils/helper';
 import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL } from '$env/static/private';
 import { del, get, post, put } from './common.reancare';
 import { searchPersonRoleTypes } from './person-role-types';
+
 ////////////////////////////////////////////////////////////////
 
-export const login = async (roleId: string, password: string, username?: string, email?: string, phone?: string) => {
-    const model: LoginModel = getLoginModel(roleId, password, username, email, phone);
+export const login = async (loginRoleId: number|null, password: string, username?: string, email?: string, phone?: string) => {
+  try {
+    const model: LoginModel = getLoginModel(loginRoleId, password, username, email, phone);
     console.log(JSON.stringify(model, null, 2));
     const headers = {};
     headers['Content-Type'] = 'application/json';
@@ -22,13 +24,20 @@ export const login = async (roleId: string, password: string, username?: string,
     const response = await res.json();
     console.log('response', response);
     return response;
+  }
+  catch (error) {
+    console.log('error', error);
+    return { Success: false, Message: error.message, Data: null };
+  }
 };
 
-const getLoginModel = (roleId: string, password: string, username?: string, email?: string, phone?: string): LoginModel => {
+const getLoginModel = (loginRoleId: number|null, password: string, username?: string, email?: string, phone?: string): LoginModel => {
   const loginModel: LoginModel = {
     Password: password,
-    LoginRoleId: roleId
   };
+  if (loginRoleId) {
+    loginModel.LoginRoleId = loginRoleId;
+  }
 
   if (username) {
     loginModel.UserName = username;
