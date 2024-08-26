@@ -1,7 +1,6 @@
 <script lang="ts">
     import Icon from '@iconify/svelte';
-
-    //////////////////////////////////////////////////////////////////
+    import { createEventDispatcher } from 'svelte';
 
     export let name = 'password';
     export let password = '';
@@ -9,16 +8,20 @@
     function togglePasswordVisibility() {
         showPassword = !showPassword;
     }
+
+    const dispatch = createEventDispatcher();
+
+    function onFocus() {
+        dispatch('focus');
+    }
+
+    function onBlur() {
+        dispatch('blur');
+    }
+
 </script>
 
 <div class="flex relative items-center">
-    <!-- <input 
-    type={showPassword ? 'text' : 'password'} 
-    name = {name} 
-    bind:value={password}
-    required 
-    class="input mb-4 mt-2" 
-  /> -->
     {#if showPassword}
         <input
             type="text"
@@ -26,6 +29,8 @@
             bind:value={password}
             required
             class="input"
+            on:focus={onFocus}
+            on:blur={onBlur}
         />
     {:else}
         <input
@@ -34,6 +39,8 @@
             bind:value={password}
             required
             class="input"
+            on:focus={onFocus}
+            on:blur={onBlur}
         />
     {/if}
     {#if password !== ''}
