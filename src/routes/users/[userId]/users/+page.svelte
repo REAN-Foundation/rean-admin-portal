@@ -232,13 +232,14 @@
 								let:confirm={confirmThis}
 							>
 								<button
+                                    disabled= {userId === row.id ? true : false}
 									on:click|preventDefault={() => {
-                    if (!row.IsPermitted) {
-                      toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
-                    } else {
-                      confirmThis(handleUserDelete, row.id)}
-                    }
-                  }
+                                        if (!row.IsPermitted) {
+                                        toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
+                                        } else {
+                                        confirmThis(handleUserDelete, row.id)}
+                                        }
+                                    }
    								class="btn p-2 -my-1 hover:variant-soft-error"
 								>
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
