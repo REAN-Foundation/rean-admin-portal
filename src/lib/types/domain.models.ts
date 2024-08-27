@@ -6,7 +6,7 @@ export interface LoginModel {
     Phone       ?: string;
     Password    ?: string;
     Otp         ?: string;
-    LoginRoleId ?: string;
+    LoginRoleId ?: number;
 };
 
 export interface ResponseData {
