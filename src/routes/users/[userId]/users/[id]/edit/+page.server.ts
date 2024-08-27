@@ -39,6 +39,7 @@ const updateUserSchema = zfd.formData({
 
 export const actions = {
 	updateUserAction: async (event: RequestEvent) => {
+        let response;
 		const request = event.request;
 		const userId = event.params.userId;
 		const id = event.params.id;
@@ -66,29 +67,30 @@ export const actions = {
         const currentTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
 
 		const phone = result.countryCode + '-' + result.phone;
-		const response = await updateUser(
-			sessionId,
-			id,
-			result.firstName,
-			result.lastName,
-			phone,
-			result.email,
-			result.selectedUserRoleId,
-            defaultTimeZone,
-            currentTimeZone
-			// result.role,
-			// result.imageResourceId
-		);
-		// const id = response.Data.user.id;
 
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw redirect(303, `/users/${userId}/users`, errorMessage(response.Message), event);
-		}
-		throw redirect(
-			303,
-			`/users/${userId}/users/${id}/view`,
-			successMessage(`User updated successfully!`),
-			event
-		);
+        try {
+            response = await updateUser(
+                sessionId,
+                id,
+                result.firstName,
+                result.lastName,
+                phone,
+                result.email,
+                result.selectedUserRoleId,
+                defaultTimeZone,
+                currentTimeZone
+                // result.role,
+                // result.imageResourceId
+            );
+        } catch (error) {
+            throw redirect(303, `/users/${userId}/users`, errorMessage(error?.body?.message ? error?.body?.message: "Error in updating"), event);
+        }
+        throw redirect(
+            303,
+            `/users/${userId}/users/${id}/view`,
+            successMessage(response?.Message ? response?.Message : `User updated successfully!`),
+            event
+        );
+		// const id = response.Data.user.id;
 	}
 };

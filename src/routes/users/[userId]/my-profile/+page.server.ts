@@ -38,6 +38,7 @@ const updateUserSchema = zfd.formData({
 
 export const actions = {
 	updateProfileAction: async (event: RequestEvent) => {
+        let response;
 		const request = event.request;
 		const userId = event.params.userId;
 		const sessionId = event.cookies.get('sessionId');
@@ -62,27 +63,26 @@ export const actions = {
 		const defaultTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
 		const currentTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
 		const phone = result.countryCode + '-' + result.phone;
-		const response = await updateUser(
-			sessionId,
-			userId,
-			result.firstName,
-			result.lastName,
-			phone,
-			result.email,
-			result.roleId,
-			defaultTimeZone,
-			currentTimeZone
-		);
-		// const id = response.Data.user.id;
-
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw redirect(303, `/users/${userId}/users`, errorMessage(response.Message), event);
-		}
-		throw redirect(
-			303,
-			`/users/${userId}/home`,
-			successMessage(`Profile updated successfully!`),
-			event
-		);
-	}
+        try {
+            response = await updateUser(
+                sessionId,
+                userId,
+                result.firstName,
+                result.lastName,
+                phone,
+                result.email,
+                result.roleId,
+                defaultTimeZone,
+                currentTimeZone
+            );
+        } catch(error) {
+            throw redirect(303, `/users/${userId}/home`, errorMessage(error?.body?.message ? error?.body?.message: "Error in updating profile"), event);
+        }
+        throw redirect(
+            303,
+            `/users/${userId}/home`,
+            successMessage(response?.Message ? response?.Message : `Profile updated successfully!`),
+            event
+        );
+}
 };

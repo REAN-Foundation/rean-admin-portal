@@ -135,6 +135,8 @@ export const createUser = async (
 	role: string,
     roleId: string,
 	password: string,
+    defaultTimeZone,
+    currentTimeZone
 ) => {
 	const body = {
     TenantId: tenantId,
@@ -145,6 +147,8 @@ export const createUser = async (
 	Phone: phone ? phone : null,
     Email: email ? email : null,
 	Password: password,
+    DefaultTimeZone: defaultTimeZone,
+    CurrentTimeZone: currentTimeZone
 	};
 
     if (Helper.isPhone(phone)) {
