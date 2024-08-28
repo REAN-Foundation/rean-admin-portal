@@ -30,8 +30,12 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 const updateUserSchema = zfd.formData({
 	firstName: z.string().optional(),
 	lastName: z.string().optional(),
-	phone: z.string().optional(),
-	email: z.string().email().optional(),
+    phone: z.string(),
+    email: z.string().email(
+      { 
+        message: "Invalid email address" 
+      }
+    ),
 	countryCode:z.string().optional(),
 	roleId:z.string().optional(),
 });

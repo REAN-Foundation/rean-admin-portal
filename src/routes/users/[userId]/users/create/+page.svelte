@@ -104,6 +104,7 @@
 						type="text"
 						name="firstName"
                         required
+                        value={form?.data?.firstName ?? ''}
 						placeholder="Enter first name here..."
 						class="input w-full {form?.errors?.firstName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -119,6 +120,7 @@
 						type="text"
 						name="lastName"
                         required
+                        value={form?.data?.lastName ?? ''}
 						placeholder="Enter last name here..."
 						class="input w-full {form?.errors?.lastName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -147,6 +149,7 @@
 				<td class="flex gap-2">
 					<select
 						name="countryCode"
+                        value={form?.data?.countryCode ?? '+1'}
 						class="select select-primary w-20 lg:w-20 md:w-20 sm:w-18 min-[320px]:w-12"
 					>
 						<option>+1</option>
@@ -155,6 +158,8 @@
 					<input
 						type="text"
 						name="phone"
+                        value={form?.data?.phone ?? ''}
+                        pattern="[0-9]*"
                         required
 						placeholder="Enter contact number here..."
 						class="input {form?.errors?.phone ? 'border-error-300 text-error-500' : ''}"
@@ -170,6 +175,7 @@
 					<input
 						type="email"
 						name="email"
+                        value={form?.data?.email ?? ''}
 						placeholder="Enter email here..."
                         required
 						class="input w-full {form?.errors?.email ? 'border-error-300' : 'border-primary-200'}"
@@ -209,8 +215,13 @@
 							: 'border-primary-200'}"
 					/> -->
 						<PasswordInput/>
+                        {#if form?.errors?.password}
+						    <p class="text-error-500 text-xs">{form?.errors?.password[0]}</p>
+                        {:else}
+                            <p class="border-b-surface-700">Password should be of minimum 8 characters & contain at least 1 capital letter , 1 digit & 1 special character</p>
+                        {/if}
 					<!-- {#if form?.errors?.password} -->
-						<p class="border-b-surface-700">Password should be of minimum 8 characters & contain at least 1 capital letter , 1 digit & 1 special character</p>
+						<!-- <p class="border-b-surface-700">Password should be of minimum 8 characters & contain at least 1 capital letter , 1 digit & 1 special character</p> -->
 					<!-- {/if} -->
 				</td>
 			</tr>
