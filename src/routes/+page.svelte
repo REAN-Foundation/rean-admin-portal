@@ -63,9 +63,8 @@
 			body: JSON.stringify({ email }),
 			headers: { 'content-type': 'application/json' }
 		});
-
 		const res =  await response.json();
-		console.log("res...........", res)
+		
 		if (res.Status === "success") {
 			toast.success(res.Message)
 			showResetPassword = true;
