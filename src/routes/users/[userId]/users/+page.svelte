@@ -202,7 +202,7 @@
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
 						<td role="gridcell" aria-colindex={2} tabindex="0">
-							<a href={!row.IsPermitted ? null : viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20)} </a>
+							<a href={!row.IsPermitted ? null : viewRoute(row.id)}>{Helper.truncateText(row.Person.FirstName, 20) || 'Not specified'} </a>
 						</td>
 						<td role="gridcell" aria-colindex={4} tabindex="0">
                             {row.Person.LastName || 'Not specified'}
@@ -232,13 +232,14 @@
 								let:confirm={confirmThis}
 							>
 								<button
+                                    disabled= {userId === row.id ? true : false}
 									on:click|preventDefault={() => {
-                    if (!row.IsPermitted) {
-                      toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
-                    } else {
-                      confirmThis(handleUserDelete, row.id)}
-                    }
-                  }
+                                        if (!row.IsPermitted) {
+                                        toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
+                                        } else {
+                                        confirmThis(handleUserDelete, row.id)}
+                                        }
+                                    }
    								class="btn p-2 -my-1 hover:variant-soft-error"
 								>
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />

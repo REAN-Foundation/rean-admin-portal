@@ -13,7 +13,9 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
     console.log(`Loading the hospitals/create page`);
     try {
-        const response = await searchHealthSystems(sessionId);
+        const response = await searchHealthSystems(sessionId, {
+            itemsPerPage: 200
+        });
         const healthSystems = response.Data.HealthSystems.Items;
         // console.log(`Health systems = ${JSON.stringify(healthSystems)}`);
         return {

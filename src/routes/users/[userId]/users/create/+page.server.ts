@@ -25,17 +25,34 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 };
 
 const createUserSchema = zfd.formData({
-	firstName: z.string().min(1).max(256),
-	lastName: z.string().min(1).max(256),
-	phone: z.string().min(10).max(64),
-	email: z.string().email().min(10).max(64),
-	role: z.string().min(10).max(64),
-	password: z.string().min(6).max(15),
-	// imageResourceId: z.string().optional(),
-  selectedUserRoleId: z.string(),
-	countryCode:z.string()
+    firstName: z.string().min(1).max(36),
+    lastName: z.string().min(1).max(36),
+    phone: z.string(),
+    email: z.string().email(
+      { 
+        message: "Invalid email address" 
+      }
+    ),
+    role: z.enum(
+      ['System user', 'Tenant admin', 'Tenant user'], 
+      { 
+        message: "Invalid role type"
+      }
+    ),
+    password: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter , 1 digit & 1 special character'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+    selectedUserRoleId: z.string(),
+    countryCode:z.string()
 
-});
+  });
 
 export const actions = {
 	createUserAction: async (event: RequestEvent) => {
@@ -64,24 +81,27 @@ export const actions = {
         const defaultTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
         const currentTimeZone = result.countryCode === '+1' ? '-05:00' : '+05:30';
 		const phone = result.countryCode + '-' + result.phone;
-		const response = await createUser(
-			sessionId,
-            tenantId,
-			result.firstName,
-			result.lastName,
-			phone,
-			result.email,
-			result.role,
-            result.selectedUserRoleId,
-			result.password,
-            defaultTimeZone,
-            currentTimeZone
-    	);
-		const id = response.Data.User.id;
-
-		if (response.Status === 'failure' || response.HttpCode !== 201) {
-			throw redirect(303, `/users/${userId}/users`, errorMessage(response.Message), event);
+		let response;
+		try {
+			response = await createUser(
+				sessionId,
+				tenantId,
+				result.firstName,
+				result.lastName,
+				phone,
+				result.email,
+				result.role,
+				result.selectedUserRoleId,
+				result.password,
+				defaultTimeZone,
+				currentTimeZone
+			);
 		}
+		catch (err) {
+			console.error(`Error creating user : ${err.body.message}`);
+			throw redirect(303, `/users/${userId}/users`, errorMessage(err.body.message), event);
+		}
+		const id = response.Data.User.id;
 		throw redirect(
 			303,
 			`/users/${userId}/users/${id}/view`,

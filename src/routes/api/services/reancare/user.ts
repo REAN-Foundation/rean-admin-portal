@@ -3,10 +3,12 @@ import { Helper } from '$lib/utils/helper';
 import { API_CLIENT_INTERNAL_KEY, BACKEND_API_URL } from '$env/static/private';
 import { del, get, post, put } from './common.reancare';
 import { searchPersonRoleTypes } from './person-role-types';
+
 ////////////////////////////////////////////////////////////////
 
-export const login = async (roleId: string, password: string, username?: string, email?: string, phone?: string) => {
-    const model: LoginModel = getLoginModel(roleId, password, username, email, phone);
+export const login = async (loginRoleId: number|null, password: string, username?: string, email?: string, phone?: string) => {
+  try {
+    const model: LoginModel = getLoginModel(loginRoleId, password, username, email, phone);
     console.log(JSON.stringify(model, null, 2));
     const headers = {};
     headers['Content-Type'] = 'application/json';
@@ -22,24 +24,31 @@ export const login = async (roleId: string, password: string, username?: string,
     const response = await res.json();
     console.log('response', response);
     return response;
+  }
+  catch (error) {
+    console.log('error', error);
+    return { Success: false, Message: error.message, Data: null };
+  }
 };
 
-const getLoginModel = (roleId:string, password: string, username?: string, email?: string, phone?: string): LoginModel => {
-    const loginModel: LoginModel = {
-        Password: password,
-		LoginRoleId:roleId
-    };
+const getLoginModel = (loginRoleId: number|null, password: string, username?: string, email?: string, phone?: string): LoginModel => {
+  const loginModel: LoginModel = {
+    Password: password,
+  };
+  if (loginRoleId) {
+    loginModel.LoginRoleId = loginRoleId;
+  }
 
-    if (username){
-        loginModel.UserName = username
-    }
-    if (phone){
-        loginModel.Phone = phone
-    }
-    if (email){
-        loginModel.Email = email
-    }
-	return loginModel;
+  if (username) {
+    loginModel.UserName = username;
+  }
+  if (phone) {
+    loginModel.Phone = phone;
+  }
+  if (email) {
+    loginModel.Email = email;
+  }
+  return loginModel;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,9 +79,10 @@ export const changePassword = async (
     return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
 
-export const SendPasswordResetCode = async (email: string) => {
+export const SendPasswordResetCode = async (email: string, loginRoleId: number) => {
     const model = {
-        Email: email
+        Email: email,
+        LoginRoleId: loginRoleId
     };
     const headers = {};
     headers['Content-Type'] = 'application/json';
@@ -90,11 +100,12 @@ export const SendPasswordResetCode = async (email: string) => {
     return response;
 };
 
-export const resetPassword = async (email: string, resetCode: string, newPassword: string) => {
+export const resetPassword = async (email: string, resetCode: string, newPassword: string, loginRoleId: number) => {
     const model = {
         Email: email,
         NewPassword: newPassword,
-        ResetCode: resetCode
+        ResetCode: resetCode,
+        RoleId: loginRoleId
     };
 
     const body = JSON.stringify(model);
@@ -126,6 +137,8 @@ export const createUser = async (
 	role: string,
     roleId: string,
 	password: string,
+    defaultTimeZone,
+    currentTimeZone
 ) => {
 	const body = {
     TenantId: tenantId,
@@ -136,6 +149,8 @@ export const createUser = async (
 	Phone: phone ? phone : null,
     Email: email ? email : null,
 	Password: password,
+    DefaultTimeZone: defaultTimeZone,
+    CurrentTimeZone: currentTimeZone
 	};
 
     if (Helper.isPhone(phone)) {
@@ -236,7 +251,7 @@ export const getUserRoleList = async (userRole: string) => {
 
 export const addPermissionMatrix = async (sessionId: string, userRoleList: any[], userRole?: string, userId?: string, tenantId?: string, roleId?: string) => {
   const permissionMatrix: any[] = [];
-  
+
   const response = await searchPersonRoleTypes(sessionId)
   let selectedUserRoleId;
   const personRoleTypes = response.Data.PersonRoleTypes
@@ -253,10 +268,10 @@ export const addPermissionMatrix = async (sessionId: string, userRoleList: any[]
 
   if (userRole === 'Tenant admin') {
       userRoleList.forEach((userRole) => {
-      if ((userRole.RoleId === roleId && 
-        userRole.TenantId === tenantId && 
+      if ((userRole.RoleId === roleId &&
+        userRole.TenantId === tenantId &&
         userRole.id === userId) ||
-      (userRole.TenantId === tenantId && 
+      (userRole.TenantId === tenantId &&
         userRole.RoleId === selectedUserRoleId)) {
         permissionMatrix.push({...userRole, IsPermitted: 1});
       } else {

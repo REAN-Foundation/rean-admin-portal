@@ -10,22 +10,21 @@
 		getSystemName,
 	} from '$lib/themes/theme.selector';
     import { errorMessage } from '$lib/utils/message.utils';
-		import { z } from 'zod';
-		import toast from 'svelte-french-toast';
-		import PasswordInput from '$lib/components/input/password.input.svelte';
+	import { z } from 'zod';
+	import toast from 'svelte-french-toast';
+	import PasswordInput from '$lib/components/input/password.input.svelte';
 
 	/////////////////////////////////////////////////////////////////////////////
 
 	const logoImageSource = getPublicLogoImageSource();
-  const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
-  const footerLink = getPublicFooterLink();
+	const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
+	const footerLink = getPublicFooterLink();
 
 	export let data: PageServerData;
 
 	personRolesStore.set(data.roles);
 	LocalStorageUtils.setItem('personRoles', JSON.stringify(data.roles));
 	let personRoles = [];
-	let loginRoleId = 1;
 	let showForgotPassword = false;
 	let showResetPassword = false;
 
@@ -34,15 +33,15 @@
 	let newPassword = '';
 	let confirmPassword = '';
 	let errors: Record<string, string[]> = {};
-	let activeTab = 'username';
+	let activeTab = 'email';
 
 	if (browser) {
 		const tmp = LocalStorageUtils.getItem('personRoles');
 		personRoles = JSON.parse(tmp);
-		const adminRole = personRoles?.find((x) => x.RoleName === 'System admin');
-		if (adminRole) {
-			loginRoleId = adminRole.id;
-		}
+		// const adminRole = personRoles?.find((x) => x.RoleName === 'System admin');
+		// if (adminRole) {
+		// 	loginRoleId = adminRole.id;
+		// }
 		LocalStorageUtils.removeItem('prevUrl');
 	}
 
@@ -64,9 +63,8 @@
 			body: JSON.stringify({ email }),
 			headers: { 'content-type': 'application/json' }
 		});
-
 		const res =  await response.json();
-		console.log("res...........", res)
+		
 		if (res.Status === "success") {
 			toast.success(res.Message)
 			showResetPassword = true;
@@ -140,7 +138,7 @@
 							<form on:submit|preventDefault={handleResetPassword}>
 								<label class="hidden">
 									<span class="text-primary-500">Email</span>
-									<input type="email"value={email} required class="input mb-4" />
+									<input type="email" value={email} required class="input mb-4" />
 								</label>
 								<label>
 									<span class="text-primary-500">Reset Code</span>
@@ -155,7 +153,7 @@
 									<div class="mb-4 mt-2">
 										<PasswordInput bind:password ={newPassword} name = "newPassword"/>
 									</div>
-				
+
 									<!-- <input type="password" bind:value={newPassword} required class="input mb-4 mt-2" /> -->
 									{#if errors.newPassword}
 										<span class="text-error-500">{errors.newPassword}</span>
@@ -167,7 +165,7 @@
 									<div class="mb-4 mt-2">
 										<PasswordInput bind:password= {confirmPassword} name = 'confirmPassword'/>
 									</div>
-									
+
 									<!-- <input type="password" bind:value={confirmPassword} required class="input mb-4" /> -->
 									{#if errors.confirmPassword}
 										<span class="text-error-500">{errors.confirmPassword}</span>
@@ -179,18 +177,18 @@
 						</div>
 					{:else}
 					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
-						<input name="roleId" bind:value={loginRoleId} class="hidden"/>
+						<!-- <input name="roleId" bind:value={loginRoleId} class="hidden"/> -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<div class="justify-center w-full mt-5 h-50">
 							<div class="flex gap-6 mb-4">
-								<div class="flex gap-2">
-									<input type="radio" class="radio rounded-full" name="loginType" value="username" bind:group={activeTab} />Username
-								</div>
 								<div class="flex gap-2">
 									<input type="radio" class="radio rounded-full" name="loginType" value="email" bind:group={activeTab} /> Email
 								</div>
 								<div class="flex gap-2">
 									<input type="radio" class="radio rounded-full" name="loginType" value="phone" bind:group={activeTab} /> Phone
+								</div>
+								<div class="flex gap-2">
+									<input type="radio" class="radio rounded-full" name="loginType" value="username" bind:group={activeTab} />Username
 								</div>
 							</div>
 							{#if activeTab === 'username'}

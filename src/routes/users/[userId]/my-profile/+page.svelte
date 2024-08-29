@@ -110,6 +110,7 @@
 					<input
 						type="text"
 						name="phone"
+                        required
 						bind:value={phoneNumber}
 						placeholder="Enter contact number here..."
 						class="input {form?.errors?.phone ? 'border-error-300 text-error-500' : ''}"
@@ -125,10 +126,14 @@
 					<input
 						type="email"
 						name="email"
+                        required
 						bind:value={email}
 						placeholder="Enter email here..."
 						class="input"
 					/>
+                    {#if form?.errors?.email}
+                    <p class="text-error-500 text-xs">{form?.errors?.email[0]}</p>
+                {/if}
 				</td>
 			</tr>
 		</tbody>
