@@ -10,6 +10,8 @@
     import { goto } from '$app/navigation';
     import type { PageServerData } from './$types';
     import type { TenantSettings } from '$lib/types/tenant.settings.types';
+    // import { uploadAppoinmentPdf } from '$routes/api/services/gmu/appointment-upload';
+    // import { number } from 'zod';
    
     /////////////////////////////////////////////////////////////////////////
     
@@ -101,6 +103,28 @@
         isLocalizationContextualQuerieschecked : false,
         isLocalizationSupportchecked : false,
         isChatPersonlizationchecked : false,
+        triggerFhirApiUrl : '',
+        triggerFhirApiUsername :'',
+        triggerFhirApiPassword :'',
+        triggerCustomApiUrl : '',
+        triggerCustomApiUsername : '',
+        triggerCustomApiPassword : '',
+        scheduleReminderTime : '',
+        weekDay : '',
+        selectedDayOfMonth : 1,
+        uploadAppointmentPDF : false,
+        useAppointmentEHRAPI : false,
+        integrateWithCustomAPI :false, 
+        integrateWithFhirAPI : false,
+        scheduleDaily : false,
+        scheduleWeekly : false,
+        scheduleMonthly : false,
+        hourBefore : false,
+        dayBefore : false,
+        weekBefore : false,
+        isManualchecked : false,
+        isScheduleTriggerchecked : false, 
+        followUpMessageschecked : false,
     }
 
     $ : console.log('Change in chat bot settings',chatBotSettingOptions);
@@ -164,6 +188,27 @@
         chatBotSettingOptions.isLocalizationContextualQuerieschecked = data.settings.ChatBot.LocationContext;
         chatBotSettingOptions.isLocalizationSupportchecked = data.settings.ChatBot.Localization;
  
+        chatBotSettingOptions.uploadAppointmentPDF = data.settings.ChatBot.AppointmentFollowup.UploadAppointmentDocument;
+        chatBotSettingOptions.useAppointmentEHRAPI = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApi;
+        chatBotSettingOptions.integrateWithCustomAPI = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApi;
+        chatBotSettingOptions.triggerCustomApiUrl = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Url;
+        chatBotSettingOptions.triggerCustomApiUsername = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Credentials.UserName;
+        chatBotSettingOptions.triggerCustomApiPassword = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Credentials.Password;
+        chatBotSettingOptions.integrateWithFhirAPI = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApi;
+        chatBotSettingOptions.triggerFhirApiUrl = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Url;
+        chatBotSettingOptions.triggerFhirApiUsername = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Credentials.UserName;
+        chatBotSettingOptions.triggerFhirApiPassword = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Credentials.Password;
+        chatBotSettingOptions.isManualchecked = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ManualTrigger;
+        chatBotSettingOptions.isScheduleTriggerchecked = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleTrigger;
+        chatBotSettingOptions.scheduleDaily = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Daily;
+        chatBotSettingOptions.scheduleWeekly = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Weekly;
+        chatBotSettingOptions.scheduleMonthly = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Monthly;
+        chatBotSettingOptions.hourBefore = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneHourBefore;
+        chatBotSettingOptions.dayBefore= data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneDayBefore;
+        chatBotSettingOptions.weekBefore = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneWeekBefore;
+        chatBotSettingOptions.followUpMessageschecked = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.FollowupMessages;
+        chatBotSettingOptions.scheduleReminderTime = data.settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleTiming;
+
         formSettingOptions.iskoboToolboxchecked = data.settings.Forms.Integrations.KoboToolbox
         formSettingOptions.isgoogleFormschecked = data.settings.Forms.Integrations.GoogleForm
         formSettingOptions.isodkchecked = data.settings.Forms.Integrations.ODK
@@ -339,6 +384,29 @@
         settings.ChatBot.Personalization = chatBotSettingOptions.isChatPersonlizationchecked;
         settings.ChatBot.LocationContext = chatBotSettingOptions.isLocalizationContextualQuerieschecked;
         settings.ChatBot.Localization = chatBotSettingOptions.isLocalizationSupportchecked;
+        settings.ChatBot.AppointmentFollowup.UploadAppointmentDocument = chatBotSettingOptions.uploadAppointmentPDF;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApi = chatBotSettingOptions.useAppointmentEHRAPI;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApi= chatBotSettingOptions.integrateWithCustomAPI;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApi = chatBotSettingOptions.integrateWithFhirAPI;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ManualTrigger = chatBotSettingOptions.isManualchecked;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleTrigger = chatBotSettingOptions.isScheduleTriggerchecked ;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Url = chatBotSettingOptions.triggerCustomApiUrl;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Credentials.UserName = chatBotSettingOptions.triggerCustomApiUsername;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Credentials.Password = chatBotSettingOptions.triggerCustomApiPassword;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Url = chatBotSettingOptions.triggerFhirApiUrl;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Credentials.UserName = chatBotSettingOptions.triggerFhirApiUsername;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Credentials.Password = chatBotSettingOptions.triggerFhirApiPassword;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Daily = chatBotSettingOptions.scheduleDaily;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Weekly = chatBotSettingOptions.scheduleWeekly;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Monthly = chatBotSettingOptions.scheduleMonthly;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.DayOfMonth = chatBotSettingOptions.selectedDayOfMonth;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.WeekDay = chatBotSettingOptions.weekDay;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleTiming = chatBotSettingOptions.scheduleReminderTime;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneHourBefore = chatBotSettingOptions.hourBefore;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneDayBefore= chatBotSettingOptions.dayBefore;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneWeekBefore = chatBotSettingOptions.weekBefore;
+        settings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.FollowupMessages = chatBotSettingOptions.followUpMessageschecked;
+
 
         settings.Forms.Integrations.KoboToolbox = formSettingOptions.iskoboToolboxchecked;
         settings.Forms.Integrations.GoogleForm = formSettingOptions.isgoogleFormschecked;
@@ -465,6 +533,48 @@
                 Personalization: false,
                 LocationContext: false,
                 Localization: false, 
+                AppointmentFollowup: {
+                    UploadAppointmentDocument: false,
+                    AppointmentEhrApi: true,
+                    AppointmentEhrApiDetails: {
+                        CustomApi: false,
+                        FhirApi: false,
+                        CustomApiDetails: {
+                            Url: null,
+                            Credentials: {
+                                UserName: null,
+                                Password: null
+                            }
+                        },
+                        FhirApiDetails: {
+                            Url: null,
+                            Credentials: {
+                                UserName: null,
+                                Password: null
+                            }
+                        },
+                        FollowupMechanism: {
+                            ManualTrigger: false,
+                            ScheduleTrigger: true,
+                            ScheduleFrequency: {
+                                Daily: true,
+                                Weekly: false,
+                                WeekDay: "Monday",
+                                Monthly: false,
+                                DayOfMonth: 1
+                            },
+                            ScheduleTiming: null,
+                            FollowupMessages: false,
+                            MessageFrequency: {
+                                OneDayBefore: false,
+                                OneHourBefore: false,
+                                OneWeekBefore: false
+                            }
+                        }
+                    }
+        
+    },
+
             },
             
             Forms: {
@@ -534,6 +644,28 @@
             updatedSettings.ChatBot.Personalization = chatBotSettingOptions.isChatPersonlizationchecked;
             updatedSettings.ChatBot.LocationContext = chatBotSettingOptions.isLocalizationContextualQuerieschecked;
             updatedSettings.ChatBot.Localization = chatBotSettingOptions.isLocalizationSupportchecked;
+            updatedSettings.ChatBot.AppointmentFollowup.UploadAppointmentDocument = chatBotSettingOptions.uploadAppointmentPDF;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApi = chatBotSettingOptions.useAppointmentEHRAPI;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApi = chatBotSettingOptions.integrateWithCustomAPI;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApi = chatBotSettingOptions.integrateWithFhirAPI;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Url = chatBotSettingOptions.triggerCustomApiUrl;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Credentials.UserName = chatBotSettingOptions.triggerCustomApiUsername;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.CustomApiDetails.Credentials.Password = chatBotSettingOptions.triggerCustomApiPassword;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Url = chatBotSettingOptions.triggerFhirApiUrl;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Credentials.UserName = chatBotSettingOptions.triggerFhirApiUsername;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FhirApiDetails.Credentials.Password = chatBotSettingOptions.triggerFhirApiPassword;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ManualTrigger = chatBotSettingOptions.isManualchecked;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleTrigger = chatBotSettingOptions.isScheduleTriggerchecked;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Daily = chatBotSettingOptions.scheduleDaily;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Weekly = chatBotSettingOptions.scheduleWeekly;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.Monthly = chatBotSettingOptions.scheduleMonthly;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.DayOfMonth = chatBotSettingOptions.selectedDayOfMonth;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleFrequency.WeekDay = chatBotSettingOptions.weekDay;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.ScheduleTiming = chatBotSettingOptions.scheduleReminderTime;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.FollowupMessages = chatBotSettingOptions.followUpMessageschecked;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneDayBefore = chatBotSettingOptions.dayBefore;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneHourBefore = chatBotSettingOptions.hourBefore;
+            updatedSettings.ChatBot.AppointmentFollowup.AppointmentEhrApiDetails.FollowupMechanism.MessageFrequency.OneWeekBefore = chatBotSettingOptions.weekBefore;
         }
         
         if (updatedSettings.UserInterfaces.Forms) {

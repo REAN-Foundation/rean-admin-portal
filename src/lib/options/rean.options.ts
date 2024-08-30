@@ -16,7 +16,7 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Clients',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Tenants',
@@ -33,11 +33,11 @@ export const Options: FeatureOptions[] = [
     //..............................
     {
         Name: 'Analysis',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Custom-Queries',
-        Enabled: true
+        Enabled: false
     },
     //..............................
     {
@@ -76,23 +76,23 @@ export const Options: FeatureOptions[] = [
     //..............................
     {
         Name: 'Careplan',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Careplan-Dashboard',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Careplan-Assets',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Careplan-Plans',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Careplan-Enrollments',
-        Enabled: true
+        Enabled: false
     },
     //..............................
     {
@@ -101,11 +101,11 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Courses',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Learning-Journeys',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Knowledge-Nuggets',
@@ -131,11 +131,11 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Organizations',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Cohorts',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Notifications',
@@ -143,7 +143,7 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Notices',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Newsfeeds',
@@ -152,35 +152,35 @@ export const Options: FeatureOptions[] = [
     //..............................
     {
         Name: 'Gamification',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Event-Types',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Badge-Categories',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Badges',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Schemas',
-        Enabled: true
+        Enabled: false
     },
     //................................
     {
         Name: 'GMU',
-        Enabled: false
+        Enabled: true
     },
     {
         Name: 'Appointment-pdf-Upload',
-        Enabled: false
+        Enabled: true
     },
     {
         Name: 'Appointment-Status-Report',
-        Enabled: false
+        Enabled: true
     }
 ];
