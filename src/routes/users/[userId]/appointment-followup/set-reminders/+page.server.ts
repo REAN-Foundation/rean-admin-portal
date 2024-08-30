@@ -51,7 +51,6 @@ export const actions = {
     uploadAppoinment: async (event: RequestEvent) => {
             // const userId = event.params.userId;
         const request = event.request;
-        // const sessionId = event.cookies.get('sessionId');
         const formData = await request.formData();
         const uploadedFile = formData?.get('name') as File;
         const fileName = uploadedFile.name;
