@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as aws from "@aws-sdk/client-s3";
 import { BUCKET_NAME } from '$env/static/private';
+import { BUCKET_FOLDER } from  '$env/static/private'
 import { ACCESS_KEY_ID } from '$env/static/private';
 import { SECRET_ACCESS_KEY } from '$env/static/private';
 import { BUCKET_REGION } from '$env/static/private';
@@ -21,7 +22,7 @@ export const uploadAppoinmentPdf = async (fileName: string, filePath: string) =>
     const s3 = getS3Client();
 
     const bucketName = BUCKET_NAME;
-    const filePathOnS3 = `${fileName}`; // Replace with your desired path and filename
+    const filePathOnS3 = `${BUCKET_FOLDER}/${fileName}`; // Replace with your desired path and filename
     const fileContent = fs.createReadStream(filePath); // Replace with the content or buffer of your file
 
     const params = {
