@@ -152,23 +152,23 @@ export const Options: FeatureOptions[] = [
     //..............................
     {
         Name: 'Gamification',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Event-Types',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Badge-Categories',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Badges',
-        Enabled: true
+        Enabled: false
     },
     {
         Name: 'Gamification-Schemas',
-        Enabled: true
+        Enabled: false
     },
     //................................
     {
