@@ -38,6 +38,10 @@ RUN npm install
 # CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
 ARG ORIGIN
 ENV ORIGIN=${ORIGIN}
+
+ARG ENVIRONMENT
+ENV ENVIRONMENT=${ENVIRONMENT}
+
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh"]
 
