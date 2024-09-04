@@ -12,7 +12,7 @@ import { date } from 'zod';
 import { derived } from 'svelte/store';
 export let data: PageServerData;
 export let form;
-	// let userData = data.tenantName;
+
 let respData = data;
 console.log("userData...",respData.UserDetails);
 let userData = respData.UserDetails.tenantName
@@ -38,11 +38,6 @@ let enddate = '';
     });
   });
  
-// {//converts to UTC
-// 	  selectedDates = selectedDatesArray.map(date => date.toISOString().split('T')[0]);
-// 	}
-//   });
-// });
 
 
 console.log('Response Dates :', form?.data.resp);
@@ -259,8 +254,5 @@ const handleSubmit = (event) => {
 	  border: 1px solid #ccc;
 	  text-align: center;
 	}
-	/* .date.canceled {
-	  text-decoration: line-through;
-	  color: red;
-	} */
+	
   </style>
