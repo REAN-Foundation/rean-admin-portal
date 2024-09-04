@@ -25,12 +25,10 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
   console.log("sessionUser..data..",tenantData.tenantName)
   return {
     UserDetails: tenantData
-    // UserDetails:'GMU_admin'
-  };
+    };
 };
 export const actions = {
-  	//  export const actions = {
-    setReminderAction: async (event: RequestEvent) => {
+  	setReminderAction: async (event: RequestEvent) => {
     const request = event.request;
     const userId = event.params.userId;
     const formData = await request.formData();
@@ -42,14 +40,14 @@ export const actions = {
         const response = await res.json();
         if (response.Status === "Success") 
         {
-          throw redirect(303, `/users/${userId}/appointment-followup/summary-uploads`, successMessage(response.Message), event)
+          throw redirect(successMessage("Your reminders are getting schedule! Please check the Status report in few minutes."), event)
         }
-      throw redirect(303, `/users/${userId}/appointment-followup/set-appointment`, errorMessage(response.Message), event)
+      throw redirect(errorMessage(response.Message), event)
       }
     },
 
     uploadAppoinment: async (event: RequestEvent) => {
-            // const userId = event.params.userId;
+        const userId = event.params.userId;
         const request = event.request;
         const formData = await request.formData();
         const uploadedFile = formData?.get('name') as File;
@@ -66,7 +64,7 @@ export const actions = {
 
         if (!fs.existsSync(filePath)) {
           console.log('File not created');
-          throw redirect(303, `/open/appointment-uploads`, errorMessage('Unable to import appointment template.'), event);
+          throw redirect(successMessage('Unable to import appointment template.'), event);
         }
 
         const response = await uploadAppoinmentPdf(
@@ -133,15 +131,12 @@ export const actions = {
           const formData = await request.formData();
           const startdate = formData.get('startdate');
           const enddate = formData.get('enddate');
-          // const startDate = new Date(formstartdate);
-          // const endDate = new Date(formenddate);
           console.log('Received start date:', startdate);
           console.log('Received end date:', enddate);
           canceldate = await viewCancelDates(startdate,enddate,sessionId!,tenantId!,tenantName);
           console.log("canceldates...",canceldate)
           if (canceldate.length === 0)
             {
-              // throw redirect(errorMessage(unscheduleDates), event)
               let message = `No cancel dates for the stated interval`
               throw redirect(errorMessage(message), event);
             }
