@@ -8,24 +8,24 @@ case "$ENVIRONMENT" in
     FAVICON_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
     ;;
   "uat")
-    ENV_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    CONSTANTS_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    FAVICON_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
+    ENV_FILE_BUCKET="duploservices-uat-configs-new-167414264568/rean-admin-portal"
+    CONSTANTS_FILE_BUCKET="duploservices-uat-configs-new-167414264568/rean-admin-portal"
+    FAVICON_FILE_BUCKET="duploservices-uat-configs-new-167414264568/rean-admin-portal"
     ;;
   "prod")
-    ENV_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    CONSTANTS_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    FAVICON_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
+    ENV_FILE_BUCKET="duploservices-prod-configs-new-167414264568/rean-admin-portal"
+    CONSTANTS_FILE_BUCKET="duploservices-prod-configs-new-167414264568/rean-admin-portal"
+    FAVICON_FILE_BUCKET="duploservices-prod-configs-new-167414264568/rean-admin-portal"
     ;;
   "aha-prod")
-    ENV_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    CONSTANTS_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    FAVICON_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
+    ENV_FILE_BUCKET="duploservices-ahaprod-configs-167414264568/rean-admin-portal"
+    CONSTANTS_FILE_BUCKET="duploservices-ahaprod-configs-167414264568/rean-admin-portal"
+    FAVICON_FILE_BUCKET="duploservices-ahaprod-configs-167414264568/rean-admin-portal"
     ;;
   "aha-uat")
-    ENV_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    CONSTANTS_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
-    FAVICON_FILE_BUCKET="duploservices-dev-configs-new-167414264568/rean-admin-portal"
+    ENV_FILE_BUCKET="duploservices-uat-configs-new-167414264568/rean-admin-portal-aha"
+    CONSTANTS_FILE_BUCKET="duploservices-uat-configs-new-167414264568/rean-admin-portal-aha"
+    FAVICON_FILE_BUCKET="duploservices-uat-configs-new-167414264568/rean-admin-portal-aha"
     ;;
   *)
     echo "Unknown environment: $ENVIRONMENT"

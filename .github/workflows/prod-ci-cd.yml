@@ -72,6 +72,9 @@ jobs:
           context: ./
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
+          build-args: |
+              ORIGIN=${{ env.ORIGIN }}
+              ENVIRONMENT=prod
           push: true
           tags: public.ecr.aws/i9y2d4u3/rean-admin-portal:${{ needs.Publish-Release.outputs.release_name }}_${{ needs.Publish-Release.outputs.release_id }}
           cache-from: type=local,src=/tmp/.buildx-cache
