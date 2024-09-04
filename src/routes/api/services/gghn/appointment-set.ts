@@ -32,7 +32,7 @@ export async function handleDateSubmission(date: string) {
     const response = await fetch(url.toString(), {
       method: 'POST'
     });
-      console.log("response*..",response)
+      // console.log("response*..",response)
       if (!response.ok) {
       throw new Error('Network response was not ok');
     }

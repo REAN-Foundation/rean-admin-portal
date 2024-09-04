@@ -76,7 +76,7 @@ const handleSubmit = (event) => {
 		method="post"
 		action="?/setReminderAction"
 		class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
-		use:enhance
+		
 	>
 		<table class="table">
 			<thead class="!variant-soft-secondary">
@@ -204,17 +204,9 @@ const handleSubmit = (event) => {
 		{/if}
 		
 	{:else}
-	<!-- <div class="nav h-12 w-full " />
-  	<div class="w-full h-full" id="background-image"> -->
-    <!-- <div class=" h-full w-full"> -->
-      <!-- <div class="h-10 w-screen shadow-xl mb-4 bg-[#7165E3]" /> -->
-      <!-- <div class="h-full w-full px-3"> -->
+	
         <div class="  flex h-96 flex-col justify-center items-center">
-			<!-- <img
-			  class="ct-image w-36 mt-14 mb-7"
-			  alt="logo"
-			  src="https://www.reanfoundation.org/wp-content/uploads/2021/10/REAN-Foundation-brand-Logo.png"
-			/> -->
+			
 			<form
 			  method="post"
 			  action="?/uploadAppoinment"
