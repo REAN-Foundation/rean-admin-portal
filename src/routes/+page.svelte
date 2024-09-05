@@ -141,7 +141,7 @@
 									<input type="email" value={email} required class="input mb-4" />
 								</label>
 								<label>
-									<span class="text-primary-500">Reset Code</span>
+									<span class="text-primary-500">Reset Code/OTP</span>
 									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
 									{#if errors.resetCode}
 										<span class="text-error-500">{errors.resetCode}</span>

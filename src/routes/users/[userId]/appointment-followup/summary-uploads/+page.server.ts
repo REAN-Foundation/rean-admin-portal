@@ -6,8 +6,7 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     if (!tenantData) {
       throw error(403, 'Not found');
     }
-    // const userRoles = await getUserRoleList(userRole);
-    console.log("sessionUser..data..",tenantData)
+  
     console.log("sessionUser..data..",tenantData.tenantName)
     if(tenantData.tenantName.includes('GGHN'))
     {
@@ -34,6 +33,9 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
             AppointmentReport:{data:data,
                 tenant:'GMU'}
             }
+    }
+    else{
+        throw error(404, 'Appointment follow-up status report not present for this user')
     };
 }
     
