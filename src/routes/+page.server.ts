@@ -104,6 +104,10 @@ export const actions = {
 			}
 		}
 
+        if (filteredRoles.length == 0) {
+            throw redirect(303, '/', errorMessage("Invalid user!"), event); 
+        } 
+        
 		const response = await login(
 			loginRoleId,
 			result.password,
