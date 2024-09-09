@@ -43,6 +43,6 @@ ARG ENVIRONMENT
 ENV ENVIRONMENT=${ENVIRONMENT}
 
 RUN chmod +x /app/entrypoint.sh
-ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh $ENVIRONMENT"]
 
 #CMD ["node", "build/index.js"]
