@@ -87,7 +87,7 @@ const handleSubmit = (event) => {
 							type="date"
 							class="input" 
 							name="date"
-							placeholder="YYYY-MM-D"
+							placeholder="DD-MM-YYYY"
 							required
 						/>
 						
@@ -160,7 +160,7 @@ const handleSubmit = (event) => {
 							type="date"
 							class="input" 
 							name="startdate"
-							placeholder="YYYY-MM-D"
+							placeholder="DD-MM-YYYY"
 							bind:value={startdate}
 							required
 						/>
@@ -174,7 +174,7 @@ const handleSubmit = (event) => {
 							type="date"
 							class="input" 
 							name="enddate"
-							placeholder="YYYY-MM-D"
+							placeholder="DD-MM-YYYY"
 							bind:value={enddate}
 							required
 						/>
