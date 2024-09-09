@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ENVIRONMENT=$1
 # Determine the environment and set S3 paths accordingly
 case "$ENVIRONMENT" in
   "dev")
