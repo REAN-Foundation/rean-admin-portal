@@ -35,23 +35,12 @@ esac
 
 # Copy files from S3
 aws s3 cp s3://$ENV_FILE_BUCKET/.env ./.env
-if [ $? -ne 0 ]; then
-  echo "Error copying .env file from S3"
-  exit 1
-fi
-
 aws s3 cp s3://$CONSTANTS_FILE_BUCKET/constants.ts /app/src/lib
-if [ $? -ne 0 ]; then
-  echo "Error copying constants.ts from S3"
-  exit 1
-fi
-
 aws s3 cp s3://$FAVICON_FILE_BUCKET/favicon.png ./static/favicon.png
-if [ $? -ne 0 ]; then
-  echo "Error copying favicon.png from S3"
-  exit 1
-fi
 
 cd /app/build
+# Add any other scripts here...
 
+# Start the service
+# npm run start
 node index.js
