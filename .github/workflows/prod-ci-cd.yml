@@ -68,6 +68,11 @@ jobs:
       - name: Copy constant file
         run: aws s3 cp s3://${{ secrets.CONSTANT_FILE_BUCKET_PATH }}/constants.ts ./app/src/lib
 
+      - name: Show files
+        run: |
+            ls -al
+            cat ./app/src/lib/constants.ts
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
