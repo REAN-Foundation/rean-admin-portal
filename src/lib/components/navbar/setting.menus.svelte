@@ -46,7 +46,7 @@
 	}
 
   let menuItems = [
-    { name: 'My profile', link: '', action: () => myProfile(), icon:'material-symbols:person-outline'},
+    { name: 'My Profile', link: '', action: () => myProfile(), icon:'material-symbols:person-outline'},
     { name: 'Change Password', link: '', action: () => changePassword(), icon:'material-symbols:lock-outline'},
     { name: 'Logout', link: '',action: () => gotoLogout(), icon:'material-symbols:logout'}
     // {
@@ -117,7 +117,7 @@
         </div>
         <div class="text-center w-64">
           <h3 class="text-lg font-medium truncate">{username}</h3>
-          <p class="text-sm text-gray-500 truncate">{email}</p>
+          <p class="text-sm text-gray-500 truncate">{email ? email: ''}</p>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@
 		Distribution
 	</a>
 
-    <button class ="btn variant-filled-secondary" on:click={handleDownloadReportClick}>
+    <!-- <button class ="btn variant-filled-secondary" on:click={handleDownloadReportClick}>
         Download Report
-    </button>
+    </button> -->
 </div>

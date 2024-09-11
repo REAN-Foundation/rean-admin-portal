@@ -7,9 +7,9 @@
 
 name: Dev-CI-CD
 
-# Controls when the workflow will run
+#Controls when the workflow will run
 on:
-  # Triggers the workflow on push events but only for the develop branch
+#   # Triggers the workflow on push events but only for the develop branch
   push:
     branches: [develop]
 
@@ -62,6 +62,9 @@ jobs:
       - name: Copy env file
         run: aws s3 cp s3://${{ secrets.ENV_FILE_BUCKET_PATH }}/.env ./.env
 
+      - name: Copy constant file
+        run: aws s3 cp s3://${{ secrets.CONSTANT_FILE_BUCKET_PATH }}/constants.ts ./src/lib
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -69,7 +72,9 @@ jobs:
           context: ./
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
-          build-args: ORIGIN=${{ env.ORIGIN }}
+          build-args: |
+             ORIGIN=${{ env.ORIGIN }}
+             ENVIRONMENT=dev
           push: true
           tags: ${{ steps.login-ecr.outputs.registry }}/rean-admin-portal:${{ steps.vars.outputs.branch }}_${{ steps.vars.outputs.sha_short }}
           cache-from: type=local,src=/tmp/.buildx-cache
@@ -114,4 +119,4 @@ jobs:
           url: 'https://reanfoundation.duplocloud.net/subscriptions/${{ secrets.DUPLO_ID }}/UpdateEcsService'
           method: 'POST'
           data: '{"TaskDefinition":${{ steps.taskdefintionvar.outputs.task_definition_arn }},"Name": "${{ secrets.SERVICE_NAME }}","Replicas":1, "DnsPrfx": "", "HealthCheckGracePeriodSeconds": 1200}'
-          bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN }}
+          bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN_V1 }}

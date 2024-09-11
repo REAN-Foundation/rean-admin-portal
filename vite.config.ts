@@ -12,5 +12,8 @@ import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 // export default config;
 
 export default defineConfig({
-	plugins: [sveltekit(), purgeCss()]
+	plugins: [sveltekit(), purgeCss()],
+    optimizeDeps: {
+        entries: ['src/routes/**/+*.{js,ts,svelte}', 'src/hooks*.{js,ts}']
+    }
 });

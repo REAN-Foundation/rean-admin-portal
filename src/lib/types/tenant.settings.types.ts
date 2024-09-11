@@ -73,7 +73,47 @@ export interface ChatBot {
     Personalization?: boolean
     LocationContext?: boolean
     Localization?: boolean
-};
+    AppointmentFollowup?:{
+        UploadAppointmentDocument?: boolean
+        AppointmentEhrApi?:  boolean
+        AppointmentEhrApiDetails?: {
+            CustomApi?: boolean
+            FhirApi?: boolean
+            CustomApiDetails?: {
+                Url?: string
+                Credentials?: {
+                    UserName?:string
+                    Password?:string
+                }
+            },
+            FhirApiDetails?: {
+                Url?:string
+                Credentials?: {
+                    UserName?: string
+                    Password?: string
+                }
+            },
+            FollowupMechanism?: {
+                ManualTrigger?: boolean
+                ScheduleTrigger?:boolean
+                ScheduleFrequency?: {
+                    Daily?: boolean
+                    Weekly?: boolean
+                    WeekDay?: string
+                    Monthly?: boolean
+                    DayOfMonth?: number
+                },
+                ScheduleTiming?: string
+                FollowupMessages?:boolean
+                MessageFrequency?: {
+                    OneDayBefore?: boolean
+                    OneHourBefore?:boolean
+                    OneWeekBefore?: boolean
+                }
+            }, 
+        };    
+        }; 
+    };
 
 export interface Forms {
     Integrations?: {

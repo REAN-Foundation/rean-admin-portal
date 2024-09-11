@@ -3,8 +3,8 @@
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
-  import { enhance } from '$app/forms';
-  import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
+    import { enhance } from '$app/forms';
+    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 	
 	//////////////////////////////////////////////////////////////////////
 
@@ -182,6 +182,8 @@
 					<input
 						type="text"
 						name="phone"
+                        required
+                        pattern="[0-9]*"
 						bind:value={splitPhoneNumber[1]}
 						placeholder="Enter contact number here..."
 						class="input {form?.errors?.phone ? 'border-error-300 text-error-500' : ''}"
@@ -197,10 +199,14 @@
 					<input
 						type="email"
 						name="email"
+                        required
 						bind:value={email}
 						placeholder="Enter email here..."
 						class="input"
 					/>
+                    {#if form?.errors?.email}
+						<p class="text-error-500 text-xs">{form?.errors?.email[0]}</p>
+					{/if}
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
@@ -210,6 +216,7 @@
 						name="roleId"
 						class="select w-full"
 						placeholder="Select role here..."
+            disabled
 						bind:value={role}
 						on:change={getRoleIdByRoleName}
 					>
