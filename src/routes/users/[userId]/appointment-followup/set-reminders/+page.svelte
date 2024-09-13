@@ -55,15 +55,15 @@ const handleSubmit = (event) => {
 </script>
 <!-- if tenant is GMU -->
 
-<svelte:head>
+<!-- <svelte:head>
 	{#if userData && userData.includes('GGHN') }
-  		<title>GGHN Appointment Follow-up</title>
+  		<!-- <title>GGHN Appointment Follow-up</title>
   		<meta name="description" content="Appointment Upload" />
 	{:else}
 		<title>GMU Appointment Upload</title>
 	{/if}
 	  
-</svelte:head>
+</svelte:head> -->
 <body>
 
 	{#if userData && userData.includes('GGHN') }
@@ -190,7 +190,8 @@ const handleSubmit = (event) => {
 	</form>
 		{#if form?.data.resp}
 		<div class="calendar">
-			{#each canceledDates as date}
+			<!-- {#each canceledDates as date} -->
+			{#each canceledDates.slice().sort((a, b) => new Date(a).getTime() - new Date(b).getTime()) as date}
 				<div class = "date">
 				{date.split('T')[0]}
 			</div>
