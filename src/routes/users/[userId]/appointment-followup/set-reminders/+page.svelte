@@ -87,7 +87,6 @@ const handleSubmit = (event) => {
 							type="date"
 							class="input" 
 							name="date"
-							placeholder="DD-MM-YYYY"
 							required
 						/>
 						
@@ -115,16 +114,15 @@ const handleSubmit = (event) => {
     </thead>
     <tbody class="!bg-white dark:!bg-inherit">
       <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-        <td>Select dates for follow-up cancellation*</td>
+        <td>Select dates for follow-up cancellation </td>
         <td>
           <input
             id="datePicker"
-            type="text"
-            class="input"
-            placeholder="Click here to select date"
+            type="button"
+            class="button rounded-md border-2 border-secondary-100"
+			placeholder="Click here to select date"
             required
-            readonly
-          />
+            />
           <input
             type="hidden"
             id="hiddenDates"
@@ -160,7 +158,6 @@ const handleSubmit = (event) => {
 							type="date"
 							class="input" 
 							name="startdate"
-							placeholder="DD-MM-YYYY"
 							bind:value={startdate}
 							required
 						/>
@@ -174,7 +171,6 @@ const handleSubmit = (event) => {
 							type="date"
 							class="input" 
 							name="enddate"
-							placeholder="DD-MM-YYYY"
 							bind:value={enddate}
 							required
 						/>
