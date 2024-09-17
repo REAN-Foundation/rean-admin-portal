@@ -103,7 +103,7 @@
                         name="healthSystemId"
                         class="select select-primary w-full "
                     >
-                        <option value={healthSystemId}>{r[0].Name}</option>
+                        <option value={healthSystemId}>{healthSystemName}</option>
                         {#each healthSystems as healthSystem}
                             <option value={healthSystem.id}>{healthSystem.Name}</option>
                         {/each}
