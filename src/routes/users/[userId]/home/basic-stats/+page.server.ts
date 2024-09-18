@@ -50,7 +50,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     if (!response) {
         throw error(404, 'Daily user statistics data not found');
     }
-    if (response.Status === 'failure' || response.HttpCode !== 200) {
+    if (response.Status === 'Failure') {
         throw redirect(303, `/users/${userId}/home`,
 			errorMessage('Latest basic statistics analytics report not available.'), 
 			event

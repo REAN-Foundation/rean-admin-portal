@@ -23,8 +23,8 @@
         console.log('Percentage:', percentage, 'Value:', value, 'Total Sum:', totalSum);
         console.log('Color Index:',percentage%8)
         console.log('Type of Color Index:',typeof(percentage%8))
-        if (index + 1 === 8) {
-            localIndex = 0;
+        if (index === 8) {
+            localIndex = index%8;
         }
         return colorPalette[localIndex];
         // if (percentage <= 16) {
