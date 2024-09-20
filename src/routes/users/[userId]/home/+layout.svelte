@@ -28,9 +28,85 @@
             invalidateAll();
         }
     }
+
+    async function handleDownloadAnalyticsReportInJSONClick(event) {
+        console.log('Handling download analytics report in JSON click',event);
+        try {
+            const response = await fetch(`/api/server/analytics/get-analytics-report-json`, {
+			method: 'GET',
+			headers: { 'Content-type': 'application/json' }
+		});
+        if (response.ok) {
+            const arrayBuffer = await response.arrayBuffer();
+            const blob = new Blob([arrayBuffer], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Analytics_Report_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            invalidateAll();
+        }
+        invalidateAll();
+        } catch (error) {
+            invalidateAll();
+        }
+    }
     
+    async function handleDownloadAnalyticsReportInExcelClick(event) {
+        console.log('Handling download analytics report in excel click',event);
+        try {
+            const response = await fetch(`/api/server/analytics/get-analytics-report-excel`, {
+			method: 'GET',
+			headers: { 'Content-type': 'application/json' }
+		});
+        if (response.ok) {
+            const arrayBuffer = await response.arrayBuffer();
+            const blob = new Blob([arrayBuffer], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Analytics_Report_${new Date().toISOString().split('T')[0]}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            invalidateAll();
+        }
+        invalidateAll();
+        } catch (error) {
+            invalidateAll();
+        }
+    }
+
+    async function handleDownloadAnalyticsReportInPdfClick(event) {
+        console.log('Handling download analytics report in pdf click',event);
+        try {
+            const response = await fetch(`/api/server/analytics/get-analytics-report-pdf`, {
+			method: 'GET',
+			headers: { 'Content-type': 'application/json' }
+		});
+        if (response.ok) {
+            const arrayBuffer = await response.arrayBuffer();
+            const blob = new Blob([arrayBuffer], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Analytics_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            invalidateAll();
+        }
+        invalidateAll();
+        } catch (error) {
+            invalidateAll();
+        }
+    }
 	const userId = $page.params.userId;
 </script>
 
-<DashboardTabs on:downloadReport={handleDownloadReportClick} {userId} />
+<!-- <DashboardTabs on:downloadReport={handleDownloadReportClick} {userId} /> -->
+<DashboardTabs 
+on:downloadAnalyticsJSONReport={handleDownloadAnalyticsReportInJSONClick}
+on:downloadAnalyticsExcelReport={handleDownloadAnalyticsReportInExcelClick}
+on:downloadAnalyticsPdfReport={handleDownloadAnalyticsReportInPdfClick}
+{userId} />
 <slot />

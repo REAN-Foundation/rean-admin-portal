@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    import { invalidateAll } from '$app/navigation';
     import { createEventDispatcher } from 'svelte';
     import Icon from '@iconify/svelte';
     
@@ -23,11 +24,41 @@
 
     const options = ['JSON', 'Excel', 'PDF'];
 
-    function handleSelect(option) {
+    function handleDownloadAnalyticsReportInJSONClick() {
+        console.log('Created custom event: downloadAnalyticsJSONReport');
+        dispatch('downloadAnalyticsJSONReport',{});
+    }
+
+    function handleDownloadAnalyticsReportInExcelClick() {
+        console.log('Created custom event: downloadAnalyticsExcelReport');
+        dispatch('downloadAnalyticsExcelReport',{});
+    }
+
+    function handleDownloadAnalyticsReportInPdfClick() {
+        console.log('Created custom event: downloadAnalyticsPdfReport');
+        dispatch('downloadAnalyticsPdfReport',{});
+    }
+
+    function handleSelect(selectedValue) {
         // This function would handle the selected option
-        console.log(`Selected: ${option}`);
+        console.log(`Selected: ${selectedValue}`);
+        switch (selectedValue) {
+        case 'JSON':
+            handleDownloadAnalyticsReportInJSONClick();
+            break;
+        case 'Excel':
+            handleDownloadAnalyticsReportInExcelClick();
+            break;
+        case 'PDF':
+            handleDownloadAnalyticsReportInPdfClick();
+            break;
+        default:
+            // Handle the case where no valid option is selected
+            break;
+        }
         buttonLabel = 'Download';
         isOpen = false;
+   
     }
 
     function toggleDropdown() {
@@ -92,7 +123,7 @@
       </div>
       {#if isOpen}
         <div
-          class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+          class="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
         >
           <div
             class="py-1"
@@ -114,3 +145,4 @@
       {/if}
     </div>
   </div>
+
