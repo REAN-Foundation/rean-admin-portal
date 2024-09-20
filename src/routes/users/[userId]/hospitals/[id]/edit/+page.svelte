@@ -103,9 +103,11 @@
                         name="healthSystemId"
                         class="select select-primary w-full "
                     >
-                        <option value={healthSystemId}>{r[0].Name}</option>
+                        <option value={healthSystemId}>{healthSystemName}</option>
                         {#each healthSystems as healthSystem}
+                            {#if _healthSystemId !== healthSystem.id}
                             <option value={healthSystem.id}>{healthSystem.Name}</option>
+                            {/if}
                         {/each}
                     </select>
                     <input type="text" hidden bind:value={healthSystemId}>
