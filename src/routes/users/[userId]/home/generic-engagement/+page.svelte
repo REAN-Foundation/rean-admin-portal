@@ -1,17 +1,25 @@
 <script lang="ts">
-    import BarChart from '../basic-stats/components/BarChart.svelte';
-    import Line from '../basic-stats/components/Line.svelte';
-
+    import BarChart from '../analytics-overview/components/BarChart.svelte';
+    import Line from '..//analytics-overview/components/Line.svelte';
+    import { getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
+    import RetentionGraphs from '..//analytics-overview/components/RetentionGraphs.svelte';
+    ////////////////////////////////////////////////////////////////////////
     export let data;
 
+    const tickColorLight = getTickColorLight();
+    const tickColorDark = getTickColorDark();
+
+    const fontColor = '#661B26';
+
     let DummyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    // let DummyData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let DummyLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
     let dailyActiveUsersData, dailyActiveUsersLabels;
     let monthlyActiveUsersData, monthlyActiveUsersLabels;
     let weeklyActiveUsersData, weeklyActiveUsersLabels;
-    let retentionOnDaysData, retentionOnDaysLabels;
-    let retentionOnIntervalData, retentionOnIntervalLabels;
+    let retentionOnDaysData, retentionOnDaysLabels, retentionOnDaysRate;
+    let retentionOnIntervalData, retentionOnIntervalLabels, retentionOnIntervalRate;
     // let commonlyVisitedFeatureData, commonlyVisitedFeatureLabels;
 
     let mostVisitedFeatureMedicationData: number[] = [];
@@ -25,7 +33,7 @@
     function formatDateToDDMMYYYY(dateString) {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         return `${day}-${month}-${year}`;
     }
@@ -62,6 +70,10 @@
                 data.statistics.GenericMetrics.RetentionRateOnSpecificDays.retention_on_specific_days.map(
                     (x) => `${x.day}`
                 );
+            retentionOnDaysRate =
+                data.statistics.GenericMetrics.RetentionRateOnSpecificDays.retention_on_specific_days.map(
+                    (x) => x.retention_rate
+                );
         }
 
         if (data.statistics.GenericMetrics.RetentionRateInSpecificIntervals.retention_in_specific_interval) {
@@ -72,6 +84,10 @@
             retentionOnIntervalLabels =
                 data.statistics.GenericMetrics.RetentionRateInSpecificIntervals.retention_in_specific_interval.map(
                     (x) => x.interval
+                );
+            retentionOnIntervalRate =
+                data.statistics.GenericMetrics.RetentionRateInSpecificIntervals.retention_in_specific_interval.map(
+                    (x) => x.retention_rate
                 );
         }
 
@@ -107,34 +123,23 @@
                         title="Daily Active Users"
                     />
                 {:else}
-                    <BarChart
-                        dataSource={DummyData}
-                        labels={DummyLabels}
-                        title="Daily Active Users (Data Not Available)"
-                    />
+                    <div class="h-[400px] w-full p-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl"
+                        >
+                            Daily Active Users
+                        </p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
                 {/if}
             </div>
 
-            <div
-                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
-            >
-                {#if monthlyActiveUsersData}
-                    <BarChart
-                        dataSource={monthlyActiveUsersData}
-                        labels={monthlyActiveUsersLabels}
-                        title="Monthly Active users "
-                    />
-                {:else}
-                    <BarChart
-                        dataSource={DummyData}
-                        labels={DummyLabels}
-                        title="Monthly Active users (Data Not Available)"
-                    />
-                {/if}
-            </div>
-        </div>
-
-        <div class="flex justify-center items-center h-full gap-10 w-full">
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
@@ -142,31 +147,79 @@
                     <BarChart
                         dataSource={weeklyActiveUsersData}
                         labels={weeklyActiveUsersLabels}
-                        title="Weekly Active users"
+                        title="Weekly Active Users"
                     />
                 {:else}
+                    <div class="h-[400px] w-full p-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl"
+                        >
+                            Weekly Active Users
+                        </p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
+                {/if}
+            </div>
+        </div>
+
+        <div class="flex justify-center items-center h-full gap-10 w-full">
+            <div
+                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                {#if monthlyActiveUsersData}
                     <BarChart
-                        dataSource={DummyData}
-                        labels={DummyLabels}
-                        title="Weekly Active users (Data Not Available)"
+                        dataSource={monthlyActiveUsersData}
+                        labels={monthlyActiveUsersLabels}
+                        title="Monthly Active Users"
                     />
+                {:else}
+                    <div class="h-[400px] w-full p-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl"
+                        >
+                            Monthly Active Users
+                        </p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
                 {/if}
             </div>
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
                 {#if retentionOnDaysData}
-                    <BarChart
+                    <RetentionGraphs
+                        rate={retentionOnDaysRate}
                         dataSource={retentionOnDaysData}
                         labels={retentionOnDaysLabels}
                         title="Retention On Specific Days"
                     />
                 {:else}
-                    <BarChart
-                        dataSource={DummyData}
-                        labels={DummyLabels}
-                        title="Retention On Specific Days (Data Not Available)"
-                    />
+                    <div class="h-[400px] w-full p-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl"
+                        >
+                            Retention On Specific Days
+                        </p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
                 {/if}
             </div>
         </div>
@@ -174,44 +227,35 @@
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if retentionOnDaysData}
-                    <BarChart
-                        dataSource={retentionOnDaysData}
-                        labels={retentionOnDaysLabels}
-                        title="Retention On Specific Days"
+                {#if retentionOnIntervalData}
+                    <RetentionGraphs
+                        rate={retentionOnIntervalRate}
+                        dataSource={retentionOnIntervalData}
+                        labels={retentionOnIntervalLabels}
+                        title="Retention On Specific Interval"
                     />
                 {:else}
-                    <BarChart
-                        dataSource={DummyData}
-                        labels={DummyLabels}
-                        title="Retention On Specific Days (Data Not Available)"
-                    />
+                    <div class="h-[400px] w-full p-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl"
+                        >
+                            Retention On Specific Interval
+                        </p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
                 {/if}
             </div>
 
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if retentionOnIntervalData}
-                    <BarChart
-                        dataSource={retentionOnIntervalData}
-                        labels={retentionOnIntervalLabels}
-                        title="Retention On Specific Interval"
-                    />
-                {:else}
-                    <BarChart
-                        dataSource={DummyData}
-                        labels={DummyLabels}
-                        title="Retention On Specific Interval (No Data available)"
-                    />
-                {/if}
-            </div>
-        </div>
-        <div class="flex justify-center items-center h-full gap-10 w-full">
-            <div
-                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
-            >
-                {#if mostVisitedFeatureLoginData && mostVisitedFeatureMedicationData}
+                {#if mostVisitedFeatureLoginData === null}
                     <Line
                         login={mostVisitedFeatureLoginData}
                         medication={mostVisitedFeatureMedicationData}
@@ -219,12 +263,20 @@
                         title="Commonly Visited Feature Data"
                     />
                 {:else}
-                    <Line
-                        login={DummyData}
-                        medication={DummyData}
-                        lables={DummyLabels}
-                        title="Commonly Visited Data (Data Not Available)"
-                    />
+                    <div class="h-[400px] w-full py-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl bold"
+                        >
+                            Commonly Visited Feature Data
+                        </p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
                 {/if}
             </div>
         </div>

@@ -31,7 +31,7 @@ import type { PageServerLoad } from './$types';
 import { getDailyStatisticsUserAnalytics } from '../../../../api/services/reancare/statistics';
 import chalk from 'chalk';
 import { redirect } from 'sveltekit-flash-message/server';
-import { errorMessage} from '$lib/utils/message.utils';
+import { errorMessage } from '$lib/utils/message.utils';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -54,10 +54,10 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     }
     if (response.Status === 'Failure') {
         throw redirect(303, `/users/${userId}/home`,
-			errorMessage('Latest generic engagement analytics report not available.'), 
-			event
-			);
-     }
+            errorMessage('Latest generic engagement analytics report not available.'),
+            event
+        );
+    }
 
 
     return {

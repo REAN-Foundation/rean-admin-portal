@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Chart from 'chart.js/auto';
-    import {getChartColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
+    import { getChartColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
 
     /////////////////////////////////////////////////////////////////////////////
 
@@ -29,34 +29,34 @@
     //     return data.map((value) => getColor(value, minValue, maxValue)); // Map each value to a color
     // }
 
-        // Predefined color palette, sorted from darkest to lightest
-        const colorPalette = getChartColors();
+    // Predefined color palette, sorted from darkest to lightest
+    const colorPalette = getChartColors();
 
-// Function to determine which color to assign based on the value's percentile
-function getColor(value: number, minValue: number, maxValue: number): string {
-    const range = maxValue - minValue;
-    const percentage = ((value - minValue) / range) * 100;
+    // Function to determine which color to assign based on the value's percentile
+    function getColor(value: number, minValue: number, maxValue: number): string {
+        const range = maxValue - minValue;
+        const percentage = ((value - minValue) / range) * 100;
 
-    // Assign colors based on percentage ranges
-    if (percentage <= 25) {
-        return colorPalette[3]; // Lightest
-    } else if (percentage <= 50) {
-        return colorPalette[2];
-    } else if (percentage <= 75) {
-        return colorPalette[1];
-    } else {
-        return colorPalette[0]; // Darkest
+        // Assign colors based on percentage ranges
+        if (percentage <= 25) {
+            return colorPalette[3]; // Lightest
+        } else if (percentage <= 50) {
+            return colorPalette[2];
+        } else if (percentage <= 75) {
+            return colorPalette[1];
+        } else {
+            return colorPalette[0]; // Darkest
+        }
     }
-}
 
-// Function to generate dynamic colors for the entire dataset
-function getDynamicColors(data: number[]): string[] {
-    const minValue = Math.min(...data);
-    const maxValue = Math.max(...data);
-    return data.map(value => getColor(value, minValue, maxValue));
-}
+    // Function to generate dynamic colors for the entire dataset
+    function getDynamicColors(data: number[]): string[] {
+        const minValue = Math.min(...data);
+        const maxValue = Math.max(...data);
+        return data.map((value) => getColor(value, minValue, maxValue));
+    }
 
-$: dynamicColors = getDynamicColors(data);
+    $: dynamicColors = getDynamicColors(data);
 
     $: data;
     $: labels;
@@ -94,7 +94,7 @@ $: dynamicColors = getDynamicColors(data);
                         text: title,
                         position: 'top',
                         color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
-                        align: 'center',
+                        align: 'start',
                         padding: 20,
                         font: {
                             size: 22,
@@ -110,8 +110,8 @@ $: dynamicColors = getDynamicColors(data);
 
 <div class=" ">
     <canvas
-    height="500"
-    width="500"
+        height="500"
+        width="500"
         bind:this={pieChart}
     />
 </div>

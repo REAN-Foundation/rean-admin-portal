@@ -18,28 +18,8 @@
     const colorPalette = getDoughnutColors();
 
     function getColor(value: number, totalSum: number, index: number): string {
-        let localIndex = index;
-        const percentage = Math.floor((value / totalSum) * 100);
-        console.log('Percentage:', percentage, 'Value:', value, 'Total Sum:', totalSum);
-        console.log('Color Index:',percentage%8)
-        console.log('Type of Color Index:',typeof(percentage%8))
-        if (index === 8) {
-            localIndex = index%8;
-        }
+        const localIndex = index % 8; // This will ensure that the index always stays within 0 to 7
         return colorPalette[localIndex];
-        // if (percentage <= 16) {
-        //     return colorPalette[5];
-        // } else if (percentage <= 32) {
-        //     return colorPalette[4];
-        // } else if (percentage <= 48) {
-        //     return colorPalette[3];
-        // } else if (percentage <= 64) {
-        //     return colorPalette[2];
-        // } else if (percentage <= 80) {
-        //     return colorPalette[1];
-        // } else {
-        //     return colorPalette[0];
-        // }
     }
 
     function getDynamicColors(data: number[]): string[] {
@@ -62,7 +42,7 @@
         doughnutChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: truncatedLabels,
+                labels: labels,
                 datasets: [
                     {
                         data: data,
@@ -76,7 +56,7 @@
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
                             boxWidth: 10,
                             boxHeight: 10,
@@ -84,7 +64,7 @@
                         }
                     },
                     title: {
-                        display: true,
+                        display: false,
                         text: title,
                         position: 'top',
                         color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
@@ -103,10 +83,10 @@
 </script>
 
 <!-- Canvas for the Doughnut chart -->
-<div class=" ">
-    <canvas
-        height="400"
-        width="400"
-        bind:this={doughnutChart}
-    />
+<div class="h-96 w-fit ">
+    {#if data}
+        <canvas bind:this={doughnutChart} />
+    {:else}
+        <p>No data available.</p>
+    {/if}
 </div>

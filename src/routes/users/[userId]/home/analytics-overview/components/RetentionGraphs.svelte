@@ -1,51 +1,27 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Chart from 'chart.js/auto';
-    import { getChartColors,getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
-
+    import { getDoughnutColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
     /////////////////////////////////////////////////////////////////////////////
-
     const tickColorLight = getTickColorLight();
     const tickColorDark = getTickColorDark();
-
     export let labels: string[] = [];
     export let dataSource: number[] = [];
+    export let rate;
     export let title: string;
-    
     let barChart;
     let ctx;
-
-    // Predefined color palette, sorted from darkest to lightest
-    const colorPalette = getChartColors();
-
-    // Function to determine which color to assign based on the value's percentile
-    function getColor(value: number, minValue: number, maxValue: number): string {
-        const range = maxValue - minValue;
-        const percentage = ((value - minValue) / range) * 100;
-
-        // Assign colors based on percentage ranges
-        if (percentage <= 25) {
-            return colorPalette[3]; // Lightest
-        } else if (percentage <= 50) {
-            return colorPalette[2];
-        } else if (percentage <= 75) {
-            return colorPalette[1];
-        } else {
-            return colorPalette[0]; // Darkest
-        }
+    console.log(labels, 'labels', dataSource, 'data');
+    const colorPalette = getDoughnutColors();
+    function getColor(index: number): string {
+        const localIndex = index % colorPalette.length;
+        return colorPalette[localIndex];
     }
-
-    // Function to generate dynamic colors for the entire dataset
     function getDynamicColors(data: number[]): string[] {
-        const minValue = Math.min(...data);
-        const maxValue = Math.max(...data);
-        return data.map(value => getColor(value, minValue, maxValue));
+        return data.map((_, index) => getColor(index));
     }
-
     $: dynamicColors = getDynamicColors(dataSource);
-
     console.log(labels, 'labels', dataSource);
-
     onMount(() => {
         ctx = barChart.getContext('2d');
         barChart = new Chart(ctx, {
@@ -55,8 +31,8 @@
                 datasets: [
                     {
                         data: dataSource,
-                        backgroundColor: dynamicColors,  // Apply dynamic colors
-                        borderColor: dynamicColors,  // Use the same color for borders
+                        backgroundColor: dynamicColors,
+                        borderColor: dynamicColors,
                         borderWidth: 1
                     }
                 ]
@@ -109,6 +85,23 @@
                             size: 22,
                             weight: 'normal',
                             lineHeight: 1.2
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                let customNames = labels;
+                                let extraInfo = rate;
+                                let tooltipLines = [];
+                                if (context.parsed.y !== null) {
+                                    let customLabel = customNames[context.dataIndex] || 'Default Name';
+                                    tooltipLines.push(customLabel);
+                                    let extra = extraInfo[context.dataIndex] || 'No Extra Info';
+                                    tooltipLines.push(extra);
+                                }
+                                return tooltipLines;
+                            }
                         }
                     }
                 }
