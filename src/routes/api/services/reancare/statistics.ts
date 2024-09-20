@@ -1,4 +1,5 @@
 import { BACKEND_API_URL } from '$env/static/private';
+import { USER_ANALYTICS_API_URL } from '$env/static/private';
 import { API_CLIENT_INTERNAL_KEY } from '$env/static/private';
 import { SessionManager } from '../../sessions/session.manager';
 import { get } from './common.reancare';
@@ -418,3 +419,9 @@ export const getYears= async (sessionId: string, searchParams?: any) => {
 	const url = BACKEND_API_URL + `/users-statistics/years`;
 	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };
+
+export const getDailyStatisticsUserAnalytics = async (sessionId, formattedDate) => {
+    console.log('Formated date: ' + formattedDate);
+    const url = USER_ANALYTICS_API_URL + `/analytics/metrics/${formattedDate}-1`;
+    return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+}
