@@ -109,17 +109,17 @@
                 (x) => x.retention_rate
             );
 
-        medicationRetentionRateIntervalsData =
+            medicationRetentionRateIntervalsData =
             data.statistics.FeatureMetrics[1].RetentionRateInSpecificIntervals.retention_in_specific_interval.map(
                 (x) => x.returning_users
             );
         medicationRetentionRateIntervalsLabels =
             data.statistics.FeatureMetrics[1].RetentionRateInSpecificIntervals.retention_in_specific_interval.map(
-                (x) => x.retention_rate
+                (x) => x.interval
             );
         medicationRetentionRateIntervalsRate =
             data.statistics.FeatureMetrics[1].RetentionRateInSpecificIntervals.retention_in_specific_interval.map(
-                (x) => x.interval
+                (x) => x.retention_rate
             );
 
         medicationDropOffPointsData = data.statistics.FeatureMetrics[1].DropOffPoints.map((x) => x.dropoff_count);
@@ -274,37 +274,37 @@
 <div class="flex mt-4 gap-4">
     <button
         on:click={() => mapData('loginSession')}
-        class="btn {activeFeature === 'loginSession' ? 'variant-filled-secondary' : 'variant-outline-secondary'}"
+        class="btn {activeFeature === 'loginSession' ? 'variant-filled-secondary' : 'border'} hover:variant-outline-secondary"
     >
         Login Session
     </button>
     <button
         on:click={() => mapData('medication')}
-        class="btn {activeFeature === 'medication' ? 'variant-filled-secondary' : 'variant-outline-secondary'}"
+        class="btn {activeFeature === 'medication' ? 'variant-filled-secondary' : 'border'} hover:variant-outline-secondary"
     >
         Medication
     </button>
     <button
         on:click={() => mapData('symptoms')}
-        class="btn {activeFeature === 'symptoms' ? 'variant-filled-secondary' : 'variant-outline-secondary'}"
+        class="btn {activeFeature === 'symptoms' ? 'variant-filled-secondary' : 'border'} hover:variant-outline-secondary"
     >
         Symptoms
     </button>
     <button
         on:click={() => mapData('vitals')}
-        class="btn {activeFeature === 'vitals' ? 'variant-filled-secondary' : 'variant-outline-secondary'}"
+        class="btn {activeFeature === 'vitals' ? 'variant-filled-secondary' : 'border'} hover:variant-outline-secondary"
     >
         Vitals
     </button>
     <button
         on:click={() => mapData('careplan')}
-        class="btn {activeFeature === 'careplan' ? 'variant-filled-secondary' : 'variant-outline-secondary'}"
+        class="btn {activeFeature === 'careplan' ? 'variant-filled-secondary' : 'border'} hover:variant-outline-secondary"
     >
         Careplan
     </button>
     <button
         on:click={() => mapData('userTask')}
-        class="btn {activeFeature === 'userTask' ? 'variant-filled-secondary' : 'variant-outline-secondary'}"
+        class="btn {activeFeature === 'userTask' ? 'variant-filled-secondary' : 'border'} hover:variant-outline-secondary"
     >
         User Task
     </button>

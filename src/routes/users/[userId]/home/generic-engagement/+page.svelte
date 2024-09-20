@@ -3,17 +3,12 @@
     import Line from '..//analytics-overview/components/Line.svelte';
     import { getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
     import RetentionGraphs from '..//analytics-overview/components/RetentionGraphs.svelte';
+    import GenericChart from './GenericChart.svelte';
+    import { onMount } from 'svelte';
     ////////////////////////////////////////////////////////////////////////
     export let data;
 
-    const tickColorLight = getTickColorLight();
-    const tickColorDark = getTickColorDark();
-
     const fontColor = '#661B26';
-
-    let DummyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    // let DummyData = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-    let DummyLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
     let dailyActiveUsersData, dailyActiveUsersLabels;
     let monthlyActiveUsersData, monthlyActiveUsersLabels;
@@ -108,63 +103,91 @@
             });
         }
     }
+
+    let tableHeaders = ['Month', 'Most Used Feature', 'Usage Count', 'Total Usage', 'Percentage'];
+    let processedData = [];
+
+    onMount(() => {
+        // Process the data
+        let monthlyData = {};
+        data.statistics.GenericMetrics.MostCommonlyVisitedFeatures.forEach((item) => {
+            if (!monthlyData[item.month]) {
+                monthlyData[item.month] = { totalUsage: 0, features: {} };
+            }
+            monthlyData[item.month].totalUsage += item.feature_usage_count;
+            monthlyData[item.month].features[item.feature] = item.feature_usage_count;
+        });
+
+        // Find the most used feature for each month and calculate percentages
+        processedData = Object.entries(monthlyData).map(([month, data]) => {
+            let mostUsedFeature = Object.entries(data.features).reduce((a, b) => (b[1] > a[1] ? b : a));
+            return {
+                month,
+                mostUsedFeature: mostUsedFeature[0],
+                usageCount: mostUsedFeature[1],
+                totalUsage: data.totalUsage,
+                percentage: ((mostUsedFeature[1] / data.totalUsage) * 100).toFixed(2) + '%'
+            };
+        });
+
+        // Sort by month
+        processedData.sort((a, b) => new Date(a.month) - new Date(b.month));
+    });
+
+        // Function to format the date
+        function formatDate(utcDate: string): string {
+        const date = new Date(utcDate);
+        return new Intl.DateTimeFormat('en-US', {
+            month: 'long',
+            year: 'numeric'
+        }).format(date);
+    }
 </script>
 
 <div class="flex flex-col justify-center">
     <div class="grid grid-cols-1 justify-center rounded-lg py-8 gap-8">
-        <div class="flex justify-center items-center h-96 gap-10 w-full">
+        <div class="flex justify-center items-center h-full gap-10 w-full">
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if dailyActiveUsersData}
-                    <BarChart
-                        dataSource={dailyActiveUsersData}
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mr-4 text-left justify-center pt-3 pb-1 ml-4 text-lg font-semibold sm:pl-3">
+                            Daily Active Users
+                        </h4>
+                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                            Total number of unique users who interact with the platform on a given day.
+                        </p>
+                    </div>
+                    <GenericChart
+                        type="bar"
+                        data={dailyActiveUsersData}
                         labels={dailyActiveUsersLabels}
                         title="Daily Active Users"
+                        {fontColor}
                     />
-                {:else}
-                    <div class="h-[400px] w-full p-4">
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-left items-center flex text-2xl"
-                        >
-                            Daily Active Users
-                        </p>
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-center items-center flex text-xl mt-28 leading-3"
-                        >
-                            Data Not Available
-                        </p>
-                    </div>
-                {/if}
+                </div>
             </div>
-
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if weeklyActiveUsersData}
-                    <BarChart
-                        dataSource={weeklyActiveUsersData}
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mr-4 text-left justify-center pt-3 pb-1 ml-4 text-lg font-semibold sm:pl-3">
+                            Weekly Active Users
+                        </h4>
+                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                            Total number of unique users who interact with the platform during a week.
+                        </p>
+                    </div>
+                    <GenericChart
+                        type="bar"
+                        data={weeklyActiveUsersData}
                         labels={weeklyActiveUsersLabels}
                         title="Weekly Active Users"
+                        {fontColor}
                     />
-                {:else}
-                    <div class="h-[400px] w-full p-4">
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-left items-center flex text-2xl"
-                        >
-                            Weekly Active Users
-                        </p>
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-center items-center flex text-xl mt-28 leading-3"
-                        >
-                            Data Not Available
-                        </p>
-                    </div>
-                {/if}
+                </div>
             </div>
         </div>
 
@@ -172,112 +195,162 @@
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if monthlyActiveUsersData}
-                    <BarChart
-                        dataSource={monthlyActiveUsersData}
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mr-4 text-left justify-center pt-3 pb-1 ml-4 text-lg font-semibold sm:pl-3">
+                            Monthly Active Users
+                        </h4>
+                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                            Total number of unique users who interact with the platform during a month.
+                        </p>
+                    </div>
+                    <GenericChart
+                        type="bar"
+                        data={monthlyActiveUsersData}
                         labels={monthlyActiveUsersLabels}
                         title="Monthly Active Users"
+                        {fontColor}
                     />
-                {:else}
-                    <div class="h-[400px] w-full p-4">
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-left items-center flex text-2xl"
-                        >
-                            Monthly Active Users
-                        </p>
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-center items-center flex text-xl mt-28 leading-3"
-                        >
-                            Data Not Available
-                        </p>
-                    </div>
-                {/if}
+                </div>
             </div>
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if retentionOnDaysData}
-                    <RetentionGraphs
-                        rate={retentionOnDaysRate}
-                        dataSource={retentionOnDaysData}
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mr-4 text-left justify-center pt-3 pb-1 ml-4 text-lg font-semibold sm:pl-3">
+                            Retention On Specific Days
+                        </h4>
+                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                            Total number of unique users who interact with the platform during a month.
+                        </p>
+                    </div>
+                    <GenericChart
+                        type="retention"
+                        data={retentionOnDaysData}
                         labels={retentionOnDaysLabels}
                         title="Retention On Specific Days"
+                        rate={retentionOnDaysRate}
+                        {fontColor}
                     />
-                {:else}
-                    <div class="h-[400px] w-full p-4">
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-left items-center flex text-2xl"
-                        >
-                            Retention On Specific Days
-                        </p>
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-center items-center flex text-xl mt-28 leading-3"
-                        >
-                            Data Not Available
-                        </p>
-                    </div>
-                {/if}
+                </div>
             </div>
         </div>
-        <div class="flex justify-center items-center h-full gap-10 w-full">
+
+        <div class="flex justify-left items-left h-full gap-10 w-full">
             <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if retentionOnIntervalData}
-                    <RetentionGraphs
-                        rate={retentionOnIntervalRate}
-                        dataSource={retentionOnIntervalData}
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mr-4 text-left justify-center pt-3 pb-1 ml-4 text-lg font-semibold sm:pl-3">
+                            Retention On Specific Interval
+                        </h4>
+                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                            Total number of unique users who interact with the platform during a month.
+                        </p>
+                    </div>
+                    <GenericChart
+                        type="retention"
+                        data={retentionOnIntervalData}
                         labels={retentionOnIntervalLabels}
                         title="Retention On Specific Interval"
+                        rate={retentionOnIntervalRate}
+                        {fontColor}
                     />
-                {:else}
-                    <div class="h-[400px] w-full p-4">
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-left items-center flex text-2xl"
-                        >
-                            Retention On Specific Interval
-                        </p>
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-center items-center flex text-xl mt-28 leading-3"
-                        >
-                            Data Not Available
-                        </p>
-                    </div>
-                {/if}
+                </div>
             </div>
-
-            <div
+            <!-- <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
-                {#if mostVisitedFeatureLoginData === null}
-                    <Line
-                        login={mostVisitedFeatureLoginData}
-                        medication={mostVisitedFeatureMedicationData}
-                        lables={commonlyVisitedFeatureLabels}
-                        title="Commonly Visited Feature Data"
-                    />
-                {:else}
-                    <div class="h-[400px] w-full py-4">
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-left items-center flex text-2xl bold"
+                <div class="w-full">
+                    <div class="flex items-center">
+                        <h4
+                            class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3"
                         >
                             Commonly Visited Feature Data
-                        </p>
-                        <p
-                            style="color:{fontColor}"
-                            class="justify-center items-center flex text-xl mt-28 leading-3"
-                        >
-                            Data Not Available
-                        </p>
+                        </h4>
                     </div>
-                {/if}
+                    <GenericChart
+                        type="line"
+                        data={mostVisitedFeatureLoginData.length > 0}
+                        login={mostVisitedFeatureLoginData}
+                        medication={mostVisitedFeatureMedicationData}
+                        labels={commonlyVisitedFeatureLabels}
+                        title="Commonly Visited Feature Data"
+                        {fontColor}
+                    />
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div class="flex justify-center items-center h-full  min-w-full">
+    <div
+        class=" min-w-full flex overflow-x-auto overflow-hidden justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4"
+    >
+        <div class="w-full">
+            <div class="flex items-center flex-col">
+                <h4 class="mr-4 mt-3 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
+                    Commonly Visited Features
+                </h4>
+                <!-- <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                        Total number of unique users who interact with the platform during a month.
+                    </p> -->
+            </div>
+            <div class=" px-2 sm:px-6 lg:px-8 col-span-2 items-center justify-center">
+                <div class="flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-4">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <table class="min-w-full border border-secondary-100 dark:border-surface-700 rounded-lg">
+                                <thead>
+                                    <tr class=" border border-secondary-100 dark:border-surface-700">
+                                        {#each tableHeaders as header}
+                                            <th
+                                                class=" py-3 text-left text-sm font-semibold sm:pl-3 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {header}
+                                            </th>
+                                        {/each}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {#each processedData as row}
+                                        <tr
+                                            class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                        >
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {formatDate(row.month)}
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {row.mostUsedFeature}
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {row.usageCount}
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {row.totalUsage}
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {row.percentage}
+                                            </td>
+                                        </tr>
+                                    {/each}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

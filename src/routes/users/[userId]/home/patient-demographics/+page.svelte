@@ -111,14 +111,14 @@
     }
 </script>
 
-<div class="py-2 mt-8">
+<div class="py-2 mt-8 ">
     <p class="  py-3 pl-4 pr-3 text-left text-sm  sm:pl-3">
         Demographics provide an understanding of the user base by categorizing them into age, gender, location, and
         other key attributes. These groupings help identify user diversity and engagement patterns.
     </p>
 </div>
-<div class="flex flex-col justify-center">
-    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold  sm:pl-3">
+<div class="flex flex-col justify-center ">
+    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold sm:pl-3">
         Age Distribution
     </p>
     <DistributionTable
@@ -158,12 +158,12 @@
         chartData={survivorCareGiverGroupData}
         chartLabels={survivorCareGiverGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold  sm:pl-3">
-        Race Group Distribution
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
+        Race Distribution
     </p>
     <DistributionTable
-        title="Race Group Distribution"
-        tableHeaders={['Age Group', 'Count', 'Percentage']}
+        title="Race Distribution"
+        tableHeaders={['Race', 'Count', 'Percentage']}
         tableData={raceGroups}
         chartData={raceGroupData}
         chartLabels={raceGroupLabels}
@@ -173,7 +173,7 @@
     </p>
     <DistributionTable
         title="Health System Distribution"
-        tableHeaders={['Gender', 'Count', 'Percentage']}
+        tableHeaders={['Health System', 'Count', 'Percentage']}
         tableData={healthSystemsDistribution}
         chartData={healthSystemGroupData}
         chartLabels={healthSystemGroupLabels}
@@ -183,7 +183,7 @@
     </p>
     <DistributionTable
         title="Hospital Distribution"
-        tableHeaders={['Ethnicity', 'Count', 'Percentage']}
+        tableHeaders={['Hospital', 'Count', 'Percentage']}
         tableData={hospitalDistribution}
         chartData={hospitalGroupData}
         chartLabels={hospitalGroupLabels}
@@ -193,7 +193,7 @@
     </p>
     <DistributionTable
         title=" Location Distribution"
-        tableHeaders={['Caregiver Status', 'Count', 'Percentage']}
+        tableHeaders={['Location', 'Count', 'Percentage']}
         tableData={locationGroups}
         chartData={locationGroupData}
         chartLabels={locationGroupLabels}

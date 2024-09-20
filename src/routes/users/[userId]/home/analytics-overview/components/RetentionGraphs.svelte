@@ -31,8 +31,8 @@
                 datasets: [
                     {
                         data: dataSource,
-                        backgroundColor: dynamicColors,
-                        borderColor: dynamicColors,
+                        backgroundColor: '#5EC1E9',
+                        borderColor: '#5EC1E9',
                         borderWidth: 1
                     }
                 ]
@@ -65,7 +65,8 @@
                         bottom: 20
                     }
                 },
-                plugins: {
+                plugins: { 
+
                     legend: {
                         display: false,
                         position: 'top',
@@ -75,7 +76,7 @@
                         }
                     },
                     title: {
-                        display: true,
+                        display: false,
                         text: title,
                         position: 'top',
                         color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
