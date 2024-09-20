@@ -25,7 +25,7 @@
             <div class="flow-root">
                 <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-4">
                     <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                        <table class="min-w-full border border-secondary-100 dark:border-surface-700 rounded-lg">
+                        <table class="w-1/2 border border-secondary-100 dark:border-surface-700 rounded-lg">
                             <thead>
                                 <tr class="w-[100%] border border-secondary-100 dark:border-surface-700">
                                     {#each tableHeaders as header}

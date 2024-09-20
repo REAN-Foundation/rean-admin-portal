@@ -42,99 +42,99 @@
     console.log(labels, 'labels', dataSource);
 
     onMount(() => {
-    ctx = barChart.getContext('2d');
-    barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [
-                {
-                    data: dataSource,
-                    backgroundColor: dynamicColors, // Apply dynamic colors
-                    borderColor: dynamicColors, // Use the same color for borders
-                    borderWidth: 1
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            indexAxis: 'x',
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+        ctx = barChart.getContext('2d');
+        barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        data: dataSource,
+                        backgroundColor:  '#5EC1E9', // Apply dynamic colors
+                        borderColor:  '#5EC1E9', // Use the same color for borders
+                        borderWidth: 1
                     }
-                },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
-                    }
-                }
+                ]
             },
-            layout: {
-                padding: {
-                    bottom: 20
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false,
-                    position: 'top',
-                    align: 'center',
-                    labels: {
-                        color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'x',
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        }
                     }
                 },
-                title: {
-                    display: true,
-                    text: title,
-                    position: 'top',
-                    color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
-                    align: 'start',
-                    padding: 20,
-                    font: {
-                        size: 22,
-                        weight: 'normal',
-                        lineHeight: 1.2
+                layout: {
+                    padding: {
+                        bottom: 20
                     }
                 },
-                tooltip: {
-                    callbacks: {
-                        // Modify this to use your custom label logic
-                        label: function (context) {
-                            let label = context.dataset.label || '';
-                            let customNames =labels // Add your custom names
+                plugins: {
+                    legend: {
+                        display: false,
+                        position: 'top',
+                        align: 'center',
+                        labels: {
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        }
+                    },
+                    title: {
+                        display: false,
+                        text: title,
+                        position: 'top',
+                        color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
+                        align: 'start',
+                        padding: 20,
+                        font: {
+                            size: 22,
+                            weight: 'normal',
+                            lineHeight: 1.2
+                        }
+                    },
 
-                            if (label) {
-                                label += ': ';
+                    tooltip: {
+                        callbacks: {
+                            // Modify this to use your custom label logic
+                            label: function (context) {
+                                let label = context.dataset.label || '';
+                                let customNames = labels; // Add your custom names
+
+                                if (label) {
+                                    label += ': ';
+                                }
+
+                                if (context.parsed.y !== null) {
+                                    // Get the value from customNames based on the context index
+                                    let customLabel = customNames[context.dataIndex] || 'Default Name';
+                                    label += customLabel; // Add the parsed value
+                                }
+
+                                return label;
                             }
-
-                            if (context.parsed.y !== null) {
-                                // Get the value from customNames based on the context index
-                                let customLabel = customNames[context.dataIndex] || 'Default Name';
-                                label += customLabel ; // Add the parsed value
-                            }
-
-                            return label;
                         }
                     }
                 }
             }
-        }
+        });
     });
-});
-
 </script>
 
 <canvas
-    class="h-96 "
+    class=" "
     bind:this={barChart}
 />
