@@ -112,13 +112,13 @@
 </script>
 
 <div class="py-2 mt-8">
-    <p class="  py-3 pl-4 pr-3 text-left text-sm text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="  py-3 pl-4 pr-3 text-left text-sm  sm:pl-3">
         Demographics provide an understanding of the user base by categorizing them into age, gender, location, and
         other key attributes. These groupings help identify user diversity and engagement patterns.
     </p>
 </div>
 <div class="flex flex-col justify-center">
-    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold  sm:pl-3">
         Age Distribution
     </p>
     <DistributionTable
@@ -128,7 +128,7 @@
         chartData={ageGroupData}
         chartLabels={ageGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
         Gender Distribution
     </p>
     <DistributionTable
@@ -138,7 +138,7 @@
         chartData={genderGroupData}
         chartLabels={genderGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
         Ethnicity Group Distribution
     </p>
     <DistributionTable
@@ -148,7 +148,7 @@
         chartData={ethnicityGroupData}
         chartLabels={ethnicityGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
         Survivor or Caregiver Distribution
     </p>
     <DistributionTable
@@ -158,7 +158,7 @@
         chartData={survivorCareGiverGroupData}
         chartLabels={survivorCareGiverGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 text-left text-lg font-semibold  sm:pl-3">
         Race Group Distribution
     </p>
     <DistributionTable
@@ -168,7 +168,7 @@
         chartData={raceGroupData}
         chartLabels={raceGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
         Health System Distribution
     </p>
     <DistributionTable
@@ -178,7 +178,7 @@
         chartData={healthSystemGroupData}
         chartLabels={healthSystemGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
         Hospital Distribution
     </p>
     <DistributionTable
@@ -188,7 +188,7 @@
         chartData={hospitalGroupData}
         chartLabels={hospitalGroupLabels}
     />
-    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="py-3 pl-4 pr-3 pt-10 text-left text-lg font-semibold  sm:pl-3">
         Location Distribution
     </p>
     <DistributionTable
@@ -201,7 +201,7 @@
 </div>
 <!--
 <div class="py-4">
-    <p class="  py-3 pl-4 pr-3 text-left text-sm font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">
+    <p class="  py-3 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-3">
         This section provides an overview of the basic analytics related to the tenant, including the total number of
         users, patient statistics, and registration/deregistration history.
     </p>

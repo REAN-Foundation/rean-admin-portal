@@ -63,19 +63,19 @@
                                     >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >Tenant Code</td
                                         >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                         >
                                             {data.statistics.TenantId || 'Default'}</td
                                         >
 
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >Unique identifier for the tenant.
                                         </td>
                                     </tr>
@@ -84,17 +84,17 @@
                                     >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >Tenant Name</td
                                         >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >{'American Heart Association'}</td
                                         >
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                         >
                                             Name of the tenant/organization.
                                         </td>
@@ -104,36 +104,36 @@
                                     >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >Start Date</td
                                         >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                         >
                                             {formatDate(data.statistics.StartDate)}</td
                                         >
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >Start date of the analysis period.
                                         </td>
                                     </tr>
                                     <tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition">
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >End Date</td
                                         >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                         >
                                             {formatDate(data.statistics.EndDate)}</td
                                         >
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >End date of the analysis period.
                                         </td>
                                     </tr>
@@ -146,10 +146,10 @@
         </div>
         <div class="  grid grid-cols-1 overflow-x-auto justify-center rounded-lg sm:px-4 px-4 py-4 w-full h-full">
             <div class="px-10 py-2">
-                <p class="py-2 pl-4 text-left text-lg font-bold text-primary-500 dark:text-primary-100 sm:pl-3">
+                <p class="py-2 pl-4 text-left text-lg font-bold  sm:pl-3">
                     Basic Statistics
                 </p>
-                <p class="py-2 pl-4 text-left text-sm text-primary-500 dark:text-primary-100 sm:pl-3">
+                <p class="py-2 pl-4 text-left text-sm  sm:pl-3">
                     This section provides an overview of the basic analytics related to the tenant, including the total
                     number of users, patient statistics, and registration/deregistration history.
                 </p>
@@ -163,14 +163,14 @@
                                     <tr>
                                         <th
                                             scope="col"
-                                            class=" py-3 pl-4 pr-3 text-left text-lg font-bold text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class=" py-3 pl-4 pr-3 text-left text-lg font-bold  sm:pl-3"
                                             >Basic Statistics</th
                                         >
                                     </tr>
                                     <tr>
                                         <td
                                             colspan="3"
-                                            class="  py-3 pl-4 pr-3 text-left text-sm font-semibold text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="  py-3 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-3"
                                         >
                                             <p>
                                                 This section provides an overview of the basic analytics related to the
@@ -186,19 +186,19 @@
                                     >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >Total Users
                                         </td>
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                         >
                                             {data.statistics.BasicStatistics.TotalUsers}</td
                                         >
 
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >Overall count of users associated with the tenant.
                                         </td>
                                     </tr>
@@ -207,17 +207,17 @@
                                     >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >Total Patients</td
                                         >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >{data.statistics.BasicStatistics.TotalPatients}</td
                                         >
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >Total number of patients registered within the system.
                                         </td>
                                     </tr>
@@ -226,17 +226,17 @@
                                     >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3 text-primary-500 dark:text-primary-100 sm:pl-3"
+                                            class="whitespace-nowrap text-sm py-2 pl-4 pr-3  sm:pl-3"
                                             >Total Active Patients</td
                                         >
                                         <td
                                             style="width:10%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >{data.statistics.BasicStatistics.TotalActivePatients}</td
                                         >
                                         <td
                                             style="width:15%;"
-                                            class="whitespace-nowrap px-3 py-2 text-sm text-primary-500 dark:text-primary-100"
+                                            class="whitespace-nowrap px-3 py-2 text-sm "
                                             >Total number of active (Not-deleted) patients
                                         </td>
                                     </tr>
@@ -249,10 +249,10 @@
         </div>
         <!-- <div class="grid grid-cols-1 overflow-x-auto justify-center rounded-lg sm:px-4 px-4 pt-4 w-full h-full bg-green-200">
             <div class="px-10 py-2">
-                <p class="py-2 pl-4 text-left text-lg font-bold text-primary-500 dark:text-primary-100 sm:pl-3">
+                <p class="py-2 pl-4 text-left text-lg font-bold  sm:pl-3">
                     Registration / Deregistration History
                 </p>
-                <p class="py-2 pl-4 text-left text-sm text-primary-500 dark:text-primary-100 sm:pl-3">
+                <p class="py-2 pl-4 text-left text-sm  sm:pl-3">
                     Trends of how many users registered or deregistered from the system on a given day, in a given week
                     or a month.
                 </p>
@@ -262,10 +262,10 @@
 </div>
 <div class="grid grid-cols-1 overflow-x-auto justify-center rounded-lg sm:px-4 px-4 pt-4 w-full h-full ">
     <div class="px-10 py-2">
-        <p class="py-2 pl-4 text-left text-lg font-bold text-primary-500 dark:text-primary-100 sm:pl-3">
+        <p class="py-2 pl-4 text-left text-lg font-bold  sm:pl-3">
             Registration / Deregistration History
         </p>
-        <p class="py-2 pl-4 text-left text-sm text-primary-500 dark:text-primary-100 sm:pl-3">
+        <p class="py-2 pl-4 text-left text-sm  sm:pl-3">
             Trends of how many users registered or deregistered from the system on a given day, in a given week
             or a month.
         </p>
