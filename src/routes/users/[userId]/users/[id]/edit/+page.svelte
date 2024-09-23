@@ -194,7 +194,7 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td>Email</td>
+				<td>Email *</td>
 				<td>
 					<input
 						type="email"
