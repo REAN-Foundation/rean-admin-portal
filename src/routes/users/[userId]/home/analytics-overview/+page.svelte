@@ -1,10 +1,7 @@
 <script lang="ts">
-    import BarChart from './components/BarChart.svelte';
     import JointBarGraph from './components/JointBarGraph.svelte';
-    import Doughnut from './components/Doughnut.svelte';
     import PieChart from './components/PieChart.svelte';
     import {
-        processPatientDeregistrationHistory,
         formatLabelOfMonth,
         processPatientRegistrationHistory,
         formatDate
@@ -12,14 +9,11 @@
     import Line from './components/Line.svelte';
 
     export let data;
-    const fontColor = '#661B26';
 
     let patientRegistrationHistoryData, patientRegistrationHistoryLabels;
-    let patientDeRegistrationHistoryData, patientDeRegistrationHistoryLabels;
+    let patientDeRegistrationHistoryData;
     let usersDistributionByRoleData, usersDistributionByRoleLabels;
     let activeUsersCountAtEndOfMonthData, activeUsersCountAtEndOfMonthLabels;
-    let dereg = processPatientDeregistrationHistory(data.statistics.BasicStatistics.PatientDeregistrationHistory);
-    const formattedDeregistrationLabels = dereg.labels.map((x) => formatLabelOfMonth(x));
 
     // console.log(dereg, 'this is data of dereg');
     // console.log(dereg.data, 'this is data of data');
