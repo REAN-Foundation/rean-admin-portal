@@ -145,6 +145,8 @@
 						name="sequence"
 						placeholder="Enter sequence here..."
 						class="input"
+						step="1" 
+						min="1"
 						bind:value={sequence}
 					/>
 				</td>
