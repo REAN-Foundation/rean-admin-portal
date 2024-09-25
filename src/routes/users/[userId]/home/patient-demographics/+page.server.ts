@@ -51,7 +51,7 @@
 
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { getDailyStatisticsUserAnalytics } from '../../../../api/services/reancare/statistics';
+import { getUserAnalytics } from '../../../../api/services/user-analytics/user-analytics';
 import chalk from 'chalk';
 import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage} from '$lib/utils/message.utils';
@@ -67,7 +67,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     const dd = String(today.getDate()).padStart(2, '0');
 
     const formattedDate = `${yyyy}-${mm}-${dd}`;
-    const response = await getDailyStatisticsUserAnalytics(sessionId, formattedDate)
+    const response = await getUserAnalytics(sessionId, formattedDate)
     console.log(chalk.yellow(JSON.stringify(response)));
     // const data = JSON.parse(await response);
 

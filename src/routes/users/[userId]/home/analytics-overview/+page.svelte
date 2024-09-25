@@ -1,97 +1,53 @@
 <script lang="ts">
     import BarChart from './components/BarChart.svelte';
+    import JointBarGraph from './components/JointBarGraph.svelte';
+    import Doughnut from './components/Doughnut.svelte';
+    import PieChart from './components/PieChart.svelte';
+    import {
+        processPatientDeregistrationHistory,
+        formatLabelOfMonth,
+        processPatientRegistrationHistory,
+        formatDate
+    } from './components/functions';
+    import Line from './components/Line.svelte';
 
     export let data;
     const fontColor = '#661B26';
-    let DummyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let DummyLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
     let patientRegistrationHistoryData, patientRegistrationHistoryLabels;
     let patientDeRegistrationHistoryData, patientDeRegistrationHistoryLabels;
-   let dereg =  processPatientDeregistrationHistory(data.statistics.BasicStatistics.PatientDeregistrationHistory);
-   const formattedDeregistrationLabels = dereg.labels.map((x)=>formatMonthLabel(x))
-    //     let patientDeRegistrationHistoryData = [];
-    // let patientDeRegistrationHistoryLabels = [];
-    function processPatientDeregistrationHistory(patientDeregistrationHistory) {
-        console.log('Input received:', patientDeregistrationHistory);
+    let usersDistributionByRoleData, usersDistributionByRoleLabels;
+    let activeUsersCountAtEndOfMonthData, activeUsersCountAtEndOfMonthLabels;
+    let dereg = processPatientDeregistrationHistory(data.statistics.BasicStatistics.PatientDeregistrationHistory);
+    const formattedDeregistrationLabels = dereg.labels.map((x) => formatLabelOfMonth(x));
 
-        // Check if input is undefined or null
-        if (patientDeregistrationHistory == null) {
-            console.error('Error: Input is null or undefined');
-            return { labels: [], data: [] };
-        }
-
-        // Ensure input is an array
-        if (!Array.isArray(patientDeregistrationHistory)) {
-            console.error('Error: Input is not an array');
-            return { labels: [], data: [] };
-        }
-
-        // Initialize the arrays
-        const patientDeRegistrationHistoryData = [];
-        const patientDeRegistrationHistoryLabels = [];
-
-        // Check if the input array is empty
-        if (patientDeregistrationHistory.length === 0) {
-            console.log('No data to process');
-            return { labels: [], data: [] };
-        }
-
-        try {
-            // Find start and end months
-            const sortedDates = patientDeregistrationHistory.map((item) => new Date(item.month)).sort((a, b) => a - b);
-
-            const startDate = sortedDates[0];
-            const endDate = sortedDates[sortedDates.length - 1];
-
-            console.log('Start month:', startDate.toISOString().slice(0, 7));
-            console.log('End month:', endDate.toISOString().slice(0, 7));
-
-            // Create a map for quick lookup of user counts
-            const userCountMap = new Map(patientDeregistrationHistory.map((item) => [item.month, item.user_count]));
-
-            // Iterate through all months from start to end
-            let currentDate = new Date(startDate);
-            while (currentDate <= endDate) {
-                const currentMonthStr = currentDate.toISOString().slice(0, 7);
-                patientDeRegistrationHistoryLabels.push(currentMonthStr);
-                patientDeRegistrationHistoryData.push(userCountMap.get(currentMonthStr) || 0);
-
-                // Move to the next month
-                currentDate.setMonth(currentDate.getMonth() + 1);
-            }
-
-            console.log('Labels:', patientDeRegistrationHistoryLabels);
-            console.log('Data:', patientDeRegistrationHistoryData);
-
-            return {
-                labels: patientDeRegistrationHistoryLabels,
-                data: patientDeRegistrationHistoryData
-            };
-        } catch (error) {
-            console.error('Error processing data:', error);
-            return { labels: [], data: [] };
-        }
-    }
-
-
-    console.log(dereg,'this is data of dereg')
-    console.log(dereg.data,'this is data of data')
-    console.log(dereg.labels,'this is data of labels')
-
-
-    function formatMonthLabel(month: string): string {
-        const date = new Date(month + '-01');
-        return date.toLocaleString('default', { month: 'short', year: 'numeric' });
-    }
-
+    // console.log(dereg, 'this is data of dereg');
+    // console.log(dereg.data, 'this is data of data');
+    // console.log(dereg.labels, 'this is data of labels');
+    const roleMapping = {
+        1: 'System admin',
+        2: 'Patient',
+        3: 'Doctor',
+        4: 'Lab user',
+        5: 'Pharmacy user',
+        6: 'Nurse',
+        7: 'Ambulance service user',
+        8: 'Patient family member',
+        9: 'Patient friend',
+        10: 'Social health worker',
+        11: 'Donor',
+        12: 'Volunteer',
+        13: 'System user',
+        14: 'Tenant admin',
+        15: 'Tenant user'
+    };
     if (data.statistics.BasicStatistics) {
         if (data.statistics.BasicStatistics.PatientRegistrationHistory) {
             patientRegistrationHistoryData = data.statistics.BasicStatistics.PatientRegistrationHistory.map(
                 (x) => x.user_count
             );
             patientRegistrationHistoryLabels = data.statistics.BasicStatistics.PatientRegistrationHistory.map((x) => {
-                const label = formatMonthLabel(x.month);
+                const label = formatLabelOfMonth(x.month);
                 return label ? label : 'Unknown';
             });
         }
@@ -100,24 +56,42 @@
             patientDeRegistrationHistoryData = data.statistics.BasicStatistics.PatientDeregistrationHistory.map(
                 (x) => x.user_count
             );
-            patientDeRegistrationHistoryLabels = data.statistics.BasicStatistics.PatientDeregistrationHistory.map(
-                (x) => {
-                    const label = formatMonthLabel(x.month);
-                    return label ? label : 'Unknown';
-                }
+            // patientDeRegistrationHistoryLabels = data.statistics.BasicStatistics.PatientDeregistrationHistory.map(
+            //     (x) => {
+            //         const label = formatMonthLabel(x.month);
+            //         return label ? label : 'Unknown';
+            //     }
+            // );
+        }
+        if (data.statistics.BasicStatistics.UsersDistributionByRole) {
+            usersDistributionByRoleData = data.statistics.BasicStatistics.UsersDistributionByRole.map(
+                (x) => x.registration_count
+            );
+            usersDistributionByRoleLabels = data.statistics.BasicStatistics.UsersDistributionByRole.map(
+                (x) => roleMapping[x.RoleId] || `${x.RoleId}`
+            );
+        }
+
+        if (data.statistics.BasicStatistics.ActiveUsersCountAtEndOfMonth) {
+            activeUsersCountAtEndOfMonthData = data.statistics.BasicStatistics.ActiveUsersCountAtEndOfMonth.map(
+                (x) => x.active_user_count
+            );
+            activeUsersCountAtEndOfMonthLabels = data.statistics.BasicStatistics.ActiveUsersCountAtEndOfMonth.map(
+                (x) => x.month_end
             );
         }
     }
+    console.log(usersDistributionByRoleData);
+    console.log(usersDistributionByRoleLabels);
 
-    // Function to format the date
-    function formatDate(utcDate: string): string {
-        const date = new Date(utcDate);
-        return new Intl.DateTimeFormat('en-US', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric'
-        }).format(date);
-    }
+    let result;
+    result = processPatientRegistrationHistory(
+        data.statistics.BasicStatistics.PatientRegistrationHistory,
+        data.statistics.BasicStatistics.PatientDeregistrationHistory
+    );
+    // onMount(() => {
+    // });
+    console.log('this is formatted result', result);
 </script>
 
 <div class="flex flex-col justify-center">
@@ -129,7 +103,9 @@
                         <div class="inline-block min-w-full align-middle sm:px-6 lg:px-8">
                             <table class="min-w-full">
                                 <tbody class="border border-secondary-100 dark:border-surface-700">
-                                    <tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border">
+                                    <tr
+                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                    >
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap text-sm py-2 pl-4 pr-3 sm:pl-3">Tenant Code</td
@@ -147,7 +123,9 @@
                                             >Unique identifier for the tenant.
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border">
+                                    <tr
+                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                    >
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap text-sm py-2 pl-4 pr-3 sm:pl-3">Tenant Name</td
@@ -164,7 +142,9 @@
                                             Name of the tenant/organization.
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border">
+                                    <tr
+                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                    >
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap text-sm py-2 pl-4 pr-3 sm:pl-3">Start Date</td
@@ -239,9 +219,9 @@
                                         </td>
                                     </tr>
                                 </thead> -->
-                                <tbody class="rounded-lg border">
+                                <tbody class="rounded-lg border border-secondary-100 dark:border-surface-700">
                                     <tr
-                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border rounded-lg"
+                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700 rounded-lg"
                                     >
                                         <td
                                             style="width:10%;"
@@ -261,7 +241,9 @@
                                             >Overall count of users associated with the tenant.
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border">
+                                    <tr
+                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                    >
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap text-sm py-2 pl-4 pr-3 sm:pl-3">Total Patients</td
@@ -277,7 +259,9 @@
                                             >Total number of patients registered within the system.
                                         </td>
                                     </tr>
-                                    <tr class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border">
+                                    <tr
+                                        class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                    >
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap text-sm py-2 pl-4 pr-3 sm:pl-3"
@@ -327,51 +311,40 @@
     <div class="grid grid-cols-1 justify-center rounded-lg gap-8 px-12">
         <div class="flex justify-center items-center h-full gap-10 w-full">
             <div
-                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-full"
             >
                 <div class="w-full">
                     <div class="flex items-center w-full justify-center">
-                        <h4
-                            class="mr-4 text-center justify-center py-3 ml-4 text-lg font-semibold sm:pl-3"
-                        >
-                            Patient Registration History
+                        <h4 class="mr-4 text-center justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
+                            Patient Registration / Deregistration History
                         </h4>
                     </div>
                     {#if patientRegistrationHistoryData}
                         <div class="h-96">
-                            <BarChart
-                                dataSource={patientRegistrationHistoryData}
-                                labels={patientRegistrationHistoryLabels}
-                                title="Patient Registration History"
+                            <JointBarGraph
+                                firstDataSource={result.registrationData}
+                                secondDataSource={result.deregistrationData}
+                                labels={result.labels}
+                                title="Patient Registration / Deregistration History"
                             />
                         </div>
                     {:else}
                         <div class="h-[400px] w-full p-4">
-                            <p
-                                style="color:{fontColor}"
-                                class="justify-center items-center flex text-2xl"
-                            >
-                                Patient Registration History
+                            <p class="justify-center items-center flex text-2xl">
+                                Patient Registration / Deregistration History
                             </p>
-                            <p
-                                style="color:{fontColor}"
-                                class="justify-center items-center flex text-xl mt-28 leading-3"
-                            >
-                                Data Not Available
-                            </p>
+                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
             </div>
 
-            <div
+            <!-- <div
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
                 <div class="w-full">
                     <div class="flex items-center justify-center">
-                        <h4
-                            class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold  sm:pl-3"
-                        >
+                        <h4 class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
                             Patient Deregistration History
                         </h4>
                     </div>
@@ -386,17 +359,73 @@
                     {:else}
                         <div class="h-[400px] w-full p-4">
                             <p
-                                style="color:{fontColor}"
+                                
                                 class="justify-center items-center flex text-2xl"
                             >
                                 Patient Deregistration History
                             </p>
                             <p
-                                style="color:{fontColor}"
+                                
                                 class="justify-center items-center flex text-xl mt-28 leading-3"
                             >
                                 Data Not Available
                             </p>
+                        </div>
+                    {/if}
+                </div>
+            </div> -->
+        </div>
+
+        <div class="flex justify-center items-center h-full gap-10 w-full">
+            <div
+                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="flex items-center w-full justify-center">
+                        <h4 class="mr-4 text-center justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
+                            User Distribution By Roles
+                        </h4>
+                    </div>
+                    {#if usersDistributionByRoleData}
+                        <div class="h-96 pl-8">
+                            <PieChart
+                                data={usersDistributionByRoleData}
+                                labels={usersDistributionByRoleLabels}
+                                title="User Distribution By Roles"
+                            />
+                        </div>
+                    {:else}
+                        <div class="h-[400px] w-full p-4">
+                            <!-- <p class="justify-center items-center flex text-2xl">User Distribution By Roles</p> -->
+                            <p class="justify-center font-semibold items-center flex text-base mt-28 leading-3">
+                                Data Not Available
+                            </p>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+
+            <div
+                class="flex min-h-full overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="flex items-center justify-center w-full">
+                        <h4 class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
+                            Active Users For Month
+                        </h4>
+                    </div>
+                    {#if patientDeRegistrationHistoryData}
+                        <div class="h-96">
+                            <Line
+                                data={activeUsersCountAtEndOfMonthData}
+                                lables={activeUsersCountAtEndOfMonthLabels}
+                                title="Patient Deregistration History"
+                            />
+                        </div>
+                    {:else}
+                        <div class="h-[400px] w-full p-4">
+                            <!-- <p class="justify-center items-center flex text-2xl">Active Users At End Of The Month</p> -->
+                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>

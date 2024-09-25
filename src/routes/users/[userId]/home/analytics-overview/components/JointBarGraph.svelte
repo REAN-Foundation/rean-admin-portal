@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Chart from 'chart.js/auto';
-    import { getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
+    import { getDoughnutColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
 
     /////////////////////////////////////////////////////////////////////////////
 
@@ -9,32 +9,40 @@
     const tickColorDark = getTickColorDark();
 
     export let labels: string[] = [];
-    export let dataSource: number[] = [];
+    export let firstDataSource: number[] = [];
+    export let secondDataSource: number[] = [];
     export let title: string;
 
     let barChart;
     let ctx;
 
-    let xLabel;
-    let yLabel;
-    function selectAxisLabel(title) {
-        switch (title) {
-            case 'Daily Active Users':
-                (xLabel = 'Day'), (yLabel = 'User Count');
-                break;
-            case 'Weekly Active Users':
-                (xLabel = 'Week'), (yLabel = 'User Count');
-                break;
-            case 'Monthly Active Users':
-                (xLabel = 'Month'), (yLabel = 'User Count');
-                break;
-            case 'Access Frequency':
-                (xLabel = 'Month'), (yLabel = 'User Count');
-                break;
-        }
+    // console.log(labels, 'labels', dataSource, 'data');
+
+    // Predefined color palette, sorted from darkest to lightest
+    const colorPalette = getDoughnutColors();
+
+    // function getColor(index: number): string {
+    //     let localIndex = index;
+    //     if (index === 8) {
+    //         localIndex = index % 8;
+    //     }
+    //     return colorPalette[localIndex];
+    // }
+    function getColor(index: number): string {
+        const localIndex = index % 8; // This will ensure that the index always stays within 0 to 7
+        return colorPalette[localIndex];
     }
+
+    // Function to generate dynamic colors for the entire dataset
+    function getDynamicColors(data: number[]): string[] {
+        return data.map((index) => getColor(index));
+    }
+
+    // $: dynamicColors = getDynamicColors(dataSource);
+
+    // console.log(labels, 'labels', dataSource);
+
     onMount(() => {
-        selectAxisLabel(title);
         ctx = barChart.getContext('2d');
         barChart = new Chart(ctx, {
             type: 'bar',
@@ -42,10 +50,22 @@
                 labels: labels,
                 datasets: [
                     {
-                        data: dataSource,
-                        backgroundColor: '#D3D3D3',
-                        borderColor: '#808080',
+                        data: firstDataSource,
+                        backgroundColor: '#68d33d',
+                        borderColor: '#5EC009',
                         borderWidth: 1,
+                        label: 'Patient Registration Moth',
+                        borderRadius: {
+                            topLeft: 4,
+                            topRight: 4
+                        }
+                    },
+                    {
+                        data: secondDataSource,
+                        backgroundColor: '#f86565',
+                        borderColor: '#5EC1E9',
+                        borderWidth: 1,
+                        label: 'Patient Deregistration Month',
                         borderRadius: {
                             topLeft: 4,
                             topRight: 4
@@ -64,11 +84,6 @@
                         },
                         ticks: {
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
-                        },
-                        title: {
-                            display: true,
-                            text: xLabel,
-                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     },
                     y: {
@@ -77,11 +92,6 @@
                             display: true
                         },
                         ticks: {
-                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
-                        },
-                        title: {
-                            display: true,
-                            text: yLabel,
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     }
@@ -93,7 +103,7 @@
                 },
                 plugins: {
                     legend: {
-                        display: false,
+                        display: true,
                         position: 'top',
                         align: 'center',
                         labels: {
@@ -113,9 +123,27 @@
                             lineHeight: 1.2
                         }
                     },
-
                     tooltip: {
-                        callbacks: {}
+                        callbacks: {
+                            label: function (context) {
+                                // Get the label for the dataset
+                                let label = context.dataset.label || '';
+
+                                // Add the x-axis value (label)
+                                let xLabel = labels[context.dataIndex] || 'No label';
+
+                                // Add the y-axis value (data point value)
+                                let yValue = context.parsed.y !== null ? context.parsed.y : 'No value';
+
+                                // Customizing the tooltip text
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += `${xLabel} , Value: ${yValue}`;
+
+                                return label;
+                            }
+                        }
                     }
                 }
             }
