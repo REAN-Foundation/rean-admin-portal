@@ -19,9 +19,10 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     }
     const hospital = response.Data.Hospital;
     const id = response.Data.Hospital.id;
-    const healthSystems_ = await searchHealthSystems(sessionId);
+    const healthSystems_ = await searchHealthSystems(sessionId, {
+        itemsPerPage: 200
+    });
     const healthSystems = healthSystems_.Data.HealthSystems.Items;
-
     return {
         location: `${id}/edit`,
         hospital,
