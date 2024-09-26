@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Doughnut from './Doughnut.svelte';
+    import Doughnut from "./Doughnut.svelte";
     
     export let title = '';
     export let tableHeaders: string[] = [];

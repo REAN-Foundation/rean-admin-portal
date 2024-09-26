@@ -1,6 +1,6 @@
 <script>
-    import BarChart from '../analytics-overview/components/BarChart.svelte';
-    import RetentionGraphs from '../analytics-overview/components/RetentionGraphs.svelte';
+    import BarChart from '$lib/components/analytics/BarChart.svelte';
+    import RetentionGraphs from '$lib/components/analytics/RetentionGraphs.svelte';
 
     export let type = 'bar';
     export let data = null;

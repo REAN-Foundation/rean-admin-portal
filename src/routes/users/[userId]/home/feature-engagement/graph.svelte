@@ -1,6 +1,6 @@
 <script lang="ts">
-    import BarChart from '../analytics-overview/components/BarChart.svelte';
-    import RetentionGraphs from '../analytics-overview/components/RetentionGraphs.svelte';
+    import BarChart from '$lib/components/analytics/BarChart.svelte';
+    import RetentionGraphs from '$lib/components/analytics/RetentionGraphs.svelte';
     /////////////////////////////////////////////////
     const fontColor = '#661B26';
     export let accessFrequencyData, accessFrequencyLabels;

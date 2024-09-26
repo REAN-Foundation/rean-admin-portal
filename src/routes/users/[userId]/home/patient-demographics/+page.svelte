@@ -1,5 +1,5 @@
 <script lang="ts">
-    import DistributionTable from '../analytics-overview/components/DistributionTable.svelte';
+    import DistributionTable from '$lib/components/analytics/DistributionTable.svelte';
     ///////////////////////////////////////////////////////////////////////////////////////////
     export let data;
 

@@ -1,12 +1,12 @@
 <script lang="ts">
-    import JointBarGraph from './components/JointBarGraph.svelte';
-    import PieChart from './components/PieChart.svelte';
+    import JointBarGraph from '$lib/components/analytics/JointBarGraph.svelte';
+    import PieChart from '$lib/components/analytics/PieChart.svelte';
     import {
         formatLabelOfMonth,
         processPatientRegistrationHistory,
         formatDate
     } from './components/functions';
-    import Line from './components/Line.svelte';
+    import Line from '$lib/components/analytics/Line.svelte';
 
     export let data;
 
