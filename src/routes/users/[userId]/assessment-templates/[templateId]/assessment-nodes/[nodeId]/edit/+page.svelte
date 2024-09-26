@@ -186,7 +186,6 @@
 							required
 							placeholder="Enter message here..."
 							bind:value={message}
-							disabled
 							class="textarea w-full
 						{form?.errors?.message ? 'border-error-300 text-error-500' : ''}"
 						/>
