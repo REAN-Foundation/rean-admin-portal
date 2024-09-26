@@ -1,28 +1,40 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import Chart from 'chart.js/auto';
-    import { getDoughnutColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
+    import { getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
+
     /////////////////////////////////////////////////////////////////////////////
+
     const tickColorLight = getTickColorLight();
     const tickColorDark = getTickColorDark();
+
     export let labels: string[] = [];
     export let dataSource: number[] = [];
-    export let rate;
     export let title: string;
+
     let barChart;
     let ctx;
-    console.log(labels, 'labels', dataSource, 'data');
-    const colorPalette = getDoughnutColors();
-    function getColor(index: number): string {
-        const localIndex = index % colorPalette.length;
-        return colorPalette[localIndex];
+
+    let xLabel;
+    let yLabel;
+    function selectAxisLabel(title) {
+        switch (title) {
+            case 'Daily Active Users':
+                (xLabel = 'Day'), (yLabel = 'User Count');
+                break;
+            case 'Weekly Active Users':
+                (xLabel = 'Week'), (yLabel = 'User Count');
+                break;
+            case 'Monthly Active Users':
+                (xLabel = 'Month'), (yLabel = 'User Count');
+                break;
+            case 'Access Frequency':
+                (xLabel = 'Month'), (yLabel = 'User Count');
+                break;
+        }
     }
-    function getDynamicColors(data: number[]): string[] {
-        return data.map((_, index) => getColor(index));
-    }
-    $: dynamicColors = getDynamicColors(dataSource);
-    console.log(labels, 'labels', dataSource);
     onMount(() => {
+        selectAxisLabel(title);
         ctx = barChart.getContext('2d');
         barChart = new Chart(ctx, {
             type: 'bar',
@@ -31,9 +43,13 @@
                 datasets: [
                     {
                         data: dataSource,
-                        backgroundColor: '#5EC1E9',
-                        borderColor: '#5EC1E9',
-                        borderWidth: 1
+                        backgroundColor: '#D3D3D3',
+                        borderColor: '#808080',
+                        borderWidth: 1,
+                        borderRadius: {
+                            topLeft: 4,
+                            topRight: 4
+                        }
                     }
                 ]
             },
@@ -48,14 +64,24 @@
                         },
                         ticks: {
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        },
+                        title: {
+                            display: true,
+                            text: xLabel,
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     },
                     y: {
                         beginAtZero: true,
                         grid: {
-                            display: false
+                            display: true
                         },
                         ticks: {
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        },
+                        title: {
+                            display: true,
+                            text: yLabel,
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     }
@@ -65,8 +91,7 @@
                         bottom: 20
                     }
                 },
-                plugins: { 
-
+                plugins: {
                     legend: {
                         display: false,
                         position: 'top',
@@ -88,22 +113,9 @@
                             lineHeight: 1.2
                         }
                     },
+
                     tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                let label = context.dataset.label || '';
-                                let customNames = labels;
-                                let extraInfo = rate;
-                                let tooltipLines = [];
-                                if (context.parsed.y !== null) {
-                                    let customLabel = customNames[context.dataIndex] || 'Default Name';
-                                    tooltipLines.push(customLabel);
-                                    let extra = extraInfo[context.dataIndex] || 'No Extra Info';
-                                    tooltipLines.push(extra);
-                                }
-                                return tooltipLines;
-                            }
-                        }
+                        callbacks: {}
                     }
                 }
             }
@@ -112,6 +124,6 @@
 </script>
 
 <canvas
-    class="h-96"
+    class=" "
     bind:this={barChart}
 />
