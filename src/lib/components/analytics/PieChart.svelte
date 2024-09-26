@@ -8,46 +8,29 @@
     const tickColorLight = getTickColorLight();
     const tickColorDark = getTickColorDark();
 
-    export let labels: string[];
-    export let data: number[];
+    export let labels: [];
+    export let data: [];
     export let title: string;
 
-    let doughnutChart;
+    let pieChart;
     let ctx;
 
+    console.log(data, 'data', labels);
     const colorPalette = getDoughnutColors();
 
-    function getColor(value: number, totalSum: number, index: number): string {
-        const localIndex = index % 8; // This will ensure that the index always stays within 0 to 7
-        return colorPalette[localIndex];
-    }
-
-    function getDynamicColors(data: number[]): string[] {
-        const totalSum = data.reduce((acc, curr) => acc + curr, 0); // Sum of all values
-        return data.map((value, index) => getColor(value, totalSum, index));
-    }
-
-    function truncateLabel(label: string, maxLength: number = 8): string {
-        return label.length > maxLength ? label.slice(0, maxLength) + '...' : label;
-    }
-
-    $: dynamicColors = getDynamicColors(data);
-    $: truncatedLabels = labels.map((label) => truncateLabel(label));
-
-    $: data;
-    $: labels;
-
     onMount(async () => {
-        ctx = doughnutChart.getContext('2d');
-        doughnutChart = new Chart(ctx, {
-            type: 'doughnut',
+        // const dynamicColors = getDynamicColors(data); // Get dynamic colors based on the dataset
+
+        ctx = pieChart.getContext('2d');
+        pieChart = new Chart(ctx, {
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [
                     {
                         data: data,
-                        backgroundColor: dynamicColors, // Dynamic colors for the doughnut chart
-                        hoverBackgroundColor: dynamicColors
+                        backgroundColor: colorPalette, // Dynamic colors for the pie chart
+                        hoverBackgroundColor: colorPalette
                     }
                 ]
             },
@@ -82,10 +65,9 @@
     });
 </script>
 
-<!-- Canvas for the Doughnut chart -->
-<div class="h-80 w-fit ">
+<div class="h-80 w-full  items-center pl-10 justify-center">
     {#if data}
-        <canvas bind:this={doughnutChart} />
+        <canvas height="400" width="400"  bind:this={pieChart} />
     {:else}
         <p>No data available.</p>
     {/if}

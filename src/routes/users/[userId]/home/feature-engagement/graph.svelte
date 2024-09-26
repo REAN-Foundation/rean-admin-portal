@@ -1,6 +1,6 @@
 <script lang="ts">
-    import BarChart from '../analytics-overview/components/BarChart.svelte';
-    import RetentionGraphs from '../analytics-overview/components/RetentionGraphs.svelte';
+    import BarChart from '$lib/components/analytics/BarChart.svelte';
+    import RetentionGraphs from '$lib/components/analytics/RetentionGraphs.svelte';
     /////////////////////////////////////////////////
     const fontColor = '#661B26';
     export let accessFrequencyData, accessFrequencyLabels;
@@ -9,8 +9,10 @@
     export let retentionRateIntervalsData, retentionRateIntervalsLabels, retentionRateIntervalsRate;
     export let dropOffPointsData, dropOffPointsLabels;
 
-    let DummyData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let DummyLabels = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+    console.log('accessFrequencyData', accessFrequencyData, 'accessFrequencyLabels', accessFrequencyLabels);
+
+    let selectedGraph = 'graph1';
+    let percentageGraph = 'graph1';
 </script>
 
 <div class="flex flex-col justify-center">
@@ -21,10 +23,13 @@
             >
                 <div class="w-full">
                     <div class="flex items-center flex-col">
-                        <h4 class="mr-4 text-left justify-center pt-3 pb-1 ml-4 text-lg font-semibold sm:pl-3">
+                        <h4 class="mx-4 text-left justify-center pt-3 py-1 text-lg font-semibold sm:pl-3">
                             Access Frequency
                         </h4>
-                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                        <!-- <h5 class="mr-4 text-left justify-center ml-4 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                            (Frequency After Registration)
+                        </h5> -->
+                        <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                             The number of times users access a particular feature over time. This metric helps identify
                             the popularity and utility of features among users.
                         </p>
@@ -55,25 +60,26 @@
                     {/if}
                 </div>
             </div>
-
             <div
-                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+                class="flex overflow-x-auto h-[100%] justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
                 <div class="w-full">
                     <div class="flex items-center flex-col">
-                        <h4 class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
-                            Engagement Rate (%)
+                        <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                            Engagement Rate
                         </h4>
-
-                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                        <!-- <h5 class="mr-4 text-left justify-center ml-4 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                            (Rate After Registration)
+                        </h5> -->
+                        <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                             This is the ratio of number of unique users engaging with each feature per month to the
                             total number of active users per month.
                         </p>
                     </div>
                     {#if engagementRateData.length > 0}
                         <div class="h-96">
+                            <!-- rate={engagementRateRate} -->
                             <RetentionGraphs
-                                rate={engagementRateRate}
                                 dataSource={engagementRateData}
                                 labels={engagementRateLabels}
                                 title="Engagement Rate (%)"
@@ -103,13 +109,15 @@
         <div
             class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
         >
-            <div class="w-full">
+            <!-- <div class="w-full">
                 <div class="flex items-center flex-col">
-                    <h4 class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
-                        <!-- Retention User Count On Specific Days (%) -->
-                        Retention Days After Registration
+                    <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                        Retention After Registration
                     </h4>
-                    <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                    <h5 class="mr-4 text-left justify-center ml-4 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                        (Days After Registration)
+                    </h5>
+                    <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                         The percentage of users who return to a feature after their first use at specific intervals (day
                         1, day 7, day 30). Retention rates measure user loyalty and the ability of the feature to keep
                         users engaged over time.
@@ -118,7 +126,6 @@
                 {#if retentionRateDaysData.length > 0 && retentionRateDaysLabels.length > 0}
                     <div class="h-96">
                         <RetentionGraphs
-                            rate={retentionRateDaysRate}
                             dataSource={retentionRateDaysData}
                             labels={retentionRateDaysLabels}
                             title="Retention User Count On Specific Days (%)"
@@ -130,7 +137,6 @@
                             style="color:{fontColor}"
                             class="justify-left items-center flex text-2xl"
                         >
-                            <!-- Retention User Count On Specific Days (%) -->
                         </p>
                         <p
                             style="color:{fontColor}"
@@ -140,27 +146,119 @@
                         </p>
                     </div>
                 {/if}
-            </div>
-        </div>
-        <div
-            class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
-        >
+            </div> -->
+            <!-- </div> -->
+
+            <!-- <div class="flex justify-center items-center h-full gap-10 w-full">
+            <div
+                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            > -->
             <div class="w-full">
                 <div class="flex items-center flex-col">
-                    <h4 class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
-                        <!-- Retention User Count On Specific Intervals (%) -->
+                    <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
                         Retention After Registration
                     </h4>
-                    <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                    <div class="flex w-full justify-end">
+                        <h5 class="flex text-center justify-center mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                            (Days After Registration)
+                        </h5>
+                        <select
+                            class="mt-4 border border-secondary-100 dark:border-surface-700 rounded-lg"
+                            on:change={(e) => {
+                                selectedGraph = e.target.value;
+                            }}
+                        >
+                            <option value="graph1">User Count</option>
+                            <option value="graph2">Percentage</option>
+                        </select>
+                    </div>
+                    <div class="h-fit w-full">
+                        <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                            The percentage of users who return to a feature after their first use at specific intervals
+                            (day 1, day 7, day 30). Retention rates measure user loyalty and the ability of the feature
+                            to keep users engaged over time.
+                        </p>
+                    </div>
+                </div>
+                {#if selectedGraph === 'graph1' && retentionRateDaysData.length > 0}
+                    <div class="h-96">
+                        <RetentionGraphs
+                            dataSource={retentionRateDaysData}
+                            labels={retentionRateDaysLabels}
+                            title="Retention User Count On Specific Days"
+                        />
+                    </div>
+                {:else if selectedGraph === 'graph1'}
+                    <div class="h-[400px] w-[400px] p-4">
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-left items-center flex text-2xl"
+                        ></p>
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
+                {:else if selectedGraph === 'graph2'}
+                    <div class="h-96">
+                        <RetentionGraphs
+                            dataSource={retentionRateDaysRate}
+                            labels={retentionRateDaysLabels}
+                            title="Retention User Count On Specific Days (%)"
+                        />
+                    </div>
+                {/if}
+            </div>
+        </div>
+
+        <div
+            class="flex h-[100%] overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+        >
+            <div class="w-full">
+                <!-- <div class="flex items-center flex-col">
+                    <h4 class="mx-4 text-left justify-center pt-3 py-1 text-lg font-semibold sm:pl-3">
+                        Retention After Registration
+                    </h4>
+                    <h5 class="mr-4 text-left justify-center ml-4 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                        (Interval After Registration)
+                    </h5>
+                    <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                         The percentage of users who return to a feature after their first use at specific intervals (0-1
                         days, 1-3 days, 3-7 days, etc). This is just another way to look at the retention on specific
                         days.
                     </p>
+                </div> -->
+                <div class="flex items-center flex-col">
+                    <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                        Retention After Registration
+                    </h4>
+                    <div class="flex w-full justify-end 0">
+                        <h5 class="flex text-center justify-start mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                            (Interval After Registration)
+                        </h5>
+                        <select
+                            class="mt-4 border border-secondary-100 dark:border-surface-700 rounded-lg "
+                            on:change={(e) => {
+                                percentageGraph = e.target.value;
+                            }}
+                        >
+                            <option value="graph1">User Count</option>
+                            <option value="graph2">Percentage</option>
+                        </select>
+                    </div>
+                    <div class="h-fit w-full">
+                        <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                            The percentage of users who return to a feature after their first use at specific intervals
+                            (0-1 days, 1-3 days, 3-7 days, etc). This is just another way to look at the retention on
+                            specific days.
+                        </p>
+                    </div>
                 </div>
-                {#if retentionRateIntervalsData.length > 0}
+                <!-- {#if retentionRateIntervalsData.length > 0}
                     <div class="h-96">
                         <RetentionGraphs
-                            rate={retentionRateIntervalsRate}
                             dataSource={retentionRateIntervalsData}
                             labels={retentionRateIntervalsLabels}
                             title="Retention User Count On Specific Intervals (%)"
@@ -171,15 +269,40 @@
                         <p
                             style="color:{fontColor}"
                             class="justify-left items-center flex text-2xl"
-                        >
-                            <!-- Retention User Count On Specific Intervals (%) -->
-                        </p>
+                        ></p>
                         <p
                             style="color:{fontColor}"
                             class="justify-center items-center flex text-xl mt-28 leading-3"
                         >
                             Data Not Available
                         </p>
+                    </div>
+                {/if} -->
+                {#if percentageGraph === 'graph1' && retentionRateIntervalsData.length > 0}
+                    <div class="h-96">
+                        <RetentionGraphs
+                            dataSource={retentionRateIntervalsData}
+                            labels={retentionRateIntervalsLabels}
+                            title="Retention User Count On Specific Intervals"
+                        />
+                    </div>
+                {:else if percentageGraph === 'graph1'}
+                    <div class="h-[400px] w-[400px] p-4">
+
+                        <p
+                            style="color:{fontColor}"
+                            class="justify-center items-center flex text-xl mt-28 leading-3"
+                        >
+                            Data Not Available
+                        </p>
+                    </div>
+                {:else if percentageGraph === 'graph2'}
+                    <div class="h-96">
+                        <RetentionGraphs
+                            dataSource={retentionRateIntervalsRate}
+                            labels={retentionRateIntervalsLabels}
+                            title="Retention User Count On Specific Intervals (%)"
+                        />
                     </div>
                 {/if}
             </div>
@@ -209,9 +332,8 @@
             <div class="h-fit w-full">
                 <div class="justify-left items-center flex py-3 text-lg sm:pl-3 flex-col">
                     {#if dropOffPointsData && dropOffPointsLabels}
-                        <p class="font-semibold">DropOff Points (%)</p>
-
-                        <p class="mr-4 text-left justify-center ml-4 pb-1 text-sm sm:pl-3">
+                        <p class="font-semibold">DropOff Points</p>
+                        <p class=" text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                             Points in the user flow where users most frequently stop using a feature. Identifying
                             drop-off points helps in optimizing the user journey and addressing usability challenges to
                             improve feature completion rates.
@@ -224,15 +346,15 @@
                     <table class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70">
                         <thead>
                             <tr>
-                                <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Label</th>
-                                <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Value</th>
+                                <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Action</th>
+                                <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Count</th>
                             </tr>
                         </thead>
                         <tbody class="justify-center">
                             {#each dropOffPointsData as value, index}
                                 <tr>
                                     <td class="py-2 px-4 border-b border-gray-200">{dropOffPointsLabels[index]}</td>
-                                    <td class="py-2 px-4 border-b border-gray-200">{value} %</td>
+                                    <td class="py-2 px-4 border-b border-gray-200">{value} </td>
                                 </tr>
                             {/each}
                         </tbody>
