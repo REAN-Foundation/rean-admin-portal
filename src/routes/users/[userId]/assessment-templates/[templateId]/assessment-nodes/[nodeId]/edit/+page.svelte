@@ -18,6 +18,7 @@
 	let optionValueStore = options;
 	let message = data.assessmentNode.Message ?? null;
 	let sequence = data.assessmentNode.Sequence;
+	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? false;
 
 	//Original data
 	let _nodeType = nodeType;
@@ -192,7 +193,18 @@
 					</td>
 				</tr>
 			{:else}
-				<tr />
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Serve List Node Children At Once</td>
+				<td>
+					<input
+						type="checkbox"
+						name="serveListNodeChildrenAtOnce"
+						bind:value={serveListNodeChildrenAtOnce}
+						bind:checked={serveListNodeChildrenAtOnce}
+						class="checkbox checkbox-primary border-primary-200 hover:border-primary-400 checkbox-md ml-2"
+					/>
+				</td>
+			</tr>
 			{/if}
 		</tbody>
 	</table>
