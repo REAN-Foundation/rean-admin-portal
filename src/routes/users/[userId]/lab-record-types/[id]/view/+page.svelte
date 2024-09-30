@@ -11,11 +11,11 @@
 	let id = labRecordType.id;
 	let typeName = labRecordType.TypeName;
 	let displayName = labRecordType.DisplayName !== null && labRecordType.DisplayName !== "" ? labRecordType.DisplayName : 'Not specified';
-	let snowmedCode = labRecordType.SnowmedCode !== null ? labRecordType.SnowmedCode : 'Not specified';
-	let loincCode = labRecordType.LoincCode !== null ? labRecordType.LoincCode : 'Not specified';
-	let normalRangeMin = labRecordType.NormalRangeMin !== null ? labRecordType.NormalRangeMin : 'Not specified';
-	let normalRangeMax = labRecordType.NormalRangeMax !== null ? labRecordType.NormalRangeMax : 'Not specified';
-	let unit = labRecordType.Unit !== null ? labRecordType.Unit : 'Not specified';
+	let snowmedCode = labRecordType.SnowmedCode !== null && labRecordType.SnowmedCode !== "" ? labRecordType.SnowmedCode : 'Not specified';
+	let loincCode = labRecordType.LoincCode !== null && labRecordType.LoincCode !== "" ? labRecordType.LoincCode : 'Not specified';
+	let normalRangeMin = labRecordType.NormalRangeMin !== null  && labRecordType.NormalRangeMin !== 0.0 ? labRecordType.NormalRangeMin : 'Not specified';
+	let normalRangeMax = labRecordType.NormalRangeMax !== null  && labRecordType.NormalRangeMax !== 0.0 ? labRecordType.NormalRangeMax : 'Not specified';
+	let unit = labRecordType.Unit !== null && labRecordType.Unit !== ""  ? labRecordType.Unit : 'Not specified';
 
 	const userId = $page.params.userId;
 	const editRoute = `/users/${userId}/lab-record-types/${id}/edit`;
