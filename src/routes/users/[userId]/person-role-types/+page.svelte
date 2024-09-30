@@ -9,52 +9,30 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-  import { invalidate } from '$app/navigation';
-  import { SYSTEM_ID } from '../../../../../src/lib/constants';
-  import { onMount } from 'svelte';
-
+    import { invalidate } from '$app/navigation';
+    import { SYSTEM_ID } from '../../../../../src/lib/constants';
+    
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-	const activeRoles = ['System admin', 'System user', 'Tenant admin', 'Tenant user', 'Paitent','Doctor'];
-	let personTypes = data.personRoleTypes;
-    // $: console.log('PersonRoleTypes', personTypes);
+	$: personTypes = data.personRoleTypes;
 	let retrivedTypes;
-	$:retrivedTypes
-    $: console.log('retrivedTypes', retrivedTypes);
     let roleName = "Role Name";
     let sortOrder = false;
 
-  const userId = $page.params.userId;
+    const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/person-role-types/create`;
 	const editRoute = (id) => `/users/${userId}/person-role-types/${id}/edit`;
 	const viewRoute = (id) => `/users/${userId}/person-role-types/${id}/view`;
 	const personRoleTypesRoute = `/users/${userId}/person-role-types`;
 
 	const breadCrumbs = [{ name: 'User Roles', path: personRoleTypesRoute }];
-
-	function setActiveRoles() {
-    personTypes = personTypes.map(role => {
-      if (activeRoles.includes(role.RoleName)) {
-        return { ...role, isActive: true };
-      }
-      return { ...role, isActive: false };
-    });
-  }
-	
-	onMount(() => {
-  	setActiveRoles();
-  });
-
-	$:setActiveRoles()
-
     let totalPersonRoleCount = data.personRoleTypes.length
     let items = 10;
     let itemsPerPage = 10;
 
     sort(sortOrder)
 	$:{
-		// personTypes = data.personRoleTypes;
 		sort(sortOrder)
 		personTypes = personTypes.map((item, index) => ({ ...item, index: index + 1 }));
 	}
@@ -63,7 +41,8 @@
         if (isOrdeApplied) {
             roleName = `Role Name ${sortOrder ? '▲' : '▼'}`
         }
-		personTypes = personTypes.sort((a, b) => {
+        if (personTypes) {
+            personTypes = personTypes.sort((a, b) => {
 			let fa = a.RoleName.toLowerCase(),
 				fb = b.RoleName.toLowerCase();
 			if (fa < fb) {
@@ -74,7 +53,9 @@
 			}
 			return 0;
 		});
-	}
+        }
+
+    }
 
 	let paginationSettings = {
 		page: 0,
@@ -103,12 +84,12 @@
 	};
 
 	async function Delete(model) {
-		await fetch(`/api/server/person-role-types`, {
+        await fetch(`/api/server/person-role-types`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
 		});
-	}
+    	}
 
     function onPageChange(e: CustomEvent): void {
 		let pageIndex = e.detail;
@@ -202,3 +183,4 @@
 		/>
 	</div>
 </div>
+
