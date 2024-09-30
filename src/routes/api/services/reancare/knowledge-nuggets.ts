@@ -58,8 +58,8 @@ export const updateKnowledgeNugget = async (
 ) => {
 	const body = {
 		TopicName: topicName,
-		BriefInformation: briefInformation ? briefInformation : null,
-		DetailedInformation: detailedInformation ? detailedInformation : null,
+		BriefInformation: briefInformation ? briefInformation : '',
+		DetailedInformation: detailedInformation ? detailedInformation : '',
 		AdditionalResources: additionalResources ? additionalResources : null,
 		Tags: tags ? tags : null
 	};

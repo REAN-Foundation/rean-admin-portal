@@ -10,12 +10,12 @@
 	let drug = data.drug;
 	let id = drug.id;
 	let drugName = drug.DrugName;
-	let genericName = drug.GenericName !== null ? drug.GenericName : 'Not specified';
-	let ingredients = drug.Ingredients !== null ? drug.Ingredients : 'Not specified';
-	let strength = drug.Strength !== null ? drug.Strength : 'Not specified';
-	let commercialNames = drug.OtherCommercialNames !== null ? drug.OtherCommercialNames : 'Not specified';
-	let manufacturer = drug.Manufacturer !== null ? drug.Manufacturer : 'Not specified';
-	let otherInformation = drug.OtherInformation !== null ? drug.OtherInformation: 'Not specified';
+	let genericName = (drug.GenericName !== null && drug.GenericName !== '') ? drug.GenericName : 'Not specified';
+	let ingredients = (drug.Ingredients !== null && drug.Ingredients !== '')  ? drug.Ingredients : 'Not specified';
+	let strength = (drug.Strength !== null && drug.Strength !== '') ? drug.Strength : 'Not specified';
+	let commercialNames = (drug.OtherCommercialNames !== null && drug.OtherCommercialNames !== '') ? drug.OtherCommercialNames : 'Not specified';
+	let manufacturer = (drug.Manufacturer !== null && drug.Manufacturer !== '')  ? drug.Manufacturer : 'Not specified';
+	let otherInformation = (drug.OtherInformation !== null && drug.GenericName !== '')  ? drug.OtherInformation: 'Not specified';
 
 	const userId = $page.params.userId;
 	const editRoute = `/users/${userId}/drugs/${id}/edit`;
