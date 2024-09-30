@@ -1,21 +1,20 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import Chart from 'chart.js/auto';
     import { getChartColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
-
-    /////////////////////////////////////////////////////////////////////////////
 
     const tickColorLight = getTickColorLight();
     const tickColorDark = getTickColorDark();
     const color = getChartColors();
 
     export let lables: string[] = [];
-    export let login: number[] = [];
-    export let medication: number[] = [];
+    export let data: number[] = [];
     export let title: string;
+
     let barChart;
     let ctx;
-    console.log(lables, 'labels', login, 'medication', medication);
+    console.log(lables, 'labels', data);
+
     onMount(() => {
         ctx = barChart.getContext('2d');
         barChart = new Chart(ctx, {
@@ -24,16 +23,12 @@
                 labels: lables,
                 datasets: [
                     {
-                        label: 'Login',
-                        data: login,
+                        label: 'Active Users',
+                        data: data,
                         borderColor: color[0],
-                        fill: false
-                    },
-                    {
-                        label: 'Medication',
-                        data: medication,
-                        borderColor: color[3],
-                        fill: false
+                        fill: true,
+                        pointRadius: 0, // Remove intersection points
+                        pointHoverRadius: 0 // Remove hover effect on points
                     }
                 ]
             },
@@ -46,28 +41,36 @@
                             display: false
                         },
                         ticks: {
-                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight // set x-axis label color here
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        },
+                        title: {
+                            display: true,
+                            text: 'Month',
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     },
                     y: {
                         grid: {
-                            display: false
+                            display: true
                         },
                         ticks: {
-                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight // set y-axis label color here
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        },
+                        title: {
+                            display: true,
+                            text: 'User Count',
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     }
                 },
                 layout: {
                     padding: {
-                        bottom: 20 // Adjust the bottom padding value as needed
+                        bottom: 20
                     }
                 },
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'top',
-                        align: 'center',
+                        display: false,
                         labels: {
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
                             boxWidth: 10,
@@ -77,10 +80,7 @@
                     title: {
                         display: false,
                         text: title,
-                        position: 'top',
                         color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
-                        align: 'start',
-                        padding: 20,
                         font: {
                             size: 22,
                             weight: 'normal',
@@ -91,10 +91,13 @@
             }
         });
     });
+
 </script>
 
-<canvas
-    height="500"
-    width="500"
-    bind:this={barChart}
-/>
+<div class="h-80 w-full p-2">
+    {#if data && data.length > 0}
+        <canvas bind:this={barChart} />
+    {:else}
+        <p>No data available.</p>
+    {/if}
+</div>

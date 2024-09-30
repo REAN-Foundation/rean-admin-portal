@@ -9,13 +9,14 @@
     const tickColorDark = getTickColorDark();
 
     export let labels: string[] = [];
-    export let dataSource: number[] = [];
+    export let firstDataSource: number[] = [];
+    export let secondDataSource: number[] = [];
     export let title: string;
 
     let barChart;
     let ctx;
 
-    console.log(labels, 'labels', dataSource, 'data');
+    // console.log(labels, 'labels', dataSource, 'data');
 
     // Predefined color palette, sorted from darkest to lightest
     const colorPalette = getDoughnutColors();
@@ -37,9 +38,9 @@
         return data.map((index) => getColor(index));
     }
 
-    $: dynamicColors = getDynamicColors(dataSource);
+    // $: dynamicColors = getDynamicColors(dataSource);
 
-    console.log(labels, 'labels', dataSource);
+    // console.log(labels, 'labels', dataSource);
 
     onMount(() => {
         ctx = barChart.getContext('2d');
@@ -49,10 +50,26 @@
                 labels: labels,
                 datasets: [
                     {
-                        data: dataSource,
-                        backgroundColor:  '#5EC1E9', // Apply dynamic colors
-                        borderColor:  '#5EC1E9', // Use the same color for borders
-                        borderWidth: 1
+                        data: firstDataSource,
+                        backgroundColor: '#68d33d',
+                        borderColor: '#5EC009',
+                        borderWidth: 1,
+                        label: 'Patient Registration Moth',
+                        borderRadius: {
+                            topLeft: 4,
+                            topRight: 4
+                        }
+                    },
+                    {
+                        data: secondDataSource,
+                        backgroundColor: '#f86565',
+                        borderColor: '#5EC1E9',
+                        borderWidth: 1,
+                        label: 'Patient Deregistration Month',
+                        borderRadius: {
+                            topLeft: 4,
+                            topRight: 4
+                        }
                     }
                 ]
             },
@@ -72,7 +89,7 @@
                     y: {
                         beginAtZero: true,
                         grid: {
-                            display: false
+                            display: true
                         },
                         ticks: {
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
@@ -86,7 +103,7 @@
                 },
                 plugins: {
                     legend: {
-                        display: false,
+                        display: true,
                         position: 'top',
                         align: 'center',
                         labels: {
@@ -106,23 +123,23 @@
                             lineHeight: 1.2
                         }
                     },
-
                     tooltip: {
                         callbacks: {
-                            // Modify this to use your custom label logic
                             label: function (context) {
+                                // Get the label for the dataset
                                 let label = context.dataset.label || '';
-                                let customNames = labels; // Add your custom names
 
+                                // Add the x-axis value (label)
+                                let xLabel = labels[context.dataIndex] || 'No label';
+
+                                // Add the y-axis value (data point value)
+                                let yValue = context.parsed.y !== null ? context.parsed.y : 'No value';
+
+                                // Customizing the tooltip text
                                 if (label) {
                                     label += ': ';
                                 }
-
-                                if (context.parsed.y !== null) {
-                                    // Get the value from customNames based on the context index
-                                    let customLabel = customNames[context.dataIndex] || 'Default Name';
-                                    label += customLabel; // Add the parsed value
-                                }
+                                label += `${xLabel} , Value: ${yValue}`;
 
                                 return label;
                             }
