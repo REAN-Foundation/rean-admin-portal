@@ -208,7 +208,7 @@
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>
-								<span slot="description"> Are you sure you want to delete a assessment node? </span>
+								<span slot="description"> Are you sure you want to delete this assessment node? Associated children nodes will also be deleted.</span>
 							</Confirm>
 						</td>
 					</tr>

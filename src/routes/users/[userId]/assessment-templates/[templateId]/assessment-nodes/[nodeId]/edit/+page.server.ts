@@ -96,6 +96,7 @@ export const actions = {
 			result.options,
 			result.message,
 			result.sequence,
+			result.serveListNodeChildrenAtOnce
 		);
 		const nodeId = response.Data.AssessmentNode.id;
 

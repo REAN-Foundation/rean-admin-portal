@@ -84,6 +84,7 @@ export const updateAssessmentNode = async (
 	options?: string[],
 	message?: string,
 	sequence?: number,
+	serveListNodeChildrenAtOnce?: boolean
 ) => {
 	const body = {
 		NodeType: nodeType,
@@ -93,6 +94,7 @@ export const updateAssessmentNode = async (
 		QueryResponseType: queryType,
 		Options: options,
 		Sequence: sequence,
+		ServeListNodeChildrenAtOnce:serveListNodeChildrenAtOnce
 	};
 	if (options && options.length > 0) {
 		let count = 1;
