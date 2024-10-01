@@ -131,14 +131,14 @@
 	<input
 		type="text"
 		name="drugName"
-		placeholder="Search by Name"
+		placeholder="Search by name"
 		bind:value={drugName}
 		class="input w-auto grow"
 	/>
 	<input
 		type="text"
 		name="genericName"
-		placeholder="Search by Generic Name"
+		placeholder="Search by generic name"
 		bind:value={genericName}
 		class="input w-auto grow"
 	/>

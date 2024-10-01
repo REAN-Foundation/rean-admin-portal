@@ -48,12 +48,14 @@
 		LocalStorageUtils.removeItem('prevUrl');
 	}
 
-	let maxHeight = '80vh';
-  const handleResize = () => {
-    maxHeight = window.innerWidth <= 768 ? '60vh' : '80vh';
-  };
-  window.addEventListener('resize', handleResize);
-  handleResize();
+  let maxHeight = '80vh';
+	if (browser) {
+		const handleResize = () => {
+			maxHeight = window.innerWidth <= 768 ? '60vh' : '80vh';
+		};
+		window.addEventListener('resize', handleResize);
+		handleResize();
+	}
 
 	const systemName = getSystemName();
 
