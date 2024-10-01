@@ -10,7 +10,7 @@ import { changePassword } from '$routes/api/services/reancare/user';
 const changePasswordSchema = zfd
   .formData({
     oldPassword: z.string().min(1, "Old password is required"),
-    newPassword: z.string().min(8, "New password should be greater than 8 charactor "),
+    newPassword: z.string().min(8, "New password should be greater than 8 characters"),
     confirmNewPassword: z.string().min(1, "Please confirm the new password"),
     // email:z.string(),
     // username:z.string(),
