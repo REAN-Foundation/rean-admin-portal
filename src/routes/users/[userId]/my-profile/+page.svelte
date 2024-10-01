@@ -73,6 +73,7 @@
 						type="text"
 						name="firstName"
 						bind:value={firstName}
+						required
 						placeholder="Enter first name here..."
 						class="input w-full {form?.errors?.firstName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -82,7 +83,7 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td>Last Name *</td>
+				<td>Last Name </td>
 				<td>
 					<input
 						type="text"
