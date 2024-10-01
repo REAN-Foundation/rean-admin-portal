@@ -79,10 +79,11 @@ export const changePassword = async (
     return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
 
-export const SendPasswordResetCode = async (email: string, loginRoleId: number) => {
+export const SendPasswordResetCode = async (loginRoleId: number, email?: string, phone?: string) => {
     const model = {
         Email: email,
-        LoginRoleId: loginRoleId
+        LoginRoleId: loginRoleId,
+        Phone: phone
     };
     const headers = {};
     headers['Content-Type'] = 'application/json';
@@ -100,12 +101,13 @@ export const SendPasswordResetCode = async (email: string, loginRoleId: number) 
     return response;
 };
 
-export const resetPassword = async (email: string, resetCode: string, newPassword: string, loginRoleId: number) => {
+export const resetPassword = async (resetCode: string, newPassword: string, loginRoleId: number, email?: string, phone?: string) => {
     const model = {
-        Email: email,
         NewPassword: newPassword,
         ResetCode: resetCode,
-        RoleId: loginRoleId
+        RoleId: loginRoleId,
+        Email: email,
+        Phone:phone
     };
 
     const body = JSON.stringify(model);
