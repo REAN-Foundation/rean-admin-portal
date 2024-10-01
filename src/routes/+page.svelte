@@ -48,6 +48,13 @@
 		LocalStorageUtils.removeItem('prevUrl');
 	}
 
+	let maxHeight = '80vh';
+  const handleResize = () => {
+    maxHeight = window.innerWidth <= 768 ? '60vh' : '80vh';
+  };
+  window.addEventListener('resize', handleResize);
+  handleResize();
+
 	const systemName = getSystemName();
 
 	const resetPasswordSchema = z.object({
@@ -137,7 +144,7 @@
 						src={logoImageSource}
 					/>
 					{#if showForgotPassword}
-						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full"style={`max-height: ${maxHeight}; overflow-y: auto;`}>
 							<h2 class="text-center text-xl mb-4">Forgot Password</h2>
 							<form on:submit|preventDefault={handleForgotPassword}>
 								<div class="justify-center w-full mt-5 h-50">
@@ -186,7 +193,7 @@
 							</form>
 						</div>
 					{:else if showResetPassword}
-						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full" style={`max-height: ${maxHeight}; overflow-y: auto;`}>
 							<h2 class="text-center text-xl mb-4">Reset Password</h2>
 							<form on:submit|preventDefault={handleResetPassword}>
 								<!-- <label class="hidden">
@@ -232,7 +239,7 @@
 							</form>
 						</div>
 					{:else}
-					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full" style={`max-height: ${maxHeight}; overflow-y: auto;`}>
 						<!-- <input name="roleId" bind:value={loginRoleId} class="hidden"/> -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<div class="justify-center w-full mt-5 h-50">
@@ -313,4 +320,3 @@
 		<a href={footerLink} class="!text-white">{footerText}</a>
 	</footer>
 </body>
-

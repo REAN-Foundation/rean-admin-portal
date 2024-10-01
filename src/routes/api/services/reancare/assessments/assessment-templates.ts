@@ -107,10 +107,10 @@ export const updateAssessmentTemplate = async (
 ) => {
 	const body = {
 		Title: title,
-		Description: description ? description : null,
+		Description: description ? description : '',
 		Type: type,
-		Provider: provider ? provider : null,
-		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : null,
+		Provider: provider ? provider : '',
+		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : '',
 		ServeListNodeChildrenAtOnce: serveListNodeChildrenAtOnce ? serveListNodeChildrenAtOnce : false,
 		ScoringApplicable: scoringApplicable ? scoringApplicable : false
 	};
