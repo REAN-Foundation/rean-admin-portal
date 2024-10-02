@@ -2,9 +2,11 @@
     import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	import DashboardTabs from '$lib/components/navbar/dashboard.tabs.svelte';
-
+    import type { PageServerData, LayoutServerData } from './$types';
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    export let data:PageServerData;
+    const tenantCode = data.sessionUser?.tenantCode || data.sessionUser?.tenantName;
     async function handleDownloadReportClick(event) {
         console.log('Handling download report click',event);
         try {
@@ -108,5 +110,6 @@
 on:downloadAnalyticsJSONReport={handleDownloadAnalyticsReportInJSONClick}
 on:downloadAnalyticsExcelReport={handleDownloadAnalyticsReportInExcelClick}
 on:downloadAnalyticsPdfReport={handleDownloadAnalyticsReportInPdfClick}
-{userId} />
+{userId} 
+{tenantCode}/>
 <slot />
