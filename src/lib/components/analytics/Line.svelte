@@ -45,7 +45,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Month',
+                            text: 'Till Month',
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     },

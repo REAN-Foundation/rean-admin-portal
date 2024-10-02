@@ -65,7 +65,7 @@
     });
 </script>
 
-<div class="h-80 w-full  items-center pl-10 justify-center">
+<div class="h-96 w-full  items-center pl-10 justify-center">
     {#if data}
         <canvas height="400" width="400"  bind:this={pieChart} />
     {:else}
