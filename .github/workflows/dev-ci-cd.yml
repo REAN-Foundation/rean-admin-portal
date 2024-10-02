@@ -1,10 +1,10 @@
 # This workflow will trigger pull requests and apply a label based on the
 # paths that are modified in the pull request.
 #
-# To use this workflow, you will need to set up a .github/labeler.yml
+# To use this workflow, you must create a .github/labeler.yml
 # file with configuration.  For more information, see:
 # https://github.com/actions/labeler
-###############################################################################################
+###################################################################################################
 
 name: Dev-CI-CD
 

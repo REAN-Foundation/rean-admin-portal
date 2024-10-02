@@ -1,6 +1,5 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { invalidateAll } from '$app/navigation';
     import { createEventDispatcher } from 'svelte';
     import Icon from '@iconify/svelte';
     
@@ -10,6 +9,7 @@
         dispatch('downloadReport', {});
     }
     export let userId = undefined;
+    export let tenantCode = undefined;
     let homeLink = `/users/${userId}/home`;
     let usersLink = `/users/${userId}/home/users-stats`;
     let basicStatsLink = `/users/${userId}/home/analytics-overview`;
@@ -80,7 +80,8 @@
       >
         Distribution
       </a>
-      <a
+      {#if tenantCode === 'default'}
+     <a
         class="btn {$page.url.pathname === basicStatsLink ? 'variant-filled-secondary' : 'variant-soft-secondary'}"
         href={basicStatsLink}
       >
@@ -104,7 +105,9 @@
       >
         Feature
       </a>
+      {/if}
     </div>
+    {#if tenantCode === 'default'}
     <div class="relative inline-block text-left ml-auto">
       <div>
         <button
@@ -143,6 +146,7 @@
           </div>
         </div>
       {/if}
-    </div>
-  </div>
+    </div> 
+    {/if} 
+</div>
 
