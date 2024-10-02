@@ -49,7 +49,7 @@
     function handleHealthSystemChange(event) {
         healthSystemId = event.target.value;
   }
-
+  $: healthSystemId;
   $: console.log('HealthSystem Id ', healthSystemId);
 </script>
 
@@ -102,8 +102,9 @@
                         on:change={handleHealthSystemChange}
                         name="healthSystemId"
                         class="select select-primary w-full "
+                        bind:value={healthSystemId}
                     >
-                    <option value={healthSystemId}>{healthSystemName}</option>
+                    <option value={_healthSystemId}>{healthSystemName}</option>
                     {#each healthSystems as healthSystem}
                         {#if _healthSystemId !== healthSystem.id}
                         <option value={healthSystem.id}>{healthSystem.Name}</option>
