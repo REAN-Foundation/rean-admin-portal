@@ -114,17 +114,16 @@ const handleSubmit = (event) => {
       </tr>
     </thead>
     <tbody class="!bg-white dark:!bg-inherit">
-      <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-        <td>Select dates for follow-up cancellation*</td>
+      <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700 w-full">
+        <td class='w-7/12'>Select dates for follow-up cancellation </td>
         <td>
-          <input
+          <input 
             id="datePicker"
-            type="text"
-            class="input"
-            placeholder="Click here to select date"
-            required
-            readonly
-          />
+            type="button"
+            class="button rounded-md border-2 border-secondary-100 w-full bg-surface-50"
+			placeholder="Click here to select date"
+			required
+            />
           <input
             type="hidden"
             id="hiddenDates"
@@ -164,7 +163,7 @@ const handleSubmit = (event) => {
 							bind:value={startdate}
 							required
 						/>
-						
+					
 					</td>
 				</tr>
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
@@ -254,5 +253,10 @@ const handleSubmit = (event) => {
 	  border: 1px solid #ccc;
 	  text-align: center;
 	}
+
+	#datePicker:hover {
+    background-color: #ffffff; /* Background color on hover */
+    
+  }
 	
   </style>

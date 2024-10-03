@@ -3,6 +3,10 @@
     import { onMount } from 'svelte';
     import toast from 'svelte-french-toast';
     import type { ActionData } from './$types';
+    import {
+		Paginator, type PaginationSettings,
+	} from '@skeletonlabs/skeleton';
+
     export let data
     let totalPatient ='';
     let notarrived ='';
@@ -13,8 +17,10 @@
     console.log(appointmentReport)
     let summary = appointmentReport['Summary'];
     let filedata = appointmentReport['File_data'];
+    let itemsPerPage = 10;
+    let retriveddata;
+    let items = 10;
     
-    // console.log(filedata[0].Appointment_time)
     type TableRow = {
         srNo: number;
         patientName: string;
@@ -25,6 +31,7 @@
         appointmentTime: string;
         replied: string;
     };
+
     let numRows = appointmentReport['File_data'].length;;
     let tableData: TableRow[] = Array.from({ length: numRows }, (_, i) => ({
         srNo: i + 1,
@@ -37,7 +44,6 @@
         replied: ''
     }));
  
-   
     // function to add patient name
     function addPatientName(newPatientName: string, rowNumber: number): void {
         // Update the specified row with the new patient name
@@ -84,7 +90,34 @@
                      }
                 }, 1000); 
             });
+
+    let paginationSettings = {
+		page: 0,
+		limit: 10,
+		size: numRows,
+		amounts: [10, 20, 30, 50]
+	} satisfies PaginationSettings;
   
+	$: {
+		// symptoms = symptoms.map((item, index) => ({ ...item, index: index + 1 }));
+		paginationSettings.size = numRows;
+		retriveddata = tableData.slice(
+		paginationSettings.page * paginationSettings.limit,
+		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+	);
+	}
+
+    
+	function onPageChange(e: CustomEvent): void {
+		let pageIndex = e.detail;
+        itemsPerPage = items * (pageIndex + 1);
+	}
+
+	function onAmountChange(e: CustomEvent): void {
+		itemsPerPage = e.detail * (paginationSettings.page + 1);
+		items = itemsPerPage;
+	}
+
 </script>
 
     <div>
@@ -127,8 +160,9 @@
     <div class="border-b-2 border-b-gray-300 mb-1"></div>
 </div>
 <!-- The Svelte component -->
-<div class="flex justify-center mt-4 overflow-auto">
-    <table class="bg-white text-center">
+<div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
+	<table class="table" role="grid" >
+		<thead class="!variant-soft-secondary">
         <tr class="border-black rounded-2xl">
             <th class="bg-[#7165E3] text-white border px-1 py-1 font-normal">Sr.no</th>
             <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Patient Name</th>
@@ -141,22 +175,38 @@
             
             <th class="bg-[#7165E3] text-white border px-1 sm:px-8 py-1 font-normal">Replied</th>
         </tr>
-        {#each tableData as { srNo, patientName, hospitalName, emrId, patientPhoneNo, patientStatus, appointmentTime, replied }}
-            <tr>
-                <td class="border px-1 py-1">{srNo}</td>
-                <td class="border px-1 py-1 text-center">{patientName}</td>
-                <td class="border px-1 py-1 text-center">{hospitalName}</td>
-                <td class="border px-1 sm:px-8 py-1 text-center">{emrId}</td>
-                <td class="border px-1 sm:px-8 py-1">{patientPhoneNo}</td>
-                <td class="border px-1 sm:px-8 py-1">{patientStatus}</td>
+    </thead>
+    <tbody class="!bg-white dark:!bg-inherit">
+        <!-- {#each tableData as { srNo, patientName, hospitalName, emrId, patientPhoneNo, patientStatus, appointmentTime, replied }} -->
+        {#each retriveddata as row}
+        <tr>
+                <td class="border px-1 py-1 text-center">{row.srNo}</td>
+                <td class="border px-1 py-1 ">{row.patientName}</td>
+                <td class="border px-1 py-1 ">{row.hospitalName}</td>
+                <td class="border px-1 sm:px-8 py-1 ">{row.emrId}</td>
+                <td class="border px-1 sm:px-8 py-1">{row.patientPhoneNo}</td>
+                <td class="border px-1 sm:px-8 py-1">{row.patientStatus}</td>
                   <!--As appointment date is same to all and we donot have specific time-->
-                <td class="border px-1 sm:px-8 py-1">{ appointmentTime}</td>
-                <td class="border px-1 sm:px-8 py-1">{replied}</td>
+                <td class="border px-1 sm:px-8 py-1">{row.appointmentTime}</td>
+                <td class="border px-1 sm:px-8 py-1">{row.replied}</td>
             </tr>
         {/each}
+    </tbody>
     </table>
 </div>
 
 
+		    
 
+<div class="w-full variant-soft-secondary rounded-lg p-2">
+	<Paginator
+		bind:settings={paginationSettings}
+		on:page={onPageChange}
+		on:amount={onAmountChange}
+		buttonClasses=" text-primary-500"
+		regionControl = 'bg-surface-100 rounded-lg btn-group text-primary-500 border border-primary-200'
+		controlVariant = 'rounded-full text-primary-500 '
+		controlSeparator = 'fill-primary-400'
+		/>
+</div>
 
