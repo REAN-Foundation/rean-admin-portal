@@ -1,29 +1,3 @@
-// import { promises as fs } from 'fs';
-// import { error, type RequestEvent } from '@sveltejs/kit';
-// import type { PageServerLoad } from './$types';
-// import path from 'path';
-
-// export const load: PageServerLoad = async (event: RequestEvent) => {
-//     try {
-//         // Load the JSON file from the `lib` directory
-//         const filePath = path.resolve('D:/Official Work/FRONT END/basic_statistics.json');
-//         const jsonData = await fs.readFile(filePath, 'utf-8');
-//         const data = JSON.parse(jsonData);
-//         // console.log(chalk.red(JSON.stringify(data),'thisis data '))
-
-//         // Return the required data for use in the page
-//         return {
-//             // patientRegistrationHistory: data.Data.PatientRegistrationHistory,
-//             statistics: data.Data 
-//             // data: data.Data
-//         };
-//     } catch (err) {
-//         throw error(401, 'Error loading data:');
-
-//     }
-// };
-
-
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getUserAnalytics } from '../../../../api/services/user-analytics/user-analytics';
@@ -43,9 +17,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 
     const formattedDate = `${yyyy}-${mm}-${dd}`;
     const response = await getUserAnalytics(sessionId, formattedDate)
-    // console.log(chalk.yellow(JSON.stringify(response)));
-    // const data = JSON.parse(await response);
-
 
     if (!response) {
         throw error(404, 'Daily user statistics data not found');
@@ -56,9 +27,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
             event
         );
     }
-
-
-
     return {
         sessionId,
         statistics: response.Data

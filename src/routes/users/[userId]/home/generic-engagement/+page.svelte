@@ -64,9 +64,6 @@
                     (x) => x.retention_rate
                 );
         }
-        // if( data.statistics.GenericMetrics.MostCommonlyVisitedFeatures){
-        //     mostVisitedFeatureData = data.statistics.GenericMetrics.MostCommonlyVisitedFeatures.
-        // }
     }
 
     const mostFiredEvents = data.statistics.GenericMetrics.MostFiredEvents;
