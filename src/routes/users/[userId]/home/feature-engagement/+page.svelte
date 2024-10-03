@@ -1,11 +1,11 @@
 <script lang="ts">
     import Graph from './graph.svelte';
     import { onMount } from 'svelte';
-    import { formatMonth, generateMonthSequence } from '../analytics-overview/components/functions'; // Import the formatMonth function
+    import { formatMonth, generateMonthSequence } from '../analytics-overview/components/functions';
     export let data;
 
-    let activeFeature: string = 'loginSession';
-    const features = ['loginSession', 'medication', 'symptoms', 'vitals', 'careplan', 'userTask'];
+    let activeFeature: string = 'Login Session';
+    const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks'];
 
     const metricTypes = [
         'AccessFrequency',
@@ -16,62 +16,56 @@
     ];
 
     let featureMetrics = {};
-    // Function to process AccessFrequency data
+
     function processAccessFrequency(feature: string, metricData) {
-        const months = metricData.map((x) => x.month); // Extract the months
-        const oldestMonth = months.sort((a, b) => new Date(a) - new Date(b))[0]; // Find the oldest month
-        const latestMonth = months.sort((a, b) => new Date(b) - new Date(a))[0]; // Find the latest month
+        const months = metricData.map((x) => x.month);
+        const oldestMonth = months.sort((a, b) => new Date(a) - new Date(b))[0];
+        const latestMonth = months.sort((a, b) => new Date(b) - new Date(a))[0];
 
-        const allMonths = generateMonthSequence(oldestMonth, latestMonth); // Generate all months sequentially
+        const allMonths = generateMonthSequence(oldestMonth, latestMonth);
 
-        // Fill the data for each month, inserting 0 for missing months
         const accessFrequencyDataMap = {};
         metricData.forEach((x) => {
-            accessFrequencyDataMap[formatMonth(x.month)] = x.access_frequency; // Format months
+            accessFrequencyDataMap[formatMonth(x.month)] = x.access_frequency;
         });
 
         const accessFrequencyData = allMonths.map((month) => accessFrequencyDataMap[month] || 0);
 
-        // Update the featureMetrics with sorted and complete data
         featureMetrics[feature].accessFrequencyLabels = allMonths;
         featureMetrics[feature].accessFrequencyData = accessFrequencyData;
     }
 
-    // Function to process AccessFrequency data
     function processEngagementRate(feature: string, metricData) {
-        const months = metricData.map((x) => x.month); // Extract the months
-        const oldestMonth = months.sort((a, b) => new Date(a) - new Date(b))[0]; // Find the oldest month
-        const latestMonth = months.sort((a, b) => new Date(b) - new Date(a))[0]; // Find the latest month
+        const months = metricData.map((x) => x.month);
+        const oldestMonth = months.sort((a, b) => new Date(a) - new Date(b))[0];
+        const latestMonth = months.sort((a, b) => new Date(b) - new Date(a))[0];
 
-        const allMonths = generateMonthSequence(oldestMonth, latestMonth); // Generate all months sequentially
+        const allMonths = generateMonthSequence(oldestMonth, latestMonth);
 
-        // Fill the data for each month, inserting 0 for missing months
         const accessFrequencyDataMap = {};
         metricData.forEach((x) => {
-            accessFrequencyDataMap[formatMonth(x.month)] = x.engagement_rate; // Format months
+            accessFrequencyDataMap[formatMonth(x.month)] = x.engagement_rate;
         });
 
         const accessFrequencyData = allMonths.map((month) => accessFrequencyDataMap[month] || 0);
 
-        // Update the featureMetrics with sorted and complete data
         featureMetrics[feature].engagementRateLabels = allMonths;
         featureMetrics[feature].engagementRateData = accessFrequencyData;
     }
 
     function initializeFeatureMetrics() {
-        features.forEach((feature, index) => {
+        const featureKeys = ['loginSession', 'medication', 'symptoms', 'vitals', 'careplan', 'userTask'];
+        featureKeys.forEach((featureKey, index) => {
             if (data.statistics.FeatureMetrics[index]) {
+                const feature = features[index];
                 featureMetrics[feature] = {};
                 metricTypes.forEach((metricType) => {
                     const metricData = data.statistics.FeatureMetrics[index][metricType];
                     switch (metricType) {
                         case 'AccessFrequency':
-                            processAccessFrequency(feature, metricData); // Call the function for AccessFrequency
+                            processAccessFrequency(feature, metricData);
                             break;
                         case 'EngagementRate':
-                            // featureMetrics[feature].engagementRateData = metricData.map(x => x.engagement_rate);
-                            // featureMetrics[feature].engagementRateLabels = metricData.map(x => formatMonth(x.month)); // Use formatMonth for formatting
-                            // featureMetrics[feature].engagementRateRate = metricData.map(x => x.engagement_rate);
                             processEngagementRate(feature, metricData);
                             break;
                         case 'RetentionRateOnSpecificDays': {
@@ -124,7 +118,7 @@
                 ? 'variant-filled-secondary'
                 : 'border'} hover:variant-outline-secondary"
         >
-            {feature.charAt(0).toUpperCase() + feature.slice(1)}
+            {feature}
         </button>
     {/each}
 </div>

@@ -24,6 +24,7 @@
                 break;
             case 'Retention User Count On Specific Days':
                 (xLabel = 'Days of the Month'), (yLabel = 'User Count');
+                MAX_INDEX = 10;
                 break;
             case 'Retention User Count On Specific Days (%)':
                 (xLabel = 'Days of the Month'), (yLabel = 'Percentage');
@@ -38,7 +39,7 @@
                 break;
             case 'Retention On Specific Days':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
-
+                MAX_INDEX = 10;
                 break;
             case 'Retention On Specific Days (%)':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
