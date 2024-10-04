@@ -11,12 +11,14 @@
 		"strict": false,
 		"ignoreDeprecations": "5.0",
 		"allowSyntheticDefaultImports": true,
-        "strictNullChecks": false,
+    "strictNullChecks": false,
 		"module": "ESNext",
 	},
 	"include": [
 		".svelte-kit/ambient.d.ts",
 		".svelte-kit/types/**/$types.d.ts",
+	  "src/**/*.ts",
+		"src/**/*.svelte",
 	],
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
