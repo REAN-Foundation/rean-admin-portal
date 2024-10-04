@@ -27,9 +27,9 @@
 
   const expandedMenus = writable({});
 
-  export let userId;
-  export let username = '';
-  export let email = '';
+  export let userId = undefined;
+  export let username = undefined;
+  export let email = undefined;
   export let imageUrl = undefined
   $: avatarSource = imageUrl;
   
