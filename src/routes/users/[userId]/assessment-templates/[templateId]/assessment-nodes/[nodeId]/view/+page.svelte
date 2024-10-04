@@ -78,7 +78,7 @@
 	};
 
 	async function Delete(model) {
-		await fetch(`/api/server/assessment-nodes`, {
+		await fetch(`/api/server/assessments/assessment-nodes`, {
 			method: 'DELETE',
 			body: JSON.stringify(model),
 			headers: { 'content-type': 'application/json' }
