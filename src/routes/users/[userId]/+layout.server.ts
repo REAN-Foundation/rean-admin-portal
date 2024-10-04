@@ -1,7 +1,8 @@
 import type { LayoutServerLoad } from './$types';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import { SessionManager } from '../../api/sessions/session.manager';
 import { getTenantSettings } from '../../api/services/reancare/tenant-settings';
+import { getUserById } from '$routes/api/services/reancare/user';
 
 ////////////////////////////////////////////////////////////////
 
@@ -30,8 +31,16 @@ export const load: LayoutServerLoad = async (event) => {
         roleName  : session.roleName,
         profileImageUrl  : session.profileImageUrl
     };
+
+    const response = await getUserById(sessionId, session.userId);
+
+	if (response.Status === 'failure' || response.HttpCode !== 200) {
+		throw error(response.HttpCode, response.Message);
+	}
+	const user = response.Data.user;
 	return {
         sessionUser,
-        tenantSettings: tenantSettings.Data.TenantSettings
+        tenantSettings: tenantSettings.Data.TenantSettings,
+        user
     };
 };

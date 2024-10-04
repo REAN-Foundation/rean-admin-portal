@@ -11,9 +11,12 @@
 	const userId = $page.params.userId;
   const userRole = data.sessionUser.roleName;
   const tenantSettings = data.tenantSettings;
-	const username = data.sessionUser.fullName;
-	const email = data.sessionUser.email;
-	const imageUrl = data.sessionUser.profileImageUrl
+	// const username = data.sessionUser.fullName;
+	// const email = data.sessionUser.email;
+	// const imageUrl = data.sessionUser.profileImageUrl
+	const username = data.user.Person.DisplayName;
+	const email = data.user.Person.Email;
+	const imageUrl = data.user.Person.ProfileImageURL;
 
 	const onLogout = async () => {
 		const response = await fetch(`/api/server/logout`, {
