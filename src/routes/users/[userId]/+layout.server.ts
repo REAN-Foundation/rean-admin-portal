@@ -27,7 +27,8 @@ export const load: LayoutServerLoad = async (event) => {
         fullName  : session.fullName,
         firstName : session.firstName,
         roleId    : session.roleId,
-        roleName  : session.roleName
+        roleName  : session.roleName,
+        profileImageUrl  : session.profileImageUrl
     };
 	return {
         sessionUser,

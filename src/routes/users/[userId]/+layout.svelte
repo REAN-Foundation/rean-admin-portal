@@ -13,6 +13,7 @@
   const tenantSettings = data.tenantSettings;
 	const username = data.sessionUser.fullName;
 	const email = data.sessionUser.email;
+	const imageUrl = data.sessionUser.profileImageUrl
 
 	const onLogout = async () => {
 		const response = await fetch(`/api/server/logout`, {
@@ -29,7 +30,7 @@
 
 <body>
 	<Navbar userId={userId} userRole={userRole} tenantSettings={tenantSettings} 
-				username={username} email={email}
+				username={username} email={email} imageUrl= {imageUrl}
         on:logout={async () => await onLogout()}>
 		<slot />
 	</Navbar>

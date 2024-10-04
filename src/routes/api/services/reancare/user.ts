@@ -197,7 +197,8 @@ export const updateUser = async (
 	email: string,
 	roleId: string,
 	defaultTimeZone: string,
-	currentTimeZone: string
+	currentTimeZone: string,
+  imageResourceId?: string
 ) => {
 	const body = {
 			FirstName: firstName,
@@ -206,7 +207,8 @@ export const updateUser = async (
 			Phone: phone ? phone : null,
 			Email: email ? email : null,
 			DefaultTimeZone: defaultTimeZone ? defaultTimeZone : null,
-			CurrentTimeZone: currentTimeZone ? currentTimeZone : null
+			CurrentTimeZone: currentTimeZone ? currentTimeZone : null,
+      ImageResourceId: imageResourceId ? imageResourceId : null
 
 	};
 	if (Helper.isPhone(phone)) {
