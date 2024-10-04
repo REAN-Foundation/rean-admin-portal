@@ -10,13 +10,13 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
+  import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
 	$: knowledgeNuggets = data.knowledgeNuggets.Items;
-    let retrivedKnowledgeNuggets;
+  let retrivedKnowledgeNuggets;
 	const userId = $page.params.userId;
 	const knowledgeNuggetRoute = `/users/${userId}/knowledge-nuggets`;
 	const editRoute = (id) => `/users/${userId}/knowledge-nuggets/${id}/edit`;
@@ -130,7 +130,44 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="topicName"
+				placeholder="Search by topic name"
+				bind:value={topicName}
+				class="input w-full"
+		/>
+		{#if topicName}
+				<button
+						type="button"
+						on:click={() => { topicName = '';}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
+
+<div class="relative w-auto grow">
+		<input 
+				type="text"
+				name="tags"
+				placeholder="Search by tags"
+				bind:value={tags}
+				class="input w-full"
+		/>
+		{#if tags}
+				<button
+						type="button"
+						on:click={() => { tags = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
+	<!-- <input
 		type="text"
 		name="topicName"
 		placeholder="Search by topic name"
@@ -142,7 +179,7 @@
 		name="tags"
 		placeholder="Search by tags" bind:value={tags}
 		class="input w-auto grow"
-	/>
+	/> -->
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 

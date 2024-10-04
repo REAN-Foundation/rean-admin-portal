@@ -154,20 +154,42 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
-		type="text"
-		name="firstName"
-		placeholder="Search by contact number"
-		bind:value={phone}
-		class="input w-auto grow"
-	/>
-	<input
-		type="text"
-		name="email"
-		placeholder="Search by email"
-        bind:value={email}
-		class="input w-auto grow"
-	/>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="phone"
+				placeholder="Search by contact number"
+				bind:value={phone}
+				class="input w-full"
+		/>
+		{#if phone}
+				<button
+						type="button"
+						on:click={() => { phone = '' }}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="email"
+				placeholder="Search by email"
+				bind:value={email}
+				class="input w-full"
+		/>
+		{#if email}
+				<button
+						type="button"
+						on:click={() => { email = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
