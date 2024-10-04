@@ -173,7 +173,7 @@
             </tr>
         </thead>
         <tbody class="!bg-white dark:!bg-inherit">
-            {#if !retrivedHealthSystems}
+            {#if retrivedHealthSystems.length <= 0}
                 <tr>
                     <td colspan="6">No records found</td>
                 </tr>
