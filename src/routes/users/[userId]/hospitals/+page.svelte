@@ -109,6 +109,10 @@
         sortBy = columnName;
     }
 
+    function onResetSearch() {
+        hospitalName = '';
+    }
+    
     const handleHospitalDelete = async (id) => {
         const hospitalId = id;
         await Delete({
@@ -130,13 +134,13 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-    <input
+    <!-- <input
         type="text"
         name="hospitalName"
         placeholder="Search by name"
         bind:value={hospitalName}
         class="input w-auto grow"
-    />
+    /> -->
     <!-- <input
         type="text"
         name="healthSystemName"
@@ -144,6 +148,24 @@
         bind:value={healthSystemName}
         class="input w-auto grow"
     /> -->
+    <div class="relative w-auto grow">
+        <input
+            type="text"
+            name="hospitalName"
+            placeholder="Search by name"
+            bind:value={hospitalName}
+            class="input w-full"
+        />
+        {#if hospitalName}
+            <button
+                type="button"
+                on:click={onResetSearch}
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+            >
+                <Icon icon="material-symbols:close" class="text-lg" />
+            </button>
+        {/if}
+    </div>
     <a
         href={createRoute}
         class="btn variant-filled-secondary">Add New</a
