@@ -31,8 +31,9 @@ export const actions = {
       return { data: result, errors };
     }
 
+    let response
     try {
-      const response = await changePassword(
+       response = await changePassword(
         sessionId,
         result.oldPassword,
         result.newPassword,
@@ -40,10 +41,11 @@ export const actions = {
         username,
         roleId,
       );
-      throw redirect(303, '/', successMessage(response.Message), event);
     } catch (error: any) {
-      throw redirect(303, `/users/${userId}/change-password`, errorMessage(error.body.message), event);
+      const errorMessageText = error?.body?.message || 'An error occurred';
+      throw redirect(303, `/users/${userId}/change-password`, errorMessage(errorMessageText), event);
     }
+    throw redirect(303, `/users/${userId}/home`, successMessage(response.Message), event);
   }
 };
 
