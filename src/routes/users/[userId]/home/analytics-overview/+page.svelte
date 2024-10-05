@@ -2,6 +2,7 @@
     import JointBarGraph from '$lib/components/analytics/JointBarGraph.svelte';
     import PieChart from '$lib/components/analytics/PieChart.svelte';
     import {
+        processPatientDeregistrationHistory,
         formatLabelOfMonth,
         processPatientRegistrationHistory,
         formatDate
@@ -14,27 +15,9 @@
     let patientDeRegistrationHistoryData;
     let usersDistributionByRoleData, usersDistributionByRoleLabels;
     let activeUsersCountAtEndOfMonthData, activeUsersCountAtEndOfMonthLabels;
+    let dereg = processPatientDeregistrationHistory(data.statistics.BasicStatistics.PatientDeregistrationHistory);
 
-    // console.log(dereg, 'this is data of dereg');
-    // console.log(dereg.data, 'this is data of data');
-    // console.log(dereg.labels, 'this is data of labels');
-    const roleMapping = {
-        1: 'System admin',
-        2: 'Patient',
-        3: 'Doctor',
-        4: 'Lab user',
-        5: 'Pharmacy user',
-        6: 'Nurse',
-        7: 'Ambulance service user',
-        8: 'Patient family member',
-        9: 'Patient friend',
-        10: 'Social health worker',
-        11: 'Donor',
-        12: 'Volunteer',
-        13: 'System user',
-        14: 'Tenant admin',
-        15: 'Tenant user'
-    };
+
     if (data.statistics.BasicStatistics) {
         if (data.statistics.BasicStatistics.PatientRegistrationHistory) {
             patientRegistrationHistoryData = data.statistics.BasicStatistics.PatientRegistrationHistory.map(
@@ -62,7 +45,7 @@
                 (x) => x.registration_count
             );
             usersDistributionByRoleLabels = data.statistics.BasicStatistics.UsersDistributionByRole.map(
-                (x) => roleMapping[x.RoleId] || `${x.RoleId}`
+                (x) => x.role_name 
             );
         }
 

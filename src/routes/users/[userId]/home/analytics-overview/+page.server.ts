@@ -17,9 +17,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 
     const formattedDate = `${yyyy}-${mm}-${dd}`;
     const response = await getUserAnalytics(sessionId, formattedDate)
-    // console.log(chalk.yellow(JSON.stringify(response)));
-    // const data = JSON.parse(await response);
-
 
     if (!response) {
         throw error(404, 'Daily user statistics data not found');
@@ -30,9 +27,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
             event
         );
     }
-
-
-
     return {
         sessionId,
         statistics: response.Data

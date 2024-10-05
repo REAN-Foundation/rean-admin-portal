@@ -16,32 +16,8 @@
     let barChart;
     let ctx;
 
-    // console.log(labels, 'labels', dataSource, 'data');
-
-    // Predefined color palette, sorted from darkest to lightest
-    const colorPalette = getDoughnutColors();
-
-    // function getColor(index: number): string {
-    //     let localIndex = index;
-    //     if (index === 8) {
-    //         localIndex = index % 8;
-    //     }
-    //     return colorPalette[localIndex];
-    // }
-    function getColor(index: number): string {
-        const localIndex = index % 8; // This will ensure that the index always stays within 0 to 7
-        return colorPalette[localIndex];
-    }
-
-    // Function to generate dynamic colors for the entire dataset
-    function getDynamicColors(data: number[]): string[] {
-        return data.map((index) => getColor(index));
-    }
-
-    // $: dynamicColors = getDynamicColors(dataSource);
-
-    // console.log(labels, 'labels', dataSource);
-
+    let xLabel="Month";
+    let yLabel="User Count";
     onMount(() => {
         ctx = barChart.getContext('2d');
         barChart = new Chart(ctx, {
@@ -84,6 +60,11 @@
                         },
                         ticks: {
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        },
+                        title: {
+                            display: true,
+                            text: xLabel,
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     },
                     y: {
@@ -92,6 +73,11 @@
                             display: true
                         },
                         ticks: {
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                        },
+                        title: {
+                            display: true,
+                            text: yLabel,
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
                         }
                     }
