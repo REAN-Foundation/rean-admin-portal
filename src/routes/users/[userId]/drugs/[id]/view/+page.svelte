@@ -15,7 +15,7 @@
 	let strength = (drug.Strength !== null && drug.Strength !== '') ? drug.Strength : 'Not specified';
 	let commercialNames = (drug.OtherCommercialNames !== null && drug.OtherCommercialNames !== '') ? drug.OtherCommercialNames : 'Not specified';
 	let manufacturer = (drug.Manufacturer !== null && drug.Manufacturer !== '')  ? drug.Manufacturer : 'Not specified';
-	let otherInformation = (drug.OtherInformation !== null && drug.GenericName !== '')  ? drug.OtherInformation: 'Not specified';
+	let otherInformation = (drug.OtherInformation !== null && drug.OtherInformation !== '')  ? drug.OtherInformation: 'Not specified';
 
 	const userId = $page.params.userId;
 	const editRoute = `/users/${userId}/drugs/${id}/edit`;

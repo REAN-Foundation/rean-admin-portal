@@ -128,20 +128,42 @@
 
 <BreadCrumbs crumbs={breadCrumbs} />
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
-		type="text"
-		name="title"
-		placeholder="Search by title"
-		bind:value={title}
-		class="input w-auto grow"
-	/>
-	<input
-		type="text"
-		name="type"
-		placeholder="Search by type"
-		bind:value={type}
-		class="input w-auto grow"
-	/>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="title"
+				placeholder="Search by title"
+				bind:value={title}
+				class="input w-full"
+		/>
+		{#if title}
+				<button
+						type="button"
+						on:click={() => { title = ''}} 
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
+<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="type"
+				placeholder="Search by type"
+				bind:value={type}
+				class="input w-full"
+		/>
+		{#if type}
+				<button
+						type="button"
+						on:click={() => { type = ''}} 
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
 	<a href="{importRoute}" class="btn variant-filled-secondary">Import</a>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>

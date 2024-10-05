@@ -4,15 +4,19 @@
 	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
   import type { LayoutServerData } from './$types';
 
-    ////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 
 	export let data: LayoutServerData;
 
 	const userId = $page.params.userId;
   const userRole = data.sessionUser.roleName;
   const tenantSettings = data.tenantSettings;
-	const username = data.sessionUser.fullName;
-	const email = data.sessionUser.email;
+	// const username = data.sessionUser.fullName;
+	// const email = data.sessionUser.email;
+	// const imageUrl = data.sessionUser.profileImageUrl
+	const username = data.user.Person.DisplayName;
+	const email = data.user.Person.Email;
+	const imageUrl = data.user.Person.ProfileImageURL;
 
 	const onLogout = async () => {
 		const response = await fetch(`/api/server/logout`, {
@@ -29,7 +33,7 @@
 
 <body>
 	<Navbar userId={userId} userRole={userRole} tenantSettings={tenantSettings} 
-				username={username} email={email}
+				username={username} email={email} imageUrl= {imageUrl}
         on:logout={async () => await onLogout()}>
 		<slot />
 	</Navbar>

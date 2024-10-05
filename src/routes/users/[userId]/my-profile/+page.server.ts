@@ -5,6 +5,7 @@ import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import type { PageServerLoad } from './$types';
 import { getUserById, updateUser} from '$routes/api/services/reancare/user';
+import { BACKEND_API_URL } from '$env/static/private';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +19,13 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 	}
 	const user = response.Data.user;
 	const id = response.Data.user.id;
-	console.log("user............", user)
+	const imageResourceId = user.Person.ImageResourceId;
+	if (imageResourceId) {
+		user.Person['ImageUrl'] =
+					BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
+	} else {
+		user.Person['ImageUrl'] = null;
+	}
 	return {
 		location: `${id}/edit`,
 		user,
@@ -38,6 +45,7 @@ const updateUserSchema = zfd.formData({
     ),
 	countryCode:z.string().optional(),
 	roleId:z.string().optional(),
+	imageResourceId: z.string().uuid()
 });
 
 export const actions = {
@@ -77,7 +85,8 @@ export const actions = {
                 result.email,
                 result.roleId,
                 defaultTimeZone,
-                currentTimeZone
+                currentTimeZone,
+								result.imageResourceId
             );
         } catch(error) {
             throw redirect(303, `/users/${userId}/home`, errorMessage(error?.body?.message ? error?.body?.message: "Error in updating profile"), event);

@@ -21,14 +21,17 @@
 	import Icon from '@iconify/svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { writable } from 'svelte/store';
+  import Image from '$lib/components/image.svelte';
 
   //////////////////////////////////////////////////////////
 
   const expandedMenus = writable({});
 
-  export let userId;
-  export let username = '';
-  export let email = '';
+  export let userId = undefined;
+  export let username = undefined;
+  export let email = undefined;
+  export let imageUrl = undefined
+  $: avatarSource = imageUrl;
   
 	const dispatch = createEventDispatcher();
 	async function changePassword() {
@@ -109,11 +112,21 @@
       </button>
       <div class="flex flex-col items-center gap-2">
         <div class="relative inline-block bg-primary-200 rounded-full h-16 w-16">
-          <img
+          <!-- <img
             class="object-cover rounded-full h-16 w-16"
             src="/user.png"
             alt="avatar"
-          />
+          /> -->
+      {#if avatarSource}
+				<Image cls="flex h-16 w-16 rounded-full" source={avatarSource} w=24 h=24 />
+				<!-- <img class="flex h-24 w-24 rounded-full" src={avatarSource} alt="d" /> -->
+			{:else}
+        <img
+          class="object-cover rounded-full h-16 w-16"
+          src="/user.png"
+          alt="avatar"
+        />
+		  {/if}
         </div>
         <div class="text-center w-64">
           <h3 class="text-lg font-medium truncate">{username}</h3>
