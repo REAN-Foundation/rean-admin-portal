@@ -1,12 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import Navbar from '$lib/components/navbar/navbar.svelte';
+  import { getSystemName } from '$lib/themes/theme.selector';
 	import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
   import type { LayoutServerData } from './$types';
 
 ////////////////////////////////////////////////////////////////
 
 	export let data: LayoutServerData;
+
+	const systemName = getSystemName();
+  
+	$:title = systemName + ($page.data.title ?  `- ${$page.data.title}` : "");
 
 	const userId = $page.params.userId;
   const userRole = data.sessionUser.roleName;
@@ -30,6 +35,14 @@
 	};
 
 </script>
+
+<svelte:head>
+    <title>{title}</title>
+    <meta
+        name="description"
+        content=""
+    />
+</svelte:head>
 
 <body>
 	<Navbar userId={userId} userRole={userRole} tenantSettings={tenantSettings} 

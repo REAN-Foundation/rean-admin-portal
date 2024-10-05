@@ -29,7 +29,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 	return {
 		location: `${id}/edit`,
 		user,
-		message: response.Message
+		message: response.Message,
+		title:"My Profile"
 	};
 	
 };

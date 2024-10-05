@@ -17,7 +17,8 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
     return {
         labRecordTypes,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title:'Lab Records'
     };
 		
 };

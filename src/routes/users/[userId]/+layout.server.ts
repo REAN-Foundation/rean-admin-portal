@@ -41,6 +41,7 @@ export const load: LayoutServerLoad = async (event) => {
 	return {
         sessionUser,
         tenantSettings: tenantSettings.Data.TenantSettings,
-        user
+        user,
+        title: '',
     };
 };

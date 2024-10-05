@@ -27,7 +27,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     }
     return {
         sessionId,
-        symptom
+        symptom,
+				title:"Symptoms Edit"
     };
 
 };
