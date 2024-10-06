@@ -16,6 +16,7 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     return {
         goalTypes,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title: 'Types-Goals'
     };
 };

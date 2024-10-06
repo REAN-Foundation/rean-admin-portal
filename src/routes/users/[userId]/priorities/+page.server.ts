@@ -16,7 +16,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     return {
         priorityTypes,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title: 'Types-Priorities'
     };			
 
 };
