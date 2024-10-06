@@ -27,7 +27,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         location: `${id}/edit`,
         symptom,
         message: response.Message,
-        title:"Symptoms View"
+        title:"Clinical-Symptoms View"
     };
 
 };

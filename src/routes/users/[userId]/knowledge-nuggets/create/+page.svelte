@@ -9,7 +9,7 @@
 
 	export let form;
 	export let data;
-	data.title ='Knowledge Nuggets Create'
+	data.title ='Educational-Knowledge Nuggets Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/knowledge-nuggets/create`;
 	const knowledgeNuggetsRoute = `/users/${userId}/knowledge-nuggets`;

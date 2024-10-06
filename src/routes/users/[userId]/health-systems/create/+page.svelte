@@ -7,6 +7,8 @@
 
 	////////////////////////////////////////////////////////////////////
 
+	export let data;
+	data.title = 'Hospital Systems-Health Systems Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/health-systems/create`;
 	const healthSystemsRoute = `/users/${userId}/health-systems`;

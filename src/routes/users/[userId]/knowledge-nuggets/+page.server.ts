@@ -20,7 +20,7 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
         knowledgeNuggets,
         sessionId,
         message: response.Message,
-        title:'Knowledge Nuggets'
+        title:'Educational-Knowledge Nuggets'
     };		
 
 };

@@ -21,7 +21,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     return {
         assessmentNodes,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title:'Clinical-Assessments-Assessment Nodes'
     };		
 
 };

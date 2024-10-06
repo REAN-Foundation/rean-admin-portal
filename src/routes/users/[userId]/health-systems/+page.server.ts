@@ -23,7 +23,8 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
     return {
         healthSystems,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title:'Hospital Systems-Health Systems'
     };
 
 		

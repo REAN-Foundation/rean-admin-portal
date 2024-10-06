@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
         labRecordTypes,
         sessionId,
         message: response.Message,
-        title:'Lab Records'
+        title:'Clinical-Lab Records'
     };
 		
 };

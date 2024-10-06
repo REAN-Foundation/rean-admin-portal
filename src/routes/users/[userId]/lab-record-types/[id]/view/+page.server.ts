@@ -18,6 +18,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         location: `${id}/edit`,
         labRecordType,
         message: response.Message,
-        title:'Lab Records View'
+        title:'Clinical-Lab Records View'
     };
 };

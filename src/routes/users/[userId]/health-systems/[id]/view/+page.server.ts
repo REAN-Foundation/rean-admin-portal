@@ -17,6 +17,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     return {
         location: `${id}/edit`,
         healthSystem,
-        message: response.Message
+        message: response.Message,
+        title:'Hospital Systems-Health Systems View'
     };
 };

@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
         sessionId,
         message: response.Message,
         backendUrl:BACKEND_API_URL,
-        title:'Symptoms'
+        title:'Clinical-Symptoms'
     };
 		
 };

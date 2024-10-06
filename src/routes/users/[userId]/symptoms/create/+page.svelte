@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////
   export let data;
 	export let form;
-	data.title = 'Symptoms Create'
+	data.title = 'Clinical-Symptoms Create'
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
   let symptomImage;
