@@ -237,15 +237,15 @@
 							>{row.Person.Email || 'Not specified'}</td
 						>
 						<td>
-              <button on:click={() => {
-                if (!row.IsPermitted) {
-                  toast.error('Permission denied: Only resource owner & system admin are allowed to view & edit.')
-                }
-              }}>
+                            <button>
 							<a href={!row.IsPermitted ? null : editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
-								<Icon icon="material-symbols:edit-outline" class="text-lg" />
+					           {#if row.IsPermitted}
+                                <Icon icon="material-symbols:edit-outline" class="text-lg"/>
+                                {:else}
+                                <Icon icon="material-symbols:edit-outline" class="text-lg" style="color: #808b96"/>
+                                {/if}
 							</a>
-            </button>
+                            </button>
 						</td>
 						<td>
 							<Confirm
@@ -254,7 +254,7 @@
 								let:confirm={confirmThis}
 							>
 								<button
-                                    disabled= {userId === row.id ? true : false}
+                                    disabled= {userId === row.id || !row.IsPermitted ? true : false}
 									on:click|preventDefault={() => {
                                         if (!row.IsPermitted) {
                                         toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
@@ -262,8 +262,8 @@
                                         confirmThis(handleUserDelete, row.id)}
                                         }
                                     }
-   								class="btn p-2 -my-1 hover:variant-soft-error"
-								>
+                                    class="btn p-2 -my-1 hover:variant-soft-error"
+                                    >
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>
