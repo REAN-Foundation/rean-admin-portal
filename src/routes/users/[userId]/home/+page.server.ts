@@ -41,6 +41,6 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         userCountByYears,
         deviceDetailsStats,
         deviceDetailsByYears,
-        title:'Dashboard-Home'
+        title:'Dashboard-Home-Overall'
     };
 };

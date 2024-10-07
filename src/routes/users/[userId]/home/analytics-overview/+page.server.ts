@@ -29,6 +29,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     }
     return {
         sessionId,
-        statistics: response.Data
+        statistics: response.Data,
+        title:'Dashboard-Home-Basic'
     };
 };
