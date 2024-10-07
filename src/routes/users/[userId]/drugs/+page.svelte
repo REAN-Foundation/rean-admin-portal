@@ -13,6 +13,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+    $: isLoading = false;
 	let retrivedDrugs;
 	$: drugs = data.drugs.Items;
 	const userId = $page.params.userId;
@@ -48,7 +49,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchDrug(model) {
-		let url = `/api/server/drugs/search?`;
+        let url = `/api/server/drugs/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
 
@@ -64,7 +65,9 @@
 		const searchResult = await res.json();
         totalDrugsCount = searchResult.TotalCount;
         drugs = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
-        
+        if (totalDrugsCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$:{
@@ -73,7 +76,10 @@
 		retrivedDrugs = drugs.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
-	);
+        );
+        if (retrivedDrugs.length > 0) {
+            isLoading = false;
+        }
 	}
 	$: if (browser)
 		searchDrug({
@@ -86,11 +92,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+        isLoading = true;
 		let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+        if (drugName || genericName) {
+            isLoading = true;
+            drugs = [];
+        }
         itemsPerPage = e.detail * (paginationSettings.page + 1);
  		items = itemsPerPage;
 	}
@@ -197,8 +208,8 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedDrugs.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
-				</tr>
+                    <td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
+        		</tr>
 			{:else}
 				{#each retrivedDrugs as row}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
