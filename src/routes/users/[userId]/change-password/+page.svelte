@@ -8,6 +8,9 @@
   /////////////////////////////////////////////////////////////////////
 
 	export let form;
+  export let data;
+  data.title = 'Change Password'
+  console.log('data',data)
 	const userId = $page.params.userId;
   const homeRoute = `/users/${userId}/home`;
 	const changePasswordRoute = `/users/${userId}/change-password`;
