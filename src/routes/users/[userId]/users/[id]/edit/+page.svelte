@@ -132,6 +132,7 @@
 						type="text"
 						name="firstName"
 						bind:value={firstName}
+						required
 						placeholder="Enter first name here..."
 						class="input w-full {form?.errors?.firstName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -147,6 +148,7 @@
 						type="text"
 						name="lastName"
 						bind:value={lastName}
+						required
 						placeholder="Enter last name here..."
 						class="input w-full {form?.errors?.lastName ? 'border-error-300' : 'border-primary-200'}"
 					/>
