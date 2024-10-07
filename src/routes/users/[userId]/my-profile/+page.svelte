@@ -18,7 +18,7 @@
 	let splitPhoneNumber = phone.split('-');
 	let [countryCode, phoneNumber] = splitPhoneNumber;
 	let imageUrl = data.user.Person.ProfileImageURL ?? undefined;
-	let imageResourceId = data.user.Person.imageUrl;
+	let imageResourceId = data.user.Person.ImageResourceId ?? undefined;
 
 	console.log("user", data.user)
   let profileImage;
