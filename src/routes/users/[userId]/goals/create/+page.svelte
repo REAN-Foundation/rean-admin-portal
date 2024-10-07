@@ -8,7 +8,8 @@
 	////////////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
-
+  export let data;
+	data.title = 'Types-Goals Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/goals/create`;
 	const goalRoute = `/users/${userId}/goals`;

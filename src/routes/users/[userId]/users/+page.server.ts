@@ -46,7 +46,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 		users,
 		sessionId,
 		message: response.Message,
-    selectedRoles
+    selectedRoles,
+    title:'Administration-Users'
 	};
 
 };

@@ -25,7 +25,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         location: `${id}/edit`,
         assessmentTemplate,
         assessmentNodes,
-        message: response.Message
+        message: response.Message,
+        title:'Clinical-Assessments View'
     };		
 
 };

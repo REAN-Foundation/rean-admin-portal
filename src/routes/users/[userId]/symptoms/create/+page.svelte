@@ -6,11 +6,13 @@
   import { enhance } from '$app/forms';
  
 ////////////////////////////////////////////////////////////////////////
-
+  export let data;
 	export let form;
+	data.title = 'Clinical-Symptoms Create'
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
   let symptomImage;
+	
     let errorMessage = {
         Text: 'Max file upload size 150 KB',
         Colour: 'border-b-surface-700'

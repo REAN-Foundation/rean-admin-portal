@@ -23,7 +23,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 			assessmentNode,
 			sessionId,
 			templateScoringCondition,
-			message: response.Message
+			message: response.Message,
+			title:'Clinical-Assessments-Assessment Nodes View'
 		};
 
 	

@@ -8,6 +8,8 @@
 	////////////////////////////////////////////////////////////////////
 	
 	export let form;
+	export let data;
+	data.title = 'Types-Priorities Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/priorities/create`;
 	const priorityRoute = `/users/${userId}/priorities`;

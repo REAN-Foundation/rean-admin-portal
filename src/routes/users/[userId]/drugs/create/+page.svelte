@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
 
 	export let form;
+	export let data;
+	data.title = 'Clinical-Drugs Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/drugs/create`;
 	const drugsRoute = `/users/${userId}/drugs`;

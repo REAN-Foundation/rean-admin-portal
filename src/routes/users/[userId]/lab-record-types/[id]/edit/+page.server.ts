@@ -24,7 +24,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     return {
         location: `${id}/edit`,
         labRecordType,
-        message: response.Message
+        message: response.Message,
+				title:'Clinical-Lab Records Edit'
     };		
 
 };

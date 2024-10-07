@@ -5,6 +5,8 @@
 	import Icon from '@iconify/svelte';
 
 	export let form;
+	export let data;
+	data.title = 'Clinical-Lab Records Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/lab-record-types/create`;
 	const labRecordTypesRoute = `/users/${userId}/lab-record-types`;

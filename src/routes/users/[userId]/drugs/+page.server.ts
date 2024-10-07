@@ -18,6 +18,7 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
     return {
      drugs,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title: 'Clinical-Drugs'
     };
 };

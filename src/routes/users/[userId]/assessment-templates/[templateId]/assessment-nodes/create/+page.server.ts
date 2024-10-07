@@ -31,7 +31,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     return {
         queryResponseTypes,
         assessmentNodes,
-        message: response.Message
+        message: response.Message,
+				title:'Clinical-Assessments-Assessment Nodes Create'
     };	
 	
 };

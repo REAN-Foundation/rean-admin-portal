@@ -7,6 +7,8 @@
 	////////////////////////////////////////////////////////////////////////////////
 
 	export let form;
+	export let data;
+	data.title = 'Clinical-Assessments Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/assessment-templates/create`;
 	const assessmentsRoutes = `/users/${userId}/assessment-templates`;

@@ -58,6 +58,11 @@
 	}
 
 	const systemName = getSystemName();
+	$: pageTitle = showForgotPassword
+        ? 'Forgot Password'
+        : showResetPassword
+        ? 'Reset Password'
+        : 'Login';
 
 	const resetPasswordSchema = z.object({
 		email: z.string().email({ message: 'Invalid email address' }),
@@ -131,7 +136,7 @@
 </script>
 
 <svelte:head>
-	<title>{systemName}</title>
+	<title>{systemName}-{pageTitle}</title>
 	<meta name="description" content="REAN careplans" />
 </svelte:head>
 <body>
