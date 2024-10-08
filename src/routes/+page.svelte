@@ -79,8 +79,28 @@
 	const resetPasswordSchema = z.object({
 		email: z.string().email({ message: 'Invalid email address' }),
 		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
-		newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-		confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+		newPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+		confirmPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+		// newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+		// confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
 	}).refine(data => data.newPassword === data.confirmPassword, {
 		message: "New password and confirm new password must match",
 		path: ['confirmPassword'],

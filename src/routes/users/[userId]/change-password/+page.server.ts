@@ -11,8 +11,28 @@ import { validateFormData } from '$lib/utils/formValidation';
 const changePasswordSchema = zfd
   .formData({
     oldPassword: z.string().min(1, "Old password is required"),
-    newPassword: z.string().min(8, "New password should be greater than 8 characters"),
-    confirmNewPassword: z.string().min(1, "Please confirm the new password"),
+    // newPassword: z.string().min(8, "New password should be greater than 8 characters"),
+    // confirmNewPassword: z.string().min(1, "Please confirm the new password"),
+    newPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+		confirmNewPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     path: ["confirmNewPassword"],
