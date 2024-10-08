@@ -12,6 +12,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	$: assessmentNodes = data.assessmentNodes.Items;
     let retrivedAssessmentNodes;
 	const userId = $page.params.userId;
@@ -63,7 +64,11 @@
 			headers: { 'content-type': 'application/json' }
 		});
 		const response = await res.json();
+		totalAssessmentNodesCount = response.TotalCount;
 		assessmentNodes = response.map((item, index) => ({ ...item, index: index + 1 }));
+		if (totalAssessmentNodesCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$: {
@@ -73,6 +78,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedAssessmentNodes.length > 0) {
+            isLoading = false;
+        }
     }
 	$: if (browser)
 		searchNode({
@@ -85,11 +93,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (title || nodeType ) {
+            isLoading = true;
+            assessmentNodes = [];
+        }
 		itemsPerPage = e.detail;
 		items = itemsPerPage;
 	}
@@ -201,7 +214,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedAssessmentNodes.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedAssessmentNodes as row, rowIndex}

@@ -146,12 +146,13 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td>Last Name </td>
+				<td>Last Name *</td>
 				<td>
 					<input
 						type="text"
 						name="lastName"
 						bind:value={lastName}
+						required
 						placeholder="Enter last name here..."
 						class="input w-full {form?.errors?.lastName ? 'border-error-300' : 'border-primary-200'}"
 					/>

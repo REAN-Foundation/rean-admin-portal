@@ -13,6 +13,7 @@
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
     let retrivedUsers;
 	$: users = data.users.Items;
     console.log('retrivedUsers@', data.users.Items);
@@ -85,6 +86,9 @@
       console.log('Response: ' + JSON.stringify(searchResult));
       totalUsersCount = searchResult.TotalCount;
       users = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+	  if (totalUsersCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$: {
@@ -94,6 +98,9 @@
       paginationSettings.page * paginationSettings.limit,
       paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedUsers.length > 0) {
+            isLoading = false;
+        }
     }
 
 	$: if (browser)
@@ -108,11 +115,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (phone || email ) {
+            isLoading = true;
+            users = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -217,7 +229,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedUsers.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedUsers as row}

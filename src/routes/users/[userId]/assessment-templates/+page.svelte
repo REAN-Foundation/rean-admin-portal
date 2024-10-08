@@ -12,6 +12,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	$: assessmentTemplates = data.assessmentTemplate.Items;
 	let retrivedAssessmentTemplates;
 	const userId = $page.params.userId;
@@ -64,6 +65,9 @@
 		const searchResult = await res.json();
         totalAssessmentTemplatesCount = searchResult.TotalCount;
 		assessmentTemplates = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+		if (totalAssessmentTemplatesCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$:{
@@ -72,7 +76,11 @@
 		retrivedAssessmentTemplates = assessmentTemplates.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
-	);}
+	);
+	if (retrivedAssessmentTemplates.length > 0) {
+            isLoading = false;
+        }
+}
 	
 
 	$:console.log(retrivedAssessmentTemplates)
@@ -87,11 +95,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (title || type) {
+            isLoading = true;
+            assessmentTemplates = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -191,7 +204,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedAssessmentTemplates.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedAssessmentTemplates as row}

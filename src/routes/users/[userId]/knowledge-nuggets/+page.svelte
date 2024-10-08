@@ -15,8 +15,9 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	$: knowledgeNuggets = data.knowledgeNuggets.Items;
-  let retrivedKnowledgeNuggets;
+    let retrivedKnowledgeNuggets;
 	const userId = $page.params.userId;
 	const knowledgeNuggetRoute = `/users/${userId}/knowledge-nuggets`;
 	const editRoute = (id) => `/users/${userId}/knowledge-nuggets/${id}/edit`;
@@ -67,6 +68,9 @@
 		const searchResult = await res.json();
         totalKnowledgeNuggetsCount = searchResult.TotalCount;
 		knowledgeNuggets = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+		if (totalKnowledgeNuggetsCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$: {
@@ -76,6 +80,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedKnowledgeNuggets.length > 0) {
+            isLoading = false;
+        }
     }
 	$: if (browser)
 		searchKnowledgeNugget({
@@ -87,12 +94,17 @@
 			sortBy: sortBy
 		});
 
-		function onPageChange(e: CustomEvent): void {
+	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (topicName || tags) {
+            isLoading = true;
+            knowledgeNuggets = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -206,7 +218,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedKnowledgeNuggets.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedKnowledgeNuggets as row}

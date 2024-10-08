@@ -16,6 +16,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	let retrivedSymptoms;
 	$: symptoms = data.symptoms;
 
@@ -70,6 +71,9 @@
 		const searchResult = await res.json();
         totalSymptomsCount = searchResult.TotalCount;
         symptoms = searchResult.Items;;
+		if (totalSymptomsCount > 0) {
+			isLoading = false;
+		}
 	}
 
 	$: {
@@ -79,6 +83,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedSymptoms.length > 0){
+		isLoading = false;
+	}
 	}
 
 	$: if (browser)
@@ -92,11 +99,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (symptom || tags) {
+            isLoading = true;
+            symptoms = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -202,7 +214,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedSymptoms.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedSymptoms as row}

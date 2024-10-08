@@ -13,6 +13,7 @@
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     export let data: PageServerData;
+    $: isLoading = false;
     $: hospitals = data.hospitals.Items;
     let retrivedHospitals;
     const userId = $page.params.userId;
@@ -63,6 +64,9 @@
         const searchResult = await res.json();
         totalHospitalsCount = searchResult.TotalCount;
         hospitals = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+        if (totalHospitalsCount > 0) {
+            isLoading = false;
+        }
      }
 
     $:{
@@ -72,6 +76,9 @@
         paginationSettings.page * paginationSettings.limit,
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
     );
+    if (retrivedHospitals.length > 0) {
+            isLoading = false;
+        }
     }
 
     // $: console.log('retrivedHospitals', retrivedHospitals);
@@ -87,11 +94,16 @@
         });
 
     function onPageChange(e: CustomEvent): void {
+        isLoading = true;
         let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
     }
 
     function onAmountChange(e: CustomEvent): void {
+        if (hospitalName) {
+            isLoading = true;
+            hospitals = [];
+        }
         itemsPerPage = e.detail * (paginationSettings.page + 1);
         items = itemsPerPage;
     }
@@ -181,7 +193,7 @@
         <tbody class="!bg-white dark:!bg-inherit">
             {#if retrivedHospitals.length <= 0}
                 <tr>
-                    <td colspan="6">No records found</td>
+                    <td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
                 </tr>
             {:else}
                 {#each retrivedHospitals as row}
