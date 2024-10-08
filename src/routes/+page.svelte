@@ -50,12 +50,24 @@
 
   let maxHeight = '80vh';
 	if (browser) {
-		const handleResize = () => {
-			maxHeight = window.innerWidth <= 768 ? '60vh' : '80vh';
-		};
-		window.addEventListener('resize', handleResize);
-		handleResize();
-	}
+  const handleResize = () => {
+    const screenWidth = window.innerWidth;
+    if (screenWidth <= 600) {
+      maxHeight = '40vh';
+    } else if (screenWidth <= 1024) {
+      maxHeight = '50vh';
+    } else if (screenWidth <= 1440) {
+      maxHeight = '60vh';
+    } else if (screenWidth <= 1600) {
+      maxHeight = '70vh';
+    } else {
+      maxHeight = '80vh';
+    }
+  };
+
+  window.addEventListener('resize', handleResize);
+  handleResize();
+}
 
 	const systemName = getSystemName();
 	$: pageTitle = showForgotPassword
