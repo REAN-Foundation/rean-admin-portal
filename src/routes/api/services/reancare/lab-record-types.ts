@@ -18,8 +18,8 @@ export const createLabRecordType = async (
 		DisplayName: displayName ? displayName : null,
 		SnowmedCode: snowmedCode ? snowmedCode : null,
 		LoincCode: loincCode ? loincCode : null,
-		NormalRangeMin: normalRangeMin ? normalRangeMin : null,
-		NormalRangeMax: normalRangeMax ? normalRangeMax : null,
+		NormalRangeMin: normalRangeMin ? normalRangeMin : 0.0,
+		NormalRangeMax: normalRangeMax ? normalRangeMax : 0.0,
 		Unit: unit ? unit : null
 	};
 	const url = BACKEND_API_URL + '/types/lab-records';
