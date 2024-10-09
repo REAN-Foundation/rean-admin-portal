@@ -146,7 +146,7 @@
 		<input
 				type="text"
 				name="topicName"
-				placeholder="Search by topic name"
+				placeholder="Search by name"
 				bind:value={topicName}
 				class="input w-full"
 		/>
@@ -202,7 +202,7 @@
 				<th data-sort="index">Id</th>
 				<th>
 					<button on:click={() => sortTable('TopicName')}>
-						Topic Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					 Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
 					</button>
 				</th>
 				<th>

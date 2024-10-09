@@ -21,6 +21,10 @@
 	export let form;
 	let healthSystems = data.healthSystems;
 	// console.log('healthSystems ->', JSON.stringify(healthSystems, null, 2));
+	healthSystems = sortHealthSystemsByName(healthSystems)
+	function sortHealthSystemsByName(healthSystems) {
+		return healthSystems.sort((a,b) => a.Name.localeCompare(b.Name));
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />

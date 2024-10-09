@@ -21,7 +21,10 @@
     let healthSystemName = data.hospital.HealthSystemName;
     let tags = data.hospital.Tags;
     let healthSystems = data.healthSystems;
-
+    healthSystems = sortHealthSystemsByName(healthSystems)
+	function sortHealthSystemsByName(healthSystems) {
+		return healthSystems.sort((a,b) => a.Name.localeCompare(b.Name));
+	}
     console.log('hospital name  ->', hospitalName);
     console.log('healthSystemId ->', healthSystemId);
     console.log('tags           ->', tags);

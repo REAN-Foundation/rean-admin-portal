@@ -9,12 +9,14 @@
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
     import toast from 'svelte-french-toast';
+    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
 	$: isLoading = false;
     let retrivedUsers;
+		let users;
 	$: users = data.users.Items;
     console.log('retrivedUsers@', data.users.Items);
 	const userId = $page.params.userId;
@@ -38,7 +40,7 @@
 	let isSortingEmail = false;
 	let isSortingPhone = false;
 	let items = 10;
-    let selectedRoles = data.selectedRoles;
+  let selectedRoles = data.selectedRoles;
 
 	let paginationSettings = {
 		page: 0,
@@ -62,8 +64,24 @@
     //         x.RoleName === "Tenant user") {
     //             selectedRoles.push(x.id);
     //         }});
-   
-    $: console.log("selectedRole", selectedRoles);
+	const tmp = LocalStorageUtils.getItem('personRoles');
+	const personRoles = JSON.parse(tmp);
+	$: console.log("personRoles", personRoles);
+	function getRoleNameById(roleId) {
+		if (Array.isArray(personRoles) && personRoles.length > 0) {
+			const role = personRoles.find(role => role.id === roleId); 
+			return role ? role.RoleName : 'Not Specified';
+		}
+		return 'Not Specified';
+	}
+
+		$: users = users.map(user => {
+		return {
+			...user,
+			RoleName: getRoleNameById(user.RoleId) 
+		};
+	});
+
     async function searchUser(model) {
       console.log(model);
       let url = `/api/server/users/search?`;
@@ -222,6 +240,7 @@
 				</th>
 				<th data-sort="Phone">Contact Number</th>
 				<th>Email</th>
+				<th>Role</th>
 				<th />
 				<th />
 			</tr>
@@ -247,6 +266,9 @@
 						>
 						<td role="gridcell" aria-colindex={4} tabindex="0"
 							>{row.Person.Email || 'Not specified'}</td
+						>
+						<td role="gridcell" aria-colindex={4} tabindex="0"
+							>{row.RoleName || 'Not specified'}</td
 						>
 						<td>
                             <button>

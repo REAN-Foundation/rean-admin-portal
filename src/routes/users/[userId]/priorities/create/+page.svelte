@@ -37,7 +37,7 @@
 	<table class="table">
 		<thead class="!variant-soft-secondary">
 			<tr>
-				<th>Create Health Priority</th>
+				<th>Create Priority</th>
 				<th class="text-end">
 					<a href={priorityRoute} class="btn p-2 -my-2 variant-soft-secondary">
 						<Icon icon="material-symbols:close-rounded" class="text-lg" />
