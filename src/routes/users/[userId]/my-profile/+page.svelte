@@ -81,9 +81,7 @@
         const errorText = await res.text();
         throw new Error(errorText);
       }
-
       const response = await res.json();
-			
       if (response.Status === 'success' && response.HttpCode === 201) {
         errorMessage.Text = "File uploaded successfully";
         errorMessage.Colour = 'text-success-500';
@@ -105,6 +103,7 @@
       errorMessage.Colour = 'text-error-500';
     }
 	}
+
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -202,17 +201,19 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td class="align-top">Profile Image *</td>
+				<td class="align-top">Profile Image</td>
 				<td>
 					{#if imageUrl === undefined}
 						<input
 							name="fileinput"
 							type="file"
-							required
 							class="true input w-full"
 							placeholder="Image"
 							on:change={async (e) => await onFileSelected(e)}
 						/>
+						{#if errorMessage}
+									<p class= {`${errorMessage.Colour}`}>{errorMessage.Text}</p>
+							{/if}
 					{:else}
 						<Image cls="flex h-24 w-24 rounded-lg" source={imageUrl} w="24" h="24" />
 						<input

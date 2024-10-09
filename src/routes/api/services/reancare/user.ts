@@ -208,7 +208,7 @@ export const updateUser = async (
 			Email: email ? email : null,
 			DefaultTimeZone: defaultTimeZone ? defaultTimeZone : null,
 			CurrentTimeZone: currentTimeZone ? currentTimeZone : null,
-      ImageResourceId: imageResourceId ? imageResourceId : null
+      ImageResourceId: imageResourceId ? imageResourceId : undefined
 
 	};
 	if (Helper.isPhone(phone)) {
