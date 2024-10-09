@@ -50,19 +50,19 @@
 
   let maxHeight = '80vh';
 	if (browser) {
-  const handleResize = () => {
-    const screenWidth = window.innerWidth;
-    if (screenWidth <= 600) {
-      maxHeight = '40vh';
-    } else if (screenWidth <= 1024) {
-      maxHeight = '50vh';
-    } else if (screenWidth <= 1440) {
-      maxHeight = '60vh';
-    } else if (screenWidth <= 1600) {
-      maxHeight = '70vh';
-    } else {
-      maxHeight = '80vh';
-    }
+		const handleResize = () => {
+			const screenWidth = window.innerWidth;
+			if (screenWidth <= 600) {
+				maxHeight = '40vh';
+			} else if (screenWidth <= 1024) {
+				maxHeight = '50vh';
+			} else if (screenWidth <= 1440) {
+				maxHeight = '60vh';
+			} else if (screenWidth <= 1600) {
+				maxHeight = '70vh';
+			} else {
+				maxHeight = '80vh';
+			}
   };
 
   window.addEventListener('resize', handleResize);
@@ -154,15 +154,12 @@
 			toast.success(res.Message)
 			showResetPassword = false;
 			showForgotPassword = false;
+			email = undefined;
+			phone = undefined;
 		} else {
 			toast.error(res.Message);
 		}
 		} catch (err) {
-			if (err instanceof z.ZodError) {
-				errors = err.flatten().fieldErrors;
-			} else {
-				errorMessage('An unexpected error occurred');
-			}
 			toast.error('Data validation error');
 		}
 	}
