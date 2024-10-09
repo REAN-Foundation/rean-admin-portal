@@ -7,8 +7,8 @@ import type { PersonRole } from '$lib/types/domain.models';
 
 export const POST = async (event: RequestEvent) => {
     const request = event.request;
-    let availableRoles: PersonRole = [];
-	let filteredRoles: PersonRole = [];
+    let availableRoles: PersonRole[];
+	let filteredRoles: PersonRole[];
     let loginRoleId = null;
 	const data = await request.json();
     console.log("data",data)
