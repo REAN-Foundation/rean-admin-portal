@@ -28,15 +28,15 @@
 	let showForgotPassword = false;
 	let showResetPassword = false;
 
-	let email = '';
-	let resetCode = '';
-	let newPassword = '';
-	let confirmPassword = '';
+	let email = undefined;
+	let resetCode = undefined;
+	let newPassword = undefined;
+	let confirmPassword = undefined;
 	let errors: Record<string, string[]> = {};
 	let loginActiveTab = 'email';
 	let forgotPasswordActiveTab = 'email';
-	let phone = ''
-	let countryCode = ''
+	let phone = undefined
+	let countryCode = undefined
 
 	if (browser) {
 		const tmp = LocalStorageUtils.getItem('personRoles');
@@ -77,7 +77,8 @@
         : 'Login';
 
 	const resetPasswordSchema = z.object({
-		email: z.string().email({ message: 'Invalid email address' }),
+		email: z.string().email({ message: 'Invalid email address' }).optional(),
+    phone: z.string().optional(),
 		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
 		newPassword: z.string().regex(
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
@@ -131,7 +132,7 @@
 	async function handleResetPassword() {
 		errors = {};
 		try {
-			resetPasswordSchema.parse({ email, resetCode, newPassword, confirmPassword });
+			resetPasswordSchema.parse({ email,phone,resetCode, newPassword, confirmPassword });
 			let resetPasswordBody = {
 				ResetCode: resetCode,
 				NewPassword: newPassword,
@@ -162,6 +163,7 @@
 			} else {
 				errorMessage('An unexpected error occurred');
 			}
+			toast.error('Data validation error');
 		}
 	}
 
@@ -239,9 +241,9 @@
 									<span class="text-primary-500">Email</span>
 									<input type="email" value={email} required class="input mb-4" />
 								</label> -->
-								<input type="email" name="email" value={email} class="input mb-4 hidden" />
-								<input type="text" name="countryCode" value={countryCode} class="input mb-4 hidden" />
-								<input type="text" name="phone" value={phone} class="input mb-4 hidden" />
+								<input type="email" name="email" bind:value={email} class="input mb-4 hidden" />
+								<input type="text" name="countryCode" bind:value={countryCode} class="input mb-4 hidden" />
+								<input type="text" name="phone" bind:value={phone} class="input mb-4 hidden" />
 								<label>
 									<span class="text-primary-500">Reset Code/OTP</span>
 									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />

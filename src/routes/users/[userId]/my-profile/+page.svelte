@@ -81,9 +81,7 @@
         const errorText = await res.text();
         throw new Error(errorText);
       }
-
       const response = await res.json();
-			
       if (response.Status === 'success' && response.HttpCode === 201) {
         errorMessage.Text = "File uploaded successfully";
         errorMessage.Colour = 'text-success-500';
@@ -116,7 +114,6 @@
 	enctype="multipart/form-data"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
-	
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -214,6 +211,9 @@
 							placeholder="Image"
 							on:change={async (e) => await onFileSelected(e)}
 						/>
+						{#if errorMessage}
+									<p class= {`${errorMessage.Colour}`}>{errorMessage.Text}</p>
+							{/if}
 					{:else}
 						<Image cls="flex h-24 w-24 rounded-lg" source={imageUrl} w="24" h="24" />
 						<input
