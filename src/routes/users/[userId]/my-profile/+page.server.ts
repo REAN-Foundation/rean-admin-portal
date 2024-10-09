@@ -46,17 +46,21 @@ const updateUserSchema = zfd.formData({
     ),
 	countryCode:z.string().optional(),
 	roleId:z.string().optional(),
-	imageResourceId: z.string().uuid()
+	imageResourceId: z.string().uuid().optional()
 });
 
 export const actions = {
 	updateProfileAction: async (event: RequestEvent) => {
-        let response;
+    let response;
 		const request = event.request;
 		const userId = event.params.userId;
 		const sessionId = event.cookies.get('sessionId');
 		const data = await request.formData();
 		const formData = Object.fromEntries(data);
+		if (!formData.imageResourceId || formData.imageResourceId === 'undefined') {
+      delete formData.imageResourceId;
+    }
+		console.log("formData", formData)
 
 		type UserSchema = z.infer<typeof updateUserSchema>;
 

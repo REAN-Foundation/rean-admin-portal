@@ -105,6 +105,7 @@
       errorMessage.Colour = 'text-error-500';
     }
 	}
+
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -115,6 +116,7 @@
 	enctype="multipart/form-data"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -202,13 +204,12 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td class="align-top">Profile Image *</td>
+				<td class="align-top">Profile Image</td>
 				<td>
 					{#if imageUrl === undefined}
 						<input
 							name="fileinput"
 							type="file"
-							required
 							class="true input w-full"
 							placeholder="Image"
 							on:change={async (e) => await onFileSelected(e)}
