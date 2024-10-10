@@ -41,7 +41,7 @@ const createUserSchema = zfd.formData({
       }
     ),
     password: z.string().regex(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, 
       {
         message: 'Password should contain at least 1 capital letter , 1 digit & 1 special character'
       }
