@@ -46,7 +46,7 @@ export const searchLabRecordTypes = async (sessionId: string, searchParams?: any
 			}
 		}
 	}
-	const url = BACKEND_API_URL + `/types/lab-records`;
+	const url = BACKEND_API_URL + `/types/lab-records/search`;
 	console.log(url);
 	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };

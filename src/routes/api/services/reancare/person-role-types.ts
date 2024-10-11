@@ -26,6 +26,26 @@ export const searchPersonRoleTypes = async (sessionId: string) => {
 	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };
 
+export const searchRoleTypes = async (sessionId: string, searchParams?: any) => {
+	let searchString = '';
+	if (searchParams) {
+		const keys = Object.keys(searchParams);
+		if (keys.length > 0) {
+			searchString = '?';
+			const params = [];
+			for (const key of keys) {
+				if (searchParams[key]) {
+					const param = `${key}=${searchParams[key]}`;
+					params.push(param);
+				}
+			}
+		}
+	}
+	const url = BACKEND_API_URL + `/roles/search`;
+	console.log(url);
+	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+};
+
 export const updatePersonRoleType = async (
 	sessionId: string,
 	personRoleTypeId: string,
