@@ -33,7 +33,7 @@ export const searchGoals = async (sessionId: string, searchParams?: any) => {
 			searchString += params.join('&');
 		}
 	}
-	const url = BACKEND_API_URL + `/types/goal-types/search`;
+	const url = BACKEND_API_URL + `/types/goal-types/search${searchString}`;
 	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };
 
