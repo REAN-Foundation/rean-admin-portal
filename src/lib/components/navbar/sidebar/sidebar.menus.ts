@@ -364,7 +364,7 @@ function addAdministrationMenus(
         name    : 'Person-Role',
         title   : 'User Roles',
         icon    : 'material-symbols:person-search-outline-rounded',
-        link    : `/users/${userId}/person-role-types`,
+        link    : `/users/${userId}/user-roles`,
         children: []
     };
     menuList.push(personRoleMenu);
