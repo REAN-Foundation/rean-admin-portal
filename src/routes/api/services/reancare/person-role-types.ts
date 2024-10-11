@@ -39,10 +39,10 @@ export const searchRoleTypes = async (sessionId: string, searchParams?: any) => 
 					params.push(param);
 				}
 			}
+			searchString += params.join('&');
 		}
 	}
-	const url = BACKEND_API_URL + `/roles/search`;
-	console.log(url);
+	const url = BACKEND_API_URL + `/roles/search${searchString}`;
 	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };
 

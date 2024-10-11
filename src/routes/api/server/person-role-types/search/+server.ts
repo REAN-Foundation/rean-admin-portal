@@ -1,4 +1,4 @@
-import { searchLabRecordTypes } from "$routes/api/services/reancare/lab-record-types";
+import { setActiveRoles } from "$lib/utils/user.active.role";
 import { searchRoleTypes } from "$routes/api/services/reancare/person-role-types";
 import type { RequestEvent } from "@sveltejs/kit";
 
@@ -18,7 +18,7 @@ export const GET = async (event: RequestEvent) => {
 
 	try {
         const searchParams = {
-            roleName,
+            name:roleName,
             orderBy: sortBy,
             order: sortOrder,
             itemsPerPage,
@@ -27,6 +27,7 @@ export const GET = async (event: RequestEvent) => {
         console.log("Search parms: ", searchParams);
 		const response = await searchRoleTypes(sessionId, searchParams);
         const roles = response.Data.Roles;
+        roles.Items = setActiveRoles(roles.Items ?? []);
         console.log("roles", JSON.stringify(response, null, 2));
         return new Response(JSON.stringify(roles));
 	} catch (err) {
