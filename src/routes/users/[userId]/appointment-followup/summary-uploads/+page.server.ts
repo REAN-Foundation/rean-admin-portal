@@ -32,7 +32,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
         console.log(data)
         return {
             AppointmentReport:{data:data,
-                tenant:'GMU'}
+                tenant:'GMU'},
+                title:'Appointment Followup-Status Report'
             }
     }
     else{
