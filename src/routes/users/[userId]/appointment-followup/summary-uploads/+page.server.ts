@@ -18,7 +18,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
         console.log(data)
     return {
         AppointmentReport:{data:data,
-            tenant:'GGHN'}
+            tenant:'GGHN'},
+            title:'Appointment Followup-Status Report'
         }
     };
     if(tenantData.tenantName.includes('GMU'))

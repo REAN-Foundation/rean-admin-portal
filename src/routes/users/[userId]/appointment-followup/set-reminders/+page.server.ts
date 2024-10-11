@@ -24,7 +24,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
   console.log("sessionUser..data..",tenantData)
   console.log("sessionUser..data..",tenantData.tenantName)
   return {
-    UserDetails: tenantData
+    UserDetails: tenantData,
+    title:'Appointment Followup-Set Reminders'
     };
 };
 export const actions = {
