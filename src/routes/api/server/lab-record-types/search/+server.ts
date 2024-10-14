@@ -27,7 +27,7 @@ export const GET = async (event: RequestEvent) => {
         };
         console.log("Search parms: ", searchParams);
 		const response = await searchLabRecordTypes(sessionId, searchParams);
-        const labRecords = response.Data.LabRecords;
+        const labRecords = response.Data.LabRecordTypes;
         console.log("labRecords", JSON.stringify(response, null, 2));
         return new Response(JSON.stringify(labRecords));
 	} catch (err) {

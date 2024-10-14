@@ -565,7 +565,7 @@ function addClinicalMenus(
             name    : 'Lab-Records',
             title   : 'Lab Records',
             icon    : 'material-symbols:lab-research-outline-rounded',
-            link    : `/users/${userId}/lab-record-types`,
+            link    : `/users/${userId}/lab-records`,
             children: []
         };
         menuList.push(labRecordType);
