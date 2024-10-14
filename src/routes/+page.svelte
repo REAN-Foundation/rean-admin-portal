@@ -81,7 +81,7 @@
     phone: z.string().optional(),
 		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
 		newPassword: z.string().regex(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, 
       {
         message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
       }
@@ -91,7 +91,7 @@
       }
     ),
 		confirmPassword: z.string().regex(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
       {
         message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
       }
@@ -160,7 +160,11 @@
 			toast.error(res.Message);
 		}
 		} catch (err) {
-			toast.error('Data validation error');
+			if (err instanceof z.ZodError) {
+				errors = err.flatten().fieldErrors;
+			} else {
+				toast.error('An unexpected error occurred');
+			}
 		}
 	}
 
