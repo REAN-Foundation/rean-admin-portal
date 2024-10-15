@@ -43,5 +43,6 @@ export const load: LayoutServerLoad = async (event) => {
         tenantSettings: tenantSettings.Data.TenantSettings,
         user,
         title: '',
+        isSubmitting:false,
     };
 };

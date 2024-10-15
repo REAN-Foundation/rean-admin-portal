@@ -10,7 +10,7 @@ import { getSymptomById, updateSymptom } from '../../../../../api/services/reanc
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
-	const sessionId = event.cookies.get('sessionId');
+    const sessionId = event.cookies.get('sessionId');
     const symptomId = event.params.id;
     const response = await getSymptomById(sessionId, symptomId);
 
@@ -20,75 +20,75 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     const symptom = response.Data.SymptomType;
     const imageResourceId = symptom.ImageResourceId;
     if (imageResourceId) {
-        symptom['ImageUrl'] =
-            BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
+        symptom['ImageUrl'] = BACKEND_API_URL + `/file-resources/${imageResourceId}/download?disposition=inline`;
     } else {
         symptom['ImageUrl'] = null;
     }
     return {
         sessionId,
         symptom,
-				title:"Clinical-Symptoms Edit"
+        title: 'Clinical-Symptoms Edit'
     };
-
 };
 
 const updateSymptomSchema = zfd.formData({
-	symptom: z.string().min(3).max(256),
-	description: z.string().optional(),
-	tags: z.array(z.string()).optional(),
-	language: z.string().optional(),
-	imageResourceId: z.string().optional()
+    symptom: z.string().min(3).max(256),
+    description: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    language: z.string().optional(),
+    imageResourceId: z.string().optional()
 });
 
 export const actions = {
-	updateSymptomAction: async (event: RequestEvent) => {
-		const request = event.request;
-		const userId = event.params.userId;
-		const sessionId = event.cookies.get('sessionId');
-		const symptomId = event.params.id;
-		const data = await request.formData();
-		const formData = Object.fromEntries(data);
+    updateSymptomAction: async (event: RequestEvent) => {
+        const request = event.request;
+        const userId = event.params.userId;
+        const sessionId = event.cookies.get('sessionId');
+        const symptomId = event.params.id;
+        const data = await request.formData();
+        const formData = Object.fromEntries(data);
 
-		const tags = data.has('tags') ? data.getAll('tags') : [];
-		const formDataValue = { ...formData, tags: tags };
+        const tags = data.has('tags') ? data.getAll('tags') : [];
+        const formDataValue = { ...formData, tags: tags };
 
-		type SymptomSchema = z.infer<typeof updateSymptomSchema>;
+        type SymptomSchema = z.infer<typeof updateSymptomSchema>;
 
-		let result: SymptomSchema = {};
-		try {
-			result = updateSymptomSchema.parse(formDataValue);
-			console.log('result', result);
-		} catch (err: any) {
-			const { fieldErrors: errors } = err.flatten();
-			console.log(errors);
-			const { ...rest } = formData;
-			return {
-				data: rest,
-				errors
-			};
-		}
+        let result: SymptomSchema = {};
+        try {
+            result = updateSymptomSchema.parse(formDataValue);
+            console.log('result', result);
+        } catch (err: any) {
+            const { fieldErrors: errors } = err.flatten();
+            console.log(errors);
+            const { ...rest } = formData;
+            return {
+                data: rest,
+                errors
+            };
+        }
 
-		const response = await updateSymptom(
-			sessionId,
-			symptomId,
-			result.symptom,
-			result.description,
-			result.tags,
-			result.language,
-			result.imageResourceId
-		);
+        let response;
+        try {
+            response = await updateSymptom(
+                sessionId,
+                symptomId,
+                result.symptom,
+                result.description,
+                result.tags,
+                result.language,
+                result.imageResourceId
+            );
+        } catch (error: any) {
+            const errorMessageText = error?.body?.message || 'An error occurred';
+            throw redirect(303, `/users/${userId}/symptoms`, errorMessage(errorMessageText), event);
+        }
+        const id = response.Data.SymptomType.id;
 
-		const id = response.Data.SymptomType.id;
-
-		if (response.Status === 'failure' || response.HttpCode !== 200) {
-			throw redirect(303, `/users/${userId}/symptoms`, errorMessage(response.Message), event);
-		}
-		throw redirect(
-			303,
-			`/users/${userId}/symptoms/${id}/view`,
-			successMessage(`Symptom updated successfully!`),
-			event
-		);
-	}
+        throw redirect(
+            303,
+            `/users/${userId}/symptoms/${id}/view`,
+            successMessage(`Symptom updated successfully!`),
+            event
+        );
+    }
 };

@@ -22,8 +22,8 @@
     let isOpen = false;
     let buttonLabel = 'Download';
 
-    const options = ['JSON', 'Excel', 'PDF'];
-
+    // const options = ['JSON', 'Excel', 'PDF'];
+    const options = ['JSON', 'Excel']
     function handleDownloadAnalyticsReportInJSONClick() {
         console.log('Created custom event: downloadAnalyticsJSONReport');
         dispatch('downloadAnalyticsJSONReport',{});
