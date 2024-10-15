@@ -12,6 +12,7 @@
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
+    import { db } from '$lib/utils/local.db';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,11 +126,18 @@
 		sortBy = columnName;
 	}
 	
-	const handleSymptomDelete = async (id) => {
+	const handleSymptomDelete = async (id,imageResourceId) => {
 		const symptomId = id;
+		console.log(`ImageUrl : ${imageResourceId}`);
+		// if (imageResourceId) {
+    //     // await db.imageCache.where({ srcUrl: imageUrl}).delete();
+		// 		await db.imageCache.where({ srcUrl: getImageUrl(imageResourceId)}).delete();
+    //     console.log(`Removed cached image for ${imageResourceId}`);
+    // }
 		await Delete({
 			sessionId: data.sessionId,
-			symptomId: symptomId
+			symptomId: symptomId,
+			// ImageUrl : imageUrl 
 		});
 		invalidate('app:symptoms');
 	};
@@ -142,9 +150,17 @@
 		});
 	}
 
-	function getImageUrl(id:string):string{
-		return data.backendUrl+`/file-resources/${id}/download?disposition=inline`
-	}
+	// function getImageUrl(id:string):string{
+	// 	return data.backendUrl+`/file-resources/${id}/download?disposition=inline`
+	// }
+
+	async function getImageUrl(id: string): Promise<string> {
+  const cachedImage = await db.imageCache.where({ srcUrl: `/file-resources/${id}/download?disposition=inline` }).first();
+  if (cachedImage) {
+    return cachedImage.srcUrl;
+  }
+  return `${data.backendUrl}/file-resources/${id}/download?disposition=inline`;
+}
 	
 </script>
 
@@ -224,12 +240,30 @@
 							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Symptom, 20)}</a>
 						</td>
 						<td role="gridcell" aria-colindex={3} tabindex="0">{row.Tags.length > 0 ? row.Tags : 'Not specified'}</td>
-						<td role="gridcell" aria-colindex="{4}" tabindex="0">
+						<!-- <td role="gridcell" aria-colindex="{4}" tabindex="0">
 							{#if row.ImageResourceId === undefined || row.ImageResourceId===null}
 							Not specified
 							{:else}
 							<Image cls="flex h-8 w-8 rounded-lg" source="{getImageUrl(row.ImageResourceId)}" w="24" h="24" />
 							{/if}
+						</td> -->
+						<!-- <td role="gridcell" aria-colindex="{4}" tabindex="0">
+							{#if row.ImageUrl === undefined || row.ImageUrl===null}
+							Not specified
+							{:else}
+							<Image cls="flex h-8 w-8 rounded-lg" source="{row.ImageUrl}" w="24" h="24" />
+							{/if}
+							</td> -->
+							<td role="gridcell" aria-colindex="{4}" tabindex="0">
+								{#if row.ImageResourceId === undefined || row.ImageResourceId === null}
+									Not specified
+								{:else}
+									{#await getImageUrl(row.ImageResourceId) then imageUrl}
+										<Image cls="flex rounded-lg" source="{imageUrl}" w="24" h="24" />
+									{:catch error}
+										<p>Error loading image</p>
+									{/await}
+								{/if}
 							</td>
 						<td role="gridcell" aria-colindex={5} tabindex="0">
 							{date.format(new Date(row.CreatedAt), 'DD-MMM-YYYY')}
@@ -246,7 +280,7 @@
 								let:confirm={confirmThis}
 							>
 								<button
-									on:click|preventDefault={() => confirmThis(handleSymptomDelete, row.id)}
+									on:click|preventDefault={() => confirmThis(handleSymptomDelete, row.id, row.imageResourceId)}
 									class="btn p-2 -my-1 hover:variant-soft-error"
 								>
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
