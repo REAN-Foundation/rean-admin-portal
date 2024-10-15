@@ -3,7 +3,7 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
-import { createPersonRoleType } from '../../../../api/services/reancare/person-role-types';
+import { createPersonRoleType } from '../../../../api/services/reancare/user-roles';
 import { validateFormData } from '$lib/utils/formValidation';
 
 /////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ export const actions = {
             const errorMessageText = error?.body?.message || 'An error occurred';
             throw redirect(
 				303,
-				`/users/${userId}/person-role-types`,
+				`/users/${userId}/user-roles`,
 				errorMessage(errorMessageText),
 				event
 			);
@@ -41,7 +41,7 @@ export const actions = {
         const id = response.Data.RoleType.id;
         throw redirect(
 			303,
-			`/users/${userId}/person-role-types/${id}/view`,
+			`/users/${userId}/user-roles/${id}/view`,
 			successMessage(`User role created successfully!`),
 			event
 		);

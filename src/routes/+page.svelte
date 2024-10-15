@@ -81,7 +81,7 @@
     phone: z.string().optional(),
 		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
 		newPassword: z.string().regex(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, 
       {
         message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
       }
@@ -91,7 +91,7 @@
       }
     ),
 		confirmPassword: z.string().regex(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, 
+       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
       {
         message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
       }
@@ -160,7 +160,11 @@
 			toast.error(res.Message);
 		}
 		} catch (err) {
-			toast.error('Data validation error');
+			if (err instanceof z.ZodError) {
+				errors = err.flatten().fieldErrors;
+			} else {
+				toast.error('An unexpected error occurred');
+			}
 		}
 	}
 
@@ -245,7 +249,7 @@
 									<span class="text-primary-500">Reset Code/OTP</span>
 									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
 									{#if errors.resetCode}
-										<span class="text-error-500">{errors.resetCode}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.resetCode}</p>
 									{/if}
 								</label>
 								<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -257,7 +261,7 @@
 
 									<!-- <input type="password" bind:value={newPassword} required class="input mb-4 mt-2" /> -->
 									{#if errors.newPassword}
-										<span class="text-error-500">{errors.newPassword}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.newPassword}</p>
 									{/if}
 								</label>
 								<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -269,7 +273,7 @@
 
 									<!-- <input type="password" bind:value={confirmPassword} required class="input mb-4" /> -->
 									{#if errors.confirmPassword}
-										<span class="text-error-500">{errors.confirmPassword}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.confirmPassword}</p>
 									{/if}
 								</label>
 								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Reset Password</button>

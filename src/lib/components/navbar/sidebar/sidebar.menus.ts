@@ -364,7 +364,7 @@ function addAdministrationMenus(
         name    : 'Person-Role',
         title   : 'User Roles',
         icon    : 'material-symbols:person-search-outline-rounded',
-        link    : `/users/${userId}/person-role-types`,
+        link    : `/users/${userId}/user-roles`,
         children: []
     };
     menuList.push(personRoleMenu);
@@ -565,7 +565,7 @@ function addClinicalMenus(
             name    : 'Lab-Records',
             title   : 'Lab Records',
             icon    : 'material-symbols:lab-research-outline-rounded',
-            link    : `/users/${userId}/lab-record-types`,
+            link    : `/users/${userId}/lab-records`,
             children: []
         };
         menuList.push(labRecordType);
