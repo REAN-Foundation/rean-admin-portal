@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { enhance } from '$app/forms';
+  import { applyAction, deserialize, enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
+    import type { ActionResult } from '@sveltejs/kit';
+    import toast from 'svelte-french-toast';
 
 	///////////////////////////////////////////////////////////////////
 	
@@ -24,6 +26,16 @@
 			path: createRoute
 		}
 	];
+
+	function handleSubmit() {
+	  isSubmitting = true;
+  } 
+
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -33,6 +45,7 @@
 	action="?/createPersonRoleTypeAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
