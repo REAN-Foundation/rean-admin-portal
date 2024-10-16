@@ -83,6 +83,8 @@
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>
