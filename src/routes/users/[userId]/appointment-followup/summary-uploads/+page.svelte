@@ -27,7 +27,6 @@
     let summary = appointmentReport['Summary'];
     console.log('report',appointmentReport['File_data'])
     let filedata = appointmentReport['File_data'];
-    // $:filedata = data.AppointmentReport.data.File_data;
     console.log("filedata",filedata)
     const statusReportRoute = `/users/${userId}/appointment-followup/summary-uploads`;
     const breadCrumbs = [{ name:'Status Report GGHN', path: statusReportRoute }];
@@ -37,7 +36,6 @@
     let items = 10;
  
     let patientCount = appointmentReport['File_data'].length;
-    // let patientCount = 12;
     let paginationSettings = {
         page: 0,
         limit: 10,
@@ -90,7 +88,7 @@
       	patientCount = searchResult.Summary;
         filedata = searchResult.File_data;
         retriveddata = filedata
-        // filedata = searchResult.File_data;
+        
         console.log("retriveddata",retriveddata);
 		if (retriveddata > 0) {
             // isLoading = false;

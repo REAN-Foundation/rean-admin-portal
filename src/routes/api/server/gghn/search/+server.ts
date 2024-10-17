@@ -21,7 +21,6 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log("para",searchParams)
 		const response = await searchReply(sessionId, searchParams);
-		// const items = response.Data.PriorityTypes;
 		console.log("response replied",response)
 		return new Response(JSON.stringify(response));
 
