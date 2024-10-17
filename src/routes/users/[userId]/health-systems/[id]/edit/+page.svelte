@@ -18,11 +18,6 @@
     export let data: PageServerData;
     let healthSystemName = data.healthSystem.Name;
     let tags = data.healthSystem.Tags;
-
-    console.log('health System name  ->', healthSystemName);
-    console.log('health System Id    ->', healthSystemId);
-    console.log('tags                ->', tags);
-
     //Original data
     let _healthSystemName = healthSystemName;
     let _healthSystemId = healthSystemId;
@@ -38,6 +33,15 @@
         { name: 'Health Systems', path: healthSystemsRoute },
         { name: 'Edit', path: editRoute }
     ];
+
+    function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -47,6 +51,7 @@
     action="?/updateHealthSystemAction"
     class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
     use:enhance
+    on:submit|preventDefault={handleSubmit}
 >
     <table class="table">
         <thead class="!variant-soft-secondary">
@@ -100,9 +105,8 @@
             on:click={handleReset}
             class="btn variant-soft-secondary">Reset</button
         >
-        <button
-            type="submit"
-            class="btn variant-filled-secondary">Submit</button
-        >
+        <button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
     </div>
 </form>

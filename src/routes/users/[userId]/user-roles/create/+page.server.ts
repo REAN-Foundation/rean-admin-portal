@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { createPersonRoleType } from '../../../../api/services/reancare/person-role-types';
+import { validateFormData } from '$lib/utils/formValidation';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -17,38 +18,30 @@ export const actions = {
 		const request = event.request;
 		const userId = event.params.userId;
 		const sessionId = event.cookies.get('sessionId');
-		const formData = Object.fromEntries(await request.formData());
+		const { result, errors } = await validateFormData(request, createPersonRoleSchema);
 
-		type PersonRoleSchema = z.infer<typeof createPersonRoleSchema>;
+        if (errors) {
+            return { data: result, errors };
+        }
 
-		let result: PersonRoleSchema = {};
-		try {
-			result = createPersonRoleSchema.parse(formData);
-			console.log('result', result);
-		} catch (err: any) {
-			const { fieldErrors: errors } = err.flatten();
-			console.log(errors);
-			const { ...rest } = formData;
-			return {
-				data: rest,
-				errors
-			};
-		}
-
-		const response = await createPersonRoleType(sessionId, result.roleName, result.description);
-		const id = response.Data.RoleType.id;
-
-		if (response.Status === 'failure' || response.HttpCode !== 201) {
-			throw redirect(
+        let response;
+        try {
+            response = await createPersonRoleType(
+                sessionId, result.roleName, result.description
+            );
+        } catch (error: any) {
+            const errorMessageText = error?.body?.message || 'An error occurred';
+            throw redirect(
 				303,
-				`/users/${userId}/person-role-types`,
-				errorMessage(response.Message),
+				`/users/${userId}/user-roles`,
+				errorMessage(errorMessageText),
 				event
 			);
-		}
-		throw redirect(
+        }
+        const id = response.Data.RoleType.id;
+        throw redirect(
 			303,
-			`/users/${userId}/person-role-types/${id}/view`,
+			`/users/${userId}/user-roles/${id}/view`,
 			successMessage(`User role created successfully!`),
 			event
 		);

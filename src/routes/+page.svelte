@@ -249,7 +249,7 @@
 									<span class="text-primary-500">Reset Code/OTP</span>
 									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
 									{#if errors.resetCode}
-										<span class="text-error-500">{errors.resetCode}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.resetCode}</p>
 									{/if}
 								</label>
 								<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -261,7 +261,7 @@
 
 									<!-- <input type="password" bind:value={newPassword} required class="input mb-4 mt-2" /> -->
 									{#if errors.newPassword}
-										<span class="text-error-500">{errors.newPassword}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.newPassword}</p>
 									{/if}
 								</label>
 								<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -273,7 +273,7 @@
 
 									<!-- <input type="password" bind:value={confirmPassword} required class="input mb-4" /> -->
 									{#if errors.confirmPassword}
-										<span class="text-error-500">{errors.confirmPassword}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.confirmPassword}</p>
 									{/if}
 								</label>
 								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Reset Password</button>

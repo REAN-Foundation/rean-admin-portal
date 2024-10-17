@@ -6,6 +6,7 @@ import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { createHospital } from '../../../../api/services/reancare/hospitals';
 import { searchHealthSystems } from '../../../../api/services/reancare/health.systems';
+import { validateFormData } from '$lib/utils/formValidation';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -20,10 +21,9 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         // console.log(`Health systems = ${JSON.stringify(healthSystems)}`);
         return {
             healthSystems: healthSystems,
-            title:'Hospital Systems-Hospitals Create'
+            title: 'Hospital Systems-Hospitals Create'
         };
-    }
-    catch (error) {
+    } catch (error) {
         console.error(`Error retriving health systems: ${error.message}`);
     }
 };
@@ -31,7 +31,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 const createHospitalSchema = zfd.formData({
     hospitalName: z.string().max(256),
     healthSystemId: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional()
 });
 
 export const actions = {
@@ -40,9 +40,9 @@ export const actions = {
         const userId = event.params.userId;
         const sessionId = event.cookies.get('sessionId');
         const data = await request.formData();
-		const formData = Object.fromEntries(data);
-		const tags = data.has('tags') ? data.getAll('tags') : [];
-		const formDataValue = { ...formData, tags: tags };
+        const formData = Object.fromEntries(data);
+        const tags = data.has('tags') ? data.getAll('tags') : [];
+        const formDataValue = { ...formData, tags: tags };
 
         console.log('formData', JSON.stringify(formDataValue, null, 2));
 
@@ -62,17 +62,14 @@ export const actions = {
             };
         }
 
-        const response = await createHospital(
-            sessionId,
-            result.hospitalName,
-            result.healthSystemId,
-            result.tags,
-        );
-        const id = response.Data.Hospital.id;
-
-        if (response.Status === 'failure' || response.HttpCode !== 201) {
-            throw redirect(303, `/users/${userId}/hospitals`, errorMessage(response.Message), event);
+        let response;
+        try {
+            response = await createHospital(sessionId, result.hospitalName, result.healthSystemId, result.tags);
+        } catch (error: any) {
+            const errorMessageText = error?.body?.message || 'An error occurred';
+            throw redirect(303, `/users/${userId}/hospitals`, errorMessage(errorMessageText), event);
         }
+        const id = response.Data.Hospital.id;
         throw redirect(
             303,
             `/users/${userId}/hospitals/${id}/view`,

@@ -8,6 +8,7 @@
 	////////////////////////////////////////////////////////////////////
 
 	export let data;
+	export let form;
 	data.title = 'Hospital Systems-Health Systems Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/health-systems/create`;
@@ -18,7 +19,14 @@
 		{ name: 'Create', path: createRoute }
 	];
 
-	export let form;
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 
 </script>
 
@@ -29,6 +37,7 @@
 	action="?/createHealthSystemAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -66,6 +75,8 @@
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

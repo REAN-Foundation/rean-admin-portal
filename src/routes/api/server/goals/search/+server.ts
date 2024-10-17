@@ -26,11 +26,10 @@ export const GET = async (event: RequestEvent) => {
 			itemsPerPage,
 			pageIndex
 		};
-		console.log('Search parms: ', searchParams);
-		const response = await searchGoals(sessionId, searchParams);
-		const items = response.Data.GoalType.Items;
-		console.log('data==/////', response);
 
+		const response = await searchGoals(sessionId, searchParams);
+		const items = response.Data.GoalTypes;
+		console.log('data==/////', response);
 		return new Response(JSON.stringify(items));
 	} catch (err) {
 		console.error(`Error retriving goal: ${err.message}`);

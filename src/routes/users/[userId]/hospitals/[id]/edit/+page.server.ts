@@ -28,15 +28,14 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         hospital,
         healthSystems,
         message: response.Message,
-        title:'Hospital Systems-Hospitals Edit'
+        title: 'Hospital Systems-Hospitals Edit'
     };
-
 };
 
 const updateHospitalSchema = zfd.formData({
     hospitalName: z.string().max(128),
     healthSystemId: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional()
 });
 
 export const actions = {
@@ -46,9 +45,9 @@ export const actions = {
         const hospitalId = event.params.id;
         const sessionId = event.cookies.get('sessionId');
         const data = await request.formData();
-		const formData = Object.fromEntries(data);
-		const tags = data.has('tags') ? data.getAll('tags') : [];
-		const formDataValue = { ...formData, tags: tags };
+        const formData = Object.fromEntries(data);
+        const tags = data.has('tags') ? data.getAll('tags') : [];
+        const formDataValue = { ...formData, tags: tags };
 
         console.log('formData', JSON.stringify(formDataValue, null, 2));
 
@@ -68,18 +67,20 @@ export const actions = {
             };
         }
 
-        const response = await updateHospital(
-            sessionId,
-            hospitalId,
-            result.hospitalName,
-            result.healthSystemId,
-            result.tags
-        );
-        const id = response.Data.Hospital.id;
-
-        if (response.Status === 'failure' || response.HttpCode !== 200) {
+        let response;
+        try {
+            response = await updateHospital(
+                sessionId,
+                hospitalId,
+                result.hospitalName,
+                result.healthSystemId,
+                result.tags
+            );
+        } catch (error: any) {
+            const errorMessageText = error?.body?.message || 'An error occurred';
             throw redirect(303, `/users/${userId}/hospitals`, errorMessage(response.Message), event);
         }
+        const id = response.Data.Hospital.id;
         throw redirect(
             303,
             `/users/${userId}/hospitals/${id}/view`,
