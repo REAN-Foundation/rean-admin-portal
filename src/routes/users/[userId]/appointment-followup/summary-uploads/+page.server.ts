@@ -1,5 +1,8 @@
-import type { PageServerLoad } from "../../$types";
-import { ServerLoadEvent, error } from '@sveltejs/kit';
+// import type { PageServerLoad } from "../../$types";
+// import { ServerLoadEvent, error } from '@sveltejs/kit';
+
+import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     const tenantData = event.locals.sessionUser

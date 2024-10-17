@@ -7,11 +7,15 @@
     import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
     import { Paginator, type PaginationSettings } from '@skeletonlabs/skeleton';
     import Icon from '@iconify/svelte';
+    import { browser } from '$app/environment';
+    import { date } from 'zod';
+    import { invalidateAll } from '$app/navigation';
+////////////////////////////////////////////////////////////////////////////////
+
     export let data;
-    let totalPatient = '';
-    let notarrived = '';
-    let repliedYes = '';
-    let repliedNo = '';
+    let reply = undefined;
+    // $: isLoading = false;
+    let retriveddata;
     const tenant = data.AppointmentReport.tenant;
     const appointmentReport = data.AppointmentReport.data;
     const userId = $page.params.userId;
@@ -21,95 +25,26 @@
     console.log(appointmentReport);
     console.log('***********************************');
     let summary = appointmentReport['Summary'];
-    const filedata = appointmentReport['File_data'];
-    console.log("filedata", filedata)
+    console.log('report',appointmentReport['File_data'])
+    let filedata = appointmentReport['File_data'];
+    // $:filedata = data.AppointmentReport.data.File_data;
+    console.log("filedata",filedata)
     const statusReportRoute = `/users/${userId}/appointment-followup/summary-uploads`;
     const breadCrumbs = [{ name:'Status Report GGHN', path: statusReportRoute }];
     console.log(filedata);
     let itemsPerPage = 10;
-    let retriveddata;
+    
     let items = 10;
-    type TableRow = {
-        srNo: number;
-        patientName: string;
-        hospitalName: string;
-        emrId: string;
-        patientPhoneNo: string;
-        patientStatus: string;
-        appointmentTime: string;
-        replied: string;
-    };
-    let numRows = appointmentReport['File_data'].length;
-    let tableData: TableRow[] = Array.from({ length: numRows }, (_, i) => ({
-        srNo: i + 1,
-        patientName: '',
-        hospitalName: '',
-        emrId: '',
-        patientPhoneNo: '',
-        patientStatus: '',
-        appointmentTime: '',
-        replied: ''
-    }));
-    // function to add patient name
-    function addPatientName(newPatientName: string, rowNumber: number): void {
-        // Update the specified row with the new patient name
-        tableData[rowNumber].patientName = newPatientName ? newPatientName : 'Not Specified';
-    }
-    function addHospitalName(newHospitalName: string, rowNumber: number): void {
-        // Update the specified row with the new patient name
-        tableData[rowNumber].hospitalName = newHospitalName ? newHospitalName : 'Not Specified';
-    }
-    function addEMRId(newEMRId: string, rowNumber: number): void {
-        // Update the specified row with the new patient name
-        tableData[rowNumber].emrId = newEMRId ? newEMRId : 'Not Specified';
-    }
-    // function to add patient phone number
-    function addPatientPhoneNo(newPatientPhoneNo: string, rowNumber: number): void {
-        // Update the specified row with the new phone number
-        tableData[rowNumber].patientPhoneNo = newPatientPhoneNo ? newPatientPhoneNo : 'Not Specified';
-    }
-    // function to add patient status
-    function addPatientStatus(newPatientStatus: string, rowNumber: number): void {
-        // Update the specified row with the new patient status
-        tableData[rowNumber].patientStatus = newPatientStatus ? newPatientStatus : 'Not Specified';
-    }
-    // function to add appointment time
-    function addAppointmentTime(newAppointmentTime: string, rowNumber: number): void {
-        // Update the specified row with the new appointment time
-        tableData[rowNumber].appointmentTime = newAppointmentTime ? newAppointmentTime : 'Not Specified';
-    }
-    // function to add replied
-    function addReplied(newReplied: string, rowNumber: number): void {
-        // Update the specified row with the new replied
-        tableData[rowNumber].replied = newReplied;
-    }
-    onMount(() => {
-        setTimeout(() => {
-            for (let i = 0; i < appointmentReport['File_data'].length; i++) {
-                addPatientName(`${filedata[i].name_of_patient}`, i);
-                addHospitalName(`${filedata[i].facility_name}`, i);
-                addEMRId(`${filedata[i].participant_code}`, i);
-                addPatientPhoneNo(`${filedata[i].phone_number}`, i);
-                addPatientStatus(`${filedata[i].patient_status}`, i);
-                addAppointmentTime(`${filedata[i].appointment_time}`, i);
-                addReplied(`${filedata[i].patient_replied}`, i);
-            }
-        }, 1000);
-    });
+ 
+    let patientCount = appointmentReport['File_data'].length;
+    // let patientCount = 12;
     let paginationSettings = {
         page: 0,
         limit: 10,
-        size: numRows,
+        size: patientCount,
         amounts: [10, 20, 30, 50]
     } satisfies PaginationSettings;
-    $: {
-        // symptoms = symptoms.map((item, index) => ({ ...item, index: index + 1 }));
-        paginationSettings.size = numRows;
-        retriveddata = tableData.slice(
-            paginationSettings.page * paginationSettings.limit,
-            paginationSettings.page * paginationSettings.limit + paginationSettings.limit
-        );
-    }
+    
     function onPageChange(e: CustomEvent): void {
         let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
@@ -118,6 +53,50 @@
         itemsPerPage = e.detail * (paginationSettings.page + 1);
         items = itemsPerPage;
     }
+    // if (retriveddata.length > 0) {
+    //         isLoading = false;
+    //     }
+    
+       
+    $: {reply;
+        filedata = filedata.map((item,index) => ({ ...item, index: index + 1 }))
+        paginationSettings.size = patientCount;
+        retriveddata = filedata.slice(
+            paginationSettings.page * paginationSettings.limit,
+            paginationSettings.page * paginationSettings.limit + paginationSettings.limit
+        );
+    }
+        $: if (browser)
+		searchReplies({
+			reply: reply,
+			date:summary['Date'],
+            clientname:tenant
+		
+		});
+
+
+    async function searchReplies(model) {
+    console.log("model--------",model);
+		let url = `/api/server/gghn/search?`;
+		url += `clientname=${tenant}`;
+		url += `&date=${summary['Date']}`;
+		if (reply) url += `&reply=${reply}`;
+		const res = await fetch(url, {
+			method: 'GET',
+            headers: { 'content-type': 'application/json' }
+		});
+		const searchResult = await res.json();
+        console.log('Search', searchResult)
+      	patientCount = searchResult.Summary;
+        filedata = searchResult.File_data;
+        retriveddata = filedata
+        // filedata = searchResult.File_data;
+        console.log("retriveddata",retriveddata);
+		if (retriveddata > 0) {
+            // isLoading = false;
+        }
+	}
+  
 </script>
 <BreadCrumbs crumbs={breadCrumbs} />
 <div>
@@ -126,30 +105,51 @@
 <div class="w-full md:w-2/5 p-1 mb-2"> 
     <div class="flex justify-between items-center">
         <p class="text-lg">Total patient</p>
-        <p class="text-lg bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center"> {summary['Total patient']}</p>
+        <p class=" bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center text-2xl pt-2"> {summary['Total patient']}</p>
     </div>
     <div class="border-b-2 border-b-gray-300 mb-1"></div>
 </div>
 <div class="w-full md:w-2/5 p-1 mb-2"> 
     <div class="flex justify-between items-center">
         <p class="text-lg">Patient replied Yes</p>
-        <p class="text-lg bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center"> {summary['Patient replied Yes']}</p>
+        <p class="text-2xl bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center pt-2"> {summary['Patient replied Yes']}</p>
     </div>
     <div class="border-b-2 border-b-gray-300 mb-1"></div>
 </div>
 <div class="w-full md:w-2/5 p-1 mb-2"> 
     <div class="flex justify-between items-center">
         <p class="text-lg">Patient replied No</p>
-        <p class="text-lg bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center"> {summary['Patient replied No']}</p>
+        <p class="text-2xl bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center pt-2"> {summary['Patient replied No']}</p>
     </div>
     <div class="border-b-2 border-b-gray-300 mb-1"></div>
 </div>
 <div class="w-full md:w-2/5 p-1 mb-2"> 
     <div class="flex justify-between items-center">
         <p class="text-lg">Patient not replied</p>
-        <p class="text-lg bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center"> {summary['Patient Not replied']}</p>
+        <p class="text-2xl bg-[#7165E3] text-white rounded px-3 py-1 w-24 h-12 text-center pt-2"> {summary['Patient Not replied']}</p>
     </div>
     <div class="border-b-2 border-b-gray-300 mb-1"></div>
+</div>
+
+<div class="flex flex-wrap gap-2 mt-1">
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="type"
+				placeholder="Search by reply"
+				bind:value={reply}
+				class="input w-full"
+		/>
+		{#if reply}
+				<button
+						type="button"
+						on:click={() => { reply = '';}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
 </div>
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
     <table
@@ -174,42 +174,42 @@
                     <td
                         role="gridcell"
                         aria-colindex={1}
-                        tabindex="0">{row.srNo}</td
+                        tabindex="0">{row.index}</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={2}
-                        tabindex="0">{row.patientName}</td
+                        tabindex="0">{row.name_of_patient ? row.name_of_patient : 'Unspecified'}</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={3}
-                        tabindex="0">{row.hospitalName}</td
+                        tabindex="0">{row.facility_name ? row.facility_name : 'Unspecified' }</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={4}
-                        tabindex="0">{row.emrId}</td
+                        tabindex="0">{row.participant_code ? row.participant_code : 'Unspecified'}</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={5}
-                        tabindex="0">{row.patientPhoneNo}</td
+                        tabindex="0">{row.phone_number ? row.phone_number : 'Unspecified'}</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={6}
-                        tabindex="0">{row.patientStatus}</td
+                        tabindex="0">{row.patient_status ? row.patient_status :'Unspecified'}</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={7}
-                        tabindex="0">{row.appointmentTime}</td
+                        tabindex="0">{row.appointment_time ? row.appointment_time : 'Unspecified'}</td
                     >
                     <td
                         role="gridcell"
                         aria-colindex={8}
-                        tabindex="0">{row.replied}</td
+                        tabindex="0">{row.patient_replied ? row.patient_replied :  'Unspecified'}</td
                     >
                 </tr>
             {/each}
