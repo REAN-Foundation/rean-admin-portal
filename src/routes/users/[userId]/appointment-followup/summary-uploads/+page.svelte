@@ -129,26 +129,30 @@
     <div class="border-b-2 border-b-gray-300 mb-1"></div>
 </div>
 
-<div class="flex flex-wrap gap-2 mt-1">
-	<div class="relative w-auto grow">
-		<input
-				type="text"
-				name="type"
-				placeholder="Search by reply"
-				bind:value={reply}
-				class="input w-full"
-		/>
+
+    <div class="relative w-auto grow flex items-center">	
+
+        <select
+        name="type"
+        bind:value={reply}
+        class="input w-1/4 ml-auto"
+       >
+        <option value="" disabled selected>Filter by reply</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+        <option value="Not Replied">Not Replied</option>
+        </select>
 		{#if reply}
 				<button
 						type="button"
 						on:click={() => { reply = '';}}
-						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+					    class="ml-2 h-full bg-transparent border-0 cursor-pointer"
 				>
 						<Icon icon="material-symbols:close" class="text-lg" />
 				</button>
 		{/if}
 </div>
-</div>
+
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
     <table
         class="table"
