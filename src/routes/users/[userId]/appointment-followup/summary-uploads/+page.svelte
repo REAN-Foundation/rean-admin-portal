@@ -146,7 +146,7 @@
 				<button
 						type="button"
 						on:click={() => { reply = '';}}
-					    class="ml-2 h-fullbg-transparent border-0 cursor-pointer"
+					    class="ml-2 h-full bg-transparent border-0 cursor-pointer"
 				>
 						<Icon icon="material-symbols:close" class="text-lg" />
 				</button>
