@@ -145,7 +145,7 @@
         <input
             type="text"
             name="roleName"
-            placeholder="Search by role name"
+            placeholder="Search by name"
             bind:value={roleName}
             class="input w-full"
         />
@@ -182,11 +182,11 @@
                 <th data-sort="index">Id</th>
                 <th>
                     <button on:click={() => sortTable('RoleName')}>
-                        RoleName {isSortingRoleName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+                        Name {isSortingRoleName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
                     </button>
                 </th>
                 <th>Description</th>
-                <th data-sort="isActive">isActive</th>
+                <th data-sort="isActive">Active Role</th>
                 <th data-sort="CreatedAt">Created Date</th>
                 <th />
                 <th />
