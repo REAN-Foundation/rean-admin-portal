@@ -138,3 +138,55 @@ export const delete_ = async (
 	console.log(chalk.green(`delete_ response message: ${response.Message}`));
 	return response;
 };
+
+export const delete__ = async (
+	url: string,
+	authorizeUser: boolean = false,
+	sessionId?: string
+) => {
+	try {
+		const headers = await setHeaders(authorizeUser, sessionId);
+
+		const res = await fetch(url, {
+			method: 'DELETE',
+			headers
+		});
+
+		const response = await res.json();
+		const message = response.Message;
+		
+		if (!res.ok) {
+			if (res.status === 500) {
+				throw error(500, { message: res.statusText });
+			} else {
+				console.log(chalk.red(`delete_ response message: ${message}`));
+				return response;
+			}
+		}
+		console.log(chalk.green(`delete_ response message: ${message}`));
+		return response;
+	} catch (err) {
+		console.log(chalk.red(`delete_ exception: ${err}`));
+		throw error(500, { message: 'Internal Server Error' });
+	}
+};
+
+const setHeaders = async (authorizeUser: boolean, sessionId?: string) => {
+	try {
+		const headers: Record<string, string> = {
+			'Content-Type': 'application/json',
+			'x-api-key' : API_CLIENT_INTERNAL_KEY
+		};
+
+		if (authorizeUser && sessionId) {
+			const session = await SessionManager.getSession(sessionId);
+			const accessToken = session?.accessToken;
+			headers['Authorization'] = `Bearer ${accessToken}`;
+		}
+
+		return headers;
+	} catch (err) {
+		console.log(chalk.red(`Error in setHeaders: ${(err as Error).message}`));
+		throw new Error(`Failed to set headers: ${(err as Error).message}`);
+	}
+};

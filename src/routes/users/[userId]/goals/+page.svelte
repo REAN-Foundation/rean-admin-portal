@@ -122,23 +122,52 @@
 		sortBy = columnName;
 	}
 
-	const handlegoalDelete = async (id) => {
-		const goalId = id;
-		console.log('goalId', goalId);
-		await Delete({
-			sessionId: data.sessionId,
-			goalId: goalId
+	// const handlegoalDelete = async (id) => {
+	// 	const goalId = id;
+	// 	console.log('goalId', goalId);
+	// 	let successRedirectUrl = `/users/${userId}/home`
+	// 	await Delete({
+	// 		sessionId: data.sessionId,
+	// 		goalId: goalId,
+	// 	},successRedirectUrl);
+	// 	invalidate('app:goals');
+	// };
+
+	// async function Delete(model) {
+    //     await fetch(`/api/server/goals`, {
+	// 		method: 'DELETE',
+	// 		body: JSON.stringify(model),
+	// 		headers: { 'content-type': 'application/json' }
+	// 	});
+	// }
+
+	// const handlegoalDelete = async (id) => {
+	// 	const goalId = id;
+	// 	console.log('goalId', goalId);	
+	// 	let successRedirectUrl = `/users/${userId}/home`
+	// 	const response = await fetch(`/api/server/goals/${id}`, {
+	// 		method: 'DELETE',
+	// 		headers: { 'content-type': 'application/json',
+				
+	// 			'Success-Redirect-Url': successRedirectUrl 
+	// 		},
+	// 		redirect: 'follow' 
+	// 	});
+	// 	invalidate('app:goals');
+	// 	console.log('response===', response);
+	// // 	if (response.redirected) {
+    // //     window.location.href = response.url;
+ 	// //    }
+	// }
+
+	const handlegoalDelete = async (id: string) => {
+		await fetch(`/api/server/goals/${id}`, {
+			method: 'DELETE',
+			headers: { 'content-type': 'application/json'},
 		});
 		invalidate('app:goals');
-	};
-
-	async function Delete(model) {
-       await fetch(`/api/server/goals`, {
-			method: 'DELETE',
-			body: JSON.stringify(model),
-			headers: { 'content-type': 'application/json' }
-		});
 	}
+
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />

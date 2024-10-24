@@ -1,4 +1,5 @@
 import { BACKEND_API_URL, API_CLIENT_INTERNAL_KEY } from '$env/static/private';
+import { delete__ } from '../common';
 import { del, get, post, put } from './common.reancare';
 
 ////////////////////////////////////////////////////////////////
@@ -54,4 +55,18 @@ export const updateGoal = async (
 export const deleteGoal = async (sessionId: string, goalId: string) => {
 	const url = BACKEND_API_URL + `/types/goal-types/${goalId}`;
 	return await del(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+};
+
+// export const deleteGoal_ = async (sessionId: string, goalId: string) => {
+// 	const url = BACKEND_API_URL + `/types/goal-type/${goalId}`;
+// 	return await delete__(url, true, sessionId);	
+// };
+export const deleteGoal_ = async (sessionId: string, goalId: string) => {
+	try {
+		const url = BACKEND_API_URL + `/types/goal-types/${goalId}`;
+		return await delete__(url, true, sessionId);
+	} catch (error) {
+		console.log(`Error deleting the goal: ${error}`);
+		throw error(500, { message: 'Internal Server Error' });
+	}
 };
