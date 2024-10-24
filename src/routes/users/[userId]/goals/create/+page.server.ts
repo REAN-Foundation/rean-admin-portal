@@ -1,15 +1,16 @@
 import { redirect } from 'sveltekit-flash-message/server';
-import type { RequestEvent } from '@sveltejs/kit';
+import { fail, type RequestEvent } from '@sveltejs/kit';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { createGoal } from '../../../../api/services/reancare/goals';
+import { validateFormData_ } from '$lib/utils/formValidation';
 
 /////////////////////////////////////////////////////////////////////////
 
 const createGoalTypeSchema = zfd.formData({
-    type: z.string().max(256),
-    tags: z.array(z.string()).optional()
+    type: z.string().min(8).max(256),
+    tags: z.array(z.string()).optional().default([])
 });
 
 export const actions = {
@@ -20,25 +21,39 @@ export const actions = {
         const data = await request.formData();
         const formData = Object.fromEntries(data);
 
-        const tags = data.has('tags') ? data.getAll('tags') : [];
-        const formDataValue = { ...formData, tags: tags };
+        // const tags = data.has('tags') ? data.getAll('tags') : [];
+        // const formDataValue = { ...formData, tags: tags };
 
-        type GoalTypeSchema = z.infer<typeof createGoalTypeSchema>;
-        let result: GoalTypeSchema = {};
+        // type GoalTypeSchema = z.infer<typeof createGoalTypeSchema>;
+        // let result: GoalTypeSchema = {};
 
-        try {
-            result = createGoalTypeSchema.parse(formDataValue);
-            console.log('result', result);
-        } catch (err: any) {
-            const { fieldErrors: errors } = err.flatten();
-            console.log(errors);
-            const { ...rest } = formData;
-            return {
-                data: rest,
-                errors
-            };
-        }
+        // try {
+        //     result = createGoalTypeSchema.parse(formDataValue);
+        //     console.log('result', result);
+        // } catch (err: any) {
+        //     const { fieldErrors: errors } = err.flatten();
+        //     console.log(errors);
+        //     const { ...rest } = formData;
+        //     return {
+        //         data: rest,
+        //         errors
+        //     };
+        // }
+        const { result, errors } = await validateFormData_(data, createGoalTypeSchema);
+        if (errors) {
+			return fail(422, {
+				result,
+				errors
+			});
+		}
 
+		if (!result) {
+			return fail(400, { result: null, errors: errorMessage('Invalid data') });
+		}
+        // if (errors) {
+        //     console.log('Validation Errors:', errors);
+        //     return { data: result, errors };
+        //   }
         let response;
         try {
             response = await createGoal(sessionId, result.type, result.tags);

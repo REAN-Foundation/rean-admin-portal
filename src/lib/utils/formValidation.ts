@@ -16,3 +16,25 @@ export const validateFormData = async <T extends ZodSchema>(
     return { result: formData, errors };
   }
 };
+
+export const validateFormData_ = async <T extends ZodSchema>(
+  formData: FormData,
+  schema: T
+) => {
+  const data = Object.fromEntries(
+    Array.from(formData.entries()).map(([key, value]) => {
+      if (formData.getAll(key).length > 1) {
+        return [key, formData.getAll(key)];
+      } else {
+        return [key, typeof value === 'string' ? value : ''];
+      }
+    })
+  );
+  try {
+    const result = schema.parse(data);
+    return { result, errors: null };
+  } catch (err: any) {
+    const { fieldErrors: errors } = err.flatten();
+    return { result: data, errors };
+  }
+};

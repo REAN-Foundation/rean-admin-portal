@@ -5,10 +5,12 @@ import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { getGoalById, updateGoal } from '../../../../../api/services/reancare/goals';
+import { validateFormData_ } from '$lib/utils/formValidation';
 
 /////////////////////////////////////////////////////////////////////////
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
+    console.log('Loading the goals/edit page');
     const sessionId = event.cookies.get('sessionId');
     const goalId = event.params.id;
     const response = await getGoalById(sessionId, goalId);
@@ -27,8 +29,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 };
 
 const updateGoalTypeSchema = zfd.formData({
-    type: z.string().max(256),
-    tags: z.array(z.string()).optional()
+    type: z.string().min(8).max(256),
+    tags: z.array(z.string()).optional().default([])
 });
 
 export const actions = {
@@ -38,27 +40,32 @@ export const actions = {
         const goalId = event.params.id;
         const sessionId = event.cookies.get('sessionId');
         const data = await request.formData();
-        const formData = Object.fromEntries(data);
+        // const formData = Object.fromEntries(data);
 
-        const tags = data.has('tags') ? data.getAll('tags') : [];
-        const formDataValue = { ...formData, tags: tags };
+        // const tags = data.has('tags') ? data.getAll('tags') : [];
+        // const formDataValue = { ...formData, tags: tags };
 
-        type GoalTypeSchema = z.infer<typeof updateGoalTypeSchema>;
+        // type GoalTypeSchema = z.infer<typeof updateGoalTypeSchema>;
 
-        let result: GoalTypeSchema = {};
-        try {
-            result = updateGoalTypeSchema.parse(formDataValue);
-            console.log('result', result);
-        } catch (err: any) {
-            const { fieldErrors: errors } = err.flatten();
-            console.log(errors);
-            const { ...rest } = formData;
-            return {
-                data: rest,
-                errors
-            };
-        }
-
+        // let result: GoalTypeSchema = {};
+        // try {
+        //     result = updateGoalTypeSchema.parse(formDataValue);
+        //     console.log('result', result);
+        // } catch (err: any) {
+        //     const { fieldErrors: errors } = err.flatten();
+        //     console.log(errors);
+        //     const { ...rest } = formData;
+        //     return {
+        //         data: rest,
+        //         errors
+        //     };
+        // }
+        const { result, errors } = await validateFormData_(data, updateGoalTypeSchema);
+        if (errors) {
+            console.log('Validation Errors:', errors);
+            return { data: Object.fromEntries(data), errors };
+          
+          }
         let response;
         try {
             response = await updateGoal(sessionId, goalId, result.type, result.tags);
