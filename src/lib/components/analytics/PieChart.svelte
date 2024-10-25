@@ -8,8 +8,8 @@
     const tickColorLight = getTickColorLight();
     const tickColorDark = getTickColorDark();
 
-    export let labels: [];
-    export let data: [];
+    export let labels: string[];
+    export let data: number[];
     export let title: string;
 
     let pieChart;
@@ -58,7 +58,18 @@
                             weight: 'normal',
                             lineHeight: 1.2
                         }
-                    }
+                    },
+                    tooltip: {
+						callbacks: {
+							label: (context) => {
+								const label = context.label || '';
+								const value = context.raw as number;
+								const total = context.dataset.data.reduce((acc, curr) => acc + (curr as number), 0);
+								const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+								return `${label}: ${value} (${percentage}%)`;
+							}
+						}
+					},
                 }
             }
         });

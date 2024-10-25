@@ -2,7 +2,12 @@
     import Graph from './graph.svelte';
     import { onMount } from 'svelte';
     import { formatMonth, generateMonthSequence } from '../analytics-overview/components/functions';
+    
+    // //////////////////////////////////////////////////////////////////////////////////////////////
+    
     export let data;
+
+    let medicationManagementdata = data.statistics.MedicationManagementMetrics[0];
 
     let activeFeature: string = 'Login Session';
     const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks'];
@@ -125,6 +130,6 @@
 
 {#key activeFeature}
     {#if Object.keys(currentMetrics).length > 0}
-        <Graph {...currentMetrics} />
+        <Graph feature = {activeFeature} {...currentMetrics} medicationManagementdata = {medicationManagementdata} />
     {/if}
 {/key}
