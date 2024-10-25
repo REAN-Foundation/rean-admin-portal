@@ -108,13 +108,13 @@
         >
             <div class="w-full">
                 <div class="flex items-center flex-col">
-                    <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                    <h4 class="mx-4 justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
                         Retention After Registration
                     </h4>
+                    <h5 class="flex justify-center mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                        (Days After Registration)
+                    </h5>
                     <div class="flex w-full justify-end">
-                        <h5 class="flex text-center justify-center mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
-                            (Days After Registration)
-                        </h5>
                         <select
                             class="mt-4 border border-secondary-100 rounded-lg select pl-2 w-fit"
                             on:change={(e) => {
@@ -161,14 +161,15 @@
             class="flex  overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
         >
             <div class="w-full">
-                <div class="flex items-center flex-col">
-                    <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                <div class="flex items-center text-center  flex-col">
+                    <h4 class="mx-4 justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
                         Retention After Registration
                     </h4>
+                    <h5 class="flex justify-start mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
+                        (Interval After Registration)
+                    </h5>
                     <div class="flex w-full justify-end 0">
-                        <h5 class="flex text-center justify-start mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
-                            (Interval After Registration)
-                        </h5>
+                     
                         <select
                             class="select pl-2 w-fit mt-4 border border-secondary-100 dark:border-surface-700 rounded-lg"
                             on:change={(e) => {
@@ -300,7 +301,7 @@
             >
                 <div class="w-full">
                     <div class="flex items-center flex-col">
-                        <h4 class="mx-4 text-left justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                        <h4 class="mx-4 text-left justify-center py-1 pt-5 text-lg font-semibold sm:pl-3">
                             Medication Management
                         </h4>
                         <div class="h-fit w-full">
@@ -313,7 +314,7 @@
                     labels = {medicationLabels}
                     title=''
                 /> -->
-                <div class="justify-center">
+                <div class="justify-center pb-6">
                     <PieChart
                     data={medicationData}
                     labels={medicationLabels}
