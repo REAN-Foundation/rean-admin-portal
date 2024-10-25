@@ -56,6 +56,17 @@
 							color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
 						}
 					},
+					tooltip: {
+						callbacks: {
+							label: (context) => {
+								const label = context.label || '';
+								const value = context.raw as number;
+								const total = context.dataset.data.reduce((acc, curr) => acc + (curr as number), 0);
+								const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+								return `${label}: ${value} (${percentage}%)`;
+							}
+						}
+					},
 					title: {
 						display: false,
 						text: title,
