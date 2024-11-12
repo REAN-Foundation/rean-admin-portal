@@ -7,7 +7,7 @@
     
     export let data;
 
-    let medicationManagementdata = data.statistics.MedicationManagementMetrics[0];
+    let medicationManagementdata = data.statistics?.MedicationManagementMetrics?.[0] || null;
 
     let activeFeature: string = 'Login Session';
     const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks'];

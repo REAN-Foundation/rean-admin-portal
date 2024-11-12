@@ -22,9 +22,9 @@
     export let medicationManagementdata;
     let medicationLabels = ['Taken', 'Not Taken', 'Not Specified'];
     let medicationData = [
-        medicationManagementdata.medication_taken_count,
-        medicationManagementdata.medication_missed_count,
-        medicationManagementdata.medication_not_answered_count
+        medicationManagementdata?.medication_taken_count || 0,
+        medicationManagementdata?.medication_missed_count || 0,
+        medicationManagementdata?.medication_not_answered_count || 0
     ];
 </script>
 
@@ -314,12 +314,20 @@
                     labels = {medicationLabels}
                     title=''
                 /> -->
+
+                
                 <div class="justify-center pb-6">
-                    <PieChart
-                    data={medicationData}
-                    labels={medicationLabels}
-                    title=""
-                />
+                    {#if medicationManagementdata}
+                        <PieChart
+                        data={medicationData}
+                        labels={medicationLabels}
+                        title=""
+                    />
+                    {:else}
+                    <div class="h-96 w-full items-center pl-10 justify-center font-semibold">
+                        Data not available
+                    </div>
+                    {/if}
                 </div>
                       
                     </div>
@@ -338,7 +346,7 @@
                                 to improve feature completion rates.
                             </p>
                         {:else}
-                            DropOff Points (%) (No Data available)
+                            DropOff Points (%) (Data not available)
                         {/if}
                     </div>
                     {#if dropOffPointsData && dropOffPointsLabels}
