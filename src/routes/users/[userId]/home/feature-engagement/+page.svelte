@@ -2,12 +2,34 @@
     import Graph from './graph.svelte';
     import { onMount } from 'svelte';
     import { formatMonth, generateMonthSequence } from '../analytics-overview/components/functions';
-    
+
     // //////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     export let data;
 
-    let medicationManagementdata = data.statistics?.MedicationManagementMetrics?.[0] || null;
+    let medicationManagementdata = data.statistics.MedicationManagementMetrics[0];
+    let healthJourneyWiseTask = data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseTask;
+    let healthJourneyWiseCompletedTask =
+        data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask;
+    let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall;
+
+    console.log('overallHealthJourneyTaskData', overallHealthJourneyTaskData);
+
+    healthJourneyWiseTask = healthJourneyWiseTask.map((task) => {
+        const completedTask = healthJourneyWiseCompletedTask.find(
+            (completed) => completed.careplan_code === task.PlanCode
+        );
+
+        const completedCount = completedTask?.careplan_completed_task_count || 0;
+        const totalTaskCount = task.careplan_task_count;
+
+        const notCompletedCount = totalTaskCount - completedCount;
+
+        task.careplan_completed_task_count = completedCount;
+        task.careplan_not_completed_task_count = notCompletedCount;
+
+        return task;
+    });
 
     let activeFeature: string = 'Login Session';
     const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks'];
@@ -130,6 +152,12 @@
 
 {#key activeFeature}
     {#if Object.keys(currentMetrics).length > 0}
-        <Graph feature = {activeFeature} {...currentMetrics} medicationManagementdata = {medicationManagementdata} />
+        <Graph
+            feature={activeFeature}
+            {...currentMetrics}
+            {medicationManagementdata}
+            {healthJourneyWiseTask}
+            {overallHealthJourneyTaskData}
+        />
     {/if}
 {/key}
