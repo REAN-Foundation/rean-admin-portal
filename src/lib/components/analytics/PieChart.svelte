@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount} from 'svelte';
     import Chart from 'chart.js/auto';
     import { getDoughnutColors, getTickColorLight, getTickColorDark } from '$lib/themes/theme.selector';
 
@@ -8,20 +8,20 @@
     const tickColorLight = getTickColorLight();
     const tickColorDark = getTickColorDark();
 
-    export let labels: string[];
-    export let data: number[];
-    export let title: string;
+    export let labels: string[] = [];
+    export let data: number[] = [];
+    export let title: string = '';
 
     let pieChart;
     let ctx;
-
-    console.log(data, 'data', labels);
     const colorPalette = getDoughnutColors();
 
-    onMount(async () => {
-        // const dynamicColors = getDynamicColors(data); // Get dynamic colors based on the dataset
+    const initChart = () => {
+        if (pieChart) {
+            pieChart.destroy();
+        }
+        ctx = (document.getElementById('myPieChart') as HTMLCanvasElement)?.getContext('2d');
 
-        ctx = pieChart.getContext('2d');
         pieChart = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -29,7 +29,7 @@
                 datasets: [
                     {
                         data: data,
-                        backgroundColor: colorPalette, // Dynamic colors for the pie chart
+                        backgroundColor: colorPalette,
                         hoverBackgroundColor: colorPalette
                     }
                 ]
@@ -60,25 +60,35 @@
                         }
                     },
                     tooltip: {
-						callbacks: {
-							label: (context) => {
-								const label = context.label || '';
-								const value = context.raw as number;
-								const total = context.dataset.data.reduce((acc, curr) => acc + (curr as number), 0);
-								const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
-								return `${label}: ${value} (${percentage}%)`;
-							}
-						}
-					},
+                        callbacks: {
+                            label: (context) => {
+                                const label = context.label || '';
+                                const value = context.raw as number;
+                                const total = context.dataset.data.reduce((acc, curr) => acc + (curr as number), 0);
+                                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    },
                 }
             }
         });
+    };
+
+    onMount(() => {
+        initChart();
     });
+
+    $: {
+        if (data.length > 0 && labels.length > 0) {
+            initChart();
+        }
+    }
 </script>
 
-<div class="h-96 w-full  items-center pl-10 justify-center">
-    {#if data}
-        <canvas height="400" width="400"  bind:this={pieChart} />
+<div class="h-96 w-full items-center pl-10 justify-center">
+    {#if data.length > 0 && labels.length > 0}
+        <canvas id="myPieChart" height="400" width="400" />
     {:else}
         <p>No data available.</p>
     {/if}

@@ -4,6 +4,7 @@ import { getDailyStatistics, getDailyTenantStatistics } from "../../../api/servi
 
 //////////////////////////////////////////////////////////////////////////
 
+
 export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
     let response;
