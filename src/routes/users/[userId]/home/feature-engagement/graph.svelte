@@ -153,7 +153,7 @@
                     <h5 class="flex justify-center mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
                         (Days After Registration)
                     </h5>
-                    <div class="flex w-full justify-end">
+                    <!-- <div class="flex w-full justify-end">
                         <select
                             class="mt-4 border border-secondary-100 rounded-lg select pl-2 w-fit"
                             on:change={(e) => {
@@ -163,13 +163,24 @@
                             <option value="graph1">User Count</option>
                             <option value="graph2">Percentage</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="h-fit w-full">
                         <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                             The percentage of users who return to a feature after their first use at specific intervals
                             (day 1, day 7, day 30). Retention rates measure user loyalty and the ability of the feature
                             to keep users engaged over time.
                         </p>
+                    </div>
+                    <div class="flex w-full justify-end">
+                        <select
+                            class="select pl-2 w-fit border border-secondary-100 dark:border-surface-700 rounded-lg"
+                            on:change={(e) => {
+                                selectedGraph = e.target.value;
+                            }}
+                        >
+                            <option value="graph1">User Count</option>
+                            <option value="graph2">Percentage</option>
+                        </select>
                     </div>
                 </div>
                 {#if selectedGraph === 'graph1' && retentionRateDaysData.length > 0}
@@ -207,7 +218,7 @@
                     <h5 class="flex justify-start mx-5 text-sm font-semibold sm:pl-3 mt-[-4px]">
                         (Interval After Registration)
                     </h5>
-                    <div class="flex w-full justify-end 0">
+                    <!-- <div class="flex w-full justify-end 0">
                         <select
                             class="select pl-2 w-fit mt-4 border border-secondary-100 dark:border-surface-700 rounded-lg"
                             on:change={(e) => {
@@ -217,13 +228,24 @@
                             <option value="graph1">User Count</option>
                             <option value="graph2">Percentage</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="h-fit w-full">
                         <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                             The percentage of users who return to a feature after their first use at specific intervals
                             (0-1 days, 1-3 days, 3-7 days, etc). This is just another way to look at the retention on
                             specific days.
                         </p>
+                    </div>
+                    <div class="flex w-full justify-end 0">
+                        <select
+                            class="select pl-2 w-fit border border-secondary-100 dark:border-surface-700 rounded-lg"
+                            on:change={(e) => {
+                                percentageGraph = e.target.value;
+                            }}
+                        >
+                            <option value="graph1">User Count</option>
+                            <option value="graph2">Percentage</option>
+                        </select>
                     </div>
                 </div>
                 {#if percentageGraph === 'graph1' && retentionRateIntervalsData.length > 0}
@@ -260,24 +282,12 @@
                         <h4 class="mx-4 justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
                             Medication Management
                         </h4>
-                        <!-- <div class="flex w-full justify-end 0">
-                            <select
-                                class="select pl-2 w-fit mt-4 border border-secondary-100 dark:border-surface-700 rounded-lg"
-                                bind:value={selectedPlanCode}
-                                on:change={updateHealthJourneyData}
-                            >
-                                {#each planCodes as planCode}
-                                    <option value={planCode}>{planCode}</option>
-                                {/each}
-                            </select>
-                        </div> -->
                         <div class="h-fit w-full">
                             <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
                                 The medication adherence showing the percentage of scheduled doses taken on time,
                                 alongside the number and percentage of missed doses.
                             </p>
                         </div>
-                        <div class="justify-center pb-6">
                             <div class="justify-center pb-6">
                                 {#if medicationManagementdata}
                                     <PieChart
@@ -291,7 +301,6 @@
                                 </div>
                                 {/if}
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -348,9 +357,15 @@
                         <h4 class="mx-4 justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
                             Health Journey Task Metrics
                         </h4>
+                        <div class="h-fit w-full">
+                            <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                                This shows the completion rate of health journey tasks, comparing completed tasks and
+                                created tasks for both overall and individual care plans.
+                            </p>
+                        </div>
                         <div class="flex w-full justify-end 0">
                             <select
-                                class="select pl-2 w-fit mt-4 border border-secondary-100 dark:border-surface-700 rounded-lg"
+                                class="select pl-2 mb-2 w-fit border border-secondary-100 dark:border-surface-700 rounded-lg"
                                 bind:value={selectedPlanCode}
                                 on:change={updateHealthJourneyData}
                             >
@@ -358,12 +373,6 @@
                                     <option value={planCode}>{planCode}</option>
                                 {/each}
                             </select>
-                        </div>
-                        <div class="h-fit w-full">
-                            <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
-                                This shows the completion rate of health journey tasks, comparing completed tasks to
-                                created tasks for both overall and individual care plans.
-                            </p>
                         </div>
                         <div class="justify-center pb-6">
                             {#if healthJourneyMetricsData.length > 0}
