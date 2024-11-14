@@ -294,6 +294,7 @@
                                     data={medicationData}
                                     labels={medicationLabels}
                                     title=""
+                                    showLegendData={true}
                                 />
                                 {:else}
                                 <div class="h-96 w-full items-center pl-10 justify-center font-semibold">
@@ -380,6 +381,7 @@
                                     data={healthJourneyMetricsData}
                                     labels={healthJourneyMetricsLabels}
                                     title=""
+                                    showLegendData={true}
                                 />
                             {/if}
                         </div>

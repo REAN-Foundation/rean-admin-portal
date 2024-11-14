@@ -358,17 +358,18 @@
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
                 <div class="w-full">
-                    <div class="flex items-center w-full justify-center">
+                    <div class="flex flex-col items-center w-full justify-center">
                         <h4 class="mr-4 text-center justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
                             User Distribution By Roles
                         </h4>
-                    </div>
-                    {#if usersDistributionByRoleData}
-                        <div class="h-96 pl-8">
+                        {#if usersDistributionByRoleData}
+                        <div class="">
                             <PieChart
                                 data={usersDistributionByRoleData}
                                 labels={usersDistributionByRoleLabels}
-                                title="User Distribution By Roles"
+                                title=""
+                                showLegendData={true}
+
                             />
                         </div>
                     {:else}
@@ -379,6 +380,8 @@
                             </p>
                         </div>
                     {/if}
+                    </div>
+                  
                 </div>
             </div>
 
