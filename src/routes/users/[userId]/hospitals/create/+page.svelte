@@ -21,6 +21,18 @@
 	export let form;
 	let healthSystems = data.healthSystems;
 	// console.log('healthSystems ->', JSON.stringify(healthSystems, null, 2));
+	healthSystems = sortHealthSystemsByName(healthSystems)
+	function sortHealthSystemsByName(healthSystems) {
+		return healthSystems.sort((a,b) => a.Name.localeCompare(b.Name));
+	}
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -30,6 +42,7 @@
 	action="?/createHospitalAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -77,6 +90,8 @@
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

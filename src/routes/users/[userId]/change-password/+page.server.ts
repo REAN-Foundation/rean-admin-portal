@@ -4,17 +4,35 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { changePassword } from '$routes/api/services/reancare/user';
+import { validateFormData } from '$lib/utils/formValidation'; 
 
 /////////////////////////////////////////////////////////////////////////
 
 const changePasswordSchema = zfd
   .formData({
     oldPassword: z.string().min(1, "Old password is required"),
-    newPassword: z.string().min(8, "New password should be greater than 8 charactor "),
-    confirmNewPassword: z.string().min(1, "Please confirm the new password"),
-    // email:z.string(),
-    // username:z.string(),
-    // roleId:z.string(),
+    // newPassword: z.string().min(8, "New password should be greater than 8 characters"),
+    // confirmNewPassword: z.string().min(1, "Please confirm the new password"),
+    newPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+		confirmNewPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     path: ["confirmNewPassword"],
@@ -23,102 +41,35 @@ const changePasswordSchema = zfd
 
 export const actions = {
   changePasswordAction: async (event: RequestEvent) => {
-    const request = event.request;
-    const userId = event.params.userId;
-    const sessionId = event.cookies.get('sessionId');
-    const email = event.locals?.sessionUser?.email;
-    const username = event.locals?.sessionUser?.username;
-    const roleId = event.locals?.sessionUser?.roleId;
+    const { request, params, cookies, locals } = event;
+    const { userId } = params;
+    const sessionId = cookies.get('sessionId');
+    const { email, username, roleId } = locals?.sessionUser || {};
+    const { result, errors } = await validateFormData(request, changePasswordSchema);
 
-    console.log("email",email)
-    const data = await request.formData();
-    const formData = Object.fromEntries(data);
+    if (errors) {
+      return { data: result, errors };
+    }
 
-    type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
-
-    let result: ChangePasswordSchema = {};
-
+    let response
     try {
-      result = changePasswordSchema.parse(formData);
-      console.log('result', result);
-    } catch (err: any) {
-      const { fieldErrors: errors } = err.flatten();
-      console.log(errors);
-      const { ...rest } = formData;
-      return {
-        data: rest,
-        errors
-      };
+       response = await changePassword(
+        sessionId,
+        result.oldPassword,
+        result.newPassword,
+        email,
+        username,
+        roleId,
+      );
+    } catch (error: any) {
+      const errorMessageText = error?.body?.message || 'An error occurred';
+      throw redirect(303, `/users/${userId}/change-password`, errorMessage(errorMessageText), event);
     }
-
-    const response = await changePassword(
-      sessionId,
-      result.oldPassword,
-      result.newPassword,
-      email,
-      username,
-      roleId,
-    );
-
-    if (response.Status === 'failure' || response.HttpCode !== 200) {
-      throw redirect(303, `/users/${userId}/change-password`, errorMessage(response.Message), event);
-    }
-    throw redirect(
-      303,
-      `/`,
-      successMessage(response.Message),
-      event
-    );
+    throw redirect(303, `/users/${userId}/home`, successMessage(response.Message), event);
   }
 };
 
-// const changePasswordSchema = zfd.formData({
-// 	oldPassword: z.string(),
-// 	newPassword: z.string(),
-// 	confirmNewPassword: z.string()
-// });
 
-// export const actions = {
-// 	changePasswordAction: async (event: RequestEvent) => {
-// 		const request = event.request;
-// 		const userId = event.params.userId;
-// 		const sessionId = event.cookies.get('sessionId');
-// 		const data = await request.formData();
-// 		const formData = Object.fromEntries(data);
-    
-// 		type ChangePasswordSchema = z.infer<typeof changePasswordSchema>;
 
-// 		let result: ChangePasswordSchema = {};
 
-// 		try {
-// 			result = changePasswordSchema.parse(formData);
-// 			console.log('result', result);
-// 		} catch (err: any) {
-// 			const { fieldErrors: errors } = err.flatten();
-// 			console.log(errors);
-// 			const { ...rest } = formData;
-// 			return {
-// 				data: rest,
-// 				errors
-// 			};
-// 		}
-
-// 		const response = await changePassword(
-// 			sessionId,
-// 			result.oldPassword,
-// 			result.newPassword,
-// 			result.confirmNewPassword
-// 		);
-
-// 		if (response.Status === 'failure' || response.HttpCode !== 200) {
-// 			throw redirect(303, `/users/${userId}/change-password`, errorMessage(response.Message), event);
-// 		}
-// 		throw redirect(
-// 			303,
-// 			`/users`,
-// 			successMessage(`Password changed successfully!`),
-// 			event
-// 		);
-// 	}
-// };
 

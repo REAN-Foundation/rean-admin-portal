@@ -8,6 +8,8 @@
 	////////////////////////////////////////////////////////////////////
 	
 	export let form;
+	export let data;
+	data.title = 'Types-Priorities Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/priorities/create`;
 	const priorityRoute = `/users/${userId}/priorities`;
@@ -22,6 +24,15 @@
 			path: createRoute
 		}
 	];
+
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -31,11 +42,12 @@
 	action="?/createPriorityAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
 			<tr>
-				<th>Create Health Priority</th>
+				<th>Create Priority</th>
 				<th class="text-end">
 					<a href={priorityRoute} class="btn p-2 -my-2 variant-soft-secondary">
 						<Icon icon="material-symbols:close-rounded" class="text-lg" />
@@ -68,6 +80,8 @@
 		</tbody>
 	</table>
 	<div class="flex p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

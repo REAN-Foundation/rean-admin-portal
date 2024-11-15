@@ -8,7 +8,10 @@ import { searchPriorities } from '../../../api/services/reancare/priorities';
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
     event.depends('app:priorities');
-	const response = await searchPriorities(sessionId);
+	const response = await searchPriorities(sessionId,{
+        orderBy: 'Type',
+        order : 'ascending'
+    });
     if (response.Status === 'failure' || response.HttpCode !== 200) {
         throw error(response.HttpCode, response.Message);
     }
@@ -16,7 +19,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     return {
         priorityTypes,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title: 'Types-Priorities'
     };			
 
 };

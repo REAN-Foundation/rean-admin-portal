@@ -1,6 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { page } from '$app/stores';
-import { searchPriorities } from '../../../services/reancare/priorities';
+import { searchPriorities } from '$routes/api/services/reancare/priorities';
 
 //////////////////////////////////////////////////////////////
 
@@ -12,28 +11,25 @@ export const GET = async (event: RequestEvent) => {
 	const tags = searchParams.get('tags') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
-	const itemsPerPage_ = searchParams.get('pageIndex');
-	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 25;
+	const itemsPerPage_ = searchParams.get('itemsPerPage');
+	const itemsPerPage = itemsPerPage_ ? parseInt(itemsPerPage_) : 10;
 	const pageIndex_ = searchParams.get('pageIndex');
 	const pageIndex = pageIndex_ ? parseInt(pageIndex_) : 0;
 
 	try {
 		const searchParams = {
 			type,
-			tags,
+			tags: tags,
 			orderBy: sortBy,
 			order: sortOrder,
 			itemsPerPage,
 			pageIndex
 		};
-		console.log('Search parms: ', searchParams);
 		const response = await searchPriorities(sessionId, searchParams);
-		const items = response.Data.Items;
-		console.log('data==/////', response);
-
+		const items = response.Data.PriorityTypes;
 		return new Response(JSON.stringify(items));
 	} catch (err) {
-		console.error(`Error retriving priority: ${err.message}`);
+		console.error(`Error retriving priorities: ${err.message}`);
 		return new Response(err.message);
 	}
 };

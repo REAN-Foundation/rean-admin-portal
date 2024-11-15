@@ -12,10 +12,12 @@
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
+    import { db } from '$lib/utils/local.db';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	let retrivedSymptoms;
 	$: symptoms = data.symptoms;
 
@@ -70,6 +72,9 @@
 		const searchResult = await res.json();
         totalSymptomsCount = searchResult.TotalCount;
         symptoms = searchResult.Items;;
+		if (totalSymptomsCount > 0) {
+			isLoading = false;
+		}
 	}
 
 	$: {
@@ -79,6 +84,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedSymptoms.length > 0){
+		isLoading = false;
+	}
 	}
 
 	$: if (browser)
@@ -92,11 +100,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (symptom || tags) {
+            isLoading = true;
+            symptoms = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -112,12 +125,19 @@
 		}
 		sortBy = columnName;
 	}
-
-	const handleSymptomDelete = async (id) => {
+	
+	const handleSymptomDelete = async (id,imageResourceId) => {
 		const symptomId = id;
+		console.log(`ImageUrl : ${imageResourceId}`);
+		// if (imageResourceId) {
+    //     // await db.imageCache.where({ srcUrl: imageUrl}).delete();
+		// 		await db.imageCache.where({ srcUrl: getImageUrl(imageResourceId)}).delete();
+    //     console.log(`Removed cached image for ${imageResourceId}`);
+    // }
 		await Delete({
 			sessionId: data.sessionId,
-			symptomId: symptomId
+			symptomId: symptomId,
+			// ImageUrl : imageUrl 
 		});
 		invalidate('app:symptoms');
 	};
@@ -130,23 +150,59 @@
 		});
 	}
 
-	function getImageUrl(id:string):string{
-		return data.backendUrl+`/file-resources/${id}/download?disposition=inline`
-	}
+	// function getImageUrl(id:string):string{
+	// 	return data.backendUrl+`/file-resources/${id}/download?disposition=inline`
+	// }
+
+	async function getImageUrl(id: string): Promise<string> {
+  const cachedImage = await db.imageCache.where({ srcUrl: `/file-resources/${id}/download?disposition=inline` }).first();
+  if (cachedImage) {
+    return cachedImage.srcUrl;
+  }
+  return `${data.backendUrl}/file-resources/${id}/download?disposition=inline`;
+}
 	
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
-		type="text"
-		name="symptom"
-		placeholder="Search by symptom"
-		bind:value={symptom}
-		class="input w-auto grow"
-	/>
-	<input type="text" name="tags" placeholder="Search by tags" bind:value={tags} class="input w-auto grow" />
+	<div class="relative w-auto grow">
+		<input
+			type="text"
+			name="symptom"
+			placeholder="Search by symptom"
+			bind:value={symptom}
+			class="input w-full"
+		/>
+		{#if symptom}
+				<button
+						type="button"
+						on:click={() => { symptom = '';}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
+	<div class="relative w-auto grow">
+		<input 
+				type="text"
+				name="tags"
+				placeholder="Search by tags"
+				bind:value={tags}
+				class="input w-full"
+		/>
+		{#if tags}
+				<button
+						type="button"
+						on:click={() => { tags = '';}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -174,7 +230,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedSymptoms.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedSymptoms as row}
@@ -184,12 +240,30 @@
 							<a href={viewRoute(row.id)}>{Helper.truncateText(row.Symptom, 20)}</a>
 						</td>
 						<td role="gridcell" aria-colindex={3} tabindex="0">{row.Tags.length > 0 ? row.Tags : 'Not specified'}</td>
-						<td role="gridcell" aria-colindex="{4}" tabindex="0">
+						<!-- <td role="gridcell" aria-colindex="{4}" tabindex="0">
 							{#if row.ImageResourceId === undefined || row.ImageResourceId===null}
 							Not specified
 							{:else}
 							<Image cls="flex h-8 w-8 rounded-lg" source="{getImageUrl(row.ImageResourceId)}" w="24" h="24" />
 							{/if}
+						</td> -->
+						<!-- <td role="gridcell" aria-colindex="{4}" tabindex="0">
+							{#if row.ImageUrl === undefined || row.ImageUrl===null}
+							Not specified
+							{:else}
+							<Image cls="flex h-8 w-8 rounded-lg" source="{row.ImageUrl}" w="24" h="24" />
+							{/if}
+							</td> -->
+							<td role="gridcell" aria-colindex="{4}" tabindex="0">
+								{#if row.ImageResourceId === undefined || row.ImageResourceId === null}
+									Not specified
+								{:else}
+									{#await getImageUrl(row.ImageResourceId) then imageUrl}
+										<Image cls="flex rounded-lg" source="{imageUrl}" w="24" h="24" />
+									{:catch error}
+										<p>Error loading image</p>
+									{/await}
+								{/if}
 							</td>
 						<td role="gridcell" aria-colindex={5} tabindex="0">
 							{date.format(new Date(row.CreatedAt), 'DD-MMM-YYYY')}
@@ -206,7 +280,7 @@
 								let:confirm={confirmThis}
 							>
 								<button
-									on:click|preventDefault={() => confirmThis(handleSymptomDelete, row.id)}
+									on:click|preventDefault={() => confirmThis(handleSymptomDelete, row.id, row.imageResourceId)}
 									class="btn p-2 -my-1 hover:variant-soft-error"
 								>
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />

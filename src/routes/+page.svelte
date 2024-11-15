@@ -28,12 +28,15 @@
 	let showForgotPassword = false;
 	let showResetPassword = false;
 
-	let email = '';
-	let resetCode = '';
-	let newPassword = '';
-	let confirmPassword = '';
+	let email = undefined;
+	let resetCode = undefined;
+	let newPassword = undefined;
+	let confirmPassword = undefined;
 	let errors: Record<string, string[]> = {};
-	let activeTab = 'email';
+	let loginActiveTab = 'email';
+	let forgotPasswordActiveTab = 'email';
+	let phone = undefined
+	let countryCode = undefined
 
 	if (browser) {
 		const tmp = LocalStorageUtils.getItem('personRoles');
@@ -45,22 +48,74 @@
 		LocalStorageUtils.removeItem('prevUrl');
 	}
 
+  let maxHeight = '80vh';
+	if (browser) {
+		const handleResize = () => {
+			const screenWidth = window.innerWidth;
+			if (screenWidth <= 600) {
+				maxHeight = '40vh';
+			} else if (screenWidth <= 1024) {
+				maxHeight = '50vh';
+			} else if (screenWidth <= 1440) {
+				maxHeight = '60vh';
+			} else if (screenWidth <= 1600) {
+				maxHeight = '70vh';
+			} else {
+				maxHeight = '80vh';
+			}
+  };
+
+  window.addEventListener('resize', handleResize);
+  handleResize();
+}
+
 	const systemName = getSystemName();
+	$: pageTitle = showForgotPassword
+        ? 'Forgot Password'
+        : showResetPassword
+        ? 'Reset Password'
+        : 'Login';
 
 	const resetPasswordSchema = z.object({
-		email: z.string().email({ message: 'Invalid email address' }),
+		email: z.string().email({ message: 'Invalid email address' }).optional(),
+    phone: z.string().optional(),
 		resetCode: z.string().min(6, { message: 'Reset code must be 6 characters' }),
-		newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-		confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+		newPassword: z.string().regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/, 
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+		confirmPassword: z.string().regex(
+       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]+$/,
+      {
+        message: 'Password should contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.'
+      }
+    ).min(8, 
+      {
+        message: "Password must be 8 characters"
+      }
+    ),
+		// newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
+		// confirmPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
 	}).refine(data => data.newPassword === data.confirmPassword, {
 		message: "New password and confirm new password must match",
 		path: ['confirmPassword'],
 	});
 
 	async function handleForgotPassword() {
+		let requestBody = {
+			Email : email,
+			CountryCode : countryCode,
+			Phone : phone
+		};
 		const response = await fetch(`/api/server/users/send-reset-code`, {
 			method: 'POST',
-			body: JSON.stringify({ email }),
+			body: JSON.stringify(requestBody),
 			headers: { 'content-type': 'application/json' }
 		});
 		const res =  await response.json();
@@ -77,20 +132,30 @@
 	async function handleResetPassword() {
 		errors = {};
 		try {
-			resetPasswordSchema.parse({ email, resetCode, newPassword, confirmPassword });
-
+			resetPasswordSchema.parse({ email,phone,resetCode, newPassword, confirmPassword });
+			let resetPasswordBody = {
+				ResetCode: resetCode,
+				NewPassword: newPassword,
+				Email : email,
+				CountryCode : countryCode,
+				Phone : phone
+			};
+			console.log("resetPasswordBody", resetPasswordBody)
+			console.log
 			const response = await fetch('/api/server/users/reset-password', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ email, resetCode, newPassword })
+			body: JSON.stringify(resetPasswordBody)
 		});
 		const res =  await response.json();
 		if (res.Status === "success") {
 			toast.success(res.Message)
 			showResetPassword = false;
 			showForgotPassword = false;
+			email = undefined;
+			phone = undefined;
 		} else {
 			toast.error(res.Message);
 		}
@@ -98,7 +163,7 @@
 			if (err instanceof z.ZodError) {
 				errors = err.flatten().fieldErrors;
 			} else {
-				errorMessage('An unexpected error occurred');
+				toast.error('An unexpected error occurred');
 			}
 		}
 	}
@@ -106,7 +171,7 @@
 </script>
 
 <svelte:head>
-	<title>{systemName}</title>
+	<title>{systemName}-{pageTitle}</title>
 	<meta name="description" content="REAN careplans" />
 </svelte:head>
 <body>
@@ -121,30 +186,70 @@
 						src={logoImageSource}
 					/>
 					{#if showForgotPassword}
-						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full"style={`max-height: ${maxHeight}; overflow-y: auto;`}>
 							<h2 class="text-center text-xl mb-4">Forgot Password</h2>
 							<form on:submit|preventDefault={handleForgotPassword}>
-								<label class="mb-2">
+								<div class="justify-center w-full mt-5 h-50">
+									<div class="flex gap-6 mb-4">
+										<div class="flex gap-2">
+											<input type="radio" class="radio rounded-full" name="loginType" value="email" bind:group={forgotPasswordActiveTab} /> Email
+										</div>
+										<div class="flex gap-2">
+											<input type="radio" class="radio rounded-full" name="loginType" value="phone" bind:group={forgotPasswordActiveTab} /> Phone
+										</div>
+									</div>
+									{#if forgotPasswordActiveTab === 'email'}
+										<label class="mb-2" for="email">
+											<span class="text-primary-500">Email</span>
+											<span class="label-text-alt" />
+										</label>
+										<input type="email" name="email" bind:value={email} required class="input mb-4" />
+									{/if}
+									{#if forgotPasswordActiveTab === 'phone'}
+									<div class="flex gap-4 mb-4">
+										<div class="flex flex-col">
+											<label class="mb-2" for="countryCode">
+												<span class="text-primary-500">Phone</span>
+												<span class="label-text-alt" />
+											</label>
+											<div class="flex flex-row gap-5">
+												<div class="w-1/3">
+													<select name="countryCode" bind:value={countryCode} required class="input">
+														<option value="+1">+1</option>
+														<option value="+91">+91</option>
+													</select>
+												</div>
+											<div class="w-2/3">
+												<input type="tel" name="phone" required class="input" bind:value={phone} />
+											</div>
+											</div>
+										</div>
+									</div>
+									{/if}
+								<!-- <label class="mb-2">
 									<span class="text-primary-500">Email</span>
 									<input type="email" bind:value={email} required class="input mb-4 mt-2" />
-								</label>
+								</label> -->
 								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Send Reset Code</button>
 								<button type="button" class="btn variant-filled-secondary mb-6 w-full" on:click={() => { showForgotPassword = false; }}>Back to Login</button>
 							</form>
 						</div>
 					{:else if showResetPassword}
-						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+						<div class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full" style={`max-height: ${maxHeight}; overflow-y: auto;`}>
 							<h2 class="text-center text-xl mb-4">Reset Password</h2>
 							<form on:submit|preventDefault={handleResetPassword}>
-								<label class="hidden">
+								<!-- <label class="hidden">
 									<span class="text-primary-500">Email</span>
 									<input type="email" value={email} required class="input mb-4" />
-								</label>
+								</label> -->
+								<input type="email" name="email" bind:value={email} class="input mb-4 hidden" />
+								<input type="text" name="countryCode" bind:value={countryCode} class="input mb-4 hidden" />
+								<input type="text" name="phone" bind:value={phone} class="input mb-4 hidden" />
 								<label>
 									<span class="text-primary-500">Reset Code/OTP</span>
 									<input type="text" bind:value={resetCode} required class="input mb-4 mt-2" />
 									{#if errors.resetCode}
-										<span class="text-error-500">{errors.resetCode}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.resetCode}</p>
 									{/if}
 								</label>
 								<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -156,7 +261,7 @@
 
 									<!-- <input type="password" bind:value={newPassword} required class="input mb-4 mt-2" /> -->
 									{#if errors.newPassword}
-										<span class="text-error-500">{errors.newPassword}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.newPassword}</p>
 									{/if}
 								</label>
 								<!-- svelte-ignore a11y-label-has-associated-control -->
@@ -168,7 +273,7 @@
 
 									<!-- <input type="password" bind:value={confirmPassword} required class="input mb-4" /> -->
 									{#if errors.confirmPassword}
-										<span class="text-error-500">{errors.confirmPassword}</span>
+										<p class="text-error-500 text-xs mb-2">{errors.confirmPassword}</p>
 									{/if}
 								</label>
 								<button type="submit" class="btn variant-filled-secondary mb-6 w-full">Reset Password</button>
@@ -176,36 +281,36 @@
 							</form>
 						</div>
 					{:else}
-					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full">
+					<form method="post" action="?/login" class="shadow-bottom-right p-8 pb-1 pt-5 rounded-lg mt-5 bg-secondary-50 border border-slate-300 shadow-xl w-96 max-w-full" style={`max-height: ${maxHeight}; overflow-y: auto;`}>
 						<!-- <input name="roleId" bind:value={loginRoleId} class="hidden"/> -->
 						<!-- svelte-ignore a11y-label-has-associated-control -->
 						<div class="justify-center w-full mt-5 h-50">
 							<div class="flex gap-6 mb-4">
 								<div class="flex gap-2">
-									<input type="radio" class="radio rounded-full" name="loginType" value="email" bind:group={activeTab} /> Email
+									<input type="radio" class="radio rounded-full" name="loginType" value="email" bind:group={loginActiveTab} /> Email
 								</div>
 								<div class="flex gap-2">
-									<input type="radio" class="radio rounded-full" name="loginType" value="phone" bind:group={activeTab} /> Phone
+									<input type="radio" class="radio rounded-full" name="loginType" value="phone" bind:group={loginActiveTab} /> Phone
 								</div>
 								<div class="flex gap-2">
-									<input type="radio" class="radio rounded-full" name="loginType" value="username" bind:group={activeTab} />Username
+									<input type="radio" class="radio rounded-full" name="loginType" value="username" bind:group={loginActiveTab} />Username
 								</div>
 							</div>
-							{#if activeTab === 'username'}
+							{#if loginActiveTab === 'username'}
 								<label class="mb-2" for="username">
 									<span class="text-primary-500">Username</span>
 									<span class="label-text-alt" />
 								</label>
 								<input type="text" name="username" required class="input mb-4" />
 							{/if}
-							{#if activeTab === 'email'}
+							{#if loginActiveTab === 'email'}
 								<label class="mb-2" for="email">
 									<span class="text-primary-500">Email</span>
 									<span class="label-text-alt" />
 								</label>
 								<input type="email" name="email" required class="input mb-4" />
 							{/if}
-							{#if activeTab === 'phone'}
+							{#if loginActiveTab === 'phone'}
 							<div class="flex gap-4 mb-4">
 								<div class="flex flex-col">
 									<label class="mb-2" for="countryCode">
@@ -257,17 +362,3 @@
 		<a href={footerLink} class="!text-white">{footerText}</a>
 	</footer>
 </body>
-
-<style>
-  .radio-group {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-  .radio-group input {
-    margin-right: 0.5rem;
-  }
-  .tab-content {
-    margin-top: 1rem;
-  }
-</style>

@@ -51,6 +51,15 @@
 			path: createRoute
 		}
 	];
+
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -60,6 +69,7 @@
 	action="?/createAssessmentNodeAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -128,7 +138,7 @@
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Sequence</td>
 				<td>
-					<input type="number" name="sequence" placeholder="Enter sequence here..." min="1" class="input" />
+					<input type="number" name="sequence" placeholder="Enter sequence here..." min="1" class="input" step="1" />
 				</td>
 			</tr>
 			{#if selectedNodeType === 'Question'}
@@ -223,6 +233,8 @@
 		</tbody>
 	</table>
 	<div class="flex p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

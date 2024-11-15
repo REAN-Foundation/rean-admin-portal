@@ -13,7 +13,7 @@
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     export let data: PageServerData;
-
+    $: isLoading = false;
     $: healthSystems = data.healthSystems.Items;
     let retrivedHealthSystems;
     const userId = $page.params.userId;
@@ -65,7 +65,10 @@
 
         const searchResult = await res.json();
         totalHealthSystemsCount = searchResult.TotalCount;
-                healthSystems = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+        healthSystems = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+        if (totalHealthSystemsCount > 0) {
+            isLoading = false;
+        }
     }
 
     $: {
@@ -75,6 +78,9 @@
         paginationSettings.page * paginationSettings.limit,
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
         );
+        if (retrivedHealthSystems.length > 0) {
+            isLoading = false;
+        }
     }
 
     // $: console.log('retrivedHealthSystems', retrivedHealthSystems);
@@ -90,11 +96,16 @@
 
 
     function onPageChange(e: CustomEvent): void {
+        isLoading = true;
         let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
     }
 
     function onAmountChange(e: CustomEvent): void {
+        if (healthSystemName) {
+            isLoading = true;
+            healthSystems = [];
+        }
         itemsPerPage = e.detail * (paginationSettings.page + 1);
         items = itemsPerPage;
     }
@@ -130,13 +141,24 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-    <input
+    <div class="relative w-auto grow">
+        <input
         type="text"
         name="healthSystemName"
         placeholder="Search by name"
         bind:value={healthSystemName}
-        class="input w-auto grow"
+        class="input w-full"
     />
+        {#if healthSystemName}
+            <button
+                type="button"
+                on:click={() => { healthSystemName = '';}}
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+            >
+                <Icon icon="material-symbols:close" class="text-lg" />
+            </button>
+        {/if}
+    </div>
     <a
         href={createRoute}
         class="btn variant-filled-secondary">Add New</a
@@ -162,9 +184,9 @@
             </tr>
         </thead>
         <tbody class="!bg-white dark:!bg-inherit">
-            {#if !retrivedHealthSystems}
+            {#if retrivedHealthSystems.length <= 0}
                 <tr>
-                    <td colspan="6">No records found</td>
+                    <td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
                 </tr>
             {:else}
                 {#each retrivedHealthSystems as row}

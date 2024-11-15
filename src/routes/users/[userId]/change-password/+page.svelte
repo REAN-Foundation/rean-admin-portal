@@ -1,19 +1,31 @@
-<script>
-  import { enhance } from '$app/forms';
+<script lang="ts">
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
   import Icon from '@iconify/svelte';
 	import PasswordInput from '$lib/components/input/password.input.svelte';
+  import { enhance } from '$app/forms';
 
   /////////////////////////////////////////////////////////////////////
 
 	export let form;
+  export let data;
+  data.title = 'Change Password'
 	const userId = $page.params.userId;
   const homeRoute = `/users/${userId}/home`;
 	const changePasswordRoute = `/users/${userId}/change-password`;
 	const breadCrumbs = [
 		{ name: 'Change Password', path: changePasswordRoute }
 	];
+
+  function handleSubmit() {
+	  isSubmitting = true;
+  } 
+	$:isSubmitting = data.isSubmitting ? data.isSubmitting : false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
+
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -23,6 +35,7 @@
   action="?/changePasswordAction"
   class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
   use:enhance
+  on:submit|preventDefault={handleSubmit}
 >
   <table class="table">
     <thead class="!variant-soft-secondary">
@@ -84,6 +97,9 @@
     </tbody>
   </table>
   <div class="flex gap-2 p-2 justify-end">
-    <button type="submit" class="btn variant-filled-secondary">Submit</button>
+    <!-- <button type="submit" class="btn variant-filled-secondary">Submit</button> -->
+    <button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
   </div>
 </form>

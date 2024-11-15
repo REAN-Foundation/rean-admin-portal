@@ -73,7 +73,14 @@
             selectedUserRoleId = selectedRole.id;
         }
   }
-  
+
+ function handleSubmit() {
+	  isSubmitting = true;
+  } 
+	$:isSubmitting = false;
+	$:if(form){
+		isSubmitting = false;	
+		}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -84,6 +91,7 @@
     enctype="multipart/form-data"
 	class= "table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -218,7 +226,7 @@
                         {#if form?.errors?.password}
 						    <p class="text-error-500 text-xs">{form?.errors?.password[0]}</p>
                         {:else}
-                            <p class="border-b-surface-700">Password should be of minimum 8 characters & contain at least 1 capital letter , 1 digit & 1 special character</p>
+                            <p class="border-b-surface-700">The password should be at least 8 characters long and must contain at least 1 capital letter, 1 small letter, 1 digit, and 1 special character.</p>
                         {/if}
 					<!-- {#if form?.errors?.password} -->
 						<!-- <p class="border-b-surface-700">Password should be of minimum 8 characters & contain at least 1 capital letter , 1 digit & 1 special character</p> -->
@@ -241,6 +249,8 @@
 		</tbody>
 	</table>
 	<div class="flex p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

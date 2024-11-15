@@ -79,10 +79,11 @@ export const changePassword = async (
     return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
 
-export const SendPasswordResetCode = async (email: string, loginRoleId: number) => {
+export const SendPasswordResetCode = async (loginRoleId: number, email?: string, phone?: string) => {
     const model = {
         Email: email,
-        LoginRoleId: loginRoleId
+        LoginRoleId: loginRoleId,
+        Phone: phone
     };
     const headers = {};
     headers['Content-Type'] = 'application/json';
@@ -100,12 +101,13 @@ export const SendPasswordResetCode = async (email: string, loginRoleId: number) 
     return response;
 };
 
-export const resetPassword = async (email: string, resetCode: string, newPassword: string, loginRoleId: number) => {
+export const resetPassword = async (resetCode: string, newPassword: string, loginRoleId: number, email?: string, phone?: string) => {
     const model = {
-        Email: email,
         NewPassword: newPassword,
         ResetCode: resetCode,
-        RoleId: loginRoleId
+        RoleId: loginRoleId,
+        Email: email,
+        Phone:phone
     };
 
     const body = JSON.stringify(model);
@@ -195,7 +197,8 @@ export const updateUser = async (
 	email: string,
 	roleId: string,
 	defaultTimeZone: string,
-	currentTimeZone: string
+	currentTimeZone: string,
+  imageResourceId?: string
 ) => {
 	const body = {
 			FirstName: firstName,
@@ -204,7 +207,8 @@ export const updateUser = async (
 			Phone: phone ? phone : null,
 			Email: email ? email : null,
 			DefaultTimeZone: defaultTimeZone ? defaultTimeZone : null,
-			CurrentTimeZone: currentTimeZone ? currentTimeZone : null
+			CurrentTimeZone: currentTimeZone ? currentTimeZone : null,
+      ImageResourceId: imageResourceId ? imageResourceId : undefined
 
 	};
 	if (Helper.isPhone(phone)) {

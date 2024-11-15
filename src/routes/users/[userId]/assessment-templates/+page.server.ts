@@ -19,5 +19,6 @@ export const load: PageServerLoad = async ({cookies,depends}) => {
         assessmentTemplate,
         sessionId,
         message: response.Message,
+        title:'Clinical-Assessments'
     };		
 };

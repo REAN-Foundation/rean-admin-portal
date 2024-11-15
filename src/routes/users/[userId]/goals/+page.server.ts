@@ -8,7 +8,10 @@ import { searchGoals } from '../../../api/services/reancare/goals';
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
 	const sessionId = event.cookies.get('sessionId');
     event.depends('app:goals');
-    const response = await searchGoals(sessionId);
+    const response = await searchGoals(sessionId,{
+        orderBy: 'Type',
+        order : 'ascending'
+    });
     if (response.Status === 'failure' || response.HttpCode !== 200) {
         throw error(response.HttpCode, response.Message);
     }
@@ -16,6 +19,7 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     return {
         goalTypes,
         sessionId,
-        message: response.Message
+        message: response.Message,
+        title: 'Types-Goals'
     };
 };

@@ -64,12 +64,12 @@ export const updateDrug = async (
 ) => {
 	const body = {
 		DrugName: drugName,
-		GenericName: genericName ? genericName : null,
-		Ingredients: ingredients ? ingredients : null,
-		Strength: strength ? strength : null,
-		OtherCommercialNames: otherCommercialNames ? otherCommercialNames : null,
-		Manufacturer: manufacturer ? manufacturer : null,
-		OtherInformation: otherInformation ? otherInformation : null
+		GenericName: genericName ? genericName : '',
+		Ingredients: ingredients ? ingredients : '',
+		Strength: strength ? strength : '',
+		OtherCommercialNames: otherCommercialNames ? otherCommercialNames : '',
+		Manufacturer: manufacturer ? manufacturer : '',
+		OtherInformation: otherInformation ? otherInformation : ''
 	};
 	const url = BACKEND_API_URL + `/clinical/drugs/${drugId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);

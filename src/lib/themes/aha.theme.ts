@@ -87,6 +87,7 @@ export const ThemeColors = {
 
 export const ThemeDarkColor   = '#C10E21';
 export const ChartColors      = ['#CB463B', '#9F2A2A', '#661B26', '#2E0C16'];
+export const DoughnutColors = [`#0b5394`, `#6fa8dc`, `#6aa84f`, `#38761d`, `#ffd966`, `#f6b26b`, `#ef8585`, `#fa4f4f`];
 export const HoverChartColors = ['#f2ecfd', '#CB463B', '#9F2A2A', '#661B26'];
 export const TickColorLight   = '#661B26';
 export const TickColorDark    = '#DED6EC';

@@ -18,6 +18,7 @@
 	let optionValueStore = options;
 	let message = data.assessmentNode.Message ?? null;
 	let sequence = data.assessmentNode.Sequence;
+	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? false;
 
 	//Original data
 	let _nodeType = nodeType;
@@ -55,6 +56,14 @@
 	let selectedQueryType = queryType;
 
 	const onSelectQueryResponseType = (val) => (selectedQueryType = val.target.value);
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -64,6 +73,7 @@
 	action="?/updateAssessmentNodeAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -145,6 +155,8 @@
 						name="sequence"
 						placeholder="Enter sequence here..."
 						class="input"
+						step="1" 
+						min="1"
 						bind:value={sequence}
 					/>
 				</td>
@@ -184,19 +196,31 @@
 							required
 							placeholder="Enter message here..."
 							bind:value={message}
-							disabled
 							class="textarea w-full
 						{form?.errors?.message ? 'border-error-300 text-error-500' : ''}"
 						/>
 					</td>
 				</tr>
 			{:else}
-				<tr />
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Serve List Node Children At Once</td>
+				<td>
+					<input
+						type="checkbox"
+						name="serveListNodeChildrenAtOnce"
+						bind:value={serveListNodeChildrenAtOnce}
+						bind:checked={serveListNodeChildrenAtOnce}
+						class="checkbox checkbox-primary border-primary-200 hover:border-primary-400 checkbox-md ml-2"
+					/>
+				</td>
+			</tr>
 			{/if}
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
 		<button type="button" on:click={handleReset} class="btn variant-soft-secondary">Reset</button>
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

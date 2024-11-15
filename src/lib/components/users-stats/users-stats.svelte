@@ -506,7 +506,7 @@
 		</div>-->
 	</div> 
 
-	<div class="flex justify-center items-center h-full gap-10 w-full">
+	<!-- <div class="flex justify-center items-center h-full gap-10 w-full">
 		<div
 			class="flex overflow-x-auto justify-center items-center rounded-lg  shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
 		>
@@ -557,9 +557,9 @@
 			{/if}
 		</div>
 		</div>
-	</div>
+	</div> -->
 
-	<div class="flex justify-start items-center h-96 gap-10 w-full mt-10">
+	<!-- <div class="flex justify-start items-center h-96 gap-10 w-full mt-10"> -->
 		<!-- <div
 			class="flex overflow-x-auto justify-center items-center rounded-lg  shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
 		>
@@ -585,9 +585,9 @@
 				{/if}
 			</div>
 		</div> -->
-		<div
+		<!-- <div
 			class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
-		>
+		> -->
 			<!-- <div class="h-96 w-full">
 				<BarChart
 					dataSource={addictionDistributionData}
@@ -595,7 +595,7 @@
 					title="Addiction"
 				/>
 			</div> -->
-			<div class="w-full">
+			<!-- <div class="w-full">
 				<div class="flex items-center">
 					<h4 class="mr-4 w-2/3 text-left justify-center py-3 ml-4 text-lg font-semibold text-primary-500 dark:text-primary-100 sm:pl-3">Addiction</h4>
 					<select name="year" id="" class="select w-1/3 mt-3" on:change={handlelSelectYearForAddiction}>
@@ -615,9 +615,9 @@
 						/>
 					</div>
 				{/if}
-			</div>
-		</div>
-	</div>
+			</div> -->
+		<!-- </div> -->
+	<!-- </div> -->
 
 	<!-- <div class="flex justify-center items-center h-96 gap-10 w-full mt-10">
 		<div

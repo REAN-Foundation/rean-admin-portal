@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { createDrug } from '../../../../api/services/reancare/drugs';
+import { validateFormData } from '$lib/utils/formValidation';
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -22,44 +23,36 @@ export const actions = {
 		const request = event.request;
 		const userId = event.params.userId;
 		const sessionId = event.cookies.get('sessionId');
-		const formData = Object.fromEntries(await request.formData());
+		const { result, errors } = await validateFormData(request, createDrugSchema);
 
-		type DrugSchema = z.infer<typeof createDrugSchema>;
+		if (errors) {
+            return { data: result, errors };
+        }
+        let response;
+        try {
+            response = await createDrug(
+                sessionId,
+				result.drugName,
+				result.genericName,
+				result.ingredients,
+				result.strength,
+				result.otherCommercialNames,
+				result.manufacturer,
+				result.otherInformation
+            );
+        } catch (error: any) {
+            const errorMessageText = error?.body?.message || 'An error occurred';
+            throw redirect(303, `/users/${userId}/drugs`, errorMessage(errorMessageText), event);
+        }
+		
+        const id = response.Data.Drug.id;
 
-		let result: DrugSchema = {};
-		try {
-			result = createDrugSchema.parse(formData);
-			console.log('result', result);
-		} catch (err: any) {
-			const { fieldErrors: errors } = err.flatten();
-			console.log(errors);
-			const { ...rest } = formData;
-			return {
-				data: rest,
-				errors
-			};
-		}
-
-		const response = await createDrug(
-			sessionId,
-			result.drugName,
-			result.genericName,
-			result.ingredients,
-			result.strength,
-			result.otherCommercialNames,
-			result.manufacturer,
-			result.otherInformation
-		);
-		const id = response.Data.Drug.id;
-
-		if (response.Status === 'failure' || response.HttpCode !== 201) {
-			throw redirect(303, `/users/${userId}/drugs`, errorMessage(response.Message), event);
-		}
-		throw redirect(
+        throw redirect(
 			303,
 			`/users/${userId}/drugs/${id}/view`,
 			successMessage(`Drug created successfully!`),
 			event
 		);
+		
 	}
 };

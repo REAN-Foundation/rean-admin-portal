@@ -19,7 +19,7 @@ export const DELETE = async (event: RequestEvent) => {
 			);
 	}
 	throw redirect(
-		successMessage(response.Message),
+		successMessage(`Symptom deleted successfully!`),
 		event
 		);	
 };

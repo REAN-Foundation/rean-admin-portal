@@ -18,7 +18,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     return {
         location: `${id}/edit`,
         knowledgeNugget,
-        message: response.Message
+        message: response.Message,
+        title:"Educational-Knowledge Nuggets View"
     };
 		
 };

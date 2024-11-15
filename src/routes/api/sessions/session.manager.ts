@@ -90,7 +90,7 @@ export class SessionManager {
 			userId         : user.id,
 			email          : user.Person.Email,
 			username       : user.UserName,
-			profileImageUrl: user.Person.ProfileImageUrl ?? null,
+			profileImageUrl: user.Person.ProfileImageURL ?? null,
 			fullName       : user.Person.DisplayName ?? null,
 			firstName      : user.Person.FirstName ?? null,
 			roleId         : user.Role.id,

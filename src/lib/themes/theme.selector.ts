@@ -4,6 +4,7 @@ import { SystemTypes } from '../system.types';
 import { ThemeColors as AHAThemeColors } from './aha.theme';
 import { ThemeDarkColor as AHAThemeDarkColor } from './aha.theme';
 import { ChartColors as AHAChartColors } from './aha.theme';
+import { DoughnutColors as AHADoughnutColors } from './aha.theme';
 import { HoverChartColors as AHAHoverChartColors } from './aha.theme';
 import { TickColorLight as AHATickColorLight } from './aha.theme';
 import { TickColorDark as AHATickColorDark } from './aha.theme';
@@ -15,6 +16,7 @@ import { SYSTEM_NAME as AHA_SYSTEM_NAME } from './aha.theme';
 // REAN Theme imports
 import { ThemeColors as REANThemeColors } from './rean.theme';
 import { ChartColors as REANChartColors } from './rean.theme';
+import { DoughnutColors as REANDoughnutColors } from './aha.theme';
 import { HoverChartColors as REANHoverChartColors } from './rean.theme';
 import { TickColorLight as REANTickColorLight } from './rean.theme';
 import { TickColorDark as REANTickColorDark } from './rean.theme';
@@ -27,6 +29,7 @@ import { SYSTEM_NAME as REAN_SYSTEM_NAME } from './rean.theme';
 // REAN Theme imports
 import { ThemeColors as GMUThemeColors } from './gmu.theme';
 import { ChartColors as GMUChartColors } from './gmu.theme';
+import { DoughnutColors as GMUDoughnutColors } from './aha.theme';
 import { HoverChartColors as GMUHoverChartColors } from './gmu.theme';
 import { TickColorLight as GMUTickColorLight } from './gmu.theme';
 import { TickColorDark as GMUTickColorDark } from './gmu.theme';
@@ -66,6 +69,21 @@ export const getChartColors = () => {
             return REANChartColors;
     }
 };
+
+export const getDoughnutColors = () => {
+    const systemType: SystemTypes = SYSTEM_ID as SystemTypes;
+    switch (systemType as SystemTypes) {
+        case SystemTypes.REAN:
+            return REANDoughnutColors;
+        case SystemTypes.AHA:
+            return AHADoughnutColors;
+        case SystemTypes.GMU:
+            return GMUDoughnutColors;
+        default:
+            return REANDoughnutColors;
+    }
+};
+
 
 export const getHoverChartColors = () => {
     const systemType: SystemTypes = SYSTEM_ID as SystemTypes;

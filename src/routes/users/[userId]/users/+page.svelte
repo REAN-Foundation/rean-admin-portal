@@ -9,11 +9,14 @@
 	import type { PageServerData } from './$types';
     import { invalidate } from '$app/navigation';
     import toast from 'svelte-french-toast';
+    import { LocalStorageUtils } from '$lib/utils/local.storage.utils';
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
     let retrivedUsers;
+		let users;
 	$: users = data.users.Items;
     console.log('retrivedUsers@', data.users.Items);
 	const userId = $page.params.userId;
@@ -37,7 +40,7 @@
 	let isSortingEmail = false;
 	let isSortingPhone = false;
 	let items = 10;
-    let selectedRoles = data.selectedRoles;
+  let selectedRoles = data.selectedRoles;
 
 	let paginationSettings = {
 		page: 0,
@@ -61,8 +64,24 @@
     //         x.RoleName === "Tenant user") {
     //             selectedRoles.push(x.id);
     //         }});
-   
-    $: console.log("selectedRole", selectedRoles);
+	const tmp = LocalStorageUtils.getItem('personRoles');
+	const personRoles = JSON.parse(tmp);
+	$: console.log("personRoles", personRoles);
+	function getRoleNameById(roleId) {
+		if (Array.isArray(personRoles) && personRoles.length > 0) {
+			const role = personRoles.find(role => role.id === roleId); 
+			return role ? role.RoleName : 'Not Specified';
+		}
+		return 'Not Specified';
+	}
+
+		$: users = users.map(user => {
+		return {
+			...user,
+			RoleName: getRoleNameById(user.RoleId) 
+		};
+	});
+
     async function searchUser(model) {
       console.log(model);
       let url = `/api/server/users/search?`;
@@ -85,6 +104,9 @@
       console.log('Response: ' + JSON.stringify(searchResult));
       totalUsersCount = searchResult.TotalCount;
       users = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+	  if (totalUsersCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$: {
@@ -94,6 +116,9 @@
       paginationSettings.page * paginationSettings.limit,
       paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedUsers.length > 0) {
+            isLoading = false;
+        }
     }
 
 	$: if (browser)
@@ -108,11 +133,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (phone || email ) {
+            isLoading = true;
+            users = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -154,20 +184,42 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
-		type="text"
-		name="firstName"
-		placeholder="Search by contact number"
-		bind:value={phone}
-		class="input w-auto grow"
-	/>
-	<input
-		type="text"
-		name="email"
-		placeholder="Search by email"
-        bind:value={email}
-		class="input w-auto grow"
-	/>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="phone"
+				placeholder="Search by contact number"
+				bind:value={phone}
+				class="input w-full"
+		/>
+		{#if phone}
+				<button
+						type="button"
+						on:click={() => { phone = '' }}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="email"
+				placeholder="Search by email"
+				bind:value={email}
+				class="input w-full"
+		/>
+		{#if email}
+				<button
+						type="button"
+						on:click={() => { email = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -188,6 +240,7 @@
 				</th>
 				<th data-sort="Phone">Contact Number</th>
 				<th>Email</th>
+				<th>Role</th>
 				<th />
 				<th />
 			</tr>
@@ -195,7 +248,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedUsers.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedUsers as row}
@@ -214,16 +267,19 @@
 						<td role="gridcell" aria-colindex={4} tabindex="0"
 							>{row.Person.Email || 'Not specified'}</td
 						>
+						<td role="gridcell" aria-colindex={4} tabindex="0"
+							>{row.RoleName || 'Not specified'}</td
+						>
 						<td>
-              <button on:click={() => {
-                if (!row.IsPermitted) {
-                  toast.error('Permission denied: Only resource owner & system admin are allowed to view & edit.')
-                }
-              }}>
+                            <button>
 							<a href={!row.IsPermitted ? null : editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
-								<Icon icon="material-symbols:edit-outline" class="text-lg" />
+					           {#if row.IsPermitted}
+                                <Icon icon="material-symbols:edit-outline" class="text-lg"/>
+                                {:else}
+                                <Icon icon="material-symbols:edit-outline" class="text-lg" style="color: #808b96"/>
+                                {/if}
 							</a>
-            </button>
+                            </button>
 						</td>
 						<td>
 							<Confirm
@@ -232,7 +288,7 @@
 								let:confirm={confirmThis}
 							>
 								<button
-                                    disabled= {userId === row.id ? true : false}
+                                    disabled= {userId === row.id || !row.IsPermitted ? true : false}
 									on:click|preventDefault={() => {
                                         if (!row.IsPermitted) {
                                         toast.error('Permission denied: Only resource owner & system admin are allowed to delete')
@@ -240,8 +296,8 @@
                                         confirmThis(handleUserDelete, row.id)}
                                         }
                                     }
-   								class="btn p-2 -my-1 hover:variant-soft-error"
-								>
+                                    class="btn p-2 -my-1 hover:variant-soft-error"
+                                    >
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>

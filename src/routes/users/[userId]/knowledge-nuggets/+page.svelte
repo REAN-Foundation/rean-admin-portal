@@ -10,11 +10,12 @@
 	} from '@skeletonlabs/skeleton';
 	import date from 'date-and-time';
 	import type { PageServerData } from './$types';
-    import { invalidate } from '$app/navigation';
+  import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	$: knowledgeNuggets = data.knowledgeNuggets.Items;
     let retrivedKnowledgeNuggets;
 	const userId = $page.params.userId;
@@ -67,6 +68,9 @@
 		const searchResult = await res.json();
         totalKnowledgeNuggetsCount = searchResult.TotalCount;
 		knowledgeNuggets = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+		if (totalKnowledgeNuggetsCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$: {
@@ -76,6 +80,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedKnowledgeNuggets.length > 0) {
+            isLoading = false;
+        }
     }
 	$: if (browser)
 		searchKnowledgeNugget({
@@ -87,12 +94,17 @@
 			sortBy: sortBy
 		});
 
-		function onPageChange(e: CustomEvent): void {
+	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (topicName || tags) {
+            isLoading = true;
+            knowledgeNuggets = [];
+        }
 		itemsPerPage = e.detail * (paginationSettings.page + 1);
 		items = itemsPerPage;
 	}
@@ -130,7 +142,44 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="topicName"
+				placeholder="Search by name"
+				bind:value={topicName}
+				class="input w-full"
+		/>
+		{#if topicName}
+				<button
+						type="button"
+						on:click={() => { topicName = '';}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
+
+<div class="relative w-auto grow">
+		<input 
+				type="text"
+				name="tags"
+				placeholder="Search by tags"
+				bind:value={tags}
+				class="input w-full"
+		/>
+		{#if tags}
+				<button
+						type="button"
+						on:click={() => { tags = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
+	<!-- <input
 		type="text"
 		name="topicName"
 		placeholder="Search by topic name"
@@ -142,7 +191,7 @@
 		name="tags"
 		placeholder="Search by tags" bind:value={tags}
 		class="input w-auto grow"
-	/>
+	/> -->
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -153,7 +202,7 @@
 				<th data-sort="index">Id</th>
 				<th>
 					<button on:click={() => sortTable('TopicName')}>
-						Topic Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+					 Name {isSortingName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
 					</button>
 				</th>
 				<th>
@@ -169,7 +218,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedKnowledgeNuggets.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedKnowledgeNuggets as row}

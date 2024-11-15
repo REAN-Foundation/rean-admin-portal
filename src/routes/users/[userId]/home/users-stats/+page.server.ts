@@ -68,6 +68,7 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         yearWiseMaritalDetails,
         yearWiseMajorAilmentDistributionDetails,
         yearWiseAddictionDistributionDetails,
-        years
+        years,
+        title:'Dashboard-Home-Distribution'
     };
 };

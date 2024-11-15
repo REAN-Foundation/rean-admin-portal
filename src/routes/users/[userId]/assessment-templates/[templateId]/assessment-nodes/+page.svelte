@@ -12,6 +12,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+	$: isLoading = false;
 	$: assessmentNodes = data.assessmentNodes.Items;
     let retrivedAssessmentNodes;
 	const userId = $page.params.userId;
@@ -63,7 +64,11 @@
 			headers: { 'content-type': 'application/json' }
 		});
 		const response = await res.json();
+		totalAssessmentNodesCount = response.TotalCount;
 		assessmentNodes = response.map((item, index) => ({ ...item, index: index + 1 }));
+		if (totalAssessmentNodesCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$: {
@@ -73,6 +78,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
 	);
+	if (retrivedAssessmentNodes.length > 0) {
+            isLoading = false;
+        }
     }
 	$: if (browser)
 		searchNode({
@@ -85,11 +93,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+		isLoading = true;
 		let pageIndex = e.detail;
 		itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+		if (title || nodeType ) {
+            isLoading = true;
+            assessmentNodes = [];
+        }
 		itemsPerPage = e.detail;
 		items = itemsPerPage;
 	}
@@ -139,20 +152,42 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
-		type="text"
-		name="title"
-		placeholder="Search by title"
-		bind:value={title}
-		class="input w-auto grow"
-	/>
-	<input
-		type="text"
-		name="type"
-		placeholder="Search by node type"
-		bind:value={nodeType}
-		class="input w-auto grow"
-	/>
+	<div class="relative w-auto grow">
+        <input
+            type="text"
+            name="title"
+            placeholder="Search by title"
+            bind:value={title}
+            class="input w-full"
+        />
+        {#if title}
+            <button
+                type="button"
+                on:click={() => { title = ''}}
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+            >
+                <Icon icon="material-symbols:close" class="text-lg" />
+            </button>
+        {/if}
+    </div>
+    <div class="relative w-auto grow">
+        <input
+            type="text"
+            name="type"
+            placeholder="Search by node type"
+            bind:value={nodeType}
+            class="input w-full"
+        />
+        {#if nodeType}
+            <button
+                type="button"
+                on:click={() => { nodeType = ''}}
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+            >
+                <Icon icon="material-symbols:close" class="text-lg" />
+            </button>
+        {/if}
+  </div>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -179,7 +214,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedAssessmentNodes.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
+					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedAssessmentNodes as row, rowIndex}
@@ -208,7 +243,7 @@
 									<Icon icon="material-symbols:delete-outline-rounded" class="text-lg" />
 								</button>
 								<span slot="title"> Delete </span>
-								<span slot="description"> Are you sure you want to delete a assessment node? </span>
+								<span slot="description"> Are you sure you want to delete this assessment node? Associated children nodes will also be deleted.</span>
 							</Confirm>
 						</td>
 					</tr>

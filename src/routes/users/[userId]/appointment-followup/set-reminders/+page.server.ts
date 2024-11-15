@@ -55,31 +55,46 @@ export const actions = {
             const newFileName = Helper.replaceAll(fileName, ' ', '_');
         const filePath = `./temp/${newFileName}`;
 
-            console.log(uploadedFile)
-        if (!fs.existsSync('./temp')) {
-          fs.mkdirSync('./temp', { recursive: true });
-          }
+            console.log("upload info",uploadedFile)
+        if(uploadedFile.type !== 'application/pdf')
+          {
+            throw redirect(errorMessage('Invalid Document!'), event)
+          }  
+        else{
+          //524,288 bytes is 512 KB size of pdf is resistricted to less than or equal to it
+              console.log("size of file",uploadedFile.size)
+              // 
+              if (uploadedFile.size > 524288) 
+              {
+                throw redirect(errorMessage('File should be less than 512 KB'), event)
+              } 
+              else
+              {  
+                console.log("valid pdf size")
+                if (!fs.existsSync('./temp')) {
+                  fs.mkdirSync('./temp', { recursive: true });
+                  }
 
-        await writeFile(filePath, Buffer.from(await uploadedFile?.arrayBuffer()));
+                await writeFile(filePath, Buffer.from(await uploadedFile?.arrayBuffer()));
 
-        if (!fs.existsSync(filePath)) {
-          console.log('File not created');
-          throw redirect(successMessage('Unable to import appointment template.'), event);
-        }
+                if (!fs.existsSync(filePath)) {
+                  console.log('File not created');
+                  throw redirect(successMessage('Unable to import appointment template.'), event);
+                }
 
-        const response = await uploadAppoinmentPdf(
-                newFileName,
-          filePath
-        );
+                const response = await uploadAppoinmentPdf(
+                        newFileName,
+                  filePath
+                );
 
-        fs.unlinkSync(filePath);
-        console.log('&&&&&&',response)
-            if (!response.body.success || response.status !== 200) {
-              throw redirect(successMessage(response.body.success), event);
-               }
-               throw redirect(errorMessage(response.body.success), event)
-
-
+                fs.unlinkSync(filePath);
+                console.log('&&&&&&',response)
+                    if (!response.body.success || response.status !== 200) {
+                      throw redirect(successMessage(response.body.success), event);
+                      }
+                      throw redirect(errorMessage(response.body.success), event)
+              }          
+            }
       },
       setCancelAction: async (event: RequestEvent) => {
           const request = event.request;

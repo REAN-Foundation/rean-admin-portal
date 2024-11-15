@@ -13,6 +13,7 @@
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     export let data: PageServerData;
+    $: isLoading = false;
     $: hospitals = data.hospitals.Items;
     let retrivedHospitals;
     const userId = $page.params.userId;
@@ -63,6 +64,9 @@
         const searchResult = await res.json();
         totalHospitalsCount = searchResult.TotalCount;
         hospitals = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
+        if (totalHospitalsCount > 0) {
+            isLoading = false;
+        }
      }
 
     $:{
@@ -72,6 +76,9 @@
         paginationSettings.page * paginationSettings.limit,
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
     );
+    if (retrivedHospitals.length > 0) {
+            isLoading = false;
+        }
     }
 
     // $: console.log('retrivedHospitals', retrivedHospitals);
@@ -87,11 +94,16 @@
         });
 
     function onPageChange(e: CustomEvent): void {
+        isLoading = true;
         let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
     }
 
     function onAmountChange(e: CustomEvent): void {
+        if (hospitalName) {
+            isLoading = true;
+            hospitals = [];
+        }
         itemsPerPage = e.detail * (paginationSettings.page + 1);
         items = itemsPerPage;
     }
@@ -130,20 +142,25 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-    <input
-        type="text"
-        name="hospitalName"
-        placeholder="Search by name"
-        bind:value={hospitalName}
-        class="input w-auto grow"
-    />
-    <!-- <input
-        type="text"
-        name="healthSystemName"
-        placeholder="Search by Health System Name"
-        bind:value={healthSystemName}
-        class="input w-auto grow"
-    /> -->
+ 
+    <div class="relative w-auto grow">
+        <input
+            type="text"
+            name="hospitalName"
+            placeholder="Search by name"
+            bind:value={hospitalName}
+            class="input w-full"
+        />
+        {#if hospitalName}
+            <button
+                type="button"
+                on:click={() => { hospitalName = '';}}
+                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+            >
+                <Icon icon="material-symbols:close" class="text-lg" />
+            </button>
+        {/if}
+    </div>
     <a
         href={createRoute}
         class="btn variant-filled-secondary">Add New</a
@@ -176,7 +193,7 @@
         <tbody class="!bg-white dark:!bg-inherit">
             {#if retrivedHospitals.length <= 0}
                 <tr>
-                    <td colspan="6">No records found</td>
+                    <td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
                 </tr>
             {:else}
                 {#each retrivedHospitals as row}

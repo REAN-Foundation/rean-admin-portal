@@ -21,13 +21,14 @@ export const createAssessmentTemplate = async (
 ) => {
 	const body = {
 		Title: title,
-		Description: description ? description : null,
+		Description: description ? description : '',
 		Type: type,
-		Provider: provider ? provider : null,
-		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : null,
+		Provider: provider ? provider : '',
+		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : '',
 		ServeListNodeChildrenAtOnce: serveListNodeChildrenAtOnce ? serveListNodeChildrenAtOnce : false,
 		ScoringApplicable: scoringApplicable ? scoringApplicable : false
 	};
+	console.log("assessment-body-----",body)
 	const url = BACKEND_API_URL + '/clinical/assessment-templates';
 	return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
@@ -106,10 +107,10 @@ export const updateAssessmentTemplate = async (
 ) => {
 	const body = {
 		Title: title,
-		Description: description ? description : null,
+		Description: description ? description : '',
 		Type: type,
-		Provider: provider ? provider : null,
-		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : null,
+		Provider: provider ? provider : '',
+		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : '',
 		ServeListNodeChildrenAtOnce: serveListNodeChildrenAtOnce ? serveListNodeChildrenAtOnce : false,
 		ScoringApplicable: scoringApplicable ? scoringApplicable : false
 	};

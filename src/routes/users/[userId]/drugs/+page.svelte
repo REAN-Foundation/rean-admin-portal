@@ -13,6 +13,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
+    $: isLoading = false;
 	let retrivedDrugs;
 	$: drugs = data.drugs.Items;
 	const userId = $page.params.userId;
@@ -48,7 +49,7 @@
 	} satisfies PaginationSettings;
 
 	async function searchDrug(model) {
-		let url = `/api/server/drugs/search?`;
+        let url = `/api/server/drugs/search?`;
 		if (sortOrder) url += `sortOrder=${sortOrder}`;
 		else url += `sortOrder=ascending`;
 
@@ -64,7 +65,9 @@
 		const searchResult = await res.json();
         totalDrugsCount = searchResult.TotalCount;
         drugs = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
-        
+        if (totalDrugsCount > 0) {
+            isLoading = false;
+        }
 	}
 
 	$:{
@@ -73,7 +76,10 @@
 		retrivedDrugs = drugs.slice(
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
-	);
+        );
+        if (retrivedDrugs.length > 0) {
+            isLoading = false;
+        }
 	}
 	$: if (browser)
 		searchDrug({
@@ -86,11 +92,16 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
+        isLoading = true;
 		let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
+        if (drugName || genericName) {
+            isLoading = true;
+            drugs = [];
+        }
         itemsPerPage = e.detail * (paginationSettings.page + 1);
  		items = itemsPerPage;
 	}
@@ -106,6 +117,12 @@
 		}
 		sortBy = columnName;
 	}
+
+	function resetSearch() {
+		drugName = undefined;
+		genericName = undefined;
+		paginationSettings.page = 0;
+  }
 
 	const handleDrugDelete = async (id) => {
 		const drugId = id;
@@ -128,20 +145,42 @@
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
-	<input
-		type="text"
-		name="drugName"
-		placeholder="Search by Name"
-		bind:value={drugName}
-		class="input w-auto grow"
-	/>
-	<input
-		type="text"
-		name="genericName"
-		placeholder="Search by Generic Name"
-		bind:value={genericName}
-		class="input w-auto grow"
-	/>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="drugName"
+				placeholder="Search by name"
+				bind:value={drugName}
+				class="input w-full"
+		/>
+		{#if drugName}
+				<button
+						type="button"
+						on:click={() => { drugName = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
+	<div class="relative w-auto grow">
+		<input
+				type="text"
+				name="genericName"
+				placeholder="Search by generic name"
+				bind:value={genericName}
+				class="input w-full"
+		/>
+		{#if genericName}
+				<button
+						type="button"
+						on:click={() => { genericName = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+	</div>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -169,8 +208,8 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedDrugs.length <= 0 }
 				<tr>
-					<td colspan="6">No records found</td>
-				</tr>
+                    <td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
+        		</tr>
 			{:else}
 				{#each retrivedDrugs as row}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

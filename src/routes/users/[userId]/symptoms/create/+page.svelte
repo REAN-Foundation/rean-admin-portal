@@ -6,11 +6,13 @@
   import { enhance } from '$app/forms';
  
 ////////////////////////////////////////////////////////////////////////
-
+  export let data;
 	export let form;
+	data.title = 'Clinical-Symptoms Create'
 	const userId = $page.params.userId;
 	let imageResourceId = undefined;
   let symptomImage;
+	
     let errorMessage = {
         Text: 'Max file upload size 150 KB',
         Colour: 'border-b-surface-700'
@@ -122,14 +124,14 @@ const onFileSelected = async (e) => {
       const response = await res.json();
 			
       if (response.Status === 'success' && response.HttpCode === 201) {
-        errorMessage.Text = "File uploaded successfully";
-        errorMessage.Colour = 'text-success-500';
 				const imageUrl = response.Data.FileResources[0].url;
 				console.log('imageResourceId', imageUrl);
 				const imageResourceId_ = response.Data.FileResources[0].id;
 				console.log('ImageResource', imageResourceId_);
 				if (imageResourceId_) {
 					imageResourceId = imageResourceId_;
+					errorMessage.Text = "File uploaded successfully";
+					errorMessage.Colour = 'text-success-500';
 									return true;
 				}
 				console.log(imageResourceId);
@@ -144,6 +146,15 @@ const onFileSelected = async (e) => {
       errorMessage.Colour = 'text-error-500';
     }
 	}
+
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -154,6 +165,7 @@ const onFileSelected = async (e) => {
 	action="?/createSymptomAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -230,6 +242,8 @@ const onFileSelected = async (e) => {
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

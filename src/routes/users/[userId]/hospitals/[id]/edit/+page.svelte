@@ -21,7 +21,10 @@
     let healthSystemName = data.hospital.HealthSystemName;
     let tags = data.hospital.Tags;
     let healthSystems = data.healthSystems;
-
+    healthSystems = sortHealthSystemsByName(healthSystems)
+	function sortHealthSystemsByName(healthSystems) {
+		return healthSystems.sort((a,b) => a.Name.localeCompare(b.Name));
+	}
     console.log('hospital name  ->', hospitalName);
     console.log('healthSystemId ->', healthSystemId);
     console.log('tags           ->', tags);
@@ -49,8 +52,16 @@
     function handleHealthSystemChange(event) {
         healthSystemId = event.target.value;
   }
+  $: healthSystemId;
+  
+  function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
 
-  $: console.log('HealthSystem Id ', healthSystemId);
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -60,6 +71,7 @@
     action="?/updateHospitalAction"
     class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
     use:enhance
+    on:submit|preventDefault={handleSubmit}
 >
     <table class="table">
         <thead class="!variant-soft-secondary">
@@ -102,13 +114,14 @@
                         on:change={handleHealthSystemChange}
                         name="healthSystemId"
                         class="select select-primary w-full "
+                        bind:value={healthSystemId}
                     >
-                        <option value={healthSystemId}>{healthSystemName}</option>
-                        {#each healthSystems as healthSystem}
-                            {#if _healthSystemId !== healthSystem.id}
-                            <option value={healthSystem.id}>{healthSystem.Name}</option>
-                            {/if}
-                        {/each}
+                    <option value={_healthSystemId}>{healthSystemName}</option>
+                    {#each healthSystems as healthSystem}
+                        {#if _healthSystemId !== healthSystem.id}
+                        <option value={healthSystem.id}>{healthSystem.Name}</option>
+                        {/if}
+                    {/each}
                     </select>
                     <input type="text" hidden bind:value={healthSystemId}>
                 </td>
@@ -131,9 +144,8 @@
             on:click={handleReset}
             class="btn variant-soft-secondary">Reset</button
         >
-        <button
-            type="submit"
-            class="btn variant-filled-secondary">Submit</button
-        >
+        <button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
     </div>
 </form>

@@ -1,7 +1,7 @@
 
 import { SendPasswordResetCode } from '$routes/api/services/reancare/user';
 import type { RequestEvent } from '@sveltejs/kit';
-import { getPersonRolesForEmail } from '../../../services/reancare/persons';
+import { getPersonRolesForEmail, getPersonRolesForPhone } from '../../../services/reancare/persons';
 import type { PersonRole } from '$lib/types/domain.models';
 
 //////////////////////////////////////////////////////////////
@@ -14,9 +14,19 @@ export const POST = async (event: RequestEvent) => {
 	const data = await request.json();
 	try {
 		console.log('Inside the send reset password code...');
-		const email = data.email;
-        
-        const res_ = await getPersonRolesForEmail(email);
+		let email = data.Email;
+        let phone = ''
+
+        if (data.Phone && data.CountryCode){
+            phone = data.CountryCode + '-' + data.Phone;
+            var res_ = availableRoles = await getPersonRolesForPhone(phone);
+            availableRoles = res_.Data?.Roles ?? [];
+       }
+        else if (data.Email){
+			var res_ = await getPersonRolesForEmail(email);
+			availableRoles = res_.Data?.Roles ?? [];
+		}
+        // const res_ = await getPersonRolesForEmail(email);
         availableRoles = res_.Data?.Roles ?? [];
 
         if (availableRoles.length > 0) {
@@ -41,7 +51,7 @@ export const POST = async (event: RequestEvent) => {
             }));
         }
         
-		const response = await SendPasswordResetCode(email, loginRoleId);
+		const response = await SendPasswordResetCode(loginRoleId, email, phone);
 		return new Response(JSON.stringify({
 			Status:response.Status,
 			HttpStatusCode:response.HttpCode,

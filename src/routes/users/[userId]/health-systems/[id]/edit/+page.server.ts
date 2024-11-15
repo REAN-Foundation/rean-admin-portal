@@ -23,15 +23,14 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     return {
         location: `${id}/edit`,
         healthSystem,
-        message: response.Message
+        message: response.Message,
+        title: 'Hospital Systems-Health Systems Edit'
     };
-        
-
 };
 
 const updateHealthSystemSchema = zfd.formData({
     healthSystemName: z.string().max(128),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional()
 });
 
 export const actions = {
@@ -41,9 +40,9 @@ export const actions = {
         const healthSystemId = event.params.id;
         const sessionId = event.cookies.get('sessionId');
         const data = await request.formData();
-		const formData = Object.fromEntries(data);
-		const tags = data.has('tags') ? data.getAll('tags') : [];
-		const formDataValue = { ...formData, tags: tags };
+        const formData = Object.fromEntries(data);
+        const tags = data.has('tags') ? data.getAll('tags') : [];
+        const formDataValue = { ...formData, tags: tags };
 
         console.log('formData', JSON.stringify(formDataValue, null, 2));
 
@@ -63,17 +62,14 @@ export const actions = {
             };
         }
 
-        const response = await updateHealthSystem(
-            sessionId,
-            healthSystemId,
-            result.healthSystemName,
-            result.tags
-        );
-        const id = response.Data.HealthSystem.id;
-
-        if (response.Status === 'failure' || response.HttpCode !== 200) {
-            throw redirect(303, `/users/${userId}/health-systems`, errorMessage(response.Message), event);
+        let response;
+        try {
+            response = await updateHealthSystem(sessionId, healthSystemId, result.healthSystemName, result.tags);
+        } catch (error: any) {
+            const errorMessageText = error?.body?.message || 'An error occurred';
+            throw redirect(303, `/users/${userId}/health-systems`, errorMessage(errorMessageText), event);
         }
+        const id = response.Data.HealthSystem.id;
         throw redirect(
             303,
             `/users/${userId}/health-systems/${id}/view`,

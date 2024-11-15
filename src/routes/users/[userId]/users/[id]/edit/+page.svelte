@@ -102,6 +102,14 @@
             selectedUserRoleId = selectedRole.id;
         }
   }
+
+	function handleSubmit() {
+	  isSubmitting = true;
+  } 
+	$:isSubmitting = false;
+	$:if(form){
+		isSubmitting = false;	
+		}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -111,6 +119,7 @@
 	action="?/updateUserAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -132,6 +141,7 @@
 						type="text"
 						name="firstName"
 						bind:value={firstName}
+						required
 						placeholder="Enter first name here..."
 						class="input w-full {form?.errors?.firstName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -147,6 +157,7 @@
 						type="text"
 						name="lastName"
 						bind:value={lastName}
+						required
 						placeholder="Enter last name here..."
 						class="input w-full {form?.errors?.lastName ? 'border-error-300' : 'border-primary-200'}"
 					/>
@@ -194,7 +205,7 @@
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-				<td>Email</td>
+				<td>Email *</td>
 				<td>
 					<input
 						type="email"
@@ -273,6 +284,8 @@
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
 		<button type="button" on:click={handleReset} class="btn variant-soft-secondary">Reset</button>
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

@@ -121,7 +121,7 @@
 </script>
 
     <div>
-        <h1 class="text-2xl text-center">Summary of Appointment {tenant}</h1>
+        <h1 class="text-2xl text-center">Status Report {tenant}</h1>
     </div>
        <div>
     <p class="text-lg text-right justify-end ">Date {summary['Date']}</p>

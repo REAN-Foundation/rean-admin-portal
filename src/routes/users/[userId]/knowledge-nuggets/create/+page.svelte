@@ -8,6 +8,8 @@
 	/////////////////////////////////////////////////////////////////////////////
 
 	export let form;
+	export let data;
+	data.title ='Educational-Knowledge Nuggets Create'
 	const userId = $page.params.userId;
 	const createRoute = `/users/${userId}/knowledge-nuggets/create`;
 	const knowledgeNuggetsRoute = `/users/${userId}/knowledge-nuggets`;
@@ -23,6 +25,14 @@
 			path: createRoute
 		}
 	];
+	function handleSubmit() {
+	  isSubmitting = true;
+    } 
+	$:isSubmitting = false ;
+
+	$:if(form){
+		isSubmitting = false;	
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
@@ -32,6 +42,7 @@
 	action="?/createKnowledgeNuggetAction"
 	class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
 	use:enhance
+	on:submit|preventDefault={handleSubmit}
 >
 	<table class="table">
 		<thead class="!variant-soft-secondary">
@@ -100,6 +111,8 @@
 		</tbody>
 	</table>
 	<div class="flex p-2 justify-end">
-		<button type="submit" class="btn variant-filled-secondary">Submit</button>
+		<button type="submit" class="btn variant-filled-secondary" disabled={isSubmitting}>
+			{isSubmitting ? 'Submitting...' : 'Submit'}
+		</button>
 	</div>
 </form>

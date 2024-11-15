@@ -11,19 +11,22 @@
         getPublicFooterText,
         getPublicFooterLink
     } from '$lib/themes/theme.selector';
+    import Image from '$lib/components/image.svelte';
+
+    ///////////////////////////////////////////////////////////////
 
     export let userId = undefined;
     export let tenantSettings = undefined;
     export let userRole = undefined;
     export let username = undefined;
     export let email = undefined;
+    export let imageUrl = undefined;
     const navbarTabs: TabDefinition[] = navbarMenu(userId);
     const sidebarTabs: TabDefinition[] = sidebarMenu(userId);
     const drawerStore = getDrawerStore();
 	const logoImageSource = getPublicLogoImageSource();
     const footerText = `© ${new Date().getFullYear()} ${getPublicFooterText()}`;
     const footerLink = getPublicFooterLink();
-
 
     function drawerRightOpen(): void {
         const settings: DrawerSettings = {
@@ -76,7 +79,12 @@
                     on:click={drawerRightOpen}
                 >
                     <!-- <Icon icon="material-symbols:person-outline-rounded" class="text-3xl" /> -->
-                    <img class="w-8 ml-2 text-lg invert dark:filter-none" src="/user.png" alt="" />
+                    <!-- <img class="w-8 ml-2 text-lg invert dark:filter-none" src="/user.png" alt="" /> -->
+                    {#if imageUrl}
+                        <Image cls="flex h-8 w-8 rounded-full" source={imageUrl} w=24 h=24 />
+                    {:else}
+                        <img class="w-8 ml-2 text-lg invert dark:filter-none" src="/user.png" alt="" />
+                    {/if}
                 </button>
             </svelte:fragment>
         </AppBar>
@@ -95,7 +103,7 @@
 </AppShell>
 <Drawer>
     {#if $drawerStore.id === 'rightSidebar'}
-        <SettingMenu on:click={drawerRightClose} on:logout userId ={userId} username={username} email={email}/>
+        <SettingMenu on:click={drawerRightClose} on:logout userId ={userId} username={username} email={email} imageUrl={imageUrl}/>
     {:else if $drawerStore.id === 'leftSidebar'}
         <div class="grid justify-center w-60 space-y-4 mt-5">
             {#each sidebarTabs as t}

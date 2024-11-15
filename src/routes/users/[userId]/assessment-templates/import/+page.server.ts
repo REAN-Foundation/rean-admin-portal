@@ -39,7 +39,8 @@ export const actions = {
         fs.unlinkSync(filePath);
 
         if (response.Status === 'failure' || response.HttpCode !== 201) {
-            throw redirect(303, `/users/${userId}/assessment-templates`, errorMessage(response.Message), event);
+            console.log(`Error in import assessment template: ${response.Message}`);
+            throw redirect(303, `/users/${userId}/assessment-templates`, errorMessage('Error in import assessment template'), event);
         }
         throw redirect(303, `/users/${userId}/assessment-templates`, successMessage(response.Message), event);
     }

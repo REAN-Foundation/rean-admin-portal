@@ -1,6 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { page } from '$app/stores';
+// import { page } from '$app/stores';
 import { searchSymptoms } from '../../../services/reancare/symptoms';
+// import { BACKEND_API_URL } from '$env/static/private';
 
 //////////////////////////////////////////////////////////////
 
@@ -28,9 +29,19 @@ export const GET = async (event: RequestEvent) => {
 		};
 		console.log('Search parms: ', searchParams);
 		const response = await searchSymptoms(sessionId, searchParams);
-		const items = response.Data.SymptomTypes;
+		const symptoms = response.Data.SymptomTypes;
 
-		return new Response(JSON.stringify(items));
+    // for (const symptom of symptoms.Items) {
+    // 	if (symptom.ImageResourceId) {
+    // 		symptom['ImageUrl'] =
+    // 			BACKEND_API_URL +
+    // 			`/file-resources/${symptom.ImageResourceId}/download?disposition=inline`;
+    // 	} else {
+    // 		symptom['ImageUrl'] = null;
+    // 	}
+    // }
+
+		return new Response(JSON.stringify(symptoms));
 	} catch (err) {
 		console.error(`Error retriving symptom: ${err.message}`);
 		return new Response(err.message);
