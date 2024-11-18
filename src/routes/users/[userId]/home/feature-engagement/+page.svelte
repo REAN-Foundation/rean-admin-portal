@@ -12,8 +12,9 @@
     let healthJourneyWiseCompletedTask =
         data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask;
     let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall;
+    let patientTaskMetrics = data.statistics.PatientTaskMetrics ?? {};
 
-    console.log('overallHealthJourneyTaskData', overallHealthJourneyTaskData);
+    console.log('patientTaskMetrics', patientTaskMetrics);
 
     healthJourneyWiseTask = healthJourneyWiseTask.map((task) => {
         const completedTask = healthJourneyWiseCompletedTask.find(
@@ -135,6 +136,7 @@
     }
 
     $: currentMetrics = featureMetrics[activeFeature] || {};
+
 </script>
 
 <div class="flex mt-4 gap-4">
@@ -158,6 +160,7 @@
             {medicationManagementdata}
             {healthJourneyWiseTask}
             {overallHealthJourneyTaskData}
+            {patientTaskMetrics}
         />
     {/if}
 {/key}

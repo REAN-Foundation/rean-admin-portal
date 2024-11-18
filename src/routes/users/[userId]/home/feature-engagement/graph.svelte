@@ -14,6 +14,8 @@
     export let medicationManagementdata;
     export let healthJourneyWiseTask;
     export let overallHealthJourneyTaskData;
+    export let patientTaskMetrics;
+ 
     let selectedGraph = 'graph1';
     let percentageGraph = 'graph1';
 
@@ -29,19 +31,37 @@
     ];
 
     let selectedPlanCode = 'Overall';
+    let selectedTaskCategory = 'Overall';
     let healthJourneyMetricsData;
-    let healthJourneyMetricsLabels = ['Completed', 'Not Completed'];
+    let taskCategoriesData;
+    let taskMetricsLabels = ['Completed', 'Not Completed'];
+    let categorySpecificData = patientTaskMetrics.CategorySpecific;
+
     let overallCompletedTasks = overallHealthJourneyTaskData.health_journey_completed_task_count;
     let overallNotCompletedTasks = overallHealthJourneyTaskData.health_journey_task_count - overallCompletedTasks;
+    let overallCompletedTasksCategory = patientTaskMetrics.Overall.patient_completed_task_count;
+    let overallNotCompletedTasksCategory = patientTaskMetrics.Overall.patient_task_count - overallCompletedTasksCategory;
 
-    let planCodes = ['Overall', ...new Set(healthJourneyWiseTask.map((item) => item.PlanCode))];
 
-    console.log('Plan Codes', planCodes);
 
-    function calculateSelectedHealthJourneyData(planCode) {
+    let planCodes = ['Overall', ...new Set(healthJourneyWiseTask?.map((item) => item.PlanCode))];
+    let taskCategories = ['Overall', ...new Set(patientTaskMetrics?.CategorySpecific?.map((item) => item.task_category))];
+
+    function getSelectedHealthJourneyData(planCode) {
         const taskData = healthJourneyWiseTask.find((item) => item.PlanCode === planCode);
         const completedCount = taskData?.careplan_completed_task_count || 0;
         const totalTaskCount = taskData?.careplan_task_count || 0;
+
+        return {
+            completed: completedCount,
+            notCompleted: totalTaskCount - completedCount
+        };
+    }
+
+    function getSelectedTaskCategoryData(taskCategory) {
+        const taskData = categorySpecificData.find((item) => item.task_category === taskCategory);
+        const completedCount = taskData?.patient_completed_task_count || 0;
+        const totalTaskCount = taskData?.task_count || 0;
 
         return {
             completed: completedCount,
@@ -57,14 +77,31 @@
                 notCompleted: overallNotCompletedTasks
             };
         } else {
-            stats = calculateSelectedHealthJourneyData(selectedPlanCode);
+            stats = getSelectedHealthJourneyData(selectedPlanCode);
         }
 
         healthJourneyMetricsData = [stats.completed, stats.notCompleted];
         console.log('Health Journey Metrics Data', healthJourneyMetricsData);
     }
 
+    function updateTaskCategoryData() {
+        let stats;
+        if (selectedTaskCategory === 'Overall') {
+            stats = {
+                completed: overallCompletedTasksCategory,
+                notCompleted: overallNotCompletedTasksCategory
+            };
+        } else {
+            stats = getSelectedTaskCategoryData(selectedTaskCategory);
+        }
+
+        taskCategoriesData = [stats.completed, stats.notCompleted];
+        console.log('Task Category Metrics Data', taskCategoriesData);
+    }
+
     $: updateHealthJourneyData();
+    $: updateTaskCategoryData();
+
 </script>
 
 <div class="flex flex-col justify-center">
@@ -379,7 +416,90 @@
                             {#if healthJourneyMetricsData.length > 0}
                                 <PieChart
                                     data={healthJourneyMetricsData}
-                                    labels={healthJourneyMetricsLabels}
+                                    labels={taskMetricsLabels}
+                                    title=""
+                                    showLegendData={true}
+                                />
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="flex overflow-x-auto justify-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="justify-left items-center flex py-3 text-lg sm:pl-3 flex-col">
+                        {#if dropOffPointsData && dropOffPointsLabels}
+                            <p class="font-semibold">DropOff Points</p>
+                            <p class="text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                                Points in the user flow where users most frequently stop using a feature. Identifying
+                                drop-off points helps in optimizing the user journey and addressing usability challenges
+                                to improve feature completion rates.
+                            </p>
+                        {:else}
+                            DropOff Points (%) (Data not available)
+                        {/if}
+                    </div>
+                    {#if dropOffPointsData && dropOffPointsLabels}
+                        <table
+                            class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Action</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Count</th>
+                                </tr>
+                            </thead>
+                            <tbody class="justify-center">
+                                {#each sortedData as { value, label }}
+                                    <tr>
+                                        <td class="py-2 px-4 border-b border-gray-200">{label}</td>
+                                        <td class="py-2 px-4 border-b border-gray-200">{value}</td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    {:else}
+                        <div class=" w-full p-4">
+                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {:else if feature === 'User Tasks'}
+        <div class="flex justify-center h-full items-stretch gap-10 w-full mt-10">
+            <div
+                class="flex overflow-x-auto justify-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mx-4 justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                            Patient Task Metrics
+                        </h4>
+                        <div class="h-fit w-full">
+                            <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                                This shows the completion rate of patient tasks, comparing completed tasks and
+                                created tasks for both overall and individual task category.
+                            </p>
+                        </div>
+                        <div class="flex w-full justify-end 0">
+                            <select
+                                class="select pl-2 mb-2 w-fit border border-secondary-100 dark:border-surface-700 rounded-lg"
+                                bind:value={selectedTaskCategory}
+                                on:change={updateTaskCategoryData}
+                            >
+                                {#each taskCategories as taskCategory}
+                                    <option value={taskCategory}>{taskCategory}</option>
+                                {/each}
+                            </select>
+                        </div>
+                        <div class="justify-center pb-6">
+                            {#if taskCategoriesData.length > 0}
+                                <PieChart
+                                    data={taskCategoriesData}
+                                    labels={taskMetricsLabels}
                                     title=""
                                     showLegendData={true}
                                 />
@@ -432,6 +552,7 @@
             </div>
         </div>
     {:else}
+    
         <div class="mt-10 flex justify-center items-center h-full gap-10 w-full">
             <div
                 class="flex flex-col overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
