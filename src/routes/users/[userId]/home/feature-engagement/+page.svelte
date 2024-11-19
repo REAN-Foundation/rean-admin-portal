@@ -7,28 +7,24 @@
 
     export let data;
 
-    let medicationManagementdata = data.statistics.MedicationManagementMetrics[0];
-    let healthJourneyWiseTask = data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseTask;
+    let medicationManagementdata = data.statistics.MedicationManagementMetrics?.[0] ?? {};
+    let healthJourneyWiseTask = data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseTask ?? [];
     let healthJourneyWiseCompletedTask =
-        data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask;
-    let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall;
+        data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask ?? [];
+    let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall ?? {};
     let patientTaskMetrics = data.statistics.PatientTaskMetrics ?? {};
 
-    console.log('patientTaskMetrics', patientTaskMetrics);
+    console.log('medicationManagementdata', medicationManagementdata);
 
-    healthJourneyWiseTask = healthJourneyWiseTask.map((task) => {
-        const completedTask = healthJourneyWiseCompletedTask.find(
-            (completed) => completed.careplan_code === task.PlanCode
+    healthJourneyWiseTask = (healthJourneyWiseTask ?? []).map((task) => {
+        const completedTask = (healthJourneyWiseCompletedTask ?? []).find(
+            (completed) => completed?.careplan_code === task?.PlanCode
         );
-
-        const completedCount = completedTask?.careplan_completed_task_count || 0;
-        const totalTaskCount = task.careplan_task_count;
-
-        const notCompletedCount = totalTaskCount - completedCount;
-
+        const completedCount = completedTask?.careplan_completed_task_count ?? 0;
+        const totalTaskCount = task?.careplan_task_count ?? 0;
+        const notCompletedCount = Math.max(totalTaskCount - completedCount, 0);
         task.careplan_completed_task_count = completedCount;
         task.careplan_not_completed_task_count = notCompletedCount;
-
         return task;
     });
 
