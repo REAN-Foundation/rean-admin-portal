@@ -190,4 +190,21 @@ export class Helper {
     public static replaceAll = (str: string, find: string, replace: string): string => {
         return str.replace(new RegExp(find, 'g'), replace);
     };
+
+    public static formatNames = (dataArray) => {
+        return dataArray.map(item => {
+            const formattedName = item.vital_name
+                .split('-')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+            return formattedName;
+        });
+    }
+
+    public static standardizeVitalName = (name: string) => {
+        return name
+            .toLowerCase()
+            .replace(/-/g, ' ') 
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+    }
 }

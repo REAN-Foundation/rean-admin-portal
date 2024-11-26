@@ -13,8 +13,7 @@
         data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask ?? [];
     let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall ?? {};
     let patientTaskMetrics = data.statistics.PatientTaskMetrics ?? {};
-
-    console.log('medicationManagementdata', medicationManagementdata);
+    let vitalMetrics = data.statistics.VitalMetrics ?? [];
 
     healthJourneyWiseTask = (healthJourneyWiseTask ?? []).map((task) => {
         const completedTask = (healthJourneyWiseCompletedTask ?? []).find(
@@ -157,6 +156,7 @@
             {healthJourneyWiseTask}
             {overallHealthJourneyTaskData}
             {patientTaskMetrics}
+            {vitalMetrics}
         />
     {/if}
 {/key}

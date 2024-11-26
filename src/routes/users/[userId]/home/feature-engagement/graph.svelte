@@ -2,6 +2,7 @@
     import BarChart from '$lib/components/analytics/BarChart.svelte';
     import PieChart from '$lib/components/analytics/PieChart.svelte';
     import RetentionGraphs from '$lib/components/analytics/RetentionGraphs.svelte';
+    import { Helper } from '$lib/utils/helper';
 
     /////////////////////////////////////////////////
 
@@ -15,15 +16,17 @@
     export let healthJourneyWiseTask;
     export let overallHealthJourneyTaskData ;
     export let patientTaskMetrics;
+    export let vitalMetrics;
  
     let selectedGraph = 'graph1';
     let percentageGraph = 'graph1';
     let selectedPlanCode = 'Overall';
     let selectedTaskCategory = 'Overall';
+    let selectedVitalName = 'Blood Pressure'
     let healthJourneyMetricsData = [];
     let taskCategoriesData = [];
+    let vitalMetricsData = [];
     let hasMedicationManagementData = Object.keys(medicationManagementdata).length > 0;
-    console.log('healthJourneyWiseTask',healthJourneyWiseTask);
 
     $: sortedData = dropOffPointsData
         .map((value, index) => ({ value, label: dropOffPointsLabels[index] }))
@@ -35,7 +38,9 @@
         medicationManagementdata?.medication_missed_count || 0,
         medicationManagementdata?.medication_not_answered_count || 0
     ];
+
     let taskMetricsLabels = ['Completed', 'Not Completed'];
+    let vitalLabels = ['Manual Entry Count', 'Device Entry Count'];
     let categorySpecificData = patientTaskMetrics?.CategorySpecific ?? [];
     let overallCompletedTasks = overallHealthJourneyTaskData?.health_journey_completed_task_count ?? 0;
     let overallNotCompletedTasks = (overallHealthJourneyTaskData?.health_journey_task_count ?? 0) - overallCompletedTasks;
@@ -44,7 +49,10 @@
     let planCodes = ['Overall', ...(healthJourneyWiseTask?.length ? new Set(healthJourneyWiseTask.map((item) => item.PlanCode)) : [])];
     let taskCategories = ['Overall', ...(patientTaskMetrics?.CategorySpecific?.length ? new Set(patientTaskMetrics.CategorySpecific.map((item) => item.task_category)) : [])];
 
-    function getSelectedHealthJourneyData(planCode) {
+    let vitalNames = vitalMetrics.map(item => item.vital_name);
+    let standardizedVitalNames = vitalNames.map(name => Helper.standardizeVitalName(name));
+
+    function getSelectedHealthJourneyData(planCode: string) {
         const taskData = healthJourneyWiseTask?.find((item) => item?.PlanCode === planCode) ?? {};
         const completedCount = taskData?.careplan_completed_task_count ?? 0;
         const totalTaskCount = taskData?.careplan_task_count ?? 0;
@@ -55,7 +63,7 @@
         };
     }
 
-    function getSelectedTaskCategoryData(taskCategory) {
+    function getSelectedTaskCategoryData(taskCategory: string) {
         const taskData = categorySpecificData?.find((item) => item?.task_category === taskCategory) ?? {};
         const completedCount = taskData?.patient_completed_task_count ?? 0;
         const totalTaskCount = taskData?.task_count ?? 0;
@@ -63,6 +71,29 @@
         return {
             completed: completedCount,
             notCompleted: Math.max(totalTaskCount - completedCount, 0)
+        };
+    }
+
+    function getSelectedVitalsData(vitalName: string) {
+        let standardizedVitalName = Helper.standardizeVitalName(vitalName);
+        console.log('standardizedVitalName',standardizedVitalName);
+        if (!vitalMetrics || !Array.isArray(vitalMetrics)) {
+            console.log('vitalMetricsData is invalid or not an array');
+            return {
+                ManualEntryCount: 0,
+                DeviceEntryCount: 0
+            };
+        }
+
+        const vitalData = vitalMetrics?.find((item) => {
+            const itemVitalName = item.vital_name ?? ''; 
+            return Helper.standardizeVitalName(itemVitalName) === standardizedVitalName;
+        }) ?? {};
+        const manualEntryCount = vitalData.manual_entry_add_event_count ?? 0;
+        const deviceEntryCount = vitalData.device_entry_add_event_count ?? 0;
+        return {
+            ManualEntryCount: manualEntryCount,
+            DeviceEntryCount: deviceEntryCount
         };
     }
 
@@ -96,8 +127,15 @@
         console.log('Task Category Metrics Data', taskCategoriesData);
     }
 
+    function updateVitalsData() {
+        let stats;
+        stats = getSelectedVitalsData(selectedVitalName);
+        vitalMetricsData = [stats.ManualEntryCount, stats.DeviceEntryCount];
+    }
+
     $: updateHealthJourneyData();
     $: updateTaskCategoryData();
+    $: updateVitalsData();
 
 </script>
 
@@ -534,8 +572,96 @@
                 </div>
             </div>
         </div>
+    {:else if feature === 'Vitals'}
+        <div class="flex justify-center h-full items-stretch gap-10 w-full mt-10">
+            <div
+                class="flex overflow-x-auto justify-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="flex items-center flex-col">
+                        <h4 class="mx-4 justify-center py-1 pt-3 text-lg font-semibold sm:pl-3">
+                           Vitals Task Metrics
+                        </h4>
+                        <div class="h-fit w-full">
+                            <p class="mx-2 text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                                This shows the addition rate of vital metrics, comparing the total events logged for each vital metric and their breakdown into manual entries and device-based entries.
+                            </p>
+                        </div>
+                        {#if vitalMetricsData?.length > 0 && vitalNames?.length > 0}
+                            <div class="flex w-full justify-end 0">
+                            
+                                <select
+                                    class="select pl-2 mb-2 w-fit border border-secondary-100 dark:border-surface-700 rounded-lg"
+                                    bind:value={selectedVitalName}
+                                    on:change={updateVitalsData}
+                                >
+                                    {#each standardizedVitalNames as vitalName}
+                                        <option value={vitalName}>{vitalName}</option>
+                                    {/each}
+                                </select>
+                            </div>
+                            <div class="justify-center pb-6">
+                                <PieChart
+                                    data={vitalMetricsData}
+                                    labels={vitalLabels}
+                                    title=""
+                                    showLegendData={true}
+                                />
+                            
+                            </div>
+                        {:else}
+                            <div class="h-96 w-full flex pl-10 justify-center font-semibold">
+                                Data not available
+                            </div>
+                        {/if}
+                    </div>
+                   
+                </div>
+            </div>
+            <div
+                class="flex overflow-x-auto justify-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="justify-left items-center flex py-3 text-lg sm:pl-3 flex-col">
+                        {#if dropOffPointsData && dropOffPointsLabels}
+                            <p class="font-semibold">DropOff Points</p>
+                            <p class="text-left justify-left my-2 pb-1 text-sm sm:pl-3">
+                                Points in the user flow where users most frequently stop using a feature. Identifying
+                                drop-off points helps in optimizing the user journey and addressing usability challenges
+                                to improve feature completion rates.
+                            </p>
+                        {:else}
+                            DropOff Points (%) (Data not available)
+                        {/if}
+                    </div>
+                    {#if dropOffPointsData && dropOffPointsLabels}
+                        <table
+                            class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
+                        >
+                            <thead>
+                                <tr>
+                                    <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Action</th>
+                                    <th class="py-2 px-4 border-b border-gray-200 font-semibold text-left">Count</th>
+                                </tr>
+                            </thead>
+                            <tbody class="justify-center">
+                                {#each sortedData as { value, label }}
+                                    <tr>
+                                        <td class="py-2 px-4 border-b border-gray-200">{label}</td>
+                                        <td class="py-2 px-4 border-b border-gray-200">{value}</td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    {:else}
+                        <div class=" w-full p-4">
+                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
     {:else}
-    
         <div class="mt-10 flex justify-center items-center h-full gap-10 w-full">
             <div
                 class="flex flex-col overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
