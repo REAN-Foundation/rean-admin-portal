@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Tooltip from '$lib/components/tooltip.svelte';
     import { Helper } from '$lib/utils/helper';
 
     ///////////////////////////////////////////////////////////////////////////
@@ -173,7 +174,12 @@
                                                     class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
                                                 >
                                                     <!-- {row.node_title} -->
-                                                    {Helper.truncateText(row.node_title, 50)}
+                                                    <!-- {Helper.truncateText(row.node_title, 50)} -->
+                                                    <Tooltip text={row.node_title || 'Not specified'}>
+                                                        <span class="cursor-pointer">
+                                                            {row.node_title !== null ? Helper.truncateText(row.node_title, 40) : 'Not specified'}
+                                                        </span>
+                                                    </Tooltip>
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
@@ -183,8 +189,13 @@
                                                 <td
                                                     class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
                                                 >
-                                                    {Helper.truncateText(row.response_option_text, 40)}
+                                                    <!-- {Helper.truncateText(row.response_option_text, 40)} -->
                                                     <!-- {row.response_option_text} -->
+                                                    <Tooltip text={row.response_option_text || 'Not specified'}>
+                                                        <span class="cursor-pointer">
+                                                            {row.response_option_text !== null ? Helper.truncateText(row.response_option_text, 40) : 'Not specified'}
+                                                        </span>
+                                                    </Tooltip>
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
