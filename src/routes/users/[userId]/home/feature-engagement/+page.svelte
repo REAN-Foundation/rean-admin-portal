@@ -2,7 +2,7 @@
     import Graph from './graph.svelte';
     import { onMount } from 'svelte';
     import { formatMonth, generateMonthSequence } from '../analytics-overview/components/functions';
-
+    import AssessmentMetrics from './assessment.metrics.svelte';
     // //////////////////////////////////////////////////////////////////////////////////////////////
 
     export let data;
@@ -14,6 +14,7 @@
     let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall ?? {};
     let patientTaskMetrics = data.statistics.PatientTaskMetrics ?? {};
     let vitalMetrics = data.statistics.VitalMetrics ?? [];
+    let assessmentMetrics = data.statistics.AssessmentMetrics ?? {};
 
     healthJourneyWiseTask = (healthJourneyWiseTask ?? []).map((task) => {
         const completedTask = (healthJourneyWiseCompletedTask ?? []).find(
@@ -28,7 +29,7 @@
     });
 
     let activeFeature: string = 'Login Session';
-    const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks'];
+    const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks', 'Assessment'];
 
     const metricTypes = [
         'AccessFrequency',
@@ -148,15 +149,19 @@
 </div>
 
 {#key activeFeature}
-    {#if Object.keys(currentMetrics).length > 0}
-        <Graph
-            feature={activeFeature}
-            {...currentMetrics}
-            {medicationManagementdata}
-            {healthJourneyWiseTask}
-            {overallHealthJourneyTaskData}
-            {patientTaskMetrics}
-            {vitalMetrics}
-        />
+    {#if activeFeature === 'Assessment'}
+    <AssessmentMetrics {assessmentMetrics} />
+    {:else}
+        {#if Object.keys(currentMetrics).length > 0}
+            <Graph
+                feature={activeFeature}
+                {...currentMetrics}
+                {medicationManagementdata}
+                {healthJourneyWiseTask}
+                {overallHealthJourneyTaskData}
+                {patientTaskMetrics}
+                {vitalMetrics}
+            />
+        {/if}
     {/if}
 {/key}
