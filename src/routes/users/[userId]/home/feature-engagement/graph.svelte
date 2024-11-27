@@ -76,15 +76,12 @@
 
     function getSelectedVitalsData(vitalName: string) {
         let standardizedVitalName = Helper.standardizeVitalName(vitalName);
-        console.log('standardizedVitalName',standardizedVitalName);
         if (!vitalMetrics || !Array.isArray(vitalMetrics)) {
-            console.log('vitalMetricsData is invalid or not an array');
             return {
                 ManualEntryCount: 0,
                 DeviceEntryCount: 0
             };
         }
-
         const vitalData = vitalMetrics?.find((item) => {
             const itemVitalName = item.vital_name ?? ''; 
             return Helper.standardizeVitalName(itemVitalName) === standardizedVitalName;
