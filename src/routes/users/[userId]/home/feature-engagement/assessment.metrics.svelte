@@ -56,13 +56,17 @@
     >
         <div class="w-full">
             <div class="flex flex-col items-center justify-between py-4">
-                <h4 class="text-lg font-semibold text-center flex-grow">Careplan Metrics</h4>
-
+                <h4 class="text-lg font-semibold text-center flex-grow">Careplan Assessment Metrics</h4>
+                <div class="h-fit w-full">
+                    <p class="mx-2 text-center justify-center pb-5 text-sm sm:pl-3">
+                        It shows the count of users who completed or are in progress with assessments, segmented by care plan code.
+                    </p>
+                </div>
                 <div class="flex items-center ml-auto">
-                    <label
+                    <!-- <label
                         for="select-Plan"
                         class="mr-2">Select</label
-                    >
+                    > -->
                     <select
                         id="select-Plan"
                         bind:value={selectedCode}
@@ -112,7 +116,7 @@
                                     colspan={assessmentTableHeaders.length}
                                     class="text-center py-4 text-sm text-gray-500"
                                 >
-                                    No data available for the selected title.
+                                   Data not available for the selected title.
                                 </td>
                             </tr>
                         {/if}
@@ -130,12 +134,16 @@
         <div class="w-full">
             <div class="flex flex-col items-center justify-between py-4">
                 <h4 class="text-lg font-semibold text-center flex-grow">Assessment Metrics</h4>
-
-                <div class="flex items-center ml-auto mt-3">
-                    <label
+                <div class="h-fit w-full">
+                    <p class="mx-2 text-center justify-center pb-5 text-sm sm:pl-3">
+                        Analyzes user responses to identify trends and patterns for each assessment question.
+                    </p>
+                </div>
+                <div class="flex items-center ml-auto mb-2">
+                    <!-- <label
                         for="select-Plan"
                         class="mr-2">Select Assessment</label
-                    >
+                    > -->
                     <select
                         id="select-Plan"
                         bind:value={selectedAssessment}
@@ -150,7 +158,7 @@
             </div>
             <div class="px-2 sm:px-6 lg:px-8 col-span-2 items-center justify-center pb-8">
                 <div class="flow-root">
-                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8 mt-4">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full align-middle sm:px-6 lg:px-8">
                             <table class="min-w-full border border-secondary-100 dark:border-surface-700 rounded-lg">
                                 <thead>
@@ -210,7 +218,7 @@
                                                 colspan={assessmentTableHeaders.length}
                                                 class="text-center py-4 text-sm text-gray-500"
                                             >
-                                                No data available for the selected title.
+                                               Data not available for the selected title.
                                             </td>
                                         </tr>
                                     {/if}
