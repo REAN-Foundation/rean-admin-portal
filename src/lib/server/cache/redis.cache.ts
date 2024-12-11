@@ -1,3 +1,4 @@
+import { CACHE_HOST, CACHE_PASSWORD } from "$env/static/private";
 import { type ICache } from "./cache.interface";
 import { createClient, type RedisClientType } from 'redis';
 
@@ -36,17 +37,19 @@ export class RedisCache implements ICache {
 
     constructor() {
         // Create a client and connect to KeyDB
-        var port = process.env.CACHE_PORT ? parseInt(process.env.CACHE_PORT) : 6379;
-        this._client = createClient({
-            socket: {
-                host: process.env.CACHE_HOST || 'localhost',
-                port: port,
-            },
-            password: process.env.CACHE_PASSWORD // if authentication is required
-        });
-        (async () => {
-            if (this._client) await this._client.connect();
-        })();
+        try {
+            this._client = createClient({
+                url: CACHE_HOST,
+                password: CACHE_PASSWORD
+            });
+            (async () => {
+                if (this._client) await this._client.connect();
+                console.log('Connected to Redis.');
+            })();
+            
+        } catch (error) {
+            console.log('Error in connected to Redis.', error);
+        }
     }
 
     set = async (key: string, value: any): Promise<void> => {
