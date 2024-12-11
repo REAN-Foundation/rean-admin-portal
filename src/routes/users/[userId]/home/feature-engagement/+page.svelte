@@ -135,7 +135,8 @@
 
 </script>
 
-<div class="flex mt-4 gap-4">
+<!-- <div class="mt-4 mr-2 sm:mr-8 flex flex-wrap gap-2 sm:gap-4 justify-center md:justify-start"> -->
+<div class="mt-4 lg:flex grid gap-2 sm:gap-4 grid-cols-1 lg:gap-2 sm:grid-cols-2 md:grid-cols-3">
     {#each features as feature}
         <button
             on:click={() => setActiveFeature(feature)}

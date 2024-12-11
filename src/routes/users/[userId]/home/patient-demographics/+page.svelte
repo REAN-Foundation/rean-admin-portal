@@ -3,19 +3,19 @@
     ///////////////////////////////////////////////////////////////////////////////////////////
     export let data;
 
-    const ageGroup = data.statistics.BasicStatistics.PatientDemographics.AgeGroups;
-    const genderGroups = data.statistics.BasicStatistics.PatientDemographics.GenderGroups;
-    const locationGroups = data.statistics.BasicStatistics.PatientDemographics.LocationGroups;
-    const ethinicityGroups = data.statistics.BasicStatistics.PatientDemographics.EthnicityGroups;
-    const raceGroups = data.statistics.BasicStatistics.PatientDemographics.RaceGroups;
-    const healthSystemsDistribution = data.statistics.BasicStatistics.PatientDemographics.HealthSystemDistribution;
-    const hospitalDistribution = data.statistics.BasicStatistics.PatientDemographics.HospitalDistribution;
+    const ageGroup = data.basicStatistics.PatientDemographics.AgeGroups;
+    const genderGroups = data.basicStatistics.PatientDemographics.GenderGroups;
+    const locationGroups = data.basicStatistics.PatientDemographics.LocationGroups;
+    const ethinicityGroups = data.basicStatistics.PatientDemographics.EthnicityGroups;
+    const raceGroups = data.basicStatistics.PatientDemographics.RaceGroups;
+    const healthSystemsDistribution = data.basicStatistics.PatientDemographics.HealthSystemDistribution;
+    const hospitalDistribution = data.basicStatistics.PatientDemographics.HospitalDistribution;
     const survivorOrCaregiverDistribution =
-        data.statistics.BasicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution;
+        data.basicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution;
 
-    //     if (data.statistics.BasicStatistics.PatientDemographics) {
-    //     if (data.statistics.BasicStatistics.PatientDemographics.AgeGroups) {
-    //         ageGroup = data.statistics.BasicStatistics.PatientDemographics.AgeGroups.map((x) => x.count);
+    //     if (data.basicStatistics.PatientDemographics) {
+    //     if (data.basicStatistics.PatientDemographics.AgeGroups) {
+    //         ageGroup = data.basicStatistics.PatientDemographics.AgeGroups.map((x) => x.count);
     //     }
     // }
     let ageGroupData, ageGroupLabels;
@@ -27,54 +27,54 @@
     let hospitalGroupData, hospitalGroupLabels;
     let survivorCareGiverGroupData, survivorCareGiverGroupLabels;
 
-    if (data.statistics.BasicStatistics.PatientDemographics) {
-        if (data.statistics.BasicStatistics.PatientDemographics.AgeGroups) {
-            ageGroupData = data.statistics.BasicStatistics.PatientDemographics.AgeGroups.map((x) => x.count);
-            ageGroupLabels = data.statistics.BasicStatistics.PatientDemographics.AgeGroups.map((x) => {
+    if (data.basicStatistics.PatientDemographics) {
+        if (data.basicStatistics.PatientDemographics.AgeGroups) {
+            ageGroupData = data.basicStatistics.PatientDemographics.AgeGroups.map((x) => x.count);
+            ageGroupLabels = data.basicStatistics.PatientDemographics.AgeGroups.map((x) => {
                 const label = x.age_group;
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.GenderGroups) {
-            genderGroupData = data.statistics.BasicStatistics.PatientDemographics.GenderGroups.map((x) => x.count);
-            genderGroupLabels = data.statistics.BasicStatistics.PatientDemographics.GenderGroups.map((x) => {
+        if (data.basicStatistics.PatientDemographics.GenderGroups) {
+            genderGroupData = data.basicStatistics.PatientDemographics.GenderGroups.map((x) => x.count);
+            genderGroupLabels = data.basicStatistics.PatientDemographics.GenderGroups.map((x) => {
                 const label = x.gender;
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.LocationGroups) {
-            locationGroupData = data.statistics.BasicStatistics.PatientDemographics.LocationGroups.map((x) => x.count);
-            locationGroupLabels = data.statistics.BasicStatistics.PatientDemographics.LocationGroups.map((x) => {
+        if (data.basicStatistics.PatientDemographics.LocationGroups) {
+            locationGroupData = data.basicStatistics.PatientDemographics.LocationGroups.map((x) => x.count);
+            locationGroupLabels = data.basicStatistics.PatientDemographics.LocationGroups.map((x) => {
                 const label = x.location;
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.EthnicityGroups) {
-            ethnicityGroupData = data.statistics.BasicStatistics.PatientDemographics.EthnicityGroups.map(
+        if (data.basicStatistics.PatientDemographics.EthnicityGroups) {
+            ethnicityGroupData = data.basicStatistics.PatientDemographics.EthnicityGroups.map(
                 (x) => x.count
             );
-            ethnicityGroupLabels = data.statistics.BasicStatistics.PatientDemographics.EthnicityGroups.map((x) => {
+            ethnicityGroupLabels = data.basicStatistics.PatientDemographics.EthnicityGroups.map((x) => {
                 const label = x.ethnicity;
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.RaceGroups) {
-            raceGroupData = data.statistics.BasicStatistics.PatientDemographics.RaceGroups.map((x) => x.count);
-            raceGroupLabels = data.statistics.BasicStatistics.PatientDemographics.RaceGroups.map((x) => {
+        if (data.basicStatistics.PatientDemographics.RaceGroups) {
+            raceGroupData = data.basicStatistics.PatientDemographics.RaceGroups.map((x) => x.count);
+            raceGroupLabels = data.basicStatistics.PatientDemographics.RaceGroups.map((x) => {
                 const label = x.race;
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.HealthSystemDistribution) {
-            healthSystemGroupData = data.statistics.BasicStatistics.PatientDemographics.HealthSystemDistribution.map(
+        if (data.basicStatistics.PatientDemographics.HealthSystemDistribution) {
+            healthSystemGroupData = data.basicStatistics.PatientDemographics.HealthSystemDistribution.map(
                 (x) => x.count
             );
-            healthSystemGroupLabels = data.statistics.BasicStatistics.PatientDemographics.HealthSystemDistribution.map(
+            healthSystemGroupLabels = data.basicStatistics.PatientDemographics.HealthSystemDistribution.map(
                 (x) => {
                     const label = x.health_system;
                     return label ? label : 'Unknown';
@@ -82,21 +82,21 @@
             );
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.HospitalDistribution) {
-            hospitalGroupData = data.statistics.BasicStatistics.PatientDemographics.HospitalDistribution.map(
+        if (data.basicStatistics.PatientDemographics.HospitalDistribution) {
+            hospitalGroupData = data.basicStatistics.PatientDemographics.HospitalDistribution.map(
                 (x) => x.count
             );
-            hospitalGroupLabels = data.statistics.BasicStatistics.PatientDemographics.HospitalDistribution.map((x) => {
+            hospitalGroupLabels = data.basicStatistics.PatientDemographics.HospitalDistribution.map((x) => {
                 const label = x.hospital;
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution) {
+        if (data.basicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution) {
             survivorCareGiverGroupData =
-                data.statistics.BasicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution.map((x) => x.count);
+                data.basicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution.map((x) => x.count);
             survivorCareGiverGroupLabels =
-                data.statistics.BasicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution.map((x) => {
+                data.basicStatistics.PatientDemographics.SurvivorOrCareGiverDistribution.map((x) => {
                     const label = x.caregiver_status;
                     // Check if the label is "Yes" or "No", and assign accordingly
                     if (label === 'No') {

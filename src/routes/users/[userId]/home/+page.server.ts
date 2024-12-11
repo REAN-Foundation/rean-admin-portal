@@ -1,9 +1,11 @@
 import type { PageServerLoad } from './$types';
 import { error, type RequestEvent } from '@sveltejs/kit';
 import { getDailyStatistics, getDailyTenantStatistics } from "../../../api/services/reancare/statistics"
+import { TimeHelper } from '$lib/utils/time.helper';
+import { DateStringFormat } from '$lib/types/time.types';
+import { getUserAnalytics } from '$routes/api/services/user-analytics/user-analytics';
 
 //////////////////////////////////////////////////////////////////////////
-
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
@@ -35,6 +37,9 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     const deviceDetailsStats = response.Data.DailyStatistics.DashboardStats.UserStatistics.DeviceDetailWiseUsers;
     const userCountByYears = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseUserCount;
     const deviceDetailsByYears = response.Data.DailyStatistics.DashboardStats.UserStatistics.YearWiseDeviceDetails;
+    const today = new Date();
+    const formattedDate = TimeHelper.getDateString(today, DateStringFormat.YYYY_MM_DD);
+    await getUserAnalytics(sessionId, formattedDate) 
 
     return {
         sessionId,

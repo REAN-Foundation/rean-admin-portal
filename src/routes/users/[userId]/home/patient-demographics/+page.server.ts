@@ -4,6 +4,8 @@ import { getUserAnalytics } from '../../../../api/services/user-analytics/user-a
 import chalk from 'chalk';
 import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage} from '$lib/utils/message.utils';
+import { TimeHelper } from '$lib/utils/time.helper';
+import { DateStringFormat } from '$lib/types/time.types';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -11,16 +13,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
     const userId = event.params.userId;
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const dd = String(today.getDate()).padStart(2, '0');
-
-    const formattedDate = `${yyyy}-${mm}-${dd}`;
+    const formattedDate = TimeHelper.getDateString(today, DateStringFormat.YYYY_MM_DD);
     const response = await getUserAnalytics(sessionId, formattedDate)
-    console.log(chalk.yellow(JSON.stringify(response)));
-    // const data = JSON.parse(await response);
-
-
     if (!response) {
         throw error(404, 'Daily user statistics data not found');
     }
@@ -31,11 +25,11 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 			);
      }
 
-
+    const basicStatistics = response.Data.BasicStatistics;
 
     return {
         sessionId,
-        statistics: response.Data,
+        basicStatistics,
         title:'Dashboard-Home-Demographics'
     };
 };

@@ -165,7 +165,7 @@
                                     <tr class="border border-secondary-100 dark:border-surface-700">
                                         {#each assessmentTableHeaders as header}
                                             <th
-                                                class="py-3 text-left text-sm font-semibold sm:pl-3 border border-secondary-100 dark:border-surface-700"
+                                                class="py-3 px-2 text-left text-sm font-semibold border border-secondary-100 dark:border-surface-700"
                                             >
                                                 {header}
                                             </th>

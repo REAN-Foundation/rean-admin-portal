@@ -1,6 +1,10 @@
 import { BACKEND_API_URL } from '$env/static/private';
 import { USER_ANALYTICS_API_URL } from '$env/static/private';
 import { API_CLIENT_INTERNAL_KEY } from '$env/static/private';
+import { CacheService } from '$lib/server/cache/cache.service';
+import { DateStringFormat } from '$lib/types/time.types';
+import { Helper } from '$lib/utils/helper';
+import { TimeHelper } from '$lib/utils/time.helper';
 import { SessionManager } from '../../sessions/session.manager';
 import { get } from './common.reancare';
 
@@ -268,12 +272,40 @@ export const getOverallUsers = async (sessionId: string, searchParams?: any) => 
 
 export const getDailyStatistics = async(sessionId:string)=>{
 	const url = BACKEND_API_URL + `/daily-stats`;
-	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+    const today = TimeHelper.getDateString(new Date(), DateStringFormat.YYYY_MM_DD);
+	const cacheKey = `session-${sessionId}:req-getDailyStatistics:${today}`;
+	const yesterday = TimeHelper.getYesterdayDate();
+    const yesterdayCacheKey = `session-${sessionId}:req-getDailyStatistics:${yesterday}`;
+
+    if (await CacheService.has(yesterdayCacheKey)) {
+        await CacheService._cache.delete(yesterdayCacheKey);
+        console.log(`Cleared old key: ${yesterdayCacheKey}`);
+    }
+    if (await CacheService.has(cacheKey)) {
+        return await CacheService.get(cacheKey);
+    }
+    const result = await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+    await CacheService.set(cacheKey, result);
+    return result;
 }
 
 export const getDailyTenantStatistics = async(sessionId:string, tenantId: string)=>{
 	const url = BACKEND_API_URL + `/daily-stats/tenants/${tenantId}`;
-	return await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+	const today = TimeHelper.getDateString(new Date(), DateStringFormat.YYYY_MM_DD);
+	const cacheKey = `session-${sessionId}:req-getDailyTenantStatistics:${today}`;
+	const yesterday = TimeHelper.getYesterdayDate();
+    const yesterdayCacheKey = `session-${sessionId}:req-getDailyTenantStatistics:${yesterday}`;
+
+    if (await CacheService.has(yesterdayCacheKey)) {
+        await CacheService._cache.delete(yesterdayCacheKey);
+        console.log(`Cleared old key: ${yesterdayCacheKey}`);
+    }
+    if (await CacheService.has(cacheKey)) {
+        return await CacheService.get(cacheKey);
+    }
+    const result = await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
+    await CacheService.set(cacheKey, result);
+    return result;
 }
 
 export const getDailySystemStatistics = async(sessionId:string)=>{

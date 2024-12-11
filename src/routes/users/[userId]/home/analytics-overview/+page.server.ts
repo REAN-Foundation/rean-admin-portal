@@ -1,9 +1,10 @@
 import { error, type RequestEvent } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getUserAnalytics } from '../../../../api/services/user-analytics/user-analytics';
-import chalk from 'chalk';
 import { redirect } from 'sveltekit-flash-message/server';
 import { errorMessage } from '$lib/utils/message.utils';
+import { TimeHelper } from '$lib/utils/time.helper';
+import { DateStringFormat } from '$lib/types/time.types';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -11,11 +12,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
     const sessionId = event.cookies.get('sessionId');
     const userId = event.params.userId;
     const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const dd = String(today.getDate()).padStart(2, '0');
-
-    const formattedDate = `${yyyy}-${mm}-${dd}`;
+    const formattedDate = TimeHelper.getDateString(today, DateStringFormat.YYYY_MM_DD);
+   
     const response = await getUserAnalytics(sessionId, formattedDate)
 
     if (!response) {
@@ -27,9 +25,11 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
             event
         );
     }
+    const basicStatistics = response.Data.BasicStatistics;
+  
     return {
         sessionId,
-        statistics: response.Data,
+        basicStatistics,
         title:'Dashboard-Home-Basic'
     };
 };
