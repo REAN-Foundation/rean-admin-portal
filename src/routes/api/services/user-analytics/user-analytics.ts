@@ -33,8 +33,7 @@ export const getUserAnalytics = async (sessionId, formattedDate) => {
     if (await CacheService.has(cacheKey)) {
         return await CacheService.get(cacheKey);
     }
-    const removedKeys = await CacheService.findAndClear([`session-${sessionId}:req-getUserAnalytics:*`]);
-    console.log(`Cleared keys: ${removedKeys.join(', ')}`);
+
     const result = await get(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
     await CacheService.set(cacheKey, result);
     return result;
