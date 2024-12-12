@@ -7,14 +7,14 @@
 
     export let data;
 
-    let medicationManagementdata = data.statistics.MedicationManagementMetrics?.[0] ?? {};
-    let healthJourneyWiseTask = data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseTask ?? [];
+    let medicationManagementdata = data.medicationManagementdata ?? {};
+    let healthJourneyWiseTask = data.healthJourneyWiseTask  ?? [];
     let healthJourneyWiseCompletedTask =
-        data.statistics.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask ?? [];
-    let overallHealthJourneyTaskData = data.statistics.HealthJourneyMetrics?.Overall ?? {};
-    let patientTaskMetrics = data.statistics.PatientTaskMetrics ?? {};
-    let vitalMetrics = data.statistics.VitalMetrics ?? [];
-    let assessmentMetrics = data.statistics.AssessmentMetrics ?? {};
+        data.healthJourneyWiseCompletedTask ?? [];
+    let overallHealthJourneyTaskData = data.overallHealthJourneyTaskData ?? {};
+    let patientTaskMetrics = data.patientTaskMetrics ?? {};
+    let vitalMetrics = data.vitalMetrics ?? [];
+    let assessmentMetrics = data.assessmentMetrics ?? {};
 
     healthJourneyWiseTask = (healthJourneyWiseTask ?? []).map((task) => {
         const completedTask = (healthJourneyWiseCompletedTask ?? []).find(
