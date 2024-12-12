@@ -25,9 +25,26 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
             event
         );
     }
+    const data = response.Data;
+    const medicationManagementdata = data.MedicationManagementMetrics?.[0] ?? {};
+    const healthJourneyWiseTask = data.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseTask ?? [];
+    const healthJourneyWiseCompletedTask =
+        data.HealthJourneyMetrics?.CareplanSpecific?.HealthJourneyWiseCompletedTask ?? [];
+    const overallHealthJourneyTaskData = data.HealthJourneyMetrics?.Overall ?? {};
+    const patientTaskMetrics = data.PatientTaskMetrics ?? {};
+    const vitalMetrics = data.VitalMetrics ?? [];
+    const assessmentMetrics = data.AssessmentMetrics ?? {};
+
     return {
         sessionId,
         statistics: response.Data,
+        medicationManagementdata,
+        healthJourneyWiseTask,
+        healthJourneyWiseCompletedTask,
+        overallHealthJourneyTaskData,
+        patientTaskMetrics,
+        vitalMetrics,
+        assessmentMetrics,
         title:'Dashboard-Home-Feature'
     };
 };
