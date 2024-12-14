@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { browser } from '$app/environment';
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
@@ -113,8 +113,8 @@
 			headers: { 'content-type': 'application/json' }
 		});
 	}
-</script>
-
+</script> -->
+<!-- 
 <BreadCrumbs crumbs={breadCrumbs} />
 
 <div class="flex flex-wrap gap-2 mt-1">
@@ -133,8 +133,8 @@
 		class="input w-auto grow"
 	/>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
-</div>
-
+</div> -->
+<!-- 
 <div class="table-container my-2 !border !border-secondary-100 dark:!border-surface-700">
 	<table class="table" role="grid">
 		<thead class="!variant-soft-secondary">
@@ -181,7 +181,7 @@
 							</a>
 						</td>
 						<td>
-							<!-- svelte-ignore missing-declaration -->
+				
 							<Confirm
 								confirmTitle="Delete"
 								cancelTitle="Cancel"
@@ -202,8 +202,8 @@
 			{/if}
 		</tbody>
 	</table>
-</div>
-
+</div> -->
+<!-- 
 <div class="w-full variant-soft-secondary rounded-lg p-2">
 	<Paginator
 		bind:settings={paginationSettings}
@@ -214,4 +214,130 @@
 		controlVariant = 'rounded-full text-primary-500 '
 		controlSeparator = 'fill-primary-400'
 		/>
-</div>
+</div> -->
+
+<script lang="ts">
+    import { enhance } from '$app/forms';
+    import { page } from '$app/stores';
+    import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
+    import { NotificationTopics, NotificationTypes } from '$lib/types/notification.topics.js';
+    import { showMessage } from '$lib/utils/message.utils';
+    import Icon from '@iconify/svelte';
+
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    export let form;
+    const userId = $page.params.userId;
+
+    const createRoute = `/users/${userId}/notifications/create`;
+    const notificationRoute = `/users/${userId}/notifications`;
+
+    const breadCrumbs = [
+        { name: 'Notifications', path: notificationRoute, home: true }
+        // { name: 'Create', path: createRoute }
+    ];
+
+</script>
+
+<BreadCrumbs crumbs={breadCrumbs} />
+
+<form
+    method="post"
+    action="?/createNotificationAction"
+    class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
+    use:enhance
+>
+    <table class="table">
+        <thead class="!variant-soft-secondary">
+            <tr>
+                <th>Send Notification</th>
+                <th class="text-end">
+                    <a
+                        href={notificationRoute}
+                        class="btn p-2 -my-2 variant-soft-secondary"
+                    >
+                        <Icon
+                            icon="material-symbols:close-rounded"
+                            class="text-lg"
+                        />
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="!bg-white dark:!bg-inherit">
+            <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td>Topic *</td>
+                <td>
+                    <select
+                        class="select w-full"
+                        name="topic"
+                        placeholder="Select topic here..."
+                    >
+                        {#each Object.entries(NotificationTopics) as [key, value]}
+                            <option
+                                value={key}
+                                selected={key === 'All_Users'}>{value}</option
+                            >
+                        {/each}
+                    </select>
+                </td>
+            </tr>
+            <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td>Title *</td>
+                <td>
+                    <input
+                        type="text"
+                        name="title"
+                        required
+                        placeholder="Enter title here..."
+                        class="input w-full {form?.errors?.title ? 'border-error-300 text-error-500' : ''}"
+                        minlength="2"
+                        maxlength="50"
+                    />
+                    {#if form?.errors?.title}
+                        <p class="text-error-500 text-xs">{form?.errors?.title[0]}</p>
+                    {/if}
+                </td>
+            </tr>
+            <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td class="align-top">Body *</td>
+                <td>
+                    <textarea
+                        name="body"
+                        placeholder="Enter body here..."
+                        class="textarea"
+                        required
+                        minlength="2"
+                        maxlength="150"
+                    />
+                </td>
+            </tr>
+            <!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Type *</td>
+				<td>
+					<select class="select w-full" name="type" placeholder="Select type here...">
+						{#each Object.entries(NotificationTypes) as [key, value]}
+							<option value={key} selected={key === 'General'}>{value}</option>
+						{/each}
+					</select>
+				</td>
+			</tr> -->
+            <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td>Url</td>
+                <td>
+                    <input
+                        type="url"
+                        name="url"
+                        class="input w-full"
+                    />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="flex p-2 justify-end">
+        <button
+            type="submit"
+            class="btn variant-filled-secondary">Submit</button
+        >
+    </div>
+</form>
