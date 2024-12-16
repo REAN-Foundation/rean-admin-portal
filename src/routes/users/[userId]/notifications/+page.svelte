@@ -218,6 +218,7 @@
 
 <script lang="ts">
     import { enhance } from '$app/forms';
+    import { afterNavigate } from '$app/navigation';
     import { page } from '$app/stores';
     import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
     import { NotificationTopics, NotificationTypes } from '$lib/types/notification.topics.js';
@@ -236,6 +237,21 @@
         { name: 'Notifications', path: notificationRoute, home: true }
         // { name: 'Create', path: createRoute }
     ];
+
+	let topic: string, title: string, body: string, url: string;
+	
+	const init = () => {
+		topic = 'All_Users';
+		title = '';
+		body = '';
+		url = '';
+	}
+
+	init();
+
+	afterNavigate(({from, to}) => {
+		init();
+	});
 
 </script>
 
@@ -272,6 +288,7 @@
                         class="select w-full"
                         name="topic"
                         placeholder="Select topic here..."
+						bind:value={topic}
                     >
                         {#each Object.entries(NotificationTopics) as [key, value]}
                             <option
@@ -289,6 +306,7 @@
                         type="text"
                         name="title"
                         required
+						bind:value={title}
                         placeholder="Enter title here..."
                         class="input w-full {form?.errors?.title ? 'border-error-300 text-error-500' : ''}"
                         minlength="2"
@@ -307,6 +325,7 @@
                         placeholder="Enter body here..."
                         class="textarea"
                         required
+						bind:value={body}
                         minlength="2"
                         maxlength="150"
                     />
@@ -329,6 +348,7 @@
                         type="url"
                         name="url"
                         class="input w-full"
+						bind:value={url}
                     />
                 </td>
             </tr>
