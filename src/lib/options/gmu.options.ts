@@ -126,7 +126,7 @@ export const Options: FeatureOptions[] = [
     },
     //..............................
     {
-        Name: 'Miscellaneous',
+        Name: 'Add-ons',
         Enabled: false
     },
     {

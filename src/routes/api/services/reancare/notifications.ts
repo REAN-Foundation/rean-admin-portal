@@ -71,3 +71,22 @@ export const deleteNotification = async (sessionId: string, notificationId: stri
 	const url = BACKEND_API_URL + `/general/notifications/${notificationId}`;
 	return await del(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };
+
+export const sendNotification = async (
+	sessionId: string,
+	topic:string,
+	title: string,
+	Body: string,
+	type: string,
+	url: string
+) => {
+	const body = {
+		Topic: topic,
+		Title: title,
+		Body: Body ? Body : null,
+		Type: type ? type : null,
+		url: url ? url : null
+	};
+	const backendUrl = BACKEND_API_URL + '/user-device-details/notificaion-topic';
+	return await post(sessionId, backendUrl, body, true, API_CLIENT_INTERNAL_KEY);
+};
