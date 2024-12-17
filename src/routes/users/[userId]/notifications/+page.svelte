@@ -342,12 +342,13 @@
 				</td>
 			</tr> -->
             <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
-                <td>Url</td>
+                <td>URL</td>
                 <td>
                     <input
                         type="url"
                         name="url"
                         class="input w-full"
+						placeholder="Enter url here..."
 						bind:value={url}
                     />
                 </td>
