@@ -147,7 +147,7 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Newsfeeds',
-        Enabled: true
+        Enabled: false
     },
     //..............................
     {
