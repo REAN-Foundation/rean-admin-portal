@@ -13,4 +13,10 @@ export class TimeHelper {
         }
         return date.toISOString().split('T')[0];
     };
+
+    static getYesterdayDate = (): string => {
+        const today = new Date();
+        today.setDate(today.getDate() - 1);
+        return TimeHelper.getDateString(today, DateStringFormat.YYYY_MM_DD);
+    };
 }

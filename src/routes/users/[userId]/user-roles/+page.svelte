@@ -10,6 +10,7 @@
     import { invalidate } from '$app/navigation';
     import { browser } from '$app/environment';
     import { SYSTEM_ID } from '$lib/constants';
+    import Tooltip from '$lib/components/tooltip.svelte';
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -182,11 +183,11 @@
                 <th data-sort="index">Id</th>
                 <th>
                     <button on:click={() => sortTable('RoleName')}>
-                        RoleName {isSortingRoleName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
+                        Name {isSortingRoleName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
                     </button>
                 </th>
                 <th>Description</th>
-                <th data-sort="isActive">isActive</th>
+                <th data-sort="isActive">Active</th>
                 <th data-sort="CreatedAt">Created Date</th>
                 <th />
                 <th />
@@ -204,8 +205,12 @@
                         <td>
                             <a href={viewRoute(row.id)}>{Helper.truncateText(row.RoleName, 20)} </a>
                         </td>
-                        <td
-                            >{row.Description !== null ? Helper.truncateText(row.Description, 40) : 'Not specified'}
+                        <td>
+                            <Tooltip text={row.Description || 'Not specified'}>
+                                <span class="cursor-pointer">
+                                    {row.Description !== null ? Helper.truncateText(row.Description, 40) : 'Not specified'}
+                                </span>
+                            </Tooltip>
                         </td>
                         <td>{row.isActive ? 'Yes' : 'No'}</td>
                         <td>{date.format(new Date(row.CreatedAt), 'DD-MMM-YYYY')}</td>

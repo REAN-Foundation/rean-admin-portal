@@ -230,7 +230,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedSymptoms.length <= 0 }
 				<tr>
-					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
+					<td colspan="7">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedSymptoms as row}

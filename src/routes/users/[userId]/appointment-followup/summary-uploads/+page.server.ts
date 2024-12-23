@@ -1,5 +1,8 @@
-import type { PageServerLoad } from "../../$types";
-import { ServerLoadEvent, error } from '@sveltejs/kit';
+// import type { PageServerLoad } from "../../$types";
+// import { ServerLoadEvent, error } from '@sveltejs/kit';
+
+import { error, type ServerLoadEvent } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     const tenantData = event.locals.sessionUser
@@ -18,7 +21,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
         console.log(data)
     return {
         AppointmentReport:{data:data,
-            tenant:'GGHN'}
+            tenant:'GGHN'},
+            title:'Appointment Followup-Status Report'
         }
     };
     if(tenantData.tenantName.includes('GMU'))
@@ -31,7 +35,8 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
         console.log(data)
         return {
             AppointmentReport:{data:data,
-                tenant:'GMU'}
+                tenant:'GMU'},
+                title:'Appointment Followup-Status Report'
             }
     }
     else{

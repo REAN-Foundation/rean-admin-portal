@@ -1,7 +1,7 @@
 import { type Session } from "./session";
 import { type ISessionCache } from "./session.cache.interface";
 import { createClient, type RedisClientType } from 'redis';
-import { SESSION_CACHE_HOST, SESSION_CACHE_PASSWORD } from "$env/static/private";
+import { CACHE_HOST, CACHE_PASSWORD } from "$env/static/private";
 
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -15,8 +15,8 @@ export class RedisCache implements ISessionCache {
         // Create a client and connect to redis 
         try {
             this._client = createClient({
-                url: SESSION_CACHE_HOST,
-                password: SESSION_CACHE_PASSWORD
+                url: CACHE_HOST,
+                password: CACHE_PASSWORD
             });
             (async () => {
                 if (this._client) await this._client.connect();

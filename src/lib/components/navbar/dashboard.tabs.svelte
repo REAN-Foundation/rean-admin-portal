@@ -108,7 +108,7 @@
       {/if}
     </div>
     {#if tenantCode === 'default'}
-    <div class="relative inline-block text-left ml-auto">
+    <div class="relative inline-block text-left ml-auto pl-2 ">
       <div>
         <button
           type="button"

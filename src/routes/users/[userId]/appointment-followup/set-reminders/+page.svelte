@@ -10,6 +10,10 @@ import type { ActionData, PageServerData } from './$types';
 import { invalidate } from '$app/navigation';
 import { date } from 'zod';
 import { derived } from 'svelte/store';
+import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
+
+//////////////////////////////////////////////////////////////////////
+
 export let data: PageServerData;
 export let form;
 
@@ -20,6 +24,9 @@ let canceledDates = [];
 let selectedDates = [];
 let startdate = '';
 let enddate = '';
+const userId = $page.params.userId;
+const setReminderRoute = `/users/${userId}/appointment-followup/set-reminders`;
+const breadCrumbs = [{ name:'Set Reminders', path: setReminderRoute }];
 
   onMount(() => {
   flatpickr("#datePicker", {
@@ -38,8 +45,6 @@ let enddate = '';
     });
   });
  
-
-
 console.log('Response Dates :', form?.data.resp);
 canceledDates =  form?.data.resp;
 
@@ -53,17 +58,8 @@ const handleSubmit = (event) => {
     event.target.submit();
   };
 </script>
-<!-- if tenant is GMU -->
 
-<!-- <svelte:head>
-	{#if userData && userData.includes('GGHN') }
-  		<!-- <title>GGHN Appointment Follow-up</title>
-  		<meta name="description" content="Appointment Upload" />
-	{:else}
-		<title>GMU Appointment Upload</title>
-	{/if}
-	  
-</svelte:head> -->
+<BreadCrumbs crumbs={breadCrumbs} />
 <body>
 
 	{#if userData && userData.includes('GGHN') }

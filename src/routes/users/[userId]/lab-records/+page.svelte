@@ -205,7 +205,7 @@
 		<tbody class="!bg-white dark:!bg-inherit">
 			{#if retrivedLabRecords.length <= 0 }
 				<tr>
-					<td colspan="6">{isLoading ? 'Loading...' : 'No records found'}</td>
+					<td colspan="8">{isLoading ? 'Loading...' : 'No records found'}</td>
 				</tr>
 			{:else}
 				{#each retrivedLabRecords as row}

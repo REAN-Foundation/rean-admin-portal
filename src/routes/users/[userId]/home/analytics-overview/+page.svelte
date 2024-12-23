@@ -15,45 +15,44 @@
     let patientDeRegistrationHistoryData;
     let usersDistributionByRoleData, usersDistributionByRoleLabels;
     let activeUsersCountAtEndOfMonthData, activeUsersCountAtEndOfMonthLabels;
-    let dereg = processPatientDeregistrationHistory(data.statistics.BasicStatistics.PatientDeregistrationHistory);
+    let dereg = processPatientDeregistrationHistory(data.basicStatistics.PatientDeregistrationHistory);
 
-
-    if (data.statistics.BasicStatistics) {
-        if (data.statistics.BasicStatistics.PatientRegistrationHistory) {
-            patientRegistrationHistoryData = data.statistics.BasicStatistics.PatientRegistrationHistory.map(
+    if (data.basicStatistics) {
+        if (data.basicStatistics.PatientRegistrationHistory) {
+            patientRegistrationHistoryData = data.basicStatistics.PatientRegistrationHistory.map(
                 (x) => x.user_count
             );
-            patientRegistrationHistoryLabels = data.statistics.BasicStatistics.PatientRegistrationHistory.map((x) => {
+            patientRegistrationHistoryLabels = data.basicStatistics.PatientRegistrationHistory.map((x) => {
                 const label = formatLabelOfMonth(x.month);
                 return label ? label : 'Unknown';
             });
         }
 
-        if (data.statistics.BasicStatistics.PatientDeregistrationHistory) {
-            patientDeRegistrationHistoryData = data.statistics.BasicStatistics.PatientDeregistrationHistory.map(
+        if (data.basicStatistics.PatientDeregistrationHistory) {
+            patientDeRegistrationHistoryData = data.basicStatistics.PatientDeregistrationHistory.map(
                 (x) => x.user_count
             );
-            // patientDeRegistrationHistoryLabels = data.statistics.BasicStatistics.PatientDeregistrationHistory.map(
+            // patientDeRegistrationHistoryLabels = data.basicStatistics.PatientDeregistrationHistory.map(
             //     (x) => {
             //         const label = formatMonthLabel(x.month);
             //         return label ? label : 'Unknown';
             //     }
             // );
         }
-        if (data.statistics.BasicStatistics.UsersDistributionByRole) {
-            usersDistributionByRoleData = data.statistics.BasicStatistics.UsersDistributionByRole.map(
+        if (data.basicStatistics.UsersDistributionByRole) {
+            usersDistributionByRoleData = data.basicStatistics.UsersDistributionByRole.map(
                 (x) => x.registration_count
             );
-            usersDistributionByRoleLabels = data.statistics.BasicStatistics.UsersDistributionByRole.map(
+            usersDistributionByRoleLabels = data.basicStatistics.UsersDistributionByRole.map(
                 (x) => x.role_name 
             );
         }
 
-        if (data.statistics.BasicStatistics.ActiveUsersCountAtEndOfMonth) {
-            activeUsersCountAtEndOfMonthData = data.statistics.BasicStatistics.ActiveUsersCountAtEndOfMonth.map(
+        if (data.basicStatistics.ActiveUsersCountAtEndOfMonth) {
+            activeUsersCountAtEndOfMonthData = data.basicStatistics.ActiveUsersCountAtEndOfMonth.map(
                 (x) => x.active_user_count
             );
-            activeUsersCountAtEndOfMonthLabels = data.statistics.BasicStatistics.ActiveUsersCountAtEndOfMonth.map(
+            activeUsersCountAtEndOfMonthLabels = data.basicStatistics.ActiveUsersCountAtEndOfMonth.map(
                 (x) => x.month_end
             );
         }
@@ -63,8 +62,8 @@
 
     let result;
     result = processPatientRegistrationHistory(
-        data.statistics.BasicStatistics.PatientRegistrationHistory,
-        data.statistics.BasicStatistics.PatientDeregistrationHistory
+        data.basicStatistics.PatientRegistrationHistory,
+        data.basicStatistics.PatientDeregistrationHistory
     );
     // onMount(() => {
     // });
@@ -91,7 +90,7 @@
                                             style="width:10%;"
                                             class="whitespace-nowrap px-3 py-2 text-sm"
                                         >
-                                            {data.statistics.TenantId || 'Default'}</td
+                                            {data.basicStatistics.TenantId || 'Default'}</td
                                         >
 
                                         <td
@@ -130,7 +129,7 @@
                                             style="width:10%;"
                                             class="whitespace-nowrap px-3 py-2 text-sm"
                                         >
-                                            {formatDate(data.statistics.StartDate)}</td
+                                            {formatDate(data.basicStatistics.StartDate)}</td
                                         >
                                         <td
                                             style="width:15%;"
@@ -147,7 +146,7 @@
                                             style="width:10%;"
                                             class="whitespace-nowrap px-3 py-2 text-sm"
                                         >
-                                            {formatDate(data.statistics.EndDate)}</td
+                                            {formatDate(data.basicStatistics.EndDate)}</td
                                         >
                                         <td
                                             style="width:15%;"
@@ -175,27 +174,6 @@
                     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="inline-block min-w-full align-middle sm:px-6 lg:px-8">
                             <table class="min-w-full">
-                                <!-- <thead>
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            class=" py-3 pl-4 pr-3 text-left text-lg font-bold  sm:pl-3"
-                                            >Basic Statistics</th
-                                        >
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            colspan="3"
-                                            class="  py-3 pl-4 pr-3 text-left text-sm font-semibold  sm:pl-3"
-                                        >
-                                            <p>
-                                                This section provides an overview of the basic analytics related to the
-                                                tenant, including the total number of users, patient statistics, and
-                                                registration/deregistration history.
-                                            </p>
-                                        </td>
-                                    </tr>
-                                </thead> -->
                                 <tbody class="rounded-lg border border-secondary-100 dark:border-surface-700">
                                     <tr
                                         class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700 rounded-lg"
@@ -209,7 +187,7 @@
                                             style="width:10%;"
                                             class="whitespace-nowrap px-3 py-2 text-sm"
                                         >
-                                            {data.statistics.BasicStatistics.TotalUsers}</td
+                                            {data.basicStatistics.TotalUsers}</td
                                         >
 
                                         <td
@@ -228,7 +206,7 @@
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap px-3 py-2 text-sm"
-                                            >{data.statistics.BasicStatistics.TotalPatients}</td
+                                            >{data.basicStatistics.TotalPatients}</td
                                         >
                                         <td
                                             style="width:15%;"
@@ -247,7 +225,7 @@
                                         <td
                                             style="width:10%;"
                                             class="whitespace-nowrap px-3 py-2 text-sm"
-                                            >{data.statistics.BasicStatistics.TotalActivePatients}</td
+                                            >{data.basicStatistics.TotalActivePatients}</td
                                         >
                                         <td
                                             style="width:15%;"
@@ -262,17 +240,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="grid grid-cols-1 overflow-x-auto justify-center rounded-lg sm:px-4 px-4 pt-4 w-full h-full bg-green-200">
-            <div class="px-10 py-2">
-                <p class="py-2 pl-4 text-left text-lg font-bold  sm:pl-3">
-                    Registration / Deregistration History
-                </p>
-                <p class="py-2 pl-4 text-left text-sm  sm:pl-3">
-                    Trends of how many users registered or deregistered from the system on a given day, in a given week
-                    or a month.
-                </p>
-            </div>
-        </div> -->
     </div>
 </div>
 <div class="grid grid-cols-1 overflow-x-auto justify-center rounded-lg sm:px-4 px-4 pt-4 w-full h-full">
@@ -315,42 +282,6 @@
                     {/if}
                 </div>
             </div>
-
-            <!-- <div
-                class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
-            >
-                <div class="w-full">
-                    <div class="flex items-center justify-center">
-                        <h4 class="mr-4 text-left justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
-                            Patient Deregistration History
-                        </h4>
-                    </div>
-                    {#if patientDeRegistrationHistoryData}
-                        <div class="h-96">
-                            <BarChart
-                                dataSource={dereg.data}
-                                labels={formattedDeregistrationLabels}
-                                title="Patient Deregistration History"
-                            />
-                        </div>
-                    {:else}
-                        <div class="h-[400px] w-full p-4">
-                            <p
-                                
-                                class="justify-center items-center flex text-2xl"
-                            >
-                                Patient Deregistration History
-                            </p>
-                            <p
-                                
-                                class="justify-center items-center flex text-xl mt-28 leading-3"
-                            >
-                                Data Not Available
-                            </p>
-                        </div>
-                    {/if}
-                </div>
-            </div> -->
         </div>
 
         <div class="flex justify-center items-center h-full gap-10 w-full">
@@ -358,17 +289,18 @@
                 class="flex overflow-x-auto justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
                 <div class="w-full">
-                    <div class="flex items-center w-full justify-center">
+                    <div class="flex flex-col items-center w-full justify-center">
                         <h4 class="mr-4 text-center justify-center py-3 ml-4 text-lg font-semibold sm:pl-3">
                             User Distribution By Roles
                         </h4>
-                    </div>
-                    {#if usersDistributionByRoleData}
-                        <div class="h-96 pl-8">
+                        {#if usersDistributionByRoleData}
+                        <div class="">
                             <PieChart
                                 data={usersDistributionByRoleData}
                                 labels={usersDistributionByRoleLabels}
-                                title="User Distribution By Roles"
+                                title=""
+                                showLegendData={true}
+
                             />
                         </div>
                     {:else}
@@ -379,6 +311,8 @@
                             </p>
                         </div>
                     {/if}
+                    </div>
+                  
                 </div>
             </div>
 

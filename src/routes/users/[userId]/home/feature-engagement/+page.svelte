@@ -2,10 +2,34 @@
     import Graph from './graph.svelte';
     import { onMount } from 'svelte';
     import { formatMonth, generateMonthSequence } from '../analytics-overview/components/functions';
+    import AssessmentMetrics from './assessment.metrics.svelte';
+    // //////////////////////////////////////////////////////////////////////////////////////////////
+
     export let data;
 
+    let medicationManagementdata = data.medicationManagementdata ?? {};
+    let healthJourneyWiseTask = data.healthJourneyWiseTask  ?? [];
+    let healthJourneyWiseCompletedTask =
+        data.healthJourneyWiseCompletedTask ?? [];
+    let overallHealthJourneyTaskData = data.overallHealthJourneyTaskData ?? {};
+    let patientTaskMetrics = data.patientTaskMetrics ?? {};
+    let vitalMetrics = data.vitalMetrics ?? [];
+    let assessmentMetrics = data.assessmentMetrics ?? {};
+
+    healthJourneyWiseTask = (healthJourneyWiseTask ?? []).map((task) => {
+        const completedTask = (healthJourneyWiseCompletedTask ?? []).find(
+            (completed) => completed?.careplan_code === task?.PlanCode
+        );
+        const completedCount = completedTask?.careplan_completed_task_count ?? 0;
+        const totalTaskCount = task?.careplan_task_count ?? 0;
+        const notCompletedCount = Math.max(totalTaskCount - completedCount, 0);
+        task.careplan_completed_task_count = completedCount;
+        task.careplan_not_completed_task_count = notCompletedCount;
+        return task;
+    });
+
     let activeFeature: string = 'Login Session';
-    const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks'];
+    const features = ['Login Session', 'Medication', 'Symptoms', 'Vitals', 'Careplan', 'User Tasks', 'Assessment'];
 
     const metricTypes = [
         'AccessFrequency',
@@ -108,9 +132,11 @@
     }
 
     $: currentMetrics = featureMetrics[activeFeature] || {};
+
 </script>
 
-<div class="flex mt-4 gap-4">
+<!-- <div class="mt-4 mr-2 sm:mr-8 flex flex-wrap gap-2 sm:gap-4 justify-center md:justify-start"> -->
+<div class="mt-4 lg:flex grid gap-2 sm:gap-4 grid-cols-1 lg:gap-2 sm:grid-cols-2 md:grid-cols-3">
     {#each features as feature}
         <button
             on:click={() => setActiveFeature(feature)}
@@ -124,7 +150,19 @@
 </div>
 
 {#key activeFeature}
-    {#if Object.keys(currentMetrics).length > 0}
-        <Graph {...currentMetrics} />
+    {#if activeFeature === 'Assessment'}
+    <AssessmentMetrics {assessmentMetrics} />
+    {:else}
+        {#if Object.keys(currentMetrics).length > 0}
+            <Graph
+                feature={activeFeature}
+                {...currentMetrics}
+                {medicationManagementdata}
+                {healthJourneyWiseTask}
+                {overallHealthJourneyTaskData}
+                {patientTaskMetrics}
+                {vitalMetrics}
+            />
+        {/if}
     {/if}
 {/key}
