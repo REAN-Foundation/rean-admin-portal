@@ -113,8 +113,8 @@
                             break;
                         }
                         case 'DropOffPoints': {
-                            featureMetrics[feature].dropOffPointsData = metricData.map((x) => x.dropoff_count);
-                            featureMetrics[feature].dropOffPointsLabels = metricData.map((x) => x.event_name);
+                            featureMetrics[feature].dropOffPointsData = metricData?.map((x) => x.dropoff_count) ?? [];
+                            featureMetrics[feature].dropOffPointsLabels = metricData?.map((x) => x.event_name) ?? [];
                             break;
                         }
                     }
