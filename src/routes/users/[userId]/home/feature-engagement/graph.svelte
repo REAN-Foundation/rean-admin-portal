@@ -384,8 +384,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class="w-full">
-                            <p class="items-start flex font-semibold leading-3 pl-6">Data Not Available</p>
+                        <div class="w-full p-4">
+                            <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
@@ -475,8 +475,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class="w-full">
-                            <p class="items-start flex font-semibold leading-3 pl-6">Data Not Available</p>
+                        <div class="w-full p-4">
+                            <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
@@ -564,16 +564,16 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class="w-full">
-                            <p class="items-start flex font-semibold leading-3 pl-6">Data Not Available</p>
-                        </div>
+                    <div class="w-full p-4">
+                        <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
+                    </div>
                     {/if}
                 </div>
             </div>
         </div>
         <div class="flex justify-center items-center h-full min-w-full py-10">
             <div
-                class="min-w-full flex overflow-x-auto overflow-hidden justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4"
+                class="flex flex-col overflow-x-auto overflow-hidden justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
             >
                 <div class="w-full">
                     <div class="flex flex-col items-center justify-between py-4">
@@ -713,8 +713,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class="w-full">
-                            <p class="items-start flex font-semibold leading-3 pl-6">Data Not Available</p>
+                        <div class="w-full p-4">
+                            <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
@@ -758,8 +758,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class="w-full">
-                            <p class="items-start flex font-semibold leading-3 pl-6 mb-4">Data Not Available</p>
+                        <div class="h-fit w-full p-4">
+                            <p class="flex justify-center items-center font-semibold my-12 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
