@@ -48,6 +48,8 @@
     let overallNotCompletedTasksCategory = (patientTaskMetrics?.Overall?.patient_task_count ?? 0) - overallCompletedTasksCategory;
     let planCodes = ['Overall', ...(healthJourneyWiseTask?.length ? new Set(healthJourneyWiseTask.map((item) => item.PlanCode)) : [])];
     let taskCategories = ['Overall', ...(patientTaskMetrics?.CategorySpecific?.length ? new Set(patientTaskMetrics.CategorySpecific.map((item) => item.task_category)) : [])];
+    let taskCompletionTableHeaders = ['Percentage Range', 'User Count'];
+    let quarterWiseTaskCompletionData = patientTaskMetrics?.QuarterWiseTaskCompletionMetrics ?? [];
 
     let vitalNames = vitalMetrics.map(item => item.vital_name);
     let standardizedVitalNames = vitalNames.map(name => Helper.standardizeVitalName(name));
@@ -362,7 +364,7 @@
                             DropOff Points (%) (Data not available)
                         {/if}
                     </div>
-                    {#if dropOffPointsData && dropOffPointsLabels}
+                    {#if dropOffPointsData.length > 0 && dropOffPointsLabels.length > 0}
                         <table
                             class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
                         >
@@ -382,8 +384,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class=" w-full p-4">
-                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
+                        <div class="w-full p-4">
+                            <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
@@ -453,7 +455,7 @@
                             DropOff Points (%) (Data not available)
                         {/if}
                     </div>
-                    {#if dropOffPointsData && dropOffPointsLabels}
+                    {#if dropOffPointsData.length > 0 && dropOffPointsLabels.length > 0}
                         <table
                             class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
                         >
@@ -473,8 +475,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class=" w-full p-4">
-                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
+                        <div class="w-full p-4">
+                            <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
@@ -542,7 +544,7 @@
                             DropOff Points (%) (Data not available)
                         {/if}
                     </div>
-                    {#if dropOffPointsData && dropOffPointsLabels}
+                    {#if dropOffPointsData.length > 0 && dropOffPointsLabels.length > 0}
                         <table
                             class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
                         >
@@ -562,10 +564,70 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class=" w-full p-4">
-                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
-                        </div>
+                    <div class="w-full p-4">
+                        <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
+                    </div>
                     {/if}
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center items-center h-full min-w-full py-10">
+            <div
+                class="flex flex-col overflow-x-auto overflow-hidden justify-center items-center rounded-lg shadow-xl border border-secondary-100 dark:border-surface-700 sm:px-4 w-1/2"
+            >
+                <div class="w-full">
+                    <div class="flex flex-col items-center justify-between py-4">
+                        <h4 class="text-lg font-semibold text-center flex-grow">Quarterwise Task Completion Metrics</h4>
+                        <div class="h-fit w-full">
+                            <p class="mx-2 text-center justify-center pb-5 text-sm sm:pl-3">
+                                This shows the count of users grouped by task completion percentage ranges.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="sm:px-6 lg:px-8 col-span-2 items-center justify-center pb-8">
+                        <table class="min-w-full border border-secondary-100 dark:border-surface-700 rounded-lg">
+                            <thead>
+                                <tr class="border border-secondary-100 dark:border-surface-700">
+                                    {#each taskCompletionTableHeaders as header}
+                                        <th
+                                            class="py-3 text-left text-sm font-semibold sm:pl-3 border border-secondary-100 dark:border-surface-700 w-1/2"
+                                            >
+                                            {header}
+                                        </th>
+                                    {/each}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {#if quarterWiseTaskCompletionData.length > 0}
+                                    {#each quarterWiseTaskCompletionData as row}
+                                        <tr
+                                            class="hover:bg-secondary-50 dark:hover:bg-surface-800 transition border border-secondary-100 dark:border-surface-700"
+                                        >
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {row.percentage_range}
+                                            </td>
+                                            <td
+                                                class="whitespace-nowrap text-sm px-3 py-2 border border-secondary-100 dark:border-surface-700"
+                                            >
+                                                {row.user_count}
+                                            </td>
+                                        </tr>
+                                    {/each}
+                                {:else}
+                                    <tr>
+                                        <td
+                                        
+                                            class="text-center py-4 text-sm text-gray-500"
+                                        >
+                                           Data not available.
+                                        </td>
+                                    </tr>
+                                {/if}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -631,7 +693,7 @@
                             DropOff Points (%) (Data not available)
                         {/if}
                     </div>
-                    {#if dropOffPointsData && dropOffPointsLabels}
+                    {#if dropOffPointsData.length > 0 && dropOffPointsLabels.length > 0}
                         <table
                             class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
                         >
@@ -651,8 +713,8 @@
                             </tbody>
                         </table>
                     {:else}
-                        <div class=" w-full p-4">
-                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
+                        <div class="w-full p-4">
+                            <p class="flex justify-center items-center font-semibold mt-28 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
@@ -676,7 +738,7 @@
                             DropOff Points (%) (No Data available)
                         {/if}
                     </div>
-                    {#if dropOffPointsData && dropOffPointsLabels}
+                    {#if dropOffPointsData.length > 0 && dropOffPointsLabels.length > 0}
                         <table
                             class="min-w-full mt-2 mb-10 rounded-lg border border-secondary-100 dark:border-surface-70"
                         >
@@ -697,7 +759,7 @@
                         </table>
                     {:else}
                         <div class="h-fit w-full p-4">
-                            <p class="justify-center items-center flex text-xl mt-28 leading-3">Data Not Available</p>
+                            <p class="flex justify-center items-center font-semibold my-12 leading-3">Data Not Available</p>
                         </div>
                     {/if}
                 </div>
