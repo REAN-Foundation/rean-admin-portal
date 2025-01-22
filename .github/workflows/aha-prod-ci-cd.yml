@@ -29,7 +29,7 @@ jobs:
 
   Deploy-ECS:
     needs: Publish-Release
-    environment: prod
+    environment: aha-prod
     runs-on: ubuntu-latest
 
     steps:
@@ -63,8 +63,8 @@ jobs:
 
       - name: Copy constant file
         run: aws s3 cp s3://${{ secrets.CONSTANT_FILE_BUCKET_PATH }}/constants.ts ./src/lib
-
-      - name: Copy constant file
+        
+      - name: Copy favicon file
         run: aws s3 cp s3://${{ secrets.FAVICON_FILE_BUCKET }}/favicon.png ./static/favicon.png
 
       - name: Build and push
@@ -121,3 +121,4 @@ jobs:
           method: 'POST'
           data: '{"TaskDefinition":${{ steps.taskdefintionvar.outputs.task_definition_arn }},"Name": "${{ secrets.SERVICE_NAME }}","Replicas":1, "HealthCheckGracePeriodSeconds": 1200, "DnsPrfx": ""}'
           bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN }}
+
