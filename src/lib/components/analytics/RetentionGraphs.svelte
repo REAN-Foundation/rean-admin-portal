@@ -101,11 +101,6 @@
                         },
                         ticks: {
                             color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
-                            callback: function (value) {
-                                if (Number.isInteger(value)) {
-                                    return value;
-                                }
-                            }
                         },
                         title: {
                             display: true,
