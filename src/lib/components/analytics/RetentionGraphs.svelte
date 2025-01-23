@@ -24,33 +24,33 @@
                 break;
             case 'Retention User Count On Specific Days':
                 (xLabel = 'Days of the Month'), (yLabel = 'User Count');
-                MAX_INDEX = 10;
+                // MAX_INDEX = 10;
                 break;
             case 'Retention User Count On Specific Days (%)':
                 (xLabel = 'Days of the Month'), (yLabel = 'Percentage');
-                MAX_INDEX = 10;
+                // MAX_INDEX = 10;
                 break;
             case 'Retention User Count On Specific Intervals':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
                 break;
             case 'Retention User Count On Specific Intervals (%)':
                 (xLabel = 'Retention Interval'), (yLabel = 'Percentage');
-                MAX_INDEX = 100;
+                // MAX_INDEX = 100;
                 break;
             case 'Retention On Specific Days':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
-                MAX_INDEX = 10;
+                // MAX_INDEX = 10;
                 break;
             case 'Retention On Specific Days (%)':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
-                MAX_INDEX = 10;
+                // MAX_INDEX = 10;
                 break;
             case 'Retention On Specific Interval':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
                 break;
             case 'Retention On Specific Interval (%)':
                 (xLabel = 'Retention Interval'), (yLabel = 'User Count');
-                MAX_INDEX = 100;
+                // MAX_INDEX = 100;
 
                 break;
         }
@@ -100,7 +100,12 @@
                             display: true
                         },
                         ticks: {
-                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight
+                            color: document.documentElement.classList.contains('dark') ? tickColorDark : tickColorLight,
+                            callback: function (value) {
+                                if (Number.isInteger(value)) {
+                                    return value;
+                                }
+                            }
                         },
                         title: {
                             display: true,
