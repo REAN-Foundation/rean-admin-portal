@@ -14,6 +14,7 @@
     const schedulingRoute = `/users/${userId}/careplan/careplans/${careplanId}/scheduling`;
 
     export let data: PageServerData;
+    const sessionId = data.sessionId;
     let code = data.careplan.Code;
     let categoryId = data.careplan.CategoryId;
     let name = data.careplan.Name;
@@ -29,7 +30,7 @@
 
     const breadCrumbs = [
         {
-            name: 'Careplan',
+            name: 'Careplans',
             path: careplansRoute
         },
         {
@@ -37,14 +38,43 @@
             path: viewRoute
         }
     ];
+
+	async function exportCareplan() {
+		const response = await fetch(`/api/server/careplan/careplans/export`, {
+			method: 'POST',
+			body: JSON.stringify(
+                {
+                    sessionId,
+                    careplanId  
+                }
+            ),
+			headers: { 'content-type': 'application/json' }
+		});
+        if (!response.ok) {
+            throw new Error(`Failed to export care plan: ${response.statusText}`);
+        }
+
+        const filename = `Careplan_${code}.json`;
+        const blob = await response.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+	}
 </script>
 
 <BreadCrumbs crumbs={breadCrumbs} />
 
-<div class="flex flex-wrap gap-2">
+<div class="flex flex-wrap gap-2 justify-end">
+    <button
+       on:click= {exportCareplan}
+        class="btn variant-filled-secondary">Export</button
+    >
     <a
         href={schedulingRoute}
-        class="btn variant-filled-secondary ml-auto">Scheduling</a
+        class="btn variant-filled-secondary">Scheduling</a
     >
     <a
         href={editRoute}

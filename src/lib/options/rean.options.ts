@@ -76,11 +76,11 @@ export const Options: FeatureOptions[] = [
     //..............................
     {
         Name: 'Careplan',
-        Enabled: false
+        Enabled: true
     },
     {
         Name: 'Careplan-Dashboard',
-        Enabled: false
+        Enabled: true
     },
     {
         Name: 'Careplan-Assets',
@@ -88,11 +88,11 @@ export const Options: FeatureOptions[] = [
     },
     {
         Name: 'Careplan-Plans',
-        Enabled: false
+        Enabled: true
     },
     {
         Name: 'Careplan-Enrollments',
-        Enabled: false
+        Enabled: true
     },
     //..............................
     {
