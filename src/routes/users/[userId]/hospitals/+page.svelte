@@ -44,7 +44,7 @@
     } satisfies PaginationSettings;
 
     $: {
-        if (hospitalName) {
+        if (hospitalName || tags) {
             paginationSettings.page = 0;
         }
     }
