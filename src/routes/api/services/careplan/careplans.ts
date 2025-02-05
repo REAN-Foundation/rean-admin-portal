@@ -112,23 +112,16 @@ export const importCareplan = async (
         'x-api-key' : CAREPLAN_SERVICE_API_KEY,
         'Authorization' : `Bearer ${accessToken}`,
     };
+    const res = await axios.post(url, form, { headers });
 
-  	// try{
-		const res = await axios.post(url, form, { headers });
-		//only for 201 status code
-		const response = res.data;
-        console.log('careplan response',response);
-        if (response.Status === 'failure' || (response.HttpCode !== 201 && response.HttpCode !== 200)) {
-            console.log(chalk.red(`post_ response message: ${response.Message}`));
-            throw error(response.HttpCode, response.Message);
-        }
-        console.log(chalk.green(`post_ response message: ${response.Message}`));
-        return response;
-	// 	return response;
-	// }catch(error){
-	// 	//other than 201 status code
-	// 	return error.response.data;
-	// }
+    const response = res.data;
+    console.log('careplan response',response);
+    if (response.Status === 'failure' || (response.HttpCode !== 201 && response.HttpCode !== 200)) {
+        console.log(chalk.red(`post_ response message: ${response.Message}`));
+        throw error(response.HttpCode, response.Message);
+    }
+    console.log(chalk.green(`post_ response message: ${response.Message}`));
+    return response;
     
 };
 
