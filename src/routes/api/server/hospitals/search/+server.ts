@@ -7,7 +7,8 @@ export const GET = async (event: RequestEvent) => {
 
     const sessionId = event.locals.sessionUser.sessionId;
     const searchParams: URLSearchParams = event.url.searchParams;
-    const name = searchParams.get('name') ?? undefined
+    const name = searchParams.get('name') ?? undefined;
+    const tags = searchParams.get('tags') ?? undefined;
     // const healthSystemName = searchParams.get('healthSystemName') ?? undefined;
     const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
     const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
@@ -19,6 +20,7 @@ export const GET = async (event: RequestEvent) => {
 	try {
         const searchParams = {
             name,
+            tags,
             orderBy: sortBy,
             order: sortOrder,
             itemsPerPage,
