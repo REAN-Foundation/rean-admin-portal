@@ -15,26 +15,12 @@ export const actions = {
         const uploadedFile = formData?.get('file') as File;
         const fileName = uploadedFile.name;
         const fileUploadFolder = PUBLIC_LOCAL_STORAGE;
-        // const filePath = `${fileUploadFolder}/${fileName}`;
-        // const filename = file.name;
-			// const fileBuffer = Buffer.from(await uploadedFile.arrayBuffer()).buffer;
-			// console.log('File buffer length:', fileBuffer);
-            const filePath = `${fileUploadFolder}/${fileName}`;
-			// fs.writeFile(filePath, fileBuffer);
+        const filePath = `${fileUploadFolder}/${fileName}`;
 
         if (!fs.existsSync(`${fileUploadFolder}`)) {
             fs.mkdirSync(`${fileUploadFolder}`, { recursive: true });
         }
-        // const fileBuffer = Buffer.from(await uploadedFile.arrayBuffer());
-		// 	fs.writeFileSync(filePath, fileBuffer);
 
-        // const arrayBuffer = await uploadedFile.arrayBuffer();
-        // await writeFile(filePath, new Uint8Array(arrayBuffer));
-    
-
-        // const arrayBuffer = await uploadedFile.arrayBuffer();
-        // const buffer = Buffer.from(arrayBuffer);
-        // await writeFile(filePath, buffer);
         const arrayBuffer = await uploadedFile.arrayBuffer();
         const uint8Array = new Uint8Array(arrayBuffer);
         await writeFile(filePath, uint8Array);
