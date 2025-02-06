@@ -25,6 +25,7 @@
     const breadCrumbs = [{ name: 'Hospitals', path: hospitalRoute }];
 
     let hospitalName = undefined;
+    let tags = undefined;
     let sortBy = 'Name';
     let sortOrder = 'ascending';
     let itemsPerPage = 10;
@@ -32,6 +33,7 @@
     $: totalHospitalsCount = data.hospitals.TotalCount;
     let isSortingName = false;
     let isSortingHealthSystemName = false;
+    let isSortingTags = false;
     let items = 10;
 
     let paginationSettings = {
@@ -42,7 +44,7 @@
     } satisfies PaginationSettings;
 
     $: {
-        if (hospitalName) {
+        if (hospitalName || tags) {
             paginationSettings.page = 0;
         }
     }
@@ -57,6 +59,7 @@
         if (offset) url += `&pageIndex=${model.pageIndex}`;
         if (hospitalName) url += `&name=${model.hospitalName}`;
         // if (healthSystemName) url += `&healthSystemName=${healthSystemName}`;
+        if (tags) url += `&tags=${tags}`;
         const res = await fetch(url, {
             method: 'GET',
             headers: { 'content-type': 'application/json' }
@@ -86,6 +89,7 @@
     $: if (browser)
         searchHospital({
             hospitalName: hospitalName,
+            tags: tags,
             // healthSystemName: healthSystemName,
             itemsPerPage: itemsPerPage,
             pageIndex: offset,
@@ -100,7 +104,7 @@
     }
 
     function onAmountChange(e: CustomEvent): void {
-        if (hospitalName) {
+        if (hospitalName || tags) {
             isLoading = true;
             hospitals = [];
         }
@@ -111,10 +115,14 @@
     function sortTable(columnName) {
         isSortingName = false;
         isSortingHealthSystemName = false;
+        isSortingTags = false;
         sortOrder = sortOrder === 'ascending' ? 'descending' : 'ascending';
         if (columnName === 'Name') {
             isSortingName = true;
         }
+        else if (columnName === 'Tags') {
+			isSortingTags = true;
+		}
         // else if (columnName === 'HealthSystemName') {
         //     isSortingHealthSystemName = true;
         // }
@@ -161,6 +169,24 @@
             </button>
         {/if}
     </div>
+    <div class="relative w-auto grow">
+		<input 
+				type="text"
+				name="tags"
+				placeholder="Search by tags"
+				bind:value={tags}
+				class="input w-full"
+		/>
+		{#if tags}
+				<button
+						type="button"
+						on:click={() => { tags = ''}}
+						class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+				>
+						<Icon icon="material-symbols:close" class="text-lg" />
+				</button>
+		{/if}
+</div>
     <a
         href={createRoute}
         class="btn variant-filled-secondary">Add New</a
@@ -185,6 +211,7 @@
                         Health System {isSortingHealthSystemName ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
                     </button>
                 </th>
+                <th>Tags</th>
                 <th>Created Date</th>
                 <th />
                 <th />
@@ -223,6 +250,11 @@
                                 ? Helper.truncateText(row.HealthSystemName, 50)
                                 : 'Not specified'}
                         </td>
+                        <td
+                        role="gridcell"
+                        aria-colindex={4}
+                        tabindex="0">{row.Tags.length >0 ? row.Tags : 'Not specified'}</td
+                    >
                         <td
                             role="gridcell"
                             aria-colindex={5}
