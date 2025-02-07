@@ -33,7 +33,7 @@
 	const schedulingRoute = `/users/${userId}/careplan/careplans/${careplanId}/scheduling`;
 	const breadCrumbs = [
 		{
-			name: 'Careplan',
+			name: 'Careplans',
 			path: careplansRoute
 		},
 		{

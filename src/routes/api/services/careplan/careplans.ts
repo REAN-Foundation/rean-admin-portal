@@ -1,5 +1,12 @@
-import { CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
+import { API_CLIENT_INTERNAL_KEY,CAREPLAN_BACKEND_API_URL, CAREPLAN_SERVICE_API_KEY } from "$env/static/private";
+import axios from "axios";
+import * as fs from 'fs';
+import FormData from 'form-data';
 import {del, get, post, put} from "./common.careplan";
+import { ServerHelper } from "$lib/server/server.helper";
+import { SessionManager } from "$routes/api/sessions/session.manager";
+import chalk from "chalk";
+import { error } from "@sveltejs/kit";
 
 // ////////////////////////////////////////////////////////////////
 
@@ -83,4 +90,56 @@ export const deleteCareplan = async (sessionId: string, careplanId: string) => {
 export const searchCareplanCategories = async (sessionId: string) => {
     const url = CAREPLAN_BACKEND_API_URL + `/careplan-categories/search`;
     return await get(sessionId, url, true);
+};
+
+export const importCareplan = async (
+	sessionId: string,
+	fileName:string,
+	filePath:string,
+	isPublic?:true
+) => {
+	const url = CAREPLAN_BACKEND_API_URL + '/careplans/import-file';
+	const session = await SessionManager.getSession(sessionId);
+	const accessToken = session.accessToken;
+	const mimeType = ServerHelper.getMimeTypeFromFileName(fileName);
+	console.log(`mimeType = ${mimeType}`);
+	const form = new FormData();
+    form.append("file", fs.createReadStream(filePath));
+	form.append("IsPublicResource", isPublic ? "true" : "false");
+
+	const headers = {
+        'Content-Type' : 'multipart/form-data',
+        'x-api-key' : CAREPLAN_SERVICE_API_KEY,
+        'Authorization' : `Bearer ${accessToken}`,
+    };
+    const res = await axios.post(url, form, { headers });
+
+    const response = res.data;
+    console.log('careplan response',response);
+    if (response.Status === 'failure' || (response.HttpCode !== 201 && response.HttpCode !== 200)) {
+        console.log(chalk.red(`post_ response message: ${response.Message}`));
+        throw error(response.HttpCode, response.Message);
+    }
+    console.log(chalk.green(`post_ response message: ${response.Message}`));
+    return response;
+    
+};
+
+export const exportCareplanById = async (sessionId: string, careplanId: string) => {
+    const url = CAREPLAN_BACKEND_API_URL + `/careplans/${careplanId}/export`;
+    const session = await SessionManager.getSession(sessionId);
+	const accessToken = session.accessToken;
+	const headers = {};
+	headers['Content-Type'] = 'application/json';
+    headers['x-api-key'] = CAREPLAN_SERVICE_API_KEY;
+    headers['Authorization'] = `Bearer ${accessToken}`;
+	const res = await fetch(url, {
+		method: 'GET',
+		headers
+	});
+    if (!res.ok) {
+        throw new Error(`Failed to export care plan: ${res.statusText}`);
+    }
+    const blob = await res.blob();
+	return blob;
 };

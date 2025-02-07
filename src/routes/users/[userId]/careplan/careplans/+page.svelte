@@ -19,7 +19,8 @@
 	const createRoute = `/users/${userId}/careplan/careplans/create`;
 	const editRoute = (id) => `/users/${userId}/careplan/careplans/${id}/edit`;
 	const viewRoute = (id) => `/users/${userId}/careplan/careplans/${id}/view`;
-
+	const importRoute = `/users/${userId}/careplan/careplans/import`;
+	
 	let name = undefined;
 	let categoryId = undefined;
 	let sortBy = 'Name';
@@ -43,7 +44,7 @@
 
 	const breadCrumbs = [
 		{
-			name: 'Careplan',
+			name: 'Careplans',
 			path: careplansRoute
 		}
 	];
@@ -141,6 +142,7 @@
 			<option value={category.id}>{category.Type}</option>
 		{/each}
 	</select>
+	<a href="{importRoute}" class="btn variant-filled-secondary">Import</a>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 

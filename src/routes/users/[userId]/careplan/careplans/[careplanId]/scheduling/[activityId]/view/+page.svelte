@@ -22,7 +22,7 @@
 
 	const breadCrumbs = [
 		{
-			name: 'CarePlan',
+			name: 'CarePlans',
 			path: careplansRoute
 		},
 		{

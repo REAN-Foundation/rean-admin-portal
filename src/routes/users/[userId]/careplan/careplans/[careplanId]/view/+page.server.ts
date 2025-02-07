@@ -27,7 +27,8 @@ export const load: PageServerLoad =  async (event: RequestEvent) => {
                 location :`${id}/edit`,
                 careplan,
                 careplanCategories,
-                message: response.Message
+                message: response.Message,
+                sessionId
             }
     }
     catch (error) {
