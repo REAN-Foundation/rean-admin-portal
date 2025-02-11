@@ -13,7 +13,7 @@
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	export let data: PageServerData;
-    $: isLoading = false;
+    let promise;
 	let retrivedDrugs;
 	$: drugs = data.drugs.Items;
 	const userId = $page.params.userId;
@@ -65,9 +65,6 @@
 		const searchResult = await res.json();
         totalDrugsCount = searchResult.TotalCount;
         drugs = searchResult.Items.map((item, index) => ({ ...item, index: index + 1 }));
-        if (totalDrugsCount > 0) {
-            isLoading = false;
-        }
 	}
 
 	$:{
@@ -77,12 +74,9 @@
 		paginationSettings.page * paginationSettings.limit,
 		paginationSettings.page * paginationSettings.limit + paginationSettings.limit
         );
-        if (retrivedDrugs.length > 0) {
-            isLoading = false;
-        }
 	}
 	$: if (browser)
-		searchDrug({
+		promise = searchDrug({
 			drugName: drugName,
 			genericName: genericName,
 			itemsPerPage: itemsPerPage,
@@ -92,14 +86,12 @@
 		});
 
 	function onPageChange(e: CustomEvent): void {
-        isLoading = true;
 		let pageIndex = e.detail;
         itemsPerPage = items * (pageIndex + 1);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
         if (drugName || genericName) {
-            isLoading = true;
             drugs = [];
         }
         itemsPerPage = e.detail * (paginationSettings.page + 1);
@@ -130,6 +122,8 @@
 			sessionId: data.sessionId,
 			drugId
 		});
+        drugName = undefined;
+	    genericName = undefined;
 		invalidate('app:drugs')
 	};
 
@@ -206,11 +200,16 @@
 			</tr>
 		</thead>
 		<tbody class="!bg-white dark:!bg-inherit">
-			{#if retrivedDrugs.length <= 0 }
+            {#await promise}
 				<tr>
-                    <td colspan="7">{isLoading ? 'Loading...' : 'No records found'}</td>
+                    <td colspan="7">Loading...</td>
         		</tr>
-			{:else}
+            {:then data}
+             {#if retrivedDrugs.length <= 0 }
+				<tr>
+                   <td colspan="6">No records found</td>
+        		</tr>
+			 {:else}
 				{#each retrivedDrugs as row}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td role="gridcell" aria-colindex={1} tabindex="0">{row.index}</td>
@@ -251,7 +250,8 @@
 						</td>
 					</tr>
 				{/each}
-			{/if}
+             {/if}   
+            {/await}
 		</tbody>
 	</table>
 </div>
