@@ -94,6 +94,8 @@
         if (drugName || genericName) {
             drugs = [];
         }
+        paginationSettings.page = 0;
+        offset = 0;
         itemsPerPage = e.detail * (paginationSettings.page + 1);
  		items = itemsPerPage;
 	}
