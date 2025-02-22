@@ -4,6 +4,7 @@
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
     import { enhance } from '$app/forms';
+    import InputChip from '$lib/components/input-chips.svelte';
 
 	////////////////////////////////////////////////////////////////
 
@@ -17,6 +18,8 @@
 	let providerAssessmentCode = data.assessmentTemplate.ProviderAssessmentCode;
 	let serveListNodeChildrenAtOnce = data.assessmentTemplate.ServeListNodeChildrenAtOnce;
 	let scoringApplicable = data.assessmentTemplate.ScoringApplicable;
+	let tags = data.assessmentTemplate.Tags;
+
 
 	//Original data
 	let _title = title;
@@ -27,6 +30,7 @@
 	let _providerAssessmentCode = providerAssessmentCode;
 	let _serveListNodeChildrenAtOnce = serveListNodeChildrenAtOnce;
 	let _scoringApplicable = scoringApplicable;
+	let _tags = JSON.stringify(tags);
 
 	function handleReset() {
 		title = _title;
@@ -36,7 +40,8 @@
 		provider = _provider;
 		providerAssessmentCode = _providerAssessmentCode;
 		serveListNodeChildrenAtOnce = _serveListNodeChildrenAtOnce;
-		scoringApplicable = _scoringApplicable
+		scoringApplicable = _scoringApplicable,
+		tags = JSON.parse(_tags);
 	}
 
 	const userId = $page.params.userId;
@@ -175,6 +180,16 @@
 					/>
 				</td>
 			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td class="align-top">Tags</td>
+                <td>
+                    <InputChip
+                        chips="variant-filled-error rounded-2xl"
+                        name="tags"
+                        bind:value={tags}
+                    />
+                </td>
+            </tr>
 		</tbody>
 	</table>
 	<div class="flex gap-2 p-2 justify-end">
