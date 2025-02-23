@@ -5,6 +5,7 @@
 	import Choice from '../../create/choice.svelte';
 	import type { PageServerData } from './$types';
     import { enhance } from '$app/forms';
+    import InputChip from '$lib/components/input-chips.svelte';
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +20,7 @@
 	let message = data.assessmentNode.Message ?? null;
 	let sequence = data.assessmentNode.Sequence;
 	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? false;
+	let tags = data.assessmentNode.Tags;
 
 	//Original data
 	let _nodeType = nodeType;
@@ -27,6 +29,8 @@
 	let _queryType = queryType;
 	let _sequence = sequence;
 	let _message = message;
+	let _tags = JSON.stringify(tags);
+
 
 	function handleReset() {
 		nodeType = _nodeType;
@@ -35,6 +39,8 @@
 		queryType = _queryType;
 		sequence = _sequence;
 		message = _message;
+		tags = JSON.parse(_tags);
+
 	}
 
 	const userId = $page.params.userId;
@@ -161,6 +167,16 @@
 					/>
 				</td>
 			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td class="align-top">Tags</td>
+                <td>
+                    <InputChip
+                        chips="variant-filled-error rounded-2xl"
+                        name="tags"
+                        bind:value={tags}
+                    />
+                </td>
+            </tr>
 			{#if selectedNodeType === 'Question'}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td class="align-top">Query Response Type *</td>

@@ -23,6 +23,8 @@
 	let displayCode = data.assessmentNode.DisplayCode;
 	let resolutionScore;
 	let sequence = data.assessmentNode.Sequence;
+	let tags_ = Array.isArray(data.assessmentNode?.Tags) ? data.assessmentNode.Tags : [];
+    let tags = tags_.join(', ');
 
 	console.log('nodeType', nodeType);
 
@@ -160,6 +162,16 @@
 				<td>Sequence</td>
 				<td>{sequence}</td>
 			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td>Tags</td>
+                <td>
+                    {#if tags.length <= 0}
+                        <span class="span">Tags not specified</span>
+                    {:else}
+                        <span class="span">{tags}</span>
+                    {/if}
+                </td>
+            </tr>
 			{#if nodeType === 'Question'}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td>Query Response Type</td>
