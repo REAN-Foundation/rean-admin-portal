@@ -26,6 +26,7 @@
 
 	let title = undefined;
 	let type = undefined;
+    let tags = undefined;
 	let sortBy = 'Title';
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
@@ -43,7 +44,7 @@
 	} satisfies PaginationSettings;
 
     $: {
-        if (title || type) {
+        if (title || type || tags) {
             paginationSettings.page = 0;
         }
     }
@@ -57,6 +58,7 @@
 		if (offest) url += `&pageIndex=${offest}`;
 		if (title) url += `&title=${model.title}`;
 		if (type) url += `&type=${model.type}`;
+        if (tags) url += `&tags=${tags}`;
         console.log("URL: " + url);
 		const res = await fetch(url, {
 			method: 'GET',
@@ -88,6 +90,7 @@
 		searchAssessmentTemplate({
 			title,
 			type,
+            tags: tags,
 			itemsPerPage: itemsPerPage,
 			pageIndex: page,
 			sortOrder: sortOrder,
@@ -101,7 +104,7 @@
 	}
 
 	function onAmountChange(e: CustomEvent): void {
-		if (title || type) {
+		if (title || type || tags) {
             isLoading = true;
             assessmentTemplates = [];
         }
@@ -177,6 +180,24 @@
 				</button>
 		{/if}
 </div>
+<div class="relative w-auto grow">
+	<input 
+			type="text"
+			name="tags"
+			placeholder="Search by tags"
+			bind:value={tags}
+			class="input w-full"
+	/>
+	{#if tags}
+			<button
+					type="button"
+					on:click={() => { tags = ''}}
+					class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+			>
+					<Icon icon="material-symbols:close" class="text-lg" />
+			</button>
+	{/if}
+</div>
 	<a href="{importRoute}" class="btn variant-filled-secondary">Import</a>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
@@ -196,6 +217,7 @@
 						Type {isSortingType ? (sortOrder === 'ascending' ? '▲' : '▼') : ''}
 					</button>
 				</th>
+				<th>Tags</th>
 				<th>Provider</th>
 				<th />
 				<th />
@@ -220,6 +242,8 @@
 						<td role="gridcell" aria-colindex={3} tabindex="0">
 							{Helper.truncateText(row.Type, 40)}
 						</td>
+						<td
+                        role="gridcell">{row.Tags.length >0 ? row.Tags : 'Not specified'}</td>
 						<td role="gridcell" aria-colindex={4} tabindex="0">
 							{row.Provider !== null && row.Provider !== ''
 								? Helper.truncateText(row.Provider, 40)
