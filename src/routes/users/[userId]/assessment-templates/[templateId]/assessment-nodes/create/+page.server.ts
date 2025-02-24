@@ -101,7 +101,7 @@ export const actions = {
             const errorMessageText = error?.body?.message || 'An error occurred';
             throw redirect(
                 303,
-                `/users/${userId}/assessment-templates/${templateId}/assessment-nodes`,
+                `/users/${userId}/assessment-templates`,
                 errorMessage(errorMessageText),
                 event
             );

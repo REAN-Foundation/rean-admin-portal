@@ -200,7 +200,7 @@
 				{#if selectedQueryType === 'Single Choice Selection' || selectedQueryType === 'Multi Choice Selection'}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td class="align-top">Options</td>
-						<td><Choice {optionValueStore} readonly={true}/></td>
+						<td><Choice {optionValueStore} readonly={false}/></td>
 					</tr>
 				{/if}
 			{:else if selectedNodeType === 'Message'}
