@@ -18,7 +18,8 @@
 	let serveListNodeChildrenAtOnce = assessmentTemplate.ServeListNodeChildrenAtOnce;
 	let scoringApplicable = assessmentTemplate.ScoringApplicable;
 	let provider = (assessmentTemplate.Provider !== null && assessmentTemplate.Provider !== "") ? assessmentTemplate.Provider : 'Not specified';;
-
+	let tags_ = data.assessmentTemplate.Tags;
+    let tags = tags_.join(', ');
 	assessmentNodes = assessmentNodes.sort((a, b) => {
 		return a.Sequence - b.Sequence;
 	});
@@ -100,6 +101,16 @@
 				<td>Scoring Applicable</td>
 				<td>{scoringApplicable}</td>
 			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td>Tags</td>
+                <td>
+                    {#if tags.length <= 0}
+                        <span class="span">Tags not specified</span>
+                    {:else}
+                        <span class="span">{tags}</span>
+                    {/if}
+                </td>
+            </tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Nodes</td>
 				<td>

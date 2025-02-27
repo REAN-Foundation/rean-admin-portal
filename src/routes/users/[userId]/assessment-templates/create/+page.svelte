@@ -3,6 +3,7 @@
 	import { page } from '$app/stores';
 	import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 	import Icon from '@iconify/svelte';
+	import InputChip from '$lib/components/input-chips.svelte';
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -117,6 +118,12 @@
 						name="scoringApplicable"
 						class="checkbox checkbox-primary border-primary-200 hover:border-primary-400 checkbox-md ml-2"
 					/>
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td class="align-top">Tags</td>
+				<td>
+					<InputChip chips="variant-filled-error rounded-2xl" name="tags" />
 				</td>
 			</tr>
 		</tbody>

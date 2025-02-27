@@ -10,6 +10,7 @@ export const GET = async (event: RequestEvent) => {
 	const templateId = searchParams.get('templateId') ?? undefined;
 	const title = searchParams.get('title') ?? undefined;
 	const nodeType = searchParams.get('nodeType') ?? undefined;
+    const tags = searchParams.get('tags') ?? undefined;
 	const sortBy = searchParams.get('sortBy') ?? 'CreatedAt';
 	const sortOrder = searchParams.get('sortOrder') ?? 'ascending';
 	const itemsPerPage_ = searchParams.get('itemsPerPage');
@@ -22,6 +23,7 @@ export const GET = async (event: RequestEvent) => {
 			templateId,
 			title,
 			nodeType,
+			tags: tags,
 			orderBy: sortBy,
 			order: sortOrder,
 			itemsPerPage,

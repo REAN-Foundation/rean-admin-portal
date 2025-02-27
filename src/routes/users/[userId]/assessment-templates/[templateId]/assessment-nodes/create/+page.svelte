@@ -5,7 +5,8 @@
 	import Icon from '@iconify/svelte';
 	import type { PageServerData } from './$types';
 	import Choice from './choice.svelte';
-  import { enhance } from '$app/forms';
+    import { enhance } from '$app/forms';
+	import InputChip from '$lib/components/input-chips.svelte';
 
 	/////////////////////////////////////////////////////////////////////////////////////
 
@@ -139,6 +140,12 @@
 				<td>Sequence</td>
 				<td>
 					<input type="number" name="sequence" placeholder="Enter sequence here..." min="1" class="input" step="1" />
+				</td>
+			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td class="align-top">Tags</td>
+				<td>
+					<InputChip chips="variant-filled-error rounded-2xl" name="tags" />
 				</td>
 			</tr>
 			{#if selectedNodeType === 'Question'}

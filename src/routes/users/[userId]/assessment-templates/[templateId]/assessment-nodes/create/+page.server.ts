@@ -48,7 +48,9 @@ const createAssessmentNodeSchema = zfd.formData({
     message: z.string().optional(),
     serveListNodeChildrenAtOnce: zfd.checkbox({ trueValue: 'true' }),
     scoringApplicable: zfd.checkbox({ trueValue: 'true' }),
-    options: z.array(z.string())
+    options: z.array(z.string()),
+    tags: z.array(z.string()).optional()
+
 });
 
 export const actions = {
@@ -58,9 +60,10 @@ export const actions = {
         const templateId = event.params.templateId;
         const sessionId = event.cookies.get('sessionId');
         const data = await request.formData();
+        const tags = data.has('tags') ? data.getAll('tags') : [];
         const options = data.has('options') ? data.getAll('options') : [];
         const formData = Object.fromEntries(data);
-        const formDataValue = { ...formData, options: options };
+        const formDataValue = { ...formData, options: options, tags: tags };
 
         type AssessmentNodeSchema = z.infer<typeof createAssessmentNodeSchema>;
 
@@ -87,17 +90,18 @@ export const actions = {
                 result.nodeType,
                 result.title,
                 result.description,
+                result.tags,
                 result.message,
                 result.serveListNodeChildrenAtOnce,
                 result.queryType,
                 result.options,
-                result.sequence
+                result.sequence  
             );
         } catch (error: any) {
             const errorMessageText = error?.body?.message || 'An error occurred';
             throw redirect(
                 303,
-                `/users/${userId}/users`,
+                `/users/${userId}/assessment-templates`,
                 errorMessage(errorMessageText),
                 event
             );

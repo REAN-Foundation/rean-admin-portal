@@ -53,7 +53,9 @@ const updateAssessmentNodeSchema = zfd.formData({
     serveListNodeChildrenAtOnce: zfd.checkbox({ trueValue: 'true' }),
     scoringApplicable: zfd.checkbox({ trueValue: 'true' }),
     options: z.array(z.string()),
-    sequence: zfd.numeric(z.number().optional())
+    sequence: zfd.numeric(z.number().optional()),
+    tags: z.array(z.string()).optional()
+
 });
 
 export const actions = {
@@ -65,9 +67,10 @@ export const actions = {
         const scoreConditionId = event.params.scoreConditionId;
         const sessionId = event.cookies.get('sessionId');
         const data = await request.formData();
+        const tags = data.has('tags') ? data.getAll('tags') : [];
         const options = data.has('options') ? data.getAll('options') : [];
         const formData = Object.fromEntries(data);
-        const formDataValue = { ...formData, options: options };
+        const formDataValue = { ...formData, options: options, tags: tags };
 
         type AssessmentNodeSchema = z.infer<typeof updateAssessmentNodeSchema>;
 
@@ -94,6 +97,7 @@ export const actions = {
                 result.nodeType,
                 result.title,
                 result.description,
+                result.tags,
                 result.queryType,
                 result.options,
                 result.message,

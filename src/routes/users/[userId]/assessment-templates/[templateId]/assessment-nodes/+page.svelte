@@ -33,10 +33,11 @@
 	let title = undefined;
 	let nodeType = undefined;
 	let sortBy = 'Title';
+    let tags = undefined;
 	let sortOrder = 'ascending';
 	let itemsPerPage = 10;
 	let offset = 0;
-	let totalAssessmentNodesCount = data.assessmentNodes.TotalCount;
+	$: totalAssessmentNodesCount = data.assessmentNodes.TotalCount;
 	let isSortingTitle = false;
 	let isSortingNodeType = false;
 	let items = 10;
@@ -48,6 +49,12 @@
 		amounts: [10, 20, 30, 50]
 	} satisfies PaginationSettings;
 
+	$: {
+        if (title || nodeType || tags) {
+            paginationSettings.page = 0;
+        }
+    }
+
 	async function searchNode(model) {
 		templateId;
 		let url = `/api/server/assessments/assessment-nodes/search?templateId=${templateId}&`;
@@ -58,6 +65,7 @@
 		if (offset) url += `&pageIndex=${offset}`;
 		if (title) url += `&title=${model.title}`;
 		if (nodeType) url += `&nodeType=${model.nodeType}`;
+        if (tags) url += `&tags=${tags}`;
 
 		const res = await fetch(url, {
 			method: 'GET',
@@ -86,6 +94,7 @@
 		searchNode({
 			title: title,
 			nodeType: nodeType,
+			tags: tags,
 			itemsPerPage: itemsPerPage,
 			pageIndex: offset,
 			sortOrder: sortOrder,
@@ -99,7 +108,7 @@
 	}
 
 	function onAmountChange(e: CustomEvent): void {
-		if (title || nodeType ) {
+		if (title || nodeType || tags) {
             isLoading = true;
             assessmentNodes = [];
         }
@@ -188,6 +197,24 @@
             </button>
         {/if}
   </div>
+  <div class="relative w-auto grow">
+	<input 
+			type="text"
+			name="tags"
+			placeholder="Search by tags"
+			bind:value={tags}
+			class="input w-full"
+	/>
+	{#if tags}
+			<button
+					type="button"
+					on:click={() => { tags = ''}}
+					class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-transparent border-0 cursor-pointer"
+			>
+					<Icon icon="material-symbols:close" class="text-lg" />
+			</button>
+	{/if}
+</div>
 	<a href={createRoute} class="btn variant-filled-secondary">Add New</a>
 </div>
 
@@ -207,6 +234,7 @@
 					</button>
 				</th>
 				<th>Query Response Type</th>
+				<th>Tags</th>
 				<th />
 				<th />
 			</tr>
@@ -225,6 +253,7 @@
 						</td>
 						<td>{row.NodeType}</td>
 						<td>{row.QueryResponseType ? row.QueryResponseType : 'N/A'}</td>
+						<td>{row.Tags.length >0 ? row.Tags : 'Not specified'}</td>
 						<td>
 							<a href={editRoute(row.id)} class="btn p-2 -my-1 hover:variant-soft-primary">
 								<Icon icon="material-symbols:edit-outline" class="text-lg" />

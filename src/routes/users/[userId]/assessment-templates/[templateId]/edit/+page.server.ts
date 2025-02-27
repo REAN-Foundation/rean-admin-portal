@@ -37,7 +37,8 @@ const updateAssessmentTemplateSchema = zfd.formData({
     provider: z.string().optional(),
     providerAssessmentCode: z.string().optional(),
     serveListNodeChildrenAtOnce: zfd.checkbox({ trueValue: 'true' }),
-    scoringApplicable: zfd.checkbox({ trueValue: 'true' })
+    scoringApplicable: zfd.checkbox({ trueValue: 'true' }),
+    tags: z.array(z.string()).optional()
 });
 
 export const actions = {
@@ -46,12 +47,29 @@ export const actions = {
         const userId = event.params.userId;
         const assessmentTemplateId = event.params.templateId;
         const sessionId = event.cookies.get('sessionId');
-        const { result, errors } = await validateFormData(request, updateAssessmentTemplateSchema);
+        const data = await request.formData();
+        const formData = Object.fromEntries(data);
+        const tags = data.has('tags') ? data.getAll('tags') : [];
+        const formDataValue = { ...formData, tags: tags };
 
-        if (errors) {
-            return { data: result, errors };
+        console.log('formData', JSON.stringify(formDataValue, null, 2));
+
+        type AssessmentTemplateSchema = z.infer<typeof updateAssessmentTemplateSchema>;
+
+        let result: AssessmentTemplateSchema = {};
+        try {
+            result = updateAssessmentTemplateSchema.parse(formDataValue);
+            console.log('result', result);
+        } catch (err) {
+            const { fieldErrors: errors } = err.flatten();
+            console.log(errors);
+            const { ...rest } = formData;
+            return {
+                data: rest,
+                errors
+            };
         }
-
+    
         let response;
         try {
             response = await updateAssessmentTemplate(
@@ -63,7 +81,8 @@ export const actions = {
                 result.provider,
                 result.providerAssessmentCode,
                 result.serveListNodeChildrenAtOnce,
-                result.scoringApplicable
+                result.scoringApplicable,
+                result.tags
             );
         } catch (error: any) {
             const errorMessageText = error?.body?.message || 'An error occurred';

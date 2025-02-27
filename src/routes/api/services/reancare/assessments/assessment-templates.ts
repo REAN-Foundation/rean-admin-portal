@@ -17,7 +17,8 @@ export const createAssessmentTemplate = async (
 	provider: string,
 	providerAssessmentCode: string,
 	serveListNodeChildrenAtOnce: boolean,
-	scoringApplicable: boolean
+	scoringApplicable: boolean,
+	tags: string[]
 ) => {
 	const body = {
 		Title: title,
@@ -26,7 +27,8 @@ export const createAssessmentTemplate = async (
 		Provider: provider ? provider : '',
 		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : '',
 		ServeListNodeChildrenAtOnce: serveListNodeChildrenAtOnce ? serveListNodeChildrenAtOnce : false,
-		ScoringApplicable: scoringApplicable ? scoringApplicable : false
+		ScoringApplicable: scoringApplicable ? scoringApplicable : false,
+		Tags: tags ? tags : []
 	};
 	console.log("assessment-body-----",body)
 	const url = BACKEND_API_URL + '/clinical/assessment-templates';
@@ -103,7 +105,8 @@ export const updateAssessmentTemplate = async (
 	provider: string,
 	providerAssessmentCode: string,
 	serveListNodeChildrenAtOnce: boolean,
-	scoringApplicable: boolean
+	scoringApplicable: boolean,
+	tags: string[]
 ) => {
 	const body = {
 		Title: title,
@@ -112,7 +115,8 @@ export const updateAssessmentTemplate = async (
 		Provider: provider ? provider : '',
 		ProviderAssessmentCode: providerAssessmentCode ? providerAssessmentCode : '',
 		ServeListNodeChildrenAtOnce: serveListNodeChildrenAtOnce ? serveListNodeChildrenAtOnce : false,
-		ScoringApplicable: scoringApplicable ? scoringApplicable : false
+		ScoringApplicable: scoringApplicable ? scoringApplicable : false,
+		Tags: tags ? tags : []
 	};
 
 	const url = BACKEND_API_URL + `/clinical/assessment-templates/${assessmentTemplateId}`;
