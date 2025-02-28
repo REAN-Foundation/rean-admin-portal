@@ -123,4 +123,4 @@ jobs:
           url: 'https://reanfoundation.duplocloud.net/subscriptions/${{ secrets.DUPLO_ID }}/UpdateEcsService'
           method: 'POST'
           data: '{"TaskDefinition":${{ steps.taskdefintionvar.outputs.task_definition_arn }},"Name": "${{ secrets.SERVICE_NAME }}","Replicas":1, "DnsPrfx": "", "HealthCheckGracePeriodSeconds": 1200}'
-          bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN_V1 }}
+          bearerToken: ${{ secrets.DUPLOCLOUD_TOKEN }}
