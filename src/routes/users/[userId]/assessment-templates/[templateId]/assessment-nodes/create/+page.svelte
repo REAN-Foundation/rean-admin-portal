@@ -187,6 +187,19 @@
 								/>
 							</td>
 						</tr>
+						<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+							<td>Correct Answer</td>
+							<td>
+								<input
+									type="text"
+									name="correctAnswer"
+									placeholder="Enter correct answer here..."
+									class="input w-full
+									 {form?.errors?. correctAnswer? 'border-error-300 text-error-500' : ''}"
+									value={form?.data?.correctAnswer ?? ''}
+								/>
+							</td>
+						</tr>
 					{:else if selectedQueryType === 'Boolean'}
 						<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 							<td>Resolution Score *</td>
@@ -208,6 +221,19 @@
 						<td class="align-top">Options</td>
 						<td>
 							<Choice/>
+						</td>
+					</tr>
+					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+						<td>Correct Answer</td>
+						<td>
+							<input
+								type="text"
+								name="correctAnswer"
+								placeholder="Enter correct answer here..."
+								class="input w-full
+								 {form?.errors?. correctAnswer? 'border-error-300 text-error-500' : ''}"
+								value={form?.data?.correctAnswer ?? ''}
+							/>
 						</td>
 					</tr>
 				{/if}

@@ -16,6 +16,7 @@ export const createAssessmentNode = async (
 	queryType?: string,
 	options?: string[],
 	sequence?: number,
+	correctAnswer?: string
 ) => {
 	const body = {
 		ParentNodeId: parentNodeId,
@@ -27,7 +28,8 @@ export const createAssessmentNode = async (
 		QueryResponseType: queryType,
 		Options: options,
 		Sequence:sequence,
-		Tags: tags ? tags : []
+		Tags: tags ? tags : [],
+		CorrectAnswer: correctAnswer ? correctAnswer : null
 	};
 	if (options && options.length > 0) {
 		let count = 1;
@@ -90,6 +92,7 @@ export const updateAssessmentNode = async (
 	message?: string,
 	sequence?: number,
 	serveListNodeChildrenAtOnce?: boolean,
+	correctAnswer?: string
 
 ) => {
 	const body = {
@@ -101,7 +104,8 @@ export const updateAssessmentNode = async (
 		Options: options,
 		Sequence: sequence,
 		ServeListNodeChildrenAtOnce:serveListNodeChildrenAtOnce,
-		Tags: tags ? tags : []
+		Tags: tags ? tags : [],
+		CorrectAnswer: correctAnswer ? correctAnswer : null
 
 	};
 	if (options && options.length > 0) {
@@ -117,6 +121,8 @@ export const updateAssessmentNode = async (
 		}
 		body.Options = options;
 	}
+	console.log("body----",body);
+
 	const url = BACKEND_API_URL + `/clinical/assessment-templates/${templateId}/nodes/${nodeId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };

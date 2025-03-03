@@ -21,6 +21,8 @@
 	let sequence = data.assessmentNode.Sequence;
 	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? false;
 	let tags = data.assessmentNode.Tags;
+	let correctAnswer = data.assessmentNode.CorrectAnswer ?? null;
+
 
 	//Original data
 	let _nodeType = nodeType;
@@ -30,7 +32,7 @@
 	let _sequence = sequence;
 	let _message = message;
 	let _tags = JSON.stringify(tags);
-
+	let _correctAnswer = correctAnswer;
 
 	function handleReset() {
 		nodeType = _nodeType;
@@ -40,6 +42,7 @@
 		sequence = _sequence;
 		message = _message;
 		tags = JSON.parse(_tags);
+		correctAnswer = _correctAnswer;
 
 	}
 
@@ -202,6 +205,21 @@
 						<td class="align-top">Options</td>
 						<td><Choice {optionValueStore} readonly={false}/></td>
 					</tr>
+
+					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+						<td>Correct Answer</td>
+						<td>
+							<input
+								type="text"
+								name="correctAnswer"
+								placeholder="Enter correct answer here..."
+								bind:value={correctAnswer}
+								class="input w-full
+								 {form?.errors?. correctAnswer? 'border-error-300 text-error-500' : ''}"
+							/>
+						</td>
+					</tr>
+
 				{/if}
 			{:else if selectedNodeType === 'Message'}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

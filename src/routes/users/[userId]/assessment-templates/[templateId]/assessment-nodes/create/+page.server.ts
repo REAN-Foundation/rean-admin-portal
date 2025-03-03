@@ -49,7 +49,8 @@ const createAssessmentNodeSchema = zfd.formData({
     serveListNodeChildrenAtOnce: zfd.checkbox({ trueValue: 'true' }),
     scoringApplicable: zfd.checkbox({ trueValue: 'true' }),
     options: z.array(z.string()),
-    tags: z.array(z.string()).optional()
+    tags: z.array(z.string()).optional(),
+    correctAnswer: z.string().optional()
 
 });
 
@@ -95,7 +96,8 @@ export const actions = {
                 result.serveListNodeChildrenAtOnce,
                 result.queryType,
                 result.options,
-                result.sequence  
+                result.sequence,
+                result.correctAnswer
             );
         } catch (error: any) {
             const errorMessageText = error?.body?.message || 'An error occurred';

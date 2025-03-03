@@ -54,7 +54,8 @@ const updateAssessmentNodeSchema = zfd.formData({
     scoringApplicable: zfd.checkbox({ trueValue: 'true' }),
     options: z.array(z.string()),
     sequence: zfd.numeric(z.number().optional()),
-    tags: z.array(z.string()).optional()
+    tags: z.array(z.string()).optional(),
+    correctAnswer: z.string().optional()
 
 });
 
@@ -102,7 +103,8 @@ export const actions = {
                 result.options,
                 result.message,
                 result.sequence,
-                result.serveListNodeChildrenAtOnce
+                result.serveListNodeChildrenAtOnce,
+                result.correctAnswer
             );
         } catch (error: any) {
             const errorMessageText = error?.body?.message || 'An error occurred';
