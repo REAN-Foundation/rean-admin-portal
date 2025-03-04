@@ -121,8 +121,7 @@ export const updateAssessmentNode = async (
 		}
 		body.Options = options;
 	}
-	console.log("body----",body);
-
+	console.log('body---', body)
 	const url = BACKEND_API_URL + `/clinical/assessment-templates/${templateId}/nodes/${nodeId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
 };
@@ -181,4 +180,42 @@ export const updateScoringCondition = async (
 		BACKEND_API_URL +
 		`/clinical/assessment-templates/${templateId}/scoring-conditions/${scoringConditionId}`;
 	return await put(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
+};
+
+export const addOption = async (
+	sessionId: string,
+	templateId: string,
+	nodeId: string,
+	text: string,
+	sequence?: number,
+) => {
+	const body = {
+		Text: text,
+		Sequence:sequence,
+	};
+	console.log('body----------',body);
+	const url = BACKEND_API_URL + `/clinical/assessment-templates/${templateId}/nodes/${nodeId}/options`;
+	return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
+};
+
+export const updateOption = async (
+	sessionId: string,
+	templateId: string,
+	nodeId: string,
+	optionId: string,
+	text: string,
+	sequence?: number,
+) => {
+	const body = {
+		Text: text,
+		Sequence:sequence,
+	};
+	console.log('body----------',body);
+	const url = BACKEND_API_URL + `/clinical/assessment-templates/${templateId}/nodes/${nodeId}/options/${optionId}`;
+	return await post(sessionId, url, body, true, API_CLIENT_INTERNAL_KEY);
+};
+
+export const deleteOption = async (sessionId: string, templateId: string, nodeId: string, optionId: string) => {
+	const url = BACKEND_API_URL + `/clinical/assessment-templates/${templateId}/nodes/${nodeId}/options/${optionId}`;
+	return await del(sessionId, url, true, API_CLIENT_INTERNAL_KEY);
 };

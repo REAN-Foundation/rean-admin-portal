@@ -25,7 +25,7 @@
 	let sequence = data.assessmentNode.Sequence;
 	let tags_ = Array.isArray(data.assessmentNode?.Tags) ? data.assessmentNode.Tags : [];
     let tags = tags_.join(', ');
-	let correctAnswer = data.assessmentNode.CorrectAnswer ? data.assessmentNode.CorrectAnswer : "Not specified";;
+	let correctAnswer = data.assessmentNode.CorrectAnswer ?? null;
 
 	console.log('nodeType', nodeType);
 
@@ -190,11 +190,23 @@
 						</td>
 					</tr>
 				{/if}
-				{#if queryType === 'Single Choice Selection' || queryType === 'Multi Choice Selection'}
+				{#if queryType === 'Single Choice Selection'}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td>Correct Answer</td>
 					<td>
-						{correctAnswer}
+						{#if correctAnswer}
+							{#if options.length > 0}
+								{#each options as option}
+									{#if option.Sequence == correctAnswer}
+										{option.Text}
+									{/if}
+								{/each}
+							<!-- {:else}
+								<span class="span" >No options available</span> -->
+							{/if}
+						{:else}
+							<span class="span">Not specified</span>
+						{/if}
 					</td>
 				</tr>
 				{/if}
