@@ -15,7 +15,7 @@
 	let nodeType = data.assessmentNode.NodeType;
 	let title = data.assessmentNode.Title;
 	let description = data.assessmentNode.Description !== null && data.assessmentNode.Description !== "" ? data.assessmentNode.Description : "Not specified";
-	let message = data.assessmentNode.Message !== null ? data.assessmentNode.Message : "Not specified" ;
+	let message = data.assessmentNode.Message !== null ? data.assessmentNode.Message : "Not specified";
 	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? null;
 	let queryType = data.assessmentNode.QueryResponseType;
 	let options = data.assessmentNode.Options ?? [];
@@ -25,6 +25,7 @@
 	let sequence = data.assessmentNode.Sequence;
 	let tags_ = Array.isArray(data.assessmentNode?.Tags) ? data.assessmentNode.Tags : [];
     let tags = tags_.join(', ');
+	let correctAnswer = data.assessmentNode.CorrectAnswer ?? null;
 
 	console.log('nodeType', nodeType);
 
@@ -189,7 +190,26 @@
 						</td>
 					</tr>
 				{/if}
-
+				{#if queryType === 'Single Choice Selection'}
+				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+					<td>Correct Answer</td>
+					<td>
+						{#if correctAnswer}
+							{#if options.length > 0}
+								{#each options as option}
+									{#if option.Sequence == correctAnswer}
+										{option.Text}
+									{/if}
+								{/each}
+							<!-- {:else}
+								<span class="span" >No options available</span> -->
+							{/if}
+						{:else}
+							<span class="span">Not specified</span>
+						{/if}
+					</td>
+				</tr>
+				{/if}
 				{#if $scoringApplicableCondition === true}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td>Resolution Score</td>

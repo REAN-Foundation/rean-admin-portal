@@ -6,6 +6,7 @@
 	import type { PageServerData } from './$types';
     import { enhance } from '$app/forms';
     import InputChip from '$lib/components/input-chips.svelte';
+    import { invalidate } from '$app/navigation';
 
 	//////////////////////////////////////////////////////////////////////////////////////
 
@@ -16,11 +17,30 @@
 	let description = data.assessmentNode.Description;
 	let queryType = data.assessmentNode.QueryResponseType;
 	let options = data.assessmentNode.Options ?? [];
+	// let optionValueStore = options.map(option => ({
+    //         id: option.id,
+    //         Text: option.Text,
+	// 		Sequece: option.Sequence
+    //     }));
+	// console.log('option', options);
 	let optionValueStore = options;
 	let message = data.assessmentNode.Message ?? null;
 	let sequence = data.assessmentNode.Sequence;
 	let serveListNodeChildrenAtOnce = data.assessmentNode.ServeListNodeChildrenAtOnce ?? false;
 	let tags = data.assessmentNode.Tags;
+	let correctAnswer = data.assessmentNode.CorrectAnswer ?? null;
+	 
+	console.log('Correct Answer', correctAnswer);
+
+	// $: selectedOption = options.find(option => String(option.Sequence) === String(correctAnswer));
+	// $: correctAnswer = Number(correctAnswer);
+	$: correctAnswer = correctAnswer !== null ? Number(correctAnswer) : null;
+
+	$: selectedOption = correctAnswer !== null 
+		? options.find(option => String(option.Sequence) === String(correctAnswer)) 
+		: null;
+
+	$: console.log('selectedOption', selectedOption);
 
 	//Original data
 	let _nodeType = nodeType;
@@ -30,7 +50,7 @@
 	let _sequence = sequence;
 	let _message = message;
 	let _tags = JSON.stringify(tags);
-
+	let _correctAnswer = correctAnswer;
 
 	function handleReset() {
 		nodeType = _nodeType;
@@ -40,6 +60,7 @@
 		sequence = _sequence;
 		message = _message;
 		tags = JSON.parse(_tags);
+		correctAnswer = _correctAnswer;
 
 	}
 
@@ -69,6 +90,28 @@
 
 	$:if(form){
 		isSubmitting = false;	
+	}
+
+	const handleOptionDelete = async (option) => {
+		 if (!option.id) return;
+		const optionId = option.id;
+		console.log("optionId-----",optionId);
+		await Delete({
+			sessionId: data.sessionId,
+			templateId: templateId,
+			nodeId: nodeId,
+			optionId: optionId
+		});
+		optionValueStore = optionValueStore.filter(opt => opt.id !== option.id);
+		invalidate('app:assessmentTemplate');
+	};
+
+	async function Delete(model) {
+		await fetch(`/api/server/assessments/options`, {
+			method: 'DELETE',
+			body: JSON.stringify(model),
+			headers: { 'content-type': 'application/json' }
+		});
 	}
 </script>
 
@@ -180,6 +223,7 @@
 			{#if selectedNodeType === 'Question'}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 					<td class="align-top">Query Response Type *</td>
+					<input type="hidden" name="queryType" bind:value={queryType}>
 					<td>
 						<select
 							id="mySelect"
@@ -188,8 +232,9 @@
 							class="select select-info w-full"
 							placeholder="Select query type here..."
 							bind:value={queryType}
-							on:change={(val) => onSelectQueryResponseType(val)}
 						>
+						<!-- on:change={(val) => onSelectQueryResponseType(val)} -->
+
 							<option selected value={queryType}>{queryType}</option>
 							<!-- {#each queryResponseTypes as responseType}
 								<option disabled value={responseType}>{responseType}</option>
@@ -200,8 +245,32 @@
 				{#if selectedQueryType === 'Single Choice Selection' || selectedQueryType === 'Multi Choice Selection'}
 					<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 						<td class="align-top">Options</td>
-						<td><Choice {optionValueStore} readonly={false}/></td>
+						<td><Choice {optionValueStore} readonly={true} on:deleteOption={handleOptionDelete}/></td>
+						
 					</tr>
+
+					{#if selectedQueryType === 'Single Choice Selection'}
+						<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+							<td>Correct Answer</td>
+							<td>
+								<select 
+									name="correctAnswer"
+									class="input w-full"
+									bind:value={correctAnswer}
+								>
+									<!-- <option value="" disabled>Select correct answer</option> -->
+									 {#if selectedOption}
+										<option selected value={selectedOption.Sequence}>{selectedOption.Text}</option>
+									{/if}
+									{#each options as option}
+										<option value={option.Sequence}>
+											{option.Text}
+										</option>
+									{/each}
+								</select>
+							</td>
+						</tr>
+					{/if}
 				{/if}
 			{:else if selectedNodeType === 'Message'}
 				<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">

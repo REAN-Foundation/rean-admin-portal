@@ -10,11 +10,13 @@ import {
     searchAssessmentNodes,
     updateAssessmentNode
 } from '../../../../../../../api/services/reancare/assessments/assessment-nodes';
+import type { ServerLoadEvent } from '@sveltejs/kit';
 
 /////////////////////////////////////////////////////////////////////////
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
+export const load: PageServerLoad = async (event: ServerLoadEvent) => {
     const sessionId = event.cookies.get('sessionId');
+    event.depends('app:assessment-nodes');
 
     const templateId = event.params.templateId;
     const assessmentNodeId = event.params.nodeId;
@@ -38,7 +40,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
         queryResponseTypes,
         assessmentNodes,
         message: response.Message,
-        title: 'Clinical-Assessments-Assessment Nodes Edit'
+        title: 'Clinical-Assessments-Assessment Nodes Edit',
+        sessionId
     };
 };
 
@@ -54,7 +57,8 @@ const updateAssessmentNodeSchema = zfd.formData({
     scoringApplicable: zfd.checkbox({ trueValue: 'true' }),
     options: z.array(z.string()),
     sequence: zfd.numeric(z.number().optional()),
-    tags: z.array(z.string()).optional()
+    tags: z.array(z.string()).optional(),
+    correctAnswer: z.string().optional()
 
 });
 
@@ -71,6 +75,8 @@ export const actions = {
         const options = data.has('options') ? data.getAll('options') : [];
         const formData = Object.fromEntries(data);
         const formDataValue = { ...formData, options: options, tags: tags };
+
+        console.log("Form data",formData)
 
         type AssessmentNodeSchema = z.infer<typeof updateAssessmentNodeSchema>;
 
@@ -102,7 +108,8 @@ export const actions = {
                 result.options,
                 result.message,
                 result.sequence,
-                result.serveListNodeChildrenAtOnce
+                result.serveListNodeChildrenAtOnce,
+                result.correctAnswer
             );
         } catch (error: any) {
             const errorMessageText = error?.body?.message || 'An error occurred';
