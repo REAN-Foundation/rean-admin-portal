@@ -1,16 +1,34 @@
 import { redirect } from 'sveltekit-flash-message/server';
-import type { RequestEvent } from '@sveltejs/kit';
+import { error, type RequestEvent } from '@sveltejs/kit';
 import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { createAssessment } from '$routes/api/services/careplan/assets/assessment';
+import type { PageServerLoad } from './$types';
+import { searchAssessmentTemplates } from '$routes/api/services/reancare/assessments/assessment-templates';
 
 /////////////////////////////////////////////////////////////////////////
 
+export const load: PageServerLoad = async ({cookies,depends}) => {
+	const sessionId = cookies.get('sessionId');
+	depends('app:assessmentTemplate')
+	const response = await searchAssessmentTemplates(sessionId,{
+		orderBy: "Title",
+		order: "ascending"
+	});
+	if (response.Status === 'failure' || response.HttpCode !== 200) {
+		throw error(response.HttpCode, response.Message);
+	}
+	const assessmentTemplates = response.Data.AssessmentTemplateRecords.Items;
+	return {
+		assessmentTemplates,
+	};		
+};
 const createAssessmentSchema = zfd.formData({
 	name: z.string().max(128),
 	description: z.string().optional(),
-  template: z.string().optional(),
+    template: z.string().optional(),
+    templateCode: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	version: z.string().optional()
 });
@@ -45,7 +63,8 @@ export const actions = {
 			sessionId,
 			result.name,
 			result.description,
-      result.template,
+       		result.template,
+			result.templateCode,
 			result.tags,
 			result.version
 		);

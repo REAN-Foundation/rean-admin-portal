@@ -5,6 +5,7 @@ import { errorMessage, successMessage } from '$lib/utils/message.utils';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { getAssessmentById, updateAssessment } from '$routes/api/services/careplan/assets/assessment';
+import { searchAssessmentTemplates } from '$routes/api/services/reancare/assessments/assessment-templates';
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -19,8 +20,15 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
       throw error(response.HttpCode, response.Message);
     }
     const assessment = response.Data;
+		const assessmentTemplatesData = await searchAssessmentTemplates(sessionId,{
+			orderBy: "Title",
+			order: "ascending"
+		  });
+	
+		const assessmentTemplates = assessmentTemplatesData.Data.AssessmentTemplateRecords.Items;
     return {
-      assessment
+      assessment,
+	  assessmentTemplates
     };
   } catch (error) {
     console.error(`Error retriving assessment: ${error.message}`);
@@ -30,7 +38,8 @@ export const load: PageServerLoad = async (event: RequestEvent) => {
 const updateAssessmentSchema = zfd.formData({
 	name: z.string().max(128),
 	description: z.string().optional(),
-  template: z.string().optional(),
+    template: z.string().optional(),
+    templateCode: z.string().optional(),
 	tags: z.array(z.string()).optional(),
 	version: z.string().optional()
 });
@@ -39,7 +48,7 @@ export const actions = {
 	updateAssessmentAction: async (event: RequestEvent) => {
 		const request = event.request;
 		const userId = event.params.userId;
-    const assessmentId = event.params.id;
+   		const assessmentId = event.params.id;
 		const sessionId = event.cookies.get('sessionId');
 		const data = await request.formData();
 		const formData = Object.fromEntries(data);
@@ -67,7 +76,8 @@ export const actions = {
       assessmentId,
 			result.name,
 			result.description,
-      result.template,
+      		result.template,
+			result.templateCode,
 			result.tags,
 			result.version
 		);

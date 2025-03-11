@@ -9,7 +9,7 @@
   ///////////////////////////////////////////////////////////
 
   const userId = $page.params.userId;
-  const assessmentId = $page.params.userId;
+  const assessmentId = $page.params.id;
   const assetRoute = `/users/${userId}/careplan/assets`;
   const editRoute = `/users/${userId}/careplan/assets/assessments/${assessmentId}/edit`;
   const viewRoute = `/users/${userId}/careplan/assets/assessments/${assessmentId}/view`;
@@ -18,11 +18,18 @@
   export let form;
   export let data: PageServerData;
   let assetCode = data.assessment.AssetCode;
+  console.log('assetCode', assetCode);
   let name = data.assessment.Name;
   let description = data.assessment.Description;
   let template = data.assessment.Template;
   let tags = data.assessment.Tags;
   let version = data.assessment.Version;
+  let templateCode = data.assessment?.ReferenceTemplateCode ?? "";
+
+	const assessmentTemplates = data.assessmentTemplates || [];
+	const assessmentTemplate = assessmentTemplates.find(
+		(template) => template.DisplayCode === templateCode
+	);
 
   //Original data
   let _name = name;
@@ -117,6 +124,33 @@
         />
 				</td>
 			</tr>
+      <!-- <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Reference Template</td>
+				<td>
+					<select name="templateCode" class="select select-primary w-full ">
+						<option value={templateCode}>{assessmentTemplate[0].Title}</option>
+						{#each assessmentTemplates as template}
+							<option value={template.DisplayCode}>{template.Title}</option>
+						{/each}
+					</select>
+				</td>
+			</tr> -->
+      <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+        <td>Reference Template</td>
+        <td>
+          <select name="templateCode" class="select select-primary w-full">
+            <option value="" disabled selected>
+              {assessmentTemplate?.Title ?? "Select a template"}
+            </option>
+      
+            {#each assessmentTemplates as template}
+              <option value={template.DisplayCode} selected={template.DisplayCode === templateCode}>
+                {template.Title}
+              </option>
+            {/each}
+          </select>
+        </td>
+      </tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td class="align-top">Tags</td>
           <td>

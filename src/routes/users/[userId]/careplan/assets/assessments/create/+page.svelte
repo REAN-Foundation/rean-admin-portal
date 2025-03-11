@@ -4,10 +4,14 @@
   import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
   import InputChip from '$lib/components/input-chips.svelte';
 	import Icon from '@iconify/svelte';
+    import type { PageServerData } from './$types.js';
 
   ////////////////////////////////////////////////////////////////////////////////////
 
   export let form;
+  export let data: PageServerData
+  let assessmentTemplates = data.assessmentTemplates ?? [];
+  console.log('assessmentTemplates', assessmentTemplates);
   const userId = $page.params.userId;
   const assetRoute = `/users/${userId}/careplan/assets`;
   const createRoute = `/users/${userId}/careplan/assets/assessments/create`;
@@ -83,6 +87,18 @@
           placeholder="Enter assessment template here..."
           name="template"
         />
+				</td>
+			</tr>
+
+      <tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+				<td>Reference Template</td>
+				<td>
+          <select name="templateCode" class="select select-primary w-full ">
+            <option disabled selected>Select referance template here...</option>
+            {#each assessmentTemplates as template}
+              <option value={template.DisplayCode}>{template.Title}</option>
+            {/each}
+          </select>
 				</td>
 			</tr>
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
