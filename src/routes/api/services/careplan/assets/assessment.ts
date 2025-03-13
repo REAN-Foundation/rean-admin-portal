@@ -8,6 +8,7 @@ export const createAssessment = async (
   name: string,
   description: string,
   template: string,
+  templateCode: string,
   tags: string[],
   version: string
 ) => {
@@ -15,6 +16,7 @@ export const createAssessment = async (
     Name: name,
     Description: description,
     Template: template,
+    ReferenceTemplateCode: templateCode,
     Tags: tags,
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };
@@ -47,6 +49,7 @@ export const updateAssessment = async (
   name: string,
   description: string,
   template: string,
+  templateCode: string,
   tags: string[],
   version: string
 ) => {
@@ -54,6 +57,7 @@ export const updateAssessment = async (
     Name: name,
     Description: description,
     Template: template,
+    ReferenceTemplateCode: templateCode,
     Tags: tags,
     Version: !version || version?.length === 0 ? 'V 1.0' : version,
   };

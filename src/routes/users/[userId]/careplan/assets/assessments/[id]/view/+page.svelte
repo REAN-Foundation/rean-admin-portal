@@ -7,7 +7,7 @@
   ///////////////////////////////////////////////////////////////////////
 
   const userId = $page.params.userId;
-  const assessmentId = $page.params.userId;
+  const assessmentId = $page.params.id;
   const assetRoute = `/users/${userId}/careplan/assets`;
   const editRoute = `/users/${userId}/careplan/assets/assessments/${assessmentId}/edit`;
   const viewRoute = `/users/${userId}/careplan/assets/assessments/${assessmentId}/view`;
@@ -20,6 +20,14 @@
   let template = data.assessment.Template;
   let tags = data.assessment.Tags;
   let version = data.assessment.Version;
+  let templateCode = data.assessment?.ReferenceTemplateCode ?? null;
+
+  const assessmentTemplates = data.assessmentTemplates || [];
+
+  const assessmentTemplate = templateCode
+		? assessmentTemplates.filter((template) => template.DisplayCode === templateCode)
+		: [];
+
 
   const breadCrumbs = [
     {
@@ -75,6 +83,11 @@
 				<td class="align-top">Template</td>
 				<td>{template}</td>
 			</tr>
+			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
+                <td>Reference Template</td>
+				<td>{assessmentTemplate.length > 0 ? assessmentTemplate[0].Title : "Not specified"}</td>
+            </tr>
+			
 			<tr class="!border-b !border-b-secondary-100 dark:!border-b-surface-700">
 				<td>Tags</td>
 				<td>
