@@ -1,4 +1,4 @@
-FROM node:18.20-alpine3.19 AS builder
+FROM node:18.20-alpine3.20 AS builder
 
 WORKDIR /app
 COPY . .
@@ -9,7 +9,7 @@ RUN npm run build
 
 #######################################
 
-FROM node:18.20-alpine3.19
+FROM node:18.20-alpine3.20
 
 RUN apk add bash
 RUN apk add --no-cache \
@@ -33,10 +33,6 @@ COPY --from=builder ./app/ ./
 
 RUN npm install
 
-# # COPY . /app
-##
-##
-# CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
 ARG ORIGIN
 ENV ORIGIN=${ORIGIN}
 
@@ -46,4 +42,3 @@ ENV ENVIRONMENT=${ENVIRONMENT}
 RUN chmod +x /app/entrypoint.sh
 ENTRYPOINT ["/bin/bash", "-c", "/app/entrypoint.sh $ENVIRONMENT"]
 
-#CMD ["node", "build/index.js"]
