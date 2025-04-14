@@ -16,7 +16,7 @@ import BreadCrumbs from '$lib/components/breadcrumbs/breadcrums.svelte';
 
 export let data: PageServerData;
 export let form;
-
+const isGMU = data.UserDetails?.tenantName?.includes('GMU');
 let respData = data;
 console.log("userData...",respData.UserDetails);
 let userData = respData.UserDetails.tenantName
@@ -96,7 +96,7 @@ const handleSubmit = (event) => {
 		</div>
 	</form>
 
-	<form
+<form
   method="post"
   action="?/setCancelAction"
   class="table-container my-2 border border-secondary-100 dark:!border-surface-700"
@@ -192,7 +192,7 @@ const handleSubmit = (event) => {
 		{/if}
 		
 	{:else}
-	
+
         <div class="  flex h-96 flex-col justify-center items-center">
 			
 			<form
@@ -205,7 +205,7 @@ const handleSubmit = (event) => {
 			  <table class="table w-2/3 mx-auto">
 				<thead class="!variant-soft-secondary">
 				<tr class="content-center">
-				<th class="text-center font-bold">Upload Appointment follow-up pdf</th>
+				<th class="text-center font-bold">Upload Appointment follow-up {isGMU ? 'PDF' : 'Excel'}</th>
 				</tr>
 				</thead>
 				<tbody class="!bg-white dark:!bg-inherit">

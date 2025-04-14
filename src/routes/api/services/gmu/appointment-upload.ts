@@ -1,10 +1,14 @@
 import * as fs from 'fs';
 import * as aws from "@aws-sdk/client-s3";
-import { BUCKET_NAME } from '$env/static/private';
+import { BUCKET_NAME, FOLLOW_UP_URL } from '$env/static/private';
 import { BUCKET_FOLDER } from  '$env/static/private'
 import { ACCESS_KEY_ID } from '$env/static/private';
 import { SECRET_ACCESS_KEY } from '$env/static/private';
 import { BUCKET_REGION } from '$env/static/private';
+import { ServerHelper } from '$lib/server/server.helper';
+import axios from 'axios';
+import chalk from 'chalk';
+import { error } from 'console';
 
 ////////////////////////////////////////////////////////////////////
 
@@ -46,4 +50,31 @@ export const uploadAppoinmentPdf = async (fileName: string, filePath: string) =>
             body: { success: false, message: 'Error uploading file to S3.' }
         };
     }
+};
+
+
+export const uploadFileForTesting = async (
+    fileName:string,
+    filePath:string,
+) => {
+    const url = FOLLOW_UP_URL + `/appointment-schedules/tests/upload`;
+    const mimeType = ServerHelper.getMimeTypeFromFileName(fileName);
+    console.log(`mimeType = ${mimeType}`);
+    const form = new FormData();
+    form.append("file", fs.createReadStream(filePath));
+
+    const headers = {
+        'Content-Type' : 'multipart/form-data',
+    };
+    const res = await axios.post(url, form, { headers });
+
+    const response = res.data;
+    console.log('upload response',response);
+    if (response.Status === 'failure' || (response.HttpCode !== 201 && response.HttpCode !== 200)) {
+        console.log(chalk.red(`post_ response message: ${response.Message}`));
+        throw error(response.HttpCode, response.Message);
+    }
+    console.log(chalk.green(`post_ response message: ${response.Message}`));
+    return response;
+    
 };

@@ -8,7 +8,7 @@ import { Event } from '@aws-sdk/client-s3';
 import * as fs from 'fs';
 import { writeFile } from 'node:fs/promises';
 import toast, { Toaster } from 'svelte-french-toast';
-import { uploadAppoinmentPdf } from "../../../../api/services/gmu/appointment-upload";
+import { uploadAppoinmentPdf, uploadFileForTesting } from "../../../../api/services/gmu/appointment-upload";
 import { addCancellationDateSubmission, handleDateSubmission, viewCancelDates } from '../../../../api/services/gghn/appointment-set';
 import { redirect } from 'sveltekit-flash-message/server';
 import { any } from 'zod';
@@ -47,56 +47,136 @@ export const actions = {
       }
     },
 
+    // uploadAppoinment: async (event: RequestEvent) => {
+    //     const userId = event.params.userId;
+    //     const request = event.request;
+    //     const formData = await request.formData();
+    //     const uploadedFile = formData?.get('name') as File;
+    //     const fileName = uploadedFile.name;
+    //         const newFileName = Helper.replaceAll(fileName, ' ', '_');
+    //     const filePath = `./temp/${newFileName}`;
+
+    //         console.log("upload info",uploadedFile)
+
+    //     if(uploadedFile.type !== 'application/pdf')
+    //       {
+    //         throw redirect(errorMessage('Invalid Document!'), event)
+    //       }  
+    //     else{
+    //       //524,288 bytes is 512 KB size of pdf is resistricted to less than or equal to it
+    //           console.log("size of file",uploadedFile.size)
+    //           // 
+    //           if (uploadedFile.size > 524288) 
+    //           {
+    //             throw redirect(errorMessage('File should be less than 512 KB'), event)
+    //           } 
+    //           else
+    //           {  
+    //             console.log("valid pdf size")
+    //             if (!fs.existsSync('./temp')) {
+    //               fs.mkdirSync('./temp', { recursive: true });
+    //               }
+
+    //             await writeFile(filePath, Buffer.from(await uploadedFile?.arrayBuffer()));
+
+    //             if (!fs.existsSync(filePath)) {
+    //               console.log('File not created');
+    //               throw redirect(successMessage('Unable to import appointment template.'), event);
+    //             }
+
+    //             const response = await uploadAppoinmentPdf(
+    //               newFileName,
+    //               filePath
+    //             );
+
+    //             fs.unlinkSync(filePath);
+    //             console.log('&&&&&&',response)
+    //                 if (!response.body.success || response.status !== 200) {
+    //                   throw redirect(successMessage(response.body.success), event);
+    //                   }
+    //                   throw redirect(errorMessage(response.body.success), event)
+    //           }          
+    //         }
+    //   },
+
     uploadAppoinment: async (event: RequestEvent) => {
-        const userId = event.params.userId;
-        const request = event.request;
-        const formData = await request.formData();
-        const uploadedFile = formData?.get('name') as File;
-        const fileName = uploadedFile.name;
-            const newFileName = Helper.replaceAll(fileName, ' ', '_');
-        const filePath = `./temp/${newFileName}`;
-
-            console.log("upload info",uploadedFile)
-        if(uploadedFile.type !== 'application/pdf')
-          {
-            throw redirect(errorMessage('Invalid Document!'), event)
-          }  
-        else{
-          //524,288 bytes is 512 KB size of pdf is resistricted to less than or equal to it
-              console.log("size of file",uploadedFile.size)
-              // 
-              if (uploadedFile.size > 524288) 
-              {
-                throw redirect(errorMessage('File should be less than 512 KB'), event)
-              } 
-              else
-              {  
-                console.log("valid pdf size")
-                if (!fs.existsSync('./temp')) {
-                  fs.mkdirSync('./temp', { recursive: true });
-                  }
-
-                await writeFile(filePath, Buffer.from(await uploadedFile?.arrayBuffer()));
-
-                if (!fs.existsSync(filePath)) {
-                  console.log('File not created');
-                  throw redirect(successMessage('Unable to import appointment template.'), event);
-                }
-
-                const response = await uploadAppoinmentPdf(
-                        newFileName,
-                  filePath
-                );
-
-                fs.unlinkSync(filePath);
-                console.log('&&&&&&',response)
-                    if (!response.body.success || response.status !== 200) {
-                      throw redirect(successMessage(response.body.success), event);
-                      }
-                      throw redirect(errorMessage(response.body.success), event)
-              }          
-            }
-      },
+      const tenantData = event.locals.sessionUser;
+      const userId = event.params.userId;
+      const request = event.request;
+      const formData = await request.formData();
+      const uploadedFile = formData?.get('name') as File;
+    
+      const fileName = uploadedFile.name;
+      const newFileName = Helper.replaceAll(fileName, ' ', '_');
+      const filePath = `./temp/${newFileName}`;
+      const fileType = uploadedFile.type;
+      const fileSize = uploadedFile.size;
+    
+      console.log("Upload Info", {
+        name: fileName,
+        type: fileType,
+        size: fileSize,
+        tenantCode: tenantData.tenantCode,
+      });
+    
+      // Tenant GMU requires only PDFs under 512 KB
+      if (tenantData.tenantName.includes('GMU')) {
+        if (fileType !== 'application/pdf') {
+          throw redirect(errorMessage('Invalid Document! Only PDFs allowed.'), event);
+        }
+    
+        if (fileSize > 524288) {
+          throw redirect(errorMessage('File should be less than 512 KB'), event);
+        }
+    
+        console.log("Valid PDF size for GMU");
+      } else {
+        // Other tenants – allow Excel files under 1 MB
+        const allowedExcelTypes = [
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'application/vnd.ms-excel'
+        ];
+    
+        if (!allowedExcelTypes.includes(fileType)) {
+          throw redirect(errorMessage('Invalid Document! Only Excel files allowed.'), event);
+        }
+    
+        if (fileSize > 1048576) {
+          throw redirect(errorMessage('Excel file should be less than 1 MB'), event);
+        }
+    
+        console.log("Valid Excel file for other tenant");
+      }
+    
+      // Ensure temp directory exists
+      if (!fs.existsSync('./temp')) {
+        fs.mkdirSync('./temp', { recursive: true });
+      }
+    
+      // Save file to disk
+      await writeFile(filePath, Buffer.from(await uploadedFile.arrayBuffer()));
+    
+      // Check if file was saved correctly
+      if (!fs.existsSync(filePath)) {
+        console.log('File not created');
+        throw redirect(successMessage('Unable to import appointment template.'), event);
+      }
+    
+      // Upload
+      const response = await uploadAppoinmentPdf(newFileName, filePath);
+      // const response = await uploadFileForTesting(newFileName, filePath);
+      // Delete temp file
+      fs.unlinkSync(filePath);
+    
+      // Handle response
+      console.log('Upload response:', response);
+      if (!response.body.success || response.status !== 200) {
+        throw redirect(errorMessage(response.body.success), event);
+      }
+    
+      throw redirect(successMessage('Document uploaded successfully.'), event);
+    },
+    
       setCancelAction: async (event: RequestEvent) => {
           const request = event.request;
           const sessionId = event.locals.sessionUser.sessionId;
