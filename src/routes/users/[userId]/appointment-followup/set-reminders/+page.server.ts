@@ -101,6 +101,7 @@ export const actions = {
 
     uploadAppoinment: async (event: RequestEvent) => {
       const tenantData = event.locals.sessionUser;
+      const tenantCode = event.locals.sessionUser?.tenantCode;
       const userId = event.params.userId;
       const request = event.request;
       const formData = await request.formData();
@@ -108,12 +109,25 @@ export const actions = {
     
       const fileName = uploadedFile.name;
       const newFileName = Helper.replaceAll(fileName, ' ', '_');
-      const filePath = `./temp/${newFileName}`;
+      // const filePath = `./temp/${newFileName}`;
+
+      // Get today's date in YYYYMMDD format
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0].replace(/-/g, ''); // "20250419"
+
+      // Insert tenantCode and date before the file extension
+      const extensionIndex = newFileName.lastIndexOf('.');
+      // const baseName = newFileName.substring(0, extensionIndex);
+      const extension = newFileName.substring(extensionIndex);
+
+      // const finalFileName = `${baseName}_${tenantCode}_${formattedDate}${extension}`;
+      const finalFileName = `${tenantCode}_${formattedDate}${extension}`;
+      const filePath = `./temp/${finalFileName}`;
       const fileType = uploadedFile.type;
       const fileSize = uploadedFile.size;
     
       console.log("Upload Info", {
-        name: fileName,
+        name: finalFileName,
         type: fileType,
         size: fileSize,
         tenantCode: tenantData.tenantCode,
@@ -163,7 +177,7 @@ export const actions = {
       }
     
       // Upload
-      const response = await uploadAppoinmentPdf(newFileName, filePath);
+      const response = await uploadAppoinmentPdf(finalFileName, filePath);
       // const response = await uploadFileForTesting(newFileName, filePath);
       // Delete temp file
       fs.unlinkSync(filePath);
@@ -171,7 +185,7 @@ export const actions = {
       // Handle response
       console.log('Upload response:', response);
       if (!response.body.success || response.status !== 200) {
-        throw redirect(errorMessage(response.body.success), event);
+        throw redirect(errorMessage(response.body.message), event);
       }
     
       throw redirect(successMessage('Document uploaded successfully.'), event);

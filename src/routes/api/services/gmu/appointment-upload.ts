@@ -58,6 +58,7 @@ export const uploadFileForTesting = async (
     filePath:string,
 ) => {
     const url = FOLLOW_UP_URL + `/appointment-schedules/tests/upload`;
+    console.log(`url ========= ${url}`);
     const mimeType = ServerHelper.getMimeTypeFromFileName(fileName);
     console.log(`mimeType = ${mimeType}`);
     const form = new FormData();
@@ -67,9 +68,9 @@ export const uploadFileForTesting = async (
         'Content-Type' : 'multipart/form-data',
     };
     const res = await axios.post(url, form, { headers });
-
+    console.log('upload response',res);
     const response = res.data;
-    console.log('upload response',response);
+    console.log('upload response',res);
     if (response.Status === 'failure' || (response.HttpCode !== 201 && response.HttpCode !== 200)) {
         console.log(chalk.red(`post_ response message: ${response.Message}`));
         throw error(response.HttpCode, response.Message);
