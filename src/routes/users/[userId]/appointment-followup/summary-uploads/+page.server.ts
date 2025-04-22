@@ -38,6 +38,20 @@ export const load: PageServerLoad = async (event: ServerLoadEvent) => {
                 tenant:'GMU'},
                 title:'Appointment Followup-Status Report'
             }
+    };
+    if(tenantData.tenantCode.includes('PRAYAS'))
+        {
+            const res =await event.fetch(`/api/server/prayas/appointment-report`)
+            const data = await res.json()
+            if (data.Status === 'Failure') {
+                throw error(404, 'Appointment report status not found')
+            }
+            console.log(data)
+        return {
+            AppointmentReport:{data:data,
+                tenant:'PRAYAS'},
+                title:'Appointment Followup-Status Report'
+            }
     }
     else{
         throw error(404, 'Appointment follow-up status report not present for this user')
