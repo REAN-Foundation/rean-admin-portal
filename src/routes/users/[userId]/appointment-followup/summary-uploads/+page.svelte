@@ -29,7 +29,7 @@
     let filedata = appointmentReport['File_data'];
     console.log("filedata",filedata)
     const statusReportRoute = `/users/${userId}/appointment-followup/summary-uploads`;
-    const breadCrumbs = [{ name:'Status Report GGHN', path: statusReportRoute }];
+    const breadCrumbs = [{ name:'Status Report', path: statusReportRoute }];
     console.log(filedata);
     let itemsPerPage = 10;
     
