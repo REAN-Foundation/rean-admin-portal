@@ -17,6 +17,14 @@ export const load: LayoutServerLoad = async (event) => {
 
     const tenantSettings = await getTenantSettings(sessionId, session.tenantId);
 
+    // On-prem reancare's tenant-settings schema omits Common.AddOns (a newer portal
+    // feature). Default it so the sidebar menu builder's tenantSettings.Common.AddOns.*
+    // checks don't throw (the related add-on menus simply stay hidden).
+    const _ts = tenantSettings?.Data?.TenantSettings;
+    if (_ts?.Common && !_ts.Common.AddOns) {
+        _ts.Common.AddOns = {};
+    }
+
 	const sessionUser = {
         sessionId : session.sessionId,
         tenantId  : session.tenantId,
